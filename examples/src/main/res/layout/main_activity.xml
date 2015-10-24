@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/main_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#aaaaaa"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:requiresFadingEdge="none"
+        android:scrollbars="vertical">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center">
+
+        <TextView
+            android:id="@+id/first"
+            style="@style/IndicateText"/>
+
+        <TextView
+            android:id="@+id/last"
+            style="@style/IndicateText"/>
+
+        <TextView
+            android:id="@+id/count"
+            style="@style/IndicateText"/>
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,104 @@
+apply plugin: 'maven'
+
+afterEvaluate { project ->
+    // add this statement
+    // androidJavadoc.classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    // androidJavadoc.classpath += project.android.libraryVariants.toList().first().javaCompile.classpath
+    // androidJavadoc.classpath += files(project.getConfigurations().getByName('compile').asList())
+
+    task androidJavadoc(type: Javadoc) {
+        source = android.sourceSets.main.java.srcDirs
+
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        classpath += files(project.getConfigurations().getByName('compile').asList())
+        classpath += files(android.bootClasspath)
+
+        options {
+            encoding "UTF-8"
+            charSet 'UTF-8'
+            author true
+            version true
+            links "http://d.android.com/reference/"
+            links "http://docs.oracle.com/javase/7/docs/api"
+        }
+
+        include '**/*.java'
+        exclude '**/BuildConfig.java'
+        exclude '**/R.java'
+        exclude '**/pom.xml'
+        exclude '**/proguard_annotations.pro'
+
+
+        failOnError false
+    }
+
+    task androidJavadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from androidJavadoc.destinationDir
+    }
+
+    task androidSourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.srcDirs
+    }
+
+    android.libraryVariants.all { variant ->
+        def name = variant.name.capitalize()
+        task "jar${name}"(type: Jar, dependsOn: variant.javaCompile) {
+            from variant.javaCompile.destinationDir
+        }
+    }
+
+
+
+    artifacts.add('archives', androidJavadocJar)
+    artifacts.add('archives', androidSourcesJar)
+
+    def configurePom = { pom ->
+        // repository(url: "${System.env.HOME}/.m2/repository")
+        def packageVersion = VERSION_NAME
+
+        if (!project.hasProperty('doRelease')) {
+            packageVersion = packageVersion + '-SNAPSHOT'
+        }
+
+        pom.project {
+            pom.groupId = GROUP
+            pom.artifactId = ARTIFACT
+            pom.version = packageVersion
+            pom.packaging = PACKAGING_TYPE
+        }
+    }
+
+
+    uploadArchives {
+        configuration = configurations.archives
+        repositories.mavenDeployer {
+            // repository(url: "${System.env.HOME}/.m2/repository")
+            configurePom pom
+            if (pom.version.toString().endsWith("-SNAPSHOT")) {
+                repository(
+                        url: "http://mvnrepo.alibaba-inc.com/nexus/content/repositories/snapshots") {
+                    authentication(
+                            userName: "snapshotsAdmin",
+                            password: "123456")
+                }
+            } else {
+                repository(
+                        url: "http://mvnrepo.alibaba-inc.com/nexus/content/repositories/releases") {
+                    authentication(
+                            userName: System.getenv('releaseUserName'),
+                            password: System.getenv('releasePassWord'))
+                }
+            }
+        }
+    }
+
+    task installArchives(type: Upload) {
+        configuration = configurations.archives
+        repositories.mavenDeployer {
+            repository url: "file://${System.properties['user.home']}/.m2/repository"
+            configurePom pom
+        }
+    }
+}

@@ -1,0 +1,33 @@
+apply plugin: 'com.android.library'
+apply plugin: "maven"
+
+def VERSION_NAME = '1.0.0'
+def VERSION_CODE = 100
+
+android {
+    compileSdkVersion Integer.parseInt(System.properties['compileSdkVersion'] ?: '22')
+    buildToolsVersion System.properties['buildToolsVersion']
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion Integer.parseInt(System.properties['targetSdkVersion'] ?: '19')
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:recyclerview-v7:21.0.2@aar'
+    compile('com.android.support:support-v4:21.0.0@aar')
+
+    androidTestCompile "org.robolectric:robolectric:3.0"
+}
+
+
+apply from: rootProject.file('deploy.gradle')
