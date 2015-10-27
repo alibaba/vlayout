@@ -1728,6 +1728,7 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         // TODO: can not find index of a hidden view from ChildHelper
     }
 
+
     protected static void attachViewHolder(RecyclerView.LayoutParams params, RecyclerView.ViewHolder holder) {
         params.mViewHolder = holder;
         params.mViewHolder.setFlags(RecyclerView.ViewHolder.FLAG_INVALID, RecyclerView.ViewHolder.FLAG_INVALID);

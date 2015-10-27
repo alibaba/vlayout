@@ -87,7 +87,12 @@ public class VLayoutActivity extends Activity {
         adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 5));
 
         adapters.add(new SubAdapter(this, new StickyLayoutHelper(), 1));
-        adapters.add(new SubAdapter(this, new ColumnLayoutHelper(), 3));
+
+        ColumnLayoutHelper layoutHelper = new ColumnLayoutHelper();
+        // layoutHelper.setBgColor(0xff00f0f0);
+        adapters.add(new SubAdapter(this, layoutHelper, 3));
+
+
         adapters.add(new SubAdapter(this, new OnePlusNLayoutHelper(), 4) {
             @Override
             public void onBindViewHolder(MainViewHolder holder, int position) {

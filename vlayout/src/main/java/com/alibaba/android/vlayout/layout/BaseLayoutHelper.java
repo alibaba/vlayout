@@ -24,7 +24,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     protected Rect mLayoutRegion = new Rect();
 
-    protected LayoutView mLayoutView;
+    LayoutView mLayoutView;
 
     int mBgColor;
 
@@ -92,13 +92,17 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
             Log.d(TAG, "call beforeLayout() on " + this.getClass().getSimpleName());
         }
 
-        if (mLayoutView == null && requireLayoutView())
-            mLayoutView = helper.generateLayoutView();
 
-        if (mLayoutView != null) {
-            helper.removeChildView(mLayoutView);
+        if (requireLayoutView()) {
+            if (mLayoutView != null) {
+                // helper.detachChildView(mLayoutView);
+            }
+        } else {
+            if (mLayoutView != null) {
+                helper.removeChildView(mLayoutView);
+                mLayoutView = null;
+            }
         }
-
     }
 
 
@@ -110,12 +114,13 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
             Log.d(TAG, "call afterFinishLayout() on " + this.getClass().getSimpleName());
         }
 
-        if (requireLayoutView() && mLayoutView != null) {
 
-            if (scrolled != Integer.MAX_VALUE && scrolled != Integer.MIN_VALUE) {
+        if (requireLayoutView()) {
+            if (scrolled != Integer.MAX_VALUE && scrolled != Integer.MIN_VALUE && mLayoutView != null) {
                 // initial layout do reset
                 mLayoutRegion.union(mLayoutView.getLeft(), mLayoutView.getTop(), mLayoutView.getRight(), mLayoutView.getBottom());
             }
+
 
             if (!mLayoutRegion.isEmpty()) {
                 if (scrolled != Integer.MAX_VALUE && scrolled != Integer.MIN_VALUE) {
@@ -127,14 +132,24 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
                 }
 
                 if (mLayoutRegion.intersects(0, 0, helper.getContentWidth(), helper.getContentHeight())) {
-                    helper.addOffFlowView(mLayoutView, true);
+
+                    if (mLayoutView == null) {
+                        mLayoutView = helper.generateLayoutView();
+                        helper.addOffFlowView(mLayoutView, true);
+                    }
+
                     bindLayoutView(mLayoutView);
+                    return;
                 } else {
                     mLayoutRegion.set(0, 0, 0, 0);
                     mLayoutView.layout(0, 0, 0, 0);
                 }
             }
+        }
 
+        if (mLayoutView != null) {
+            helper.removeChildView(mLayoutView);
+            mLayoutView = null;
         }
 
     }
@@ -142,8 +157,10 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     @Override
     public void clear(LayoutManagerHelper helper) {
-        if (mLayoutView != null)
+        if (mLayoutView != null) {
             helper.removeChildView(mLayoutView);
+            mLayoutView = null;
+        }
     }
 
 

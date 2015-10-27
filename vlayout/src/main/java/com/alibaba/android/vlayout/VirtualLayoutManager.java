@@ -638,6 +638,15 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         }
     }
 
+    @Override
+    public void attachChildView(View view, boolean head) {
+        attachView(view, head ? 0 : -1);
+    }
+
+    @Override
+    public void detachChildView(View view) {
+        detachView(view);
+    }
 
     @Override
     public void addOffFlowView(View view, boolean head) {
@@ -645,8 +654,18 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     }
 
     @Override
+    public void attachOffFlowView(View view, boolean head) {
+        attachHiddenView(view, head);
+    }
+
+    @Override
     public View findHiddenViewByPosition(int position) {
         return findHiddenView(position);
+    }
+
+    @Override
+    public void removeDetachedView(View view) {
+        super.removeDetachedView(view);
     }
 
     @Override

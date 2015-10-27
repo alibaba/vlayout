@@ -26,7 +26,15 @@ public interface LayoutManagerHelper {
 
     void removeChildView(View view);
 
+    void attachChildView(View view, boolean head);
+
+    void detachChildView(View view);
+
+    void removeDetachedView(View view);
+
     void addOffFlowView(View view, boolean head);
+
+    void attachOffFlowView(View view, boolean head);
 
     View findViewByPosition(int position);
 
