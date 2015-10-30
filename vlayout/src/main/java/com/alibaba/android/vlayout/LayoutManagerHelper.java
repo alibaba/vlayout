@@ -18,7 +18,7 @@ public interface LayoutManagerHelper {
      *
      * @return default LayoutView
      */
-    LayoutView generateLayoutView();
+    View generateLayoutView();
 
     void addChildView(VirtualLayoutManager.LayoutStateWrapper layoutState, View view, int position);
 

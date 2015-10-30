@@ -19,18 +19,47 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center">
+        android:layout_gravity="bottom|center"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/first"
-            style="@style/IndicateText"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/last"
-            style="@style/IndicateText"/>
+            <TextView
+                android:id="@+id/first"
+                style="@style/IndicateText"/>
 
-        <TextView
-            android:id="@+id/count"
-            style="@style/IndicateText"/>
+            <TextView
+                android:id="@+id/last"
+                style="@style/IndicateText"/>
+
+            <TextView
+                android:id="@+id/count"
+                style="@style/IndicateText"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#33000000">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jump Position"/>
+
+            <EditText
+                android:id="@+id/position"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:numeric="integer"/>
+
+            <Button
+                android:id="@+id/jump"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jump"/>
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>

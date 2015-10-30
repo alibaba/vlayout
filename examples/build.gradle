@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 
+// apply plugin: 'view-inspector'
+
+
 android {
     compileSdkVersion Integer.parseInt(System.properties['compileSdkVersion'])
     buildToolsVersion System.properties['buildToolsVersion']
@@ -23,6 +26,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile project(':vlayout')
+    compile 'com.crittercism.dexmaker:dexmaker:1.4'
     compile 'com.alibaba.android:imagecompat_interface:1.1.0@jar'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:appcompat-v7:21.0.0'

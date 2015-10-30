@@ -107,7 +107,7 @@ public class FixLayoutHelper extends BaseLayoutHelper {
         result.mConsumed = 0;
         result.mIgnoreConsumed = true;
 
-        handleStateOnResult(view, result);
+        handleStateOnResult(result, view);
 
     }
 
@@ -145,13 +145,14 @@ public class FixLayoutHelper extends BaseLayoutHelper {
         }
 
         // Not in normal flow
-        if (shouldBeDraw(startPosition, endPosition)) {
+        if (shouldBeDraw(startPosition, endPosition, scrolled)) {
             if (mFixView != null) {
                 // already capture in layoutViews phase
                 // if it's not shown on screen
                 // TODO: nested scrollBy
-                if (mFixView.getParent() == null)
+                if (mFixView.getParent() == null) {
                     helper.addOffFlowView(mFixView, false);
+                }
             } else {
                 mFixView = recycler.getViewForPosition(mPos);
                 doMeasureAndLayout(mFixView, helper);
@@ -161,7 +162,7 @@ public class FixLayoutHelper extends BaseLayoutHelper {
 
     }
 
-    protected boolean shouldBeDraw(int startPosition, int endPosition) {
+    protected boolean shouldBeDraw(int startPosition, int endPosition, int scrolled) {
         return true;
     }
 

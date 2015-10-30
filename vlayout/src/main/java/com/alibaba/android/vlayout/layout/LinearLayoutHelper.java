@@ -117,7 +117,7 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
                     + (right - params.rightMargin) + ", b:" + (bottom - params.bottomMargin));
         }
 
-        handleStateOnResult(view, result);
+        handleStateOnResult(result, view);
     }
 
 }

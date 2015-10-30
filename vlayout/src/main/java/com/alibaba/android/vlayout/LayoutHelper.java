@@ -1,7 +1,9 @@
 package com.alibaba.android.vlayout;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.alibaba.android.vlayout.layout.LayoutChunkResult;
 
@@ -92,6 +94,15 @@ public abstract class LayoutHelper {
     }
 
     /**
+     * This method is called when scroll state is changed
+     *
+     * @param state The new scroll state for RecyclerView
+     */
+    public void onScrollStateChanged(int state) {
+
+    }
+
+    /**
      * Get zIndex of this {@link LayoutHelper}
      *
      * @return zIndex of current layoutHelper
@@ -165,7 +176,7 @@ public abstract class LayoutHelper {
     /**
      * Whether a background layoutView is required
      *
-     * @return true if require a {@link LayoutView}
+     * @return true if require a layoutView
      */
     public abstract boolean requireLayoutView();
 
@@ -174,7 +185,7 @@ public abstract class LayoutHelper {
      *
      * @param layoutView generated layoutView as backgroundView
      */
-    public abstract void bindLayoutView(LayoutView layoutView);
+    public abstract void bindLayoutView(View layoutView);
 
 
     /**
@@ -186,5 +197,14 @@ public abstract class LayoutHelper {
      * @return extra margin must be calculated in {@link VirtualLayoutManager}
      */
     public abstract int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical);
+
+
+    public void onSaveState(final Bundle bundle) {
+
+    }
+
+    public void onRestoreInstanceState(final Bundle bundle) {
+
+    }
 
 }

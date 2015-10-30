@@ -22,7 +22,7 @@ public class ScrollFixLayoutHelper extends FixLayoutHelper {
 
 
     @Override
-    protected boolean shouldBeDraw(int startPosition, int endPosition) {
+    protected boolean shouldBeDraw(int startPosition, int endPosition, int scrolled) {
         return endPosition >= getRange().getLower() - 1;
     }
 

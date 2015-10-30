@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
-import com.alibaba.android.vlayout.LayoutView;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
@@ -24,7 +23,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     protected Rect mLayoutRegion = new Rect();
 
-    LayoutView mLayoutView;
+    View mLayoutView;
 
     int mBgColor;
 
@@ -68,7 +67,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
      * @return next view to render, null if no more view available
      */
     @Nullable
-    public View nextView(RecyclerView.Recycler recycler, LayoutStateWrapper layoutState, LayoutManagerHelper helper, LayoutChunkResult result) {
+    public final View nextView(RecyclerView.Recycler recycler, LayoutStateWrapper layoutState, LayoutManagerHelper helper, LayoutChunkResult result) {
         View view = layoutState.next(recycler);
         if (view == null) {
             // if we are laying out views in scrap, this may return null which means there is
@@ -84,6 +83,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         helper.addChildView(layoutState, view);
         return view;
     }
+
 
     @Override
     public void beforeLayout(RecyclerView.Recycler recycler, RecyclerView.State state,
@@ -207,7 +207,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
     }
 
     @Override
-    public void bindLayoutView(@NonNull final LayoutView layoutView) {
+    public void bindLayoutView(@NonNull final View layoutView) {
         layoutView.measure(View.MeasureSpec.makeMeasureSpec(mLayoutRegion.width(), View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(mLayoutRegion.height(), View.MeasureSpec.EXACTLY));
         layoutView.layout(mLayoutRegion.left, mLayoutRegion.top, mLayoutRegion.right, mLayoutRegion.bottom);
@@ -218,14 +218,24 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
     }
 
 
-    protected void handleStateOnResult(View view, LayoutChunkResult result) {
-        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
+    protected void handleStateOnResult(LayoutChunkResult result, View... views) {
+        if (views == null) return;
 
-        // Consume the available space if the view is not removed OR changed
-        if (params.isItemRemoved() || params.isItemChanged()) {
-            result.mIgnoreConsumed = true;
+        for (View view : views) {
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
+
+            // Consume the available space if the view is not removed OR changed
+            if (params.isItemRemoved() || params.isItemChanged()) {
+                result.mIgnoreConsumed = true;
+            }
+
+            // used when search a focusable view
+            result.mFocusable = result.mFocusable || view.isFocusable();
+
+            if (result.mFocusable && result.mIgnoreConsumed) {
+                break;
+            }
         }
-        result.mFocusable = view.isFocusable();
     }
 
 

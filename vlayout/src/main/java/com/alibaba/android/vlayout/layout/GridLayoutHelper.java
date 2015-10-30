@@ -317,7 +317,6 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             }
         }
 
-        // TODO : marginTop for start and marginBottom for end
         result.mConsumed = maxSize + (layoutInVertical ? mVGap : mHGap);
 
 
@@ -376,9 +375,13 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
     @Override
     public int getExtraMargin(int offset, boolean layoutFromEnd, boolean layoutInVertical) {
-        // 1. first row, layoutFromEnd, top
-
-        // 2. last row, layoutFromStart, bottom
+        if (layoutFromEnd) {
+            if (offset >= getItemCount() - mSpanCount)
+                return layoutInVertical ? mMarginBottom : mMarginRight;
+        } else {
+            if (offset < mSpanCount)
+                return layoutInVertical ? mMarginTop : mMarginLeft;
+        }
 
         return super.getExtraMargin(offset, layoutFromEnd, layoutInVertical);
     }

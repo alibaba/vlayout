@@ -9,6 +9,10 @@
         android:theme="@style/AppTheme">
 
 
+        <activity android:name=".TestActivity">
+
+        </activity>
+
         <activity android:name="com.tmall.wireless.tangram.example.VLayoutActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

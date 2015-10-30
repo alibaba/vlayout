@@ -170,7 +170,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
             mFixView = null;
         }
 
-        handleStateOnResult(view, result);
+        handleStateOnResult(result, view);
     }
 
 
@@ -215,10 +215,19 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
         if (mFixView != null) {
             // already capture in layoutViews phase
             // if it's not shown on screen
-            helper.addOffFlowView(mFixView, false);
+            if (mFixView.getParent() == null) {
+                helper.addOffFlowView(mFixView, false);
+            }
         } else {
             if ((mStickyStart && startPosition >= mPos) || (!mStickyStart && endPosition <= mPos)) {
                 mFixView = recycler.getViewForPosition(mPos);
+
+                VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) mFixView.getLayoutParams();
+
+                if (params.isItemRemoved()) {
+                    // item is removed
+                    return;
+                }
 
                 // when do measure in after layout no need to consider scrolled
                 doMeasure(mFixView, helper);
@@ -226,7 +235,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
                 // do layout
                 final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
                 int consumed = orientationHelper.getDecoratedMeasurement(mFixView);
-                VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) mFixView.getLayoutParams();
+
 
                 int left, top, right, bottom;
                 if (helper.getOrientation() == VERTICAL) {

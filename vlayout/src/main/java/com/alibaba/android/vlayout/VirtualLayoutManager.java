@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget._ExposeLinearLayoutManagerEx;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,9 +87,19 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     }
 
     public void setLayoutHelpers(@Nullable List<LayoutHelper> helpers) {
+        // find reused layout, do not call clear on this reused layout helpers
+        SparseArray<LayoutHelper> newHelpersSet = new SparseArray<>();
+
+        if (helpers != null) {
+            for (LayoutHelper helper : helpers) {
+                newHelpersSet.put(System.identityHashCode(helper), helper);
+            }
+        }
 
         for (LayoutHelper helper : mHelperFinder) {
-            helper.clear(this);
+            // not in new helpers
+            if (newHelpersSet.get(System.identityHashCode(helper)) == null)
+                helper.clear(this);
         }
 
         // set ranges
@@ -156,6 +167,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         boolean changed = true;
         while (changed) {
             mTempAnchorInfoWrapper.position = anchorInfo.mPosition;
+            mTempAnchorInfoWrapper.coordinate = anchorInfo.mCoordinate;
             LayoutHelper layoutHelper = mHelperFinder.getLayoutHelper(anchorInfo.mPosition);
             if (layoutHelper != null)
                 layoutHelper.checkAnchorInfo(state, mTempAnchorInfoWrapper);
@@ -164,6 +176,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
                 changed = false;
             } else {
                 anchorInfo.mPosition = mTempAnchorInfoWrapper.position;
+                anchorInfo.mCoordinate = mTempAnchorInfoWrapper.coordinate;
             }
 
             mTempAnchorInfoWrapper.position = -1;
@@ -233,6 +246,14 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         return scrolled;
     }
 
+    @Override
+    public void onScrollStateChanged(int state) {
+        super.onScrollStateChanged(state);
+
+        for (LayoutHelper helper : mHelperFinder) {
+            helper.onScrollStateChanged(state);
+        }
+    }
 
     private LayoutStateWrapper mTempLayoutStateWrapper = new LayoutStateWrapper();
 
@@ -243,7 +264,6 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         LayoutHelper layoutHelper = mHelperFinder == null ? null : mHelperFinder.getLayoutHelper(position);
         if (layoutHelper == null)
             layoutHelper = mDefaultLayoutHelper;
-
 
         layoutHelper.doLayout(recycler, state, mTempLayoutStateWrapper, result, this);
 
@@ -432,6 +452,11 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     @Override
     public void onDetachedFromWindow(RecyclerView view, RecyclerView.Recycler recycler) {
         super.onDetachedFromWindow(view, recycler);
+
+        for (LayoutHelper helper : mHelperFinder) {
+            helper.clear(this);
+        }
+
         mRecyclerView.removeOnItemTouchListener(mOnItemTouchListener);
         mRecyclerView = null;
     }
@@ -479,6 +504,8 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     public static class AnchorInfoWrapper {
 
         public int position;
+
+        public int coordinate;
 
         AnchorInfoWrapper() {
 
@@ -611,7 +638,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
 
     @Override
-    public LayoutView generateLayoutView() {
+    public View generateLayoutView() {
         // TODO: reuse LayoutViews
         LayoutView layoutView = new LayoutView(mRecyclerView.getContext());
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);

@@ -192,6 +192,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             calculateRect(mainConsumed, mAreaRect, layoutState, helper);
 
             layoutChild(view, mAreaRect.left, mAreaRect.top, mAreaRect.right, mAreaRect.bottom, helper);
+            handleStateOnResult(result, view);
         } else if (count == 2) {
 
             final View child1 = mChildrenViews[0];
@@ -249,6 +250,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                         mAreaRect.right - orientationHelper.getDecoratedMeasurementInOther(child2),
                         mAreaRect.top, mAreaRect.right, mAreaRect.bottom, helper);
 
+
             } else {
                 if (mMarginCollapse) {
                     lp1.leftMargin = mergeLayoutMargin(lp1.leftMargin, mMarginLeft);
@@ -298,6 +300,8 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                         mAreaRect.bottom - orientationHelper.getDecoratedMeasurementInOther(child2),
                         mAreaRect.right, mAreaRect.bottom, helper);
             }
+
+            handleStateOnResult(result, child1, child2);
         } else if (count == 3) {
 
             final View child1 = mChildrenViews[0];
@@ -386,6 +390,8 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             } else {
                 // TODO: horizontal support
             }
+
+            handleStateOnResult(result, child1, child2, child3);
         } else if (count == 4) {
             final View child1 = mChildrenViews[0];
             final VirtualLayoutManager.LayoutParams lp1 = (VirtualLayoutManager.LayoutParams) child1.getLayoutParams();
@@ -485,10 +491,11 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             } else {
                 // TODO: horizontal support
             }
+
+            handleStateOnResult(result, child1, child2, child3, child4);
         }
 
         result.mConsumed = mainConsumed;
-
 
         Arrays.fill(mChildrenViews, null);
     }

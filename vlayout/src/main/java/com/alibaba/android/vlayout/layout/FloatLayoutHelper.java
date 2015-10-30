@@ -102,7 +102,7 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
         result.mConsumed = 0;
         result.mIgnoreConsumed = true;
 
-        handleStateOnResult(view, result);
+        handleStateOnResult(result, view);
 
     }
 

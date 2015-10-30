@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
@@ -46,6 +49,22 @@ public class VLayoutActivity extends Activity {
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_view);
 
+        findViewById(R.id.jump).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText position = (EditText) findViewById(R.id.position);
+                if (!TextUtils.isEmpty(position.getText())) {
+                    try {
+                        int pos = Integer.parseInt(position.getText().toString());
+                        recyclerView.scrollToPosition(pos);
+                    } catch (Exception e) {
+                        Log.e("VlayoutActivity", e.getMessage(), e);
+                    }
+                }
+            }
+        });
+
+
         final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
 
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -57,7 +76,7 @@ public class VLayoutActivity extends Activity {
             @Override
             public void onScrolled(RecyclerView recyclerView, int i, int i2) {
                 mFirstText.setText("First: " + layoutManager.findFirstVisibleItemPosition());
-                mLastText.setText("Last: " + layoutManager.findLastVisibleItemPosition());
+                mLastText.setText("Existing: " + MainViewHolder.existing + " Created: " + MainViewHolder.createdTimes);
                 mCountText.setText("Count: " + recyclerView.getChildCount());
             }
         });
@@ -75,10 +94,15 @@ public class VLayoutActivity extends Activity {
         };
 
 
+        RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
+
+        recyclerView.setRecycledViewPool(viewPool);
+
         recyclerView.addItemDecoration(itemDecoration);
 
+        viewPool.setMaxRecycledViews(0, 20);
 
-        DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager);
+        DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, true);
 
         recyclerView.setAdapter(delegateAdapter);
 
@@ -115,12 +139,13 @@ public class VLayoutActivity extends Activity {
                 holder.itemView.setBackgroundColor(0xffffcc00);
             }
         });
+
         adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 1));
         adapters.add(new SubAdapter(this, new GridLayoutHelper(4), 16));
 
 
         adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 10));
-
+        adapters.add(new SubAdapter(this, new GridLayoutHelper(3), 45));
 
         delegateAdapter.setAdapters(adapters);
 
@@ -186,8 +211,19 @@ public class VLayoutActivity extends Activity {
 
     static class MainViewHolder extends RecyclerView.ViewHolder {
 
+        public static volatile int existing = 0;
+        public static int createdTimes = 0;
+
         public MainViewHolder(View itemView) {
             super(itemView);
+            createdTimes++;
+            existing++;
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+            existing--;
+            super.finalize();
         }
     }
 }

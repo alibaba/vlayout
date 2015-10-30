@@ -3,6 +3,7 @@ package android.support.v7.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PointF;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
@@ -444,6 +445,8 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         mAnchorInfo.mLayoutFromEnd = mShouldReverseLayout ^ mStackFromEnd;
         // calculate anchor position and coordinate
         updateAnchorInfoForLayout(state, mAnchorInfo);
+
+
         if (DEBUG) {
             Log.d(TAG, "Anchor info:" + mAnchorInfo);
         }
@@ -1717,11 +1720,44 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     // Extends method
     //==================================
     protected void addHiddenView(View view, boolean head) {
-        mChildHelper.addView(view, head ? 0 : -1, true);
-    }
-
-    protected void attachHiddenView(View view, boolean head) {
-        mChildHelper.attachViewToParent(view, head ? 0 : -1, view.getLayoutParams(), true);
+        final RecyclerView.ViewHolder holder = RecyclerView.getChildViewHolderInt(view);
+        final RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) view.getLayoutParams();
+        int index = head ? 0 : -1;
+        if (holder.wasReturnedFromScrap() || holder.isScrap()) {
+            if (holder.isScrap()) {
+                holder.unScrap();
+            } else {
+                holder.clearReturnedFromScrapFlag();
+            }
+            mChildHelper.attachViewToParent(view, index, view.getLayoutParams(), true);
+        } else if (view.getParent() == mRecyclerView) { // it was not a scrap but a valid child
+            // ensure in correct position
+            int currentIndex = mChildHelper.indexOfChild(view);
+            if (index == -1) {
+                index = mChildHelper.getChildCount();
+            }
+            if (currentIndex == -1) {
+                throw new IllegalStateException("Added View has RecyclerView as parent but"
+                        + " view is not a real child. Unfiltered index:"
+                        + mRecyclerView.indexOfChild(view));
+            }
+            if (currentIndex != index) {
+                moveView(currentIndex, index);
+            }
+        } else {
+            mChildHelper.addView(view, index, true);
+            lp.mInsetsDirty = true;
+            if (mSmoothScroller != null && mSmoothScroller.isRunning()) {
+                mSmoothScroller.onChildAttachedToWindow(view);
+            }
+        }
+        if (lp.mPendingInvalidate) {
+            if (DEBUG) {
+                Log.d(TAG, "consuming pending invalidate on child " + lp.mViewHolder);
+            }
+            holder.itemView.invalidate();
+            lp.mPendingInvalidate = false;
+        }
     }
 
     protected void detachHiddenView(View view) {
@@ -1897,20 +1933,27 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
         boolean mAnchorLayoutFromEnd;
 
-        public SavedState() {
+        Bundle extras;
 
+        public SavedState() {
+            extras = new Bundle();
         }
 
         SavedState(Parcel in) {
             mAnchorPosition = in.readInt();
             mAnchorOffset = in.readInt();
             mAnchorLayoutFromEnd = in.readInt() == 1;
+            extras = in.readBundle();
+            if (extras == null) {
+                extras = new Bundle();
+            }
         }
 
         public SavedState(SavedState other) {
             mAnchorPosition = other.mAnchorPosition;
             mAnchorOffset = other.mAnchorOffset;
             mAnchorLayoutFromEnd = other.mAnchorLayoutFromEnd;
+            extras = other.extras;
         }
 
         boolean hasValidAnchor() {
@@ -1931,6 +1974,7 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             dest.writeInt(mAnchorPosition);
             dest.writeInt(mAnchorOffset);
             dest.writeInt(mAnchorLayoutFromEnd ? 1 : 0);
+            dest.writeBundle(extras);
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR
@@ -1996,8 +2040,8 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
         public void assignFromView(View child) {
             if (mLayoutFromEnd) {
-                mCoordinate = mOrientationHelper.getDecoratedEnd(child) + getExtraMargin(child, mLayoutFromEnd);
-                mOrientationHelper.getTotalSpaceChange();
+                mCoordinate = mOrientationHelper.getDecoratedEnd(child) + getExtraMargin(child, mLayoutFromEnd) +
+                        mOrientationHelper.getTotalSpaceChange();
             } else {
                 mCoordinate = mOrientationHelper.getDecoratedStart(child) + getExtraMargin(child, mLayoutFromEnd);
             }

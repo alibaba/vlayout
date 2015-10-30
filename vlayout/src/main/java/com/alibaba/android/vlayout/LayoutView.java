@@ -11,7 +11,7 @@ import android.view.View;
  *
  * @since 1.0.0
  */
-public class LayoutView extends View {
+public final class LayoutView extends View {
 
     public LayoutView(Context context) {
         super(context);

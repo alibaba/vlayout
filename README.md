@@ -90,9 +90,10 @@ public class MyAdapter extends VirtualLayoutManager {
 
 ### TODOs
 
-* 横向滑动＋回收
-* Horizontal Layout，目前只支持纵向布局
-* 嵌套滑动和动画
+
 * 更多布局支持，瀑布流等
+* 横向滑动＋回收
+* 嵌套滑动和动画
+* Horizontal Layout，目前只支持纵向布局
 
 
