@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget._ExposeLinearLayoutManagerEx;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,19 +86,11 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     }
 
     public void setLayoutHelpers(@Nullable List<LayoutHelper> helpers) {
-        // find reused layout, do not call clear on this reused layout helpers
-        SparseArray<LayoutHelper> newHelpersSet = new SparseArray<>();
-
-        if (helpers != null) {
-            for (LayoutHelper helper : helpers) {
-                newHelpersSet.put(System.identityHashCode(helper), helper);
-            }
-        }
+        // SparseArray<LayoutHelper> newHelpersSet = new SparseArray<>();
+        // newHelpersSet.put(System.identityHashCode(helper), helper);
 
         for (LayoutHelper helper : mHelperFinder) {
-            // not in new helpers
-            if (newHelpersSet.get(System.identityHashCode(helper)) == null)
-                helper.clear(this);
+            helper.clear(this);
         }
 
         // set ranges
@@ -184,13 +175,13 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     }
 
     @Override
-    protected int getExtraMargin(View child, boolean layoutFromEnd) {
+    protected int getExtraMargin(View child, boolean isLayoutEnd) {
         int position = getPosition(child);
         if (position != RecyclerView.NO_POSITION) {
             LayoutHelper helper = mHelperFinder.getLayoutHelper(position);
             if (helper != null) {
                 return helper.getExtraMargin(position - helper.getRange().getLower(),
-                        layoutFromEnd, getOrientation() == VERTICAL);
+                        isLayoutEnd, getOrientation() == VERTICAL);
             }
         }
 
@@ -251,7 +242,24 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         super.onScrollStateChanged(state);
 
         for (LayoutHelper helper : mHelperFinder) {
-            helper.onScrollStateChanged(state);
+            helper.onScrollStateChanged(state, this);
+        }
+    }
+
+    @Override
+    public void offsetChildrenHorizontal(int dx) {
+        super.offsetChildrenHorizontal(dx);
+
+        for (LayoutHelper helper : mHelperFinder) {
+            helper.offsetChildrenHorizontal(dx, this);
+        }
+    }
+
+    @Override
+    public void offsetChildrenVertical(int dy) {
+        super.offsetChildrenVertical(dy);
+        for (LayoutHelper helper : mHelperFinder) {
+            helper.offsetChildrenVertical(dy, this);
         }
     }
 
@@ -316,6 +324,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     public boolean supportsPredictiveItemAnimations() {
         return mPendingSavedState == null;
     }
+
 
     /**
      * Do updates when items change
@@ -681,11 +690,6 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     }
 
     @Override
-    public void attachOffFlowView(View view, boolean head) {
-        attachHiddenView(view, head);
-    }
-
-    @Override
     public View findHiddenViewByPosition(int position) {
         return findHiddenView(position);
     }
@@ -743,7 +747,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
                 int pos = getPosition(v);
                 if (pos != RecyclerView.NO_POSITION) {
                     LayoutHelper layoutHelper = mHelperFinder.getLayoutHelper(pos);
-                    if (layoutHelper == null || layoutHelper.isRecyclable(pos, startPos, endPos)) {
+                    if (layoutHelper == null || layoutHelper.isRecyclable(pos, startPos, endPos, this)) {
                         removeAndRecycleViewAt(i, recycler);
                     }
                 } else
@@ -762,7 +766,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
                 int pos = getPosition(v);
                 if (pos != RecyclerView.NO_POSITION) {
                     LayoutHelper layoutHelper = mHelperFinder.getLayoutHelper(pos);
-                    if (layoutHelper == null || layoutHelper.isRecyclable(pos, startPos, endPos)) {
+                    if (layoutHelper == null || layoutHelper.isRecyclable(pos, startPos, endPos, this)) {
                         removeAndRecycleViewAt(i, recycler);
                     }
                 } else

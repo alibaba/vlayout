@@ -98,7 +98,28 @@ public abstract class LayoutHelper {
      *
      * @param state The new scroll state for RecyclerView
      */
-    public void onScrollStateChanged(int state) {
+    public void onScrollStateChanged(int state, LayoutManagerHelper helper) {
+
+    }
+
+
+    /**
+     * Offset all child views attached to the parent RecyclerView by dx pixels along
+     * the horizontal axis.
+     *
+     * @param dx Pixels to offset by
+     */
+    public void offsetChildrenHorizontal(int dx, LayoutManagerHelper helper) {
+
+    }
+
+    /**
+     * Offset all child views attached to the parent RecyclerView by dy pixels along
+     * the vertical axis.
+     *
+     * @param dy Pixels to offset by
+     */
+    public void offsetChildrenVertical(int dy, LayoutManagerHelper helper) {
 
     }
 
@@ -118,9 +139,10 @@ public abstract class LayoutHelper {
      * @param childPos   recycled child index
      * @param startIndex start index of child will be recycled
      * @param endIndex   end index of child will be recycled
+     * @param helper
      * @return whether the child in <code>childPos</code> can be recycled
      */
-    public boolean isRecyclable(int childPos, int startIndex, int endIndex) {
+    public boolean isRecyclable(int childPos, int startIndex, int endIndex, LayoutManagerHelper helper) {
         return true;
     }
 

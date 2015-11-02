@@ -3,13 +3,14 @@ package com.tmall.wireless.tangram.example;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -29,7 +30,21 @@ public class TestActivity extends Activity {
 
         recyclerView.setLayoutManager(layoutManager);
 
-        //layoutManager.setReverseLayout(true);
+        findViewById(R.id.jump).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText position = (EditText) findViewById(R.id.position);
+                if (!TextUtils.isEmpty(position.getText())) {
+                    try {
+                        int pos = Integer.parseInt(position.getText().toString());
+                        recyclerView.scrollToPosition(pos);
+                    } catch (Exception e) {
+                        Log.e("VlayoutActivity", e.getMessage(), e);
+                    }
+                }
+            }
+        });
+
 
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
@@ -64,14 +79,6 @@ public class TestActivity extends Activity {
                         return 40;
                     }
                 });
-
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //recyclerView.scrollToPosition(7);
-                //recyclerView.getAdapter().notifyDataSetChanged();
-            }
-        }, 6000);
     }
 
 

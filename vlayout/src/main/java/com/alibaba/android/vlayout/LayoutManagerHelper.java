@@ -1,5 +1,6 @@
 package com.alibaba.android.vlayout;
 
+import android.support.annotation.Nullable;
 import android.support.v7.widget.OrientationHelper;
 import android.view.View;
 
@@ -20,6 +21,9 @@ public interface LayoutManagerHelper {
      */
     View generateLayoutView();
 
+    @Nullable
+    View getChildAt(int index);
+
     void addChildView(VirtualLayoutManager.LayoutStateWrapper layoutState, View view, int position);
 
     void addChildView(VirtualLayoutManager.LayoutStateWrapper layoutState, View view);
@@ -33,8 +37,6 @@ public interface LayoutManagerHelper {
     void removeDetachedView(View view);
 
     void addOffFlowView(View view, boolean head);
-
-    void attachOffFlowView(View view, boolean head);
 
     View findViewByPosition(int position);
 

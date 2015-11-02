@@ -106,15 +106,15 @@ public abstract class AbstractFullFillLayoutHelper extends BaseLayoutHelper {
     }
 
     @Override
-    public int getExtraMargin(int offset, boolean layoutFromEnd, boolean layoutInVertical) {
+    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical) {
         if (layoutInVertical) {
-            if (layoutFromEnd) {
+            if (isLayoutEnd) {
                 return mMarginBottom;
             } else {
                 return -mMarginTop;
             }
         } else {
-            if (layoutFromEnd) {
+            if (isLayoutEnd) {
                 return mMarginRight;
             } else {
                 return -mMarginLeft;
@@ -136,7 +136,7 @@ public abstract class AbstractFullFillLayoutHelper extends BaseLayoutHelper {
 
 
     @Override
-    public boolean isRecyclable(int childPos, int startIndex, int endIndex) {
+    public boolean isRecyclable(int childPos, int startIndex, int endIndex, LayoutManagerHelper helper) {
         Range<Integer> range = getRange();
         if (range.contains(childPos)) {
             return Range.create(startIndex, endIndex).contains(range);

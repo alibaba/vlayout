@@ -6,7 +6,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="BookmarkManager">
     <bookmark url="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/RecyclerView.java" line="1625" />
@@ -20,35 +20,26 @@
     <bookmark url="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/RecyclerView.java" line="4929" />
     <bookmark url="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/RecyclerView.java" line="325" />
     <bookmark url="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/RecyclerView.java" line="4954" />
+    <bookmark url="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/StaggeredGridLayoutManager.java" line="652" />
+    <bookmark url="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/StaggeredGridLayoutManager.java" line="1305" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="59908847-3279-4333-af76-7687c7656958" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/TestActivity.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ViewPagerLayoutHelper.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/dexmaker_1_4.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/examples/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/BaseLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/BaseLayoutHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/AbstractFullFillLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/AbstractFullFillLayoutHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ColumnLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ColumnLayoutHelper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/FixLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/FixLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/FloatLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/FloatLayoutHelper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/GridLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/GridLayoutHelper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutHelper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutManagerHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutManagerHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutView.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/LinearLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/LinearLayoutHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/MarginLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/MarginLayoutHelper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/OnePlusNLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/OnePlusNLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ScrollFixLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ScrollFixLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StickyLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StickyLayoutHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/SingleLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/SingleLayoutHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/TestActivity.java" afterPath="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/TestActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java" afterPath="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/VirtualLayoutManager.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/VirtualLayoutManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/extension/src/main/java/android/support/v7/widget/_ExposeLinearLayoutManagerEx.java" afterPath="$PROJECT_DIR$/extension/src/main/java/android/support/v7/widget/_ExposeLinearLayoutManagerEx.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/build.gradle" afterPath="$PROJECT_DIR$/examples/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/build.gradle" afterPath="$PROJECT_DIR$/vlayout/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/examples.iml" afterPath="$PROJECT_DIR$/examples/examples.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/extension/extension.iml" afterPath="$PROJECT_DIR$/extension/extension.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/src/main/res/layout/main_activity.xml" afterPath="$PROJECT_DIR$/examples/src/main/res/layout/main_activity.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/vlayout-vlayout.iml" afterPath="$PROJECT_DIR$/vlayout/vlayout-vlayout.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -83,88 +74,49 @@
         <entry file="file://$PROJECT_DIR$/extension/src/main/java/android/support/v7/widget/_ExposeLinearLayoutManagerEx.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="1777" column="43" selection-start-line="1777" selection-start-column="43" selection-end-line="1777" selection-end-column="43" />
+              <caret line="1092" column="63" selection-start-line="1092" selection-start-column="63" selection-end-line="1092" selection-end-column="63" />
               <folding>
-                <element signature="e#73243#73244#0" expanded="true" />
-                <element signature="e#73293#73294#0" expanded="true" />
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ChildHelper.java" pinned="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/ChildHelper.java">
+      <file leaf-file-name="StaggeredGridLayoutHelper.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="78" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/examples/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.63382155">
-              <caret line="28" column="51" selection-start-line="28" selection-start-column="51" selection-end-line="28" selection-end-column="51" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main_activity.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples/src/main/res/layout/main_activity.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.896552">
-              <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StickyLayoutHelper.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StickyLayoutHelper.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="274" column="0" selection-start-line="274" selection-start-column="0" selection-end-line="274" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.72727275">
+              <caret line="131" column="14" selection-start-line="131" selection-start-column="14" selection-end-line="200" selection-end-column="17" />
               <folding>
-                <element signature="e#1083#1084#0" expanded="true" />
-                <element signature="e#1130#1131#0" expanded="true" />
-                <element signature="e#1375#1376#0" expanded="true" />
-                <element signature="e#1403#1404#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#1238#1239#0" expanded="true" />
+                <element signature="e#1268#1269#0" expanded="true" />
+                <element signature="e#1328#1329#0" expanded="true" />
+                <element signature="e#1365#1366#0" expanded="true" />
+                <element signature="e#7924#7925#0" expanded="true" />
+                <element signature="e#7969#7970#0" expanded="true" />
+                <element signature="e#11309#11310#0" expanded="true" />
+                <element signature="e#11350#11351#0" expanded="true" />
+                <element signature="e#11421#11422#0" expanded="true" />
+                <element signature="e#11473#11474#0" expanded="true" />
+                <element signature="e#12652#12653#0" expanded="true" />
+                <element signature="e#12690#12691#0" expanded="true" />
+                <element signature="e#15977#15978#0" expanded="true" />
+                <element signature="e#16033#16034#0" expanded="true" />
+                <element signature="e#16996#16997#0" expanded="true" />
+                <element signature="e#17039#17040#0" expanded="true" />
+                <element signature="e#17090#17091#0" expanded="true" />
+                <element signature="e#17158#17159#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="View.java" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/android/view/View.java">
+      <file leaf-file-name="StaggeredGridLayoutManager.java" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/StaggeredGridLayoutManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="11455" column="0" selection-start-line="11455" selection-start-column="0" selection-end-line="11455" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ViewCompat.java" pinned="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.0/support-v4-21.0.0-sources.jar!/android/support/v4/view/ViewCompat.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="295" column="49" selection-start-line="295" selection-start-column="20" selection-end-line="295" selection-end-column="49" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ViewGroup.java" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/android/view/ViewGroup.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="3669" column="16" selection-start-line="3669" selection-start-column="16" selection-end-line="3669" selection-end-column="16" />
+              <caret line="1337" column="41" selection-start-line="1337" selection-start-column="41" selection-end-line="1337" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -174,25 +126,20 @@
         <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/VirtualLayoutManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="679" column="17" selection-start-line="679" selection-start-column="17" selection-end-line="679" selection-end-column="17" />
+              <caret line="621" column="23" selection-start-line="621" selection-start-column="23" selection-end-line="621" selection-end-column="23" />
               <folding>
-                <element signature="e#15192#15219#0" expanded="true" />
-                <element signature="e#19389#19390#0" expanded="true" />
-                <element signature="e#19447#19448#0" expanded="true" />
-                <element signature="e#21205#21206#0" expanded="true" />
-                <element signature="e#21246#21247#0" expanded="true" />
-                <element signature="e#21655#21656#0" expanded="true" />
-                <element signature="e#21688#21689#0" expanded="true" />
+                <element signature="e#19401#19402#0" expanded="true" />
+                <element signature="e#19459#19460#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vlayout/build.gradle">
+      <file leaf-file-name="VLayoutActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-17.481482">
-              <caret line="33" column="60" selection-start-line="33" selection-start-column="60" selection-end-line="33" selection-end-column="60" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="161" column="46" selection-start-line="161" selection-start-column="46" selection-end-line="161" selection-end-column="46" />
               <folding />
             </state>
           </provider>
@@ -2641,7 +2588,7 @@
     <option name="modificationStamps">
       <map>
         <entry key="$PROJECT_DIR$/../tmall-android-pad" value="5706074645000" />
-        <entry key="$PROJECT_DIR$" value="10119638935000" />
+        <entry key="$PROJECT_DIR$" value="10119786180000" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -2831,6 +2778,7 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/commons-codec/commons-codec/1.4/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/external/lombok/lombok-ast/0.2.3/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/external/lombok/lombok-ast/0.2.3/lombok-ast-0.2.3.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.crittercism.dexmaker/dexmaker/1.4/6d1ffc507a9b46bbc718d030a1c39b31c572d2b6/dexmaker-1.4.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.alibaba.android/imagecompat_interface/1.1.0/f7359ffb7c1d05f7d9c395e432d0a8d346c54c08/imagecompat_interface-1.1.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/appcompat-v7/21.0.0/4a3b6d98f08840acdc6103a753c1e1da3603da22/appcompat-v7-21.0.0.aar" />
@@ -3027,7 +2975,6 @@
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/recyclerview-v7/21.0.2/11c62a8d92fab257bf1bfacd877f53c41dff6c69/recyclerview-v7-21.0.2.aar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/support-v4/21.0.0/30415aa4bc4087c8b4e2b59c7310cb146db8e83f/support-v4-21.0.0.aar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/support-annotations/21.0.0/1a578b9607b36266c63d43a4fa0ab5664dbe911e/support-annotations-21.0.0.jar" />
-                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.crittercism.dexmaker/dexmaker/1.4/6d1ffc507a9b46bbc718d030a1c39b31c572d2b6/dexmaker-1.4.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/vlayout" />
@@ -3171,28 +3118,28 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/OnScrollStateChangeListener.java" />
         <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutView.java" />
-        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutManagerHelper.java" />
-        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutHelper.java" />
         <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/GridLayoutHelper.java" />
         <option value="$PROJECT_DIR$/examples/src/main/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/LinearLayoutHelper.java" />
         <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/BaseLayoutHelper.java" />
         <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/FloatLayoutHelper.java" />
-        <option value="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/TestActivity.java" />
-        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/OnePlusNLayoutHelper.java" />
-        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java" />
-        <option value="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java" />
-        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/AbstractFullFillLayoutHelper.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StickyLayoutHelper.java" />
-        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/FixLayoutHelper.java" />
         <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ScrollFixLayoutHelper.java" />
-        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/VirtualLayoutManager.java" />
         <option value="$PROJECT_DIR$/examples/src/main/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/examples/src/main/res/layout/main_activity.xml" />
-        <option value="$PROJECT_DIR$/extension/src/main/java/android/support/v7/widget/_ExposeLinearLayoutManagerEx.java" />
         <option value="$PROJECT_DIR$/vlayout/build.gradle" />
         <option value="$PROJECT_DIR$/examples/build.gradle" />
+        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/LinearLayoutHelper.java" />
+        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/FixLayoutHelper.java" />
+        <option value="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/TestActivity.java" />
+        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/OnePlusNLayoutHelper.java" />
+        <option value="$PROJECT_DIR$/extension/src/main/java/android/support/v7/widget/_ExposeLinearLayoutManagerEx.java" />
+        <option value="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java" />
+        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutHelper.java" />
+        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/AbstractFullFillLayoutHelper.java" />
+        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/VirtualLayoutManager.java" />
+        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutManagerHelper.java" />
+        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java" />
       </list>
     </option>
   </component>
@@ -3427,32 +3374,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="vlayout" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="vlayout" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="examples" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -3481,9 +3402,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -3504,6 +3422,9 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -3529,6 +3450,9 @@
     <property name="OverrideImplement.combined" value="true" />
     <property name="OverrideImplement.overriding.sorted" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
+    <property name="DEBUGGABLE_DEVICE" value="genymotion-custom_phone___5_1_0___api_22___768x1280-192.168.57.101:5555" />
+    <property name="DEBUGGABLE_PROCESS" value="com.tmall.wireless.tangram.example" />
+    <property name="SHOW_ALL_PROCESSES" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -3746,16 +3670,15 @@
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287841" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297568" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32382134" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32382134" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287841" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287841" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -3763,11 +3686,12 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24964234" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2739628" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287841" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -3788,111 +3712,39 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$USER_HOME$/Library/Android/sdk/sources/android-21/android/support/v7/widget/RecyclerView.java</url>
-          <line>5382</line>
+          <url>jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/StaggeredGridLayoutManager.java</url>
+          <line>565</line>
           <properties />
-          <option name="timeStamp" value="40" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/RecyclerView.java</url>
-          <line>3585</line>
-          <properties />
-          <option name="timeStamp" value="49" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StickyLayoutHelper.java</url>
-          <line>221</line>
-          <properties />
-          <option name="timeStamp" value="52" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/ChildHelper.java</url>
-          <line>78</line>
-          <properties />
-          <option name="timeStamp" value="55" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/RecyclerView.java</url>
-          <line>3343</line>
-          <properties />
-          <option name="timeStamp" value="56" />
+          <option name="timeStamp" value="65" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="57" />
+      <option name="time" value="67" />
     </breakpoint-manager>
     <watches-manager>
+      <configuration name="Remote">
+        <watch expression="view.getMeasuredHeight()" language="JAVA" custom="" />
+        <watch expression="view.getMeasuredWidth()" language="JAVA" custom="" />
+        <watch expression="layoutState.getLayoutDirection()" language="JAVA" custom="" />
+        <watch expression="position" language="JAVA" custom="" />
+      </configuration>
       <configuration name="examples">
-        <watch expression="mAttachedScrap" language="JAVA" custom="" />
-        <watch expression="mAttachedScrap.get(7).getPosition()" language="JAVA" custom="" />
-        <watch expression="holder.isTmpDetached()" language="JAVA" custom="" />
-        <watch expression="holder.needsUpdate()" language="JAVA" custom="" />
+        <watch expression="view.getMeasuredHeight()" language="JAVA" custom="" />
+        <watch expression="view.getMeasuredWidth()" language="JAVA" custom="" />
+        <watch expression="layoutState.getLayoutDirection()" language="JAVA" custom="" />
+        <watch expression="position" language="JAVA" custom="" />
+        <watch expression="View.MeasureSpec.getMode(widthSpec)" language="JAVA" custom="android.view.View" />
+        <watch expression="mLanes[lane].begin" language="JAVA" custom="" />
       </configuration>
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/android/os/Looper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="257" column="30" selection-start-line="257" selection-start-column="15" selection-end-line="257" selection-end-column="30" />
-          <folding>
-            <element signature="e#5688#5689#0" expanded="false" />
-            <element signature="e#5729#5730#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/android/os/MessageQueue.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="559" column="20" selection-start-line="559" selection-start-column="20" selection-end-line="559" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/android/support/v4/view/ViewPager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="101" column="0" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#113259#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4232143">
-          <caret line="85" column="39" selection-start-line="85" selection-start-column="39" selection-end-line="85" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ViewPagerLayoutHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/java/lang/System.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="967" column="36" selection-start-line="967" selection-start-column="36" selection-end-line="967" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/android/util/SparseArray.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1294719">
           <caret line="195" column="69" selection-start-line="195" selection-start-column="69" selection-end-line="195" selection-end-column="69" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3908,7 +3760,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="1679" column="7" selection-start-line="1679" selection-start-column="7" selection-end-line="1679" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3917,27 +3768,11 @@
         <state vertical-scroll-proportion="0.26064736">
           <caret line="13" column="23" selection-start-line="13" selection-start-column="19" selection-end-line="13" selection-end-column="29" />
           <folding>
-            <element signature="e#385#386#0" expanded="true" />
-            <element signature="e#415#416#0" expanded="true" />
-            <element signature="e#477#478#0" expanded="true" />
-            <element signature="e#514#515#0" expanded="true" />
+            <element signature="e#385#386#0" expanded="false" />
+            <element signature="e#415#416#0" expanded="false" />
+            <element signature="e#477#478#0" expanded="false" />
+            <element signature="e#514#515#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/java/util/BitSet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="85" column="11" selection-start-line="85" selection-start-column="11" selection-end-line="85" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/MarginLayoutHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="23" column="29" selection-start-line="23" selection-start-column="15" selection-end-line="23" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3945,15 +3780,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="36" column="20" selection-start-line="36" selection-start-column="20" selection-end-line="36" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3475298">
-          <caret line="12" column="12" selection-start-line="12" selection-start-column="12" selection-end-line="12" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3961,10 +3787,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="550" column="0" selection-start-line="550" selection-start-column="0" selection-end-line="550" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#99755#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3972,7 +3794,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.36452243">
           <caret line="11" column="33" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="33" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3980,15 +3801,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="104" column="42" selection-start-line="104" selection-start-column="42" selection-end-line="104" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/LinearLayoutHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="104" column="67" selection-start-line="104" selection-start-column="67" selection-end-line="104" selection-end-column="67" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3999,55 +3811,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-3.5172415">
           <caret line="6" column="28" selection-start-line="6" selection-start-column="28" selection-end-line="6" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/GridLayoutHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="354" column="80" selection-start-line="354" selection-start-column="80" selection-end-line="354" selection-end-column="80" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/TestActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="66" column="0" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2533#2534#0" expanded="true" />
-            <element signature="e#2590#2591#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/OrientationHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.72727275">
-          <caret line="67" column="27" selection-start-line="67" selection-start-column="27" selection-end-line="67" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/StaggeredGridLayoutManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="773" column="42" selection-start-line="773" selection-start-column="42" selection-end-line="773" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="24" column="5" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1018#1019#0" expanded="false" />
-            <element signature="e#1059#1060#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -4055,9 +3818,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.30174083">
           <caret line="1400" column="45" selection-start-line="1400" selection-start-column="45" selection-end-line="1400" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#100716#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -4065,15 +3825,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="147" column="16" selection-start-line="147" selection-start-column="16" selection-end-line="147" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="97" column="6" selection-start-line="97" selection-start-column="6" selection-end-line="97" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4081,25 +3832,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="79" column="0" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
-          <folding>
-            <element signature="e#2530#2531#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/OnePlusNLayoutHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="72" column="56" selection-start-line="72" selection-start-column="56" selection-end-line="72" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/AbstractFullFillLayoutHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="104" column="52" selection-start-line="104" selection-start-column="52" selection-end-line="104" selection-end-column="52" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4107,7 +3839,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="254" column="23" selection-start-line="254" selection-start-column="23" selection-end-line="254" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4115,7 +3846,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.9259257">
           <caret line="11" column="83" selection-start-line="11" selection-start-column="83" selection-end-line="11" selection-end-column="83" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4123,7 +3853,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1244898">
           <caret line="1989" column="56" selection-start-line="1989" selection-start-column="56" selection-end-line="1989" selection-end-column="56" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4131,46 +3860,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="684" column="74" selection-start-line="684" selection-start-column="74" selection-end-line="684" selection-end-column="74" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="130" column="51" selection-start-line="130" selection-start-column="51" selection-end-line="130" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/BaseLayoutHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
-          <folding>
-            <element signature="e#1146#1147#0" expanded="true" />
-            <element signature="e#1179#1180#0" expanded="true" />
-            <element signature="e#1226#1227#0" expanded="true" />
-            <element signature="e#1269#1270#0" expanded="true" />
-            <element signature="e#5030#5031#0" expanded="true" />
-            <element signature="e#5066#5067#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutManagerHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="34" column="17" selection-start-line="34" selection-start-column="17" selection-end-line="34" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/FixLayoutHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="166" column="5" selection-start-line="166" selection-start-column="5" selection-end-line="166" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4186,7 +3875,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.49323016">
           <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4197,15 +3885,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-12.896552">
           <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/android/view/View.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="11455" column="0" selection-start-line="11455" selection-start-column="0" selection-end-line="11455" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4213,12 +3892,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="274" column="0" selection-start-line="274" selection-start-column="0" selection-end-line="274" selection-end-column="0" />
-          <folding>
-            <element signature="e#1083#1084#0" expanded="true" />
-            <element signature="e#1130#1131#0" expanded="true" />
-            <element signature="e#1375#1376#0" expanded="true" />
-            <element signature="e#1403#1404#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -4226,7 +3900,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="78" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4234,23 +3907,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="3669" column="16" selection-start-line="3669" selection-start-column="16" selection-end-line="3669" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/VirtualLayoutManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="679" column="17" selection-start-line="679" selection-start-column="17" selection-end-line="679" selection-end-column="17" />
-          <folding>
-            <element signature="e#15192#15219#0" expanded="true" />
-            <element signature="e#19389#19390#0" expanded="true" />
-            <element signature="e#19447#19448#0" expanded="true" />
-            <element signature="e#21205#21206#0" expanded="true" />
-            <element signature="e#21246#21247#0" expanded="true" />
-            <element signature="e#21655#21656#0" expanded="true" />
-            <element signature="e#21688#21689#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -4258,43 +3914,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="295" column="49" selection-start-line="295" selection-start-column="20" selection-end-line="295" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/RecyclerView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3342" column="13" selection-start-line="3342" selection-start-column="13" selection-end-line="3342" selection-end-column="13" />
-          <folding>
-            <element signature="e#131285#131286#0" expanded="true" />
-            <element signature="e#131342#131343#0" expanded="true" />
-            <element signature="e#137776#137777#0" expanded="true" />
-            <element signature="e#137842#137843#0" expanded="true" />
-            <element signature="e#209629#209630#0" expanded="true" />
-            <element signature="e#209683#209684#0" expanded="true" />
-            <element signature="e#210023#210024#0" expanded="true" />
-            <element signature="e#210065#210066#0" expanded="true" />
-            <element signature="e#210462#210463#0" expanded="true" />
-            <element signature="e#210517#210518#0" expanded="true" />
-            <element signature="e#213756#213757#0" expanded="true" />
-            <element signature="e#213810#213811#0" expanded="true" />
-            <element signature="e#218894#218895#0" expanded="true" />
-            <element signature="e#218962#218963#0" expanded="true" />
-            <element signature="e#294995#294996#0" expanded="true" />
-            <element signature="e#295052#295053#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/extension/src/main/java/android/support/v7/widget/_ExposeLinearLayoutManagerEx.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1777" column="43" selection-start-line="1777" selection-start-column="43" selection-end-line="1777" selection-end-column="43" />
-          <folding>
-            <element signature="e#73243#73244#0" expanded="true" />
-            <element signature="e#73293#73294#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -4302,15 +3921,263 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-17.481482">
           <caret line="33" column="60" selection-start-line="33" selection-start-column="60" selection-end-line="33" selection-end-column="60" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/examples/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.63382155">
-          <caret line="28" column="51" selection-start-line="28" selection-start-column="51" selection-end-line="28" selection-end-column="51" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutHelperFinder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="22" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/LinearLayoutHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="61" column="9" selection-start-line="61" selection-start-column="9" selection-end-line="61" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/java/lang/Object.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.061895553">
+          <caret line="354" column="5" selection-start-line="354" selection-start-column="5" selection-end-line="354" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/java/util/Objects.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4738878">
+          <caret line="115" column="3" selection-start-line="115" selection-start-column="3" selection-end-line="115" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/java/util/Arrays.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.59574467">
+          <caret line="2390" column="13" selection-start-line="2390" selection-start-column="13" selection-end-line="2390" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/FixLayoutHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="165" column="20" selection-start-line="165" selection-start-column="20" selection-end-line="165" selection-end-column="20" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#955#956#0" expanded="false" />
+            <element signature="e#985#986#0" expanded="false" />
+            <element signature="e#1505#1506#0" expanded="false" />
+            <element signature="e#1548#1549#0" expanded="false" />
+            <element signature="e#2954#2955#0" expanded="false" />
+            <element signature="e#2982#2983#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/OnePlusNLayoutHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="514" column="0" selection-start-line="514" selection-start-column="0" selection-end-line="514" selection-end-column="0" />
+          <folding>
+            <element signature="e#23883#23884#0" expanded="true" />
+            <element signature="e#23922#23923#0" expanded="true" />
+            <element signature="e#24106#24107#0" expanded="true" />
+            <element signature="e#24150#24151#0" expanded="true" />
+            <element signature="e#24218#24219#0" expanded="true" />
+            <element signature="e#24255#24256#0" expanded="true" />
+            <element signature="e#24317#24318#0" expanded="true" />
+            <element signature="e#24354#24355#0" expanded="true" />
+            <element signature="e#24419#24420#0" expanded="true" />
+            <element signature="e#24456#24457#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/OrientationHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="140" column="25" selection-start-line="140" selection-start-column="25" selection-end-line="140" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/android/view/View.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15670" column="0" selection-start-line="15670" selection-start-column="0" selection-end-line="15670" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/android/widget/FrameLayout.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="582" column="33" selection-start-line="582" selection-start-column="33" selection-end-line="582" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/GridLayoutHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3617021">
+          <caret line="350" column="86" selection-start-line="350" selection-start-column="86" selection-end-line="350" selection-end-column="86" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="24" column="11" selection-start-line="24" selection-start-column="11" selection-end-line="24" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/TestActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.21083172">
+          <caret line="69" column="28" selection-start-line="69" selection-start-column="28" selection-end-line="69" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/BaseLayoutHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="175" column="0" selection-start-line="175" selection-start-column="0" selection-end-line="175" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="161" column="46" selection-start-line="161" selection-start-column="46" selection-end-line="161" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/AbstractFullFillLayoutHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5848329">
+          <caret line="135" column="4" selection-start-line="135" selection-start-column="4" selection-end-line="135" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/RecyclerView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="5224" column="36" selection-start-line="5224" selection-start-column="36" selection-end-line="5224" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="153" column="39" selection-start-line="153" selection-start-column="39" selection-end-line="153" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutManagerHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/MarginLayoutHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="23" column="15" selection-start-line="23" selection-start-column="15" selection-end-line="23" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/LayoutState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="23" column="6" selection-start-line="23" selection-start-column="6" selection-end-line="23" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Android/sdk/sources/android-21/java/util/BitSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.52998066">
+          <caret line="87" column="43" selection-start-line="87" selection-start-column="43" selection-end-line="87" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/extension/src/main/java/android/support/v7/widget/_ExposeLinearLayoutManagerEx.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1092" column="63" selection-start-line="1092" selection-start-column="63" selection-end-line="1092" selection-end-column="63" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/VirtualLayoutManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="621" column="23" selection-start-line="621" selection-start-column="23" selection-end-line="621" selection-end-column="23" />
+          <folding>
+            <element signature="e#19401#19402#0" expanded="true" />
+            <element signature="e#19459#19460#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Library/Android/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.2/recyclerview-v7-21.0.2-sources.jar!/android/support/v7/widget/StaggeredGridLayoutManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1337" column="41" selection-start-line="1337" selection-start-column="41" selection-end-line="1337" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.72727275">
+          <caret line="131" column="14" selection-start-line="131" selection-start-column="14" selection-end-line="200" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1238#1239#0" expanded="true" />
+            <element signature="e#1268#1269#0" expanded="true" />
+            <element signature="e#1328#1329#0" expanded="true" />
+            <element signature="e#1365#1366#0" expanded="true" />
+            <element signature="e#7924#7925#0" expanded="true" />
+            <element signature="e#7969#7970#0" expanded="true" />
+            <element signature="e#11309#11310#0" expanded="true" />
+            <element signature="e#11350#11351#0" expanded="true" />
+            <element signature="e#11421#11422#0" expanded="true" />
+            <element signature="e#11473#11474#0" expanded="true" />
+            <element signature="e#12652#12653#0" expanded="true" />
+            <element signature="e#12690#12691#0" expanded="true" />
+            <element signature="e#15977#15978#0" expanded="true" />
+            <element signature="e#16033#16034#0" expanded="true" />
+            <element signature="e#16996#16997#0" expanded="true" />
+            <element signature="e#17039#17040#0" expanded="true" />
+            <element signature="e#17090#17091#0" expanded="true" />
+            <element signature="e#17158#17159#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

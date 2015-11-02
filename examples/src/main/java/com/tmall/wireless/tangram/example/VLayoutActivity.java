@@ -23,6 +23,7 @@ import com.alibaba.android.vlayout.layout.FixLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
+import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.alibaba.android.vlayout.layout.StickyLayoutHelper;
 
 import java.util.LinkedList;
@@ -136,7 +137,6 @@ public class VLayoutActivity extends Activity {
                 layoutParams.topMargin = 10;
                 layoutParams.leftMargin = 10;
                 holder.itemView.setLayoutParams(layoutParams);
-                holder.itemView.setBackgroundColor(0xffffcc00);
             }
         });
 
@@ -146,6 +146,18 @@ public class VLayoutActivity extends Activity {
 
         adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 10));
         adapters.add(new SubAdapter(this, new GridLayoutHelper(3), 45));
+
+        adapters.clear();
+
+        adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(3), 15) {
+            @Override
+            public void onBindViewHolder(MainViewHolder holder, int position) {
+                super.onBindViewHolder(holder, position);
+                VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+                layoutParams.height = 240 + position % 7 * 20;
+                holder.itemView.setLayoutParams(layoutParams);
+            }
+        });
 
         delegateAdapter.setAdapters(adapters);
 

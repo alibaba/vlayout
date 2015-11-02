@@ -170,8 +170,10 @@ public class FixLayoutHelper extends BaseLayoutHelper {
     @Override
     public void clear(LayoutManagerHelper helper) {
         super.clear(helper);
-        if (mFixView != null)
+        if (mFixView != null) {
             helper.removeChildView(mFixView);
+            mFixView = null;
+        }
     }
 
     private void doMeasureAndLayout(View view, LayoutManagerHelper helper) {

@@ -374,8 +374,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
 
     @Override
-    public int getExtraMargin(int offset, boolean layoutFromEnd, boolean layoutInVertical) {
-        if (layoutFromEnd) {
+    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical) {
+        if (isLayoutEnd) {
             if (offset >= getItemCount() - mSpanCount)
                 return layoutInVertical ? mMarginBottom : mMarginRight;
         } else {
@@ -383,7 +383,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                 return layoutInVertical ? mMarginTop : mMarginLeft;
         }
 
-        return super.getExtraMargin(offset, layoutFromEnd, layoutInVertical);
+        return super.getExtraMargin(offset, isLayoutEnd, layoutInVertical);
     }
 
     private static final int MAIN_DIR_SPEC =

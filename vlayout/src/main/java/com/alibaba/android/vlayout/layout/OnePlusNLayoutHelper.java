@@ -556,26 +556,26 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
     }
 
     @Override
-    public int getExtraMargin(int offset, boolean layoutFromEnd, boolean layoutInVertical) {
+    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical) {
         if (getItemCount() == 3) {
-            if (offset == 1 && layoutFromEnd) {
+            if (offset == 1 && isLayoutEnd) {
                 Log.e(TAG, "hello");
                 return 0;
             }
         } else if (getItemCount() == 4) {
-            if (offset == 1 && layoutFromEnd) {
+            if (offset == 1 && isLayoutEnd) {
                 return 0;
             }
         }
 
         if (layoutInVertical) {
-            if (layoutFromEnd) {
+            if (isLayoutEnd) {
                 return mMarginBottom;
             } else {
                 return -mMarginTop;
             }
         } else {
-            if (layoutFromEnd) {
+            if (isLayoutEnd) {
                 return mMarginRight;
             } else {
                 return -mMarginLeft;
