@@ -44,9 +44,9 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean GRID_LAYOUT = true;
 
-    private static final boolean STICKY_LAYOUT = false;
+    private static final boolean STICKY_LAYOUT = true;
 
-    private static final boolean STAGGER_LAYOUT = false;
+    private static final boolean STAGGER_LAYOUT = true;
 
     private TextView mFirstText;
     private TextView mLastText;
@@ -134,7 +134,6 @@ public class VLayoutActivity extends Activity {
         // layoutHelper.setBgColor(0xff00f0f0);
         if (COLUMN_LAYOUT)
             adapters.add(new SubAdapter(this, layoutHelper, 3));
-
 
         if (ONEN_LAYOUT)
             adapters.add(new SubAdapter(this, new OnePlusNLayoutHelper(), 4) {

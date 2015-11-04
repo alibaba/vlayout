@@ -26,49 +26,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="59908847-3279-4333-af76-7687c7656958" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/accessibility_test_framework_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ant_1_8_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ant_launcher_1_8_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_21_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/asm_5_0_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/asm_analysis_5_0_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/asm_commons_5_0_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/asm_tree_5_0_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/asm_util_5_0_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/bcprov_jdk16_1_46.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/icu4j_53_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/imagecompat_interface_1_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/junit_4_8_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/maven_ant_tasks_2_1_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/picasso_2_5_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/recyclerview_v7_21_0_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/robolectric_3_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/robolectric_annotations_3_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/robolectric_resources_3_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/robolectric_utils_3_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/shadows_core_3_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/sqlite4java_0_282.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_21_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/vtd_xml_2_11.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/AbstractFullFillLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/AbstractFullFillLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/BaseLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/BaseLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ColumnLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ColumnLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/FixLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/FixLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/FloatLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/FloatLayoutHelper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/GridLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/GridLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutManagerHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutManagerHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/MarginLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/MarginLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/OnePlusNLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/OnePlusNLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ScrollFixLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ScrollFixLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/SingleLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/SingleLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StickyLayoutHelper.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StickyLayoutHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/TestActivity.java" afterPath="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/TestActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java" afterPath="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/VirtualLayoutManager.java" afterPath="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/VirtualLayoutManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/extension/src/main/java/android/support/v7/widget/_ExposeLinearLayoutManagerEx.java" afterPath="$PROJECT_DIR$/extension/src/main/java/android/support/v7/widget/_ExposeLinearLayoutManagerEx.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/extension/extension.iml" afterPath="$PROJECT_DIR$/extension/extension.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/vlayout/vlayout-vlayout.iml" afterPath="$PROJECT_DIR$/vlayout/vlayout-vlayout.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -112,80 +72,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ColumnLayoutHelper.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ColumnLayoutHelper.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="148" column="32" selection-start-line="148" selection-start-column="32" selection-end-line="148" selection-end-column="32" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DelegateAdapter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/DelegateAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GridLayoutHelper.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/GridLayoutHelper.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="384" column="0" selection-start-line="384" selection-start-column="0" selection-end-line="384" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OnePlusNLayoutHelper.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/OnePlusNLayoutHelper.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="514" column="0" selection-start-line="514" selection-start-column="0" selection-end-line="514" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RecyclerView.class" pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/extension/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.2/jars/classes.jar!/android/support/v7/widget/RecyclerView.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.7777777">
-              <caret line="57" column="13" selection-start-line="57" selection-start-column="13" selection-end-line="57" selection-end-column="13" />
-              <folding>
-                <element signature="e#91493#91494#0" expanded="true" />
-                <element signature="e#91544#91545#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="StaggeredGridLayoutHelper.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5728543">
-              <caret line="545" column="9" selection-start-line="545" selection-start-column="9" selection-end-line="545" selection-end-column="9" />
+            <state vertical-scroll-proportion="0.033932135">
+              <caret line="213" column="20" selection-start-line="213" selection-start-column="20" selection-end-line="213" selection-end-column="20" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1678#1679#0" expanded="true" />
-                <element signature="e#1708#1709#0" expanded="true" />
-                <element signature="e#22239#22240#0" expanded="true" />
-                <element signature="e#22278#22279#0" expanded="true" />
-                <element signature="e#23695#23696#0" expanded="true" />
-                <element signature="e#23733#23734#0" expanded="true" />
-                <element signature="e#24109#24110#0" expanded="true" />
-                <element signature="e#24174#24175#0" expanded="true" />
-                <element signature="e#25085#25086#0" expanded="true" />
-                <element signature="e#25148#25149#0" expanded="true" />
-                <element signature="e#29311#29312#0" expanded="true" />
-                <element signature="e#29354#29355#0" expanded="true" />
-                <element signature="e#29405#29406#0" expanded="true" />
-                <element signature="e#29473#29474#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -205,7 +98,7 @@
         <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/VirtualLayoutManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="147" column="0" selection-start-line="147" selection-start-column="0" selection-end-line="147" selection-end-column="0" />
+              <caret line="179" column="0" selection-start-line="179" selection-start-column="0" selection-end-line="179" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#4043#4044#0" expanded="true" />
@@ -239,7 +132,7 @@
         <entry file="file://$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+              <caret line="36" column="47" selection-start-line="36" selection-start-column="47" selection-end-line="36" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -2688,7 +2581,7 @@
     <option name="modificationStamps">
       <map>
         <entry key="$PROJECT_DIR$/../tmall-android-pad" value="5706074645000" />
-        <entry key="$PROJECT_DIR$" value="10120153515000" />
+        <entry key="$PROJECT_DIR$" value="10121204668000" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -3234,13 +3127,13 @@
         <option value="$PROJECT_DIR$/vlayout/build.gradle" />
         <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/LayoutHelper.java" />
         <option value="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/TestActivity.java" />
-        <option value="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java" />
         <option value="$PROJECT_DIR$/extension/src/main/java/android/support/v7/widget/_ExposeLinearLayoutManagerEx.java" />
         <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ColumnLayoutHelper.java" />
         <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/AbstractFullFillLayoutHelper.java" />
+        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java" />
         <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/GridLayoutHelper.java" />
         <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/VirtualLayoutManager.java" />
-        <option value="$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java" />
+        <option value="$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java" />
       </list>
     </option>
   </component>
@@ -3818,18 +3711,10 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java</url>
-          <line>214</line>
-          <properties />
-          <option name="timeStamp" value="149" />
-        </line-breakpoint>
-      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="155" />
+      <option name="time" value="157" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Remote">
@@ -4421,10 +4306,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="1951" column="49" selection-start-line="1951" selection-start-column="49" selection-end-line="1951" selection-end-column="49" />
-          <folding>
-            <element signature="e#93871#93872#0" expanded="true" />
-            <element signature="e#93921#93922#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -4444,14 +4326,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/extension/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.2/jars/classes.jar!/android/support/v7/widget/RecyclerView.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-3.7777777">
@@ -4463,34 +4337,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ColumnLayoutHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="148" column="32" selection-start-line="148" selection-start-column="32" selection-end-line="148" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/AbstractFullFillLayoutHelper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.50499004">
           <caret line="107" column="5" selection-start-line="107" selection-start-column="5" selection-end-line="107" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/GridLayoutHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="384" column="0" selection-start-line="384" selection-start-column="0" selection-end-line="384" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/OnePlusNLayoutHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="514" column="0" selection-start-line="514" selection-start-column="0" selection-end-line="514" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -4503,10 +4353,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/GridLayoutHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.43712574">
+          <caret line="398" column="4" selection-start-line="398" selection-start-column="4" selection-end-line="398" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/DelegateAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="0.33333334">
           <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/ColumnLayoutHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.06187625">
+          <caret line="144" column="5" selection-start-line="144" selection-start-column="5" selection-end-line="144" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/OnePlusNLayoutHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.033932135">
+          <caret line="514" column="0" selection-start-line="514" selection-start-column="0" selection-end-line="514" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -4525,7 +4399,7 @@
     <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/VirtualLayoutManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="147" column="0" selection-start-line="147" selection-start-column="0" selection-end-line="147" selection-end-column="0" />
+          <caret line="179" column="0" selection-start-line="179" selection-start-column="0" selection-end-line="179" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#4043#4044#0" expanded="true" />
@@ -4554,26 +4428,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/examples/src/main/java/com/tmall/wireless/tangram/example/VLayoutActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="36" column="47" selection-start-line="36" selection-start-column="47" selection-end-line="36" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/vlayout/src/main/java/com/alibaba/android/vlayout/layout/StaggeredGridLayoutHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5728543">
-          <caret line="545" column="9" selection-start-line="545" selection-start-column="9" selection-end-line="545" selection-end-column="9" />
+        <state vertical-scroll-proportion="0.033932135">
+          <caret line="213" column="20" selection-start-line="213" selection-start-column="20" selection-end-line="213" selection-end-column="20" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1678#1679#0" expanded="true" />
-            <element signature="e#1708#1709#0" expanded="true" />
-            <element signature="e#22239#22240#0" expanded="true" />
-            <element signature="e#22278#22279#0" expanded="true" />
-            <element signature="e#23695#23696#0" expanded="true" />
-            <element signature="e#23733#23734#0" expanded="true" />
-            <element signature="e#24109#24110#0" expanded="true" />
-            <element signature="e#24174#24175#0" expanded="true" />
-            <element signature="e#25085#25086#0" expanded="true" />
-            <element signature="e#25148#25149#0" expanded="true" />
-            <element signature="e#29311#29312#0" expanded="true" />
-            <element signature="e#29354#29355#0" expanded="true" />
-            <element signature="e#29405#29406#0" expanded="true" />
-            <element signature="e#29473#29474#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -402,13 +402,13 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         if (state.getItemCount() > 0 && !state.isPreLayout()) {
             int span = mSpanSizeLookup.getCachedSpanIndex(anchorInfo.position, mSpanCount);
             if (anchorInfo.layoutFromEnd) {
-                while (span > 0 && anchorInfo.position > 0) {
-                    anchorInfo.position--;
+                while (span < mSpanCount - 1 && anchorInfo.position < getItemCount()) {
+                    anchorInfo.position++;
                     span = mSpanSizeLookup.getCachedSpanIndex(anchorInfo.position, mSpanCount);
                 }
             } else {
-                while (span < mSpanCount - 1 && anchorInfo.position < getItemCount()) {
-                    anchorInfo.position++;
+                while (span > 0 && anchorInfo.position > 0) {
+                    anchorInfo.position--;
                     span = mSpanSizeLookup.getCachedSpanIndex(anchorInfo.position, mSpanCount);
                 }
             }
