@@ -2,6 +2,7 @@ package com.alibaba.android.vlayout.layout;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -49,6 +51,16 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     private LazySpanLookup mLazySpanLookup = new LazySpanLookup();
 
+
+    private WeakReference<VirtualLayoutManager> mLayoutManager = null;
+
+    private final Runnable checkForGapsRunnable = new Runnable() {
+        @Override
+        public void run() {
+            checkForGaps();
+        }
+    };
+
     public StaggeredGridLayoutHelper(int lanes) {
         this(lanes, 0);
     }
@@ -85,8 +97,21 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         mEachGap = (int) (totalGaps / (mNumLanes - 1) + 0.5);
         mLastGap = totalGaps - (mNumLanes - 2) * mEachGap;
 
-
+        if (mLayoutManager == null || mLayoutManager.get() == null || mLayoutManager.get() != helper) {
+            if (helper instanceof VirtualLayoutManager) {
+                mLayoutManager = new WeakReference<VirtualLayoutManager>((VirtualLayoutManager) helper);
+            }
+        }
     }
+
+    @Override
+    public void afterLayout(RecyclerView.Recycler recycler, RecyclerView.State state, int startPosition, int endPosition, int scrolled, LayoutManagerHelper helper) {
+        super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
+        if (!state.isPreLayout() && helper.getChildCount() > 0) {
+            ViewCompat.postOnAnimation(helper.getChildAt(0), checkForGapsRunnable);
+        }
+    }
+
 
     @Override
     public void layoutViews(RecyclerView.Recycler recycler, RecyclerView.State state,
@@ -229,7 +254,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     @Override
     public void onScrollStateChanged(int state, LayoutManagerHelper helper) {
-
+        if (state == RecyclerView.SCROLL_STATE_IDLE) {
+            checkForGaps();
+        }
     }
 
 
@@ -268,7 +295,131 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         super.clear(helper);
         mLazySpanLookup.clear();
         mSpans = null;
+        mLayoutManager = null;
     }
+
+
+    private void checkForGaps() {
+
+        if (mLayoutManager == null) return;
+
+        final VirtualLayoutManager layoutManager = mLayoutManager.get();
+
+        if (layoutManager == null || layoutManager.getChildCount() == 0) {
+            return;
+        }
+
+        final Range<Integer> range = getRange();
+
+        final int minPos, maxPos, alignPos;
+        if (layoutManager.getReverseLayout()) {
+            minPos = layoutManager.findLastVisibleItemPosition();
+            maxPos = layoutManager.findFirstVisibleItemPosition();
+            alignPos = range.getUpper();
+        } else {
+            minPos = layoutManager.findFirstVisibleItemPosition();
+            maxPos = layoutManager.findLastCompletelyVisibleItemPosition();
+            alignPos = range.getLower();
+        }
+
+
+        final OrientationHelper orientationHelper = layoutManager.getMainOrientationHelper();
+        final int childCount = layoutManager.getChildCount();
+        int viewAnchor = Integer.MIN_VALUE;
+        int alignLine = Integer.MIN_VALUE;
+
+
+        if (layoutManager.getReverseLayout()) {
+            for (int i = childCount - 1; i >= 0; i--) {
+                View view = layoutManager.getChildAt(i);
+                int position = layoutManager.getPosition(view);
+                if (position == alignPos) {
+                    viewAnchor = position;
+                    if (i == childCount - 1) {
+                        alignLine = orientationHelper.getDecoratedEnd(view);
+                    } else {
+                        View child = layoutManager.getChildAt(i + 1);
+                        int aPos = layoutManager.getPosition(child);
+                        if (aPos == position - 1) {
+                            alignLine = orientationHelper.getDecoratedStart(child);
+                        } else {
+                            alignLine = orientationHelper.getDecoratedEnd(view);
+                        }
+                    }
+                    break;
+                }
+            }
+        } else {
+            for (int i = 0; i < childCount; i++) {
+                View view = layoutManager.getChildAt(i);
+                int position = layoutManager.getPosition(view);
+                if (position == alignPos) {
+                    viewAnchor = position;
+                    if (i == 0) {
+                        alignLine = orientationHelper.getDecoratedStart(view);
+                    } else {
+                        View child = layoutManager.getChildAt(i - 1);
+                        alignLine = orientationHelper.getDecoratedEnd(child);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (viewAnchor == Integer.MIN_VALUE) {
+            return;
+        }
+
+        View gapView = hasGapsToFix(layoutManager, viewAnchor, alignLine);
+        if (gapView != null) {
+            mLazySpanLookup.clear();
+
+            for (Span span : mSpans) {
+                span.setLine(alignLine);
+            }
+
+            layoutManager.requestSimpleAnimationsInNextLayout();
+            layoutManager.requestLayout();
+        }
+    }
+
+    /**
+     * Checks for gaps if we've reached to the top of the list.
+     * <p>
+     * Intermediate gaps created by full span items are tracked via mLaidOutInvalidFullSpan field.
+     */
+    private View hasGapsToFix(VirtualLayoutManager layoutManager, final int position, final int alignLine) {
+        View view = layoutManager.findViewByPosition(position);
+
+        if (view == null) return null;
+
+
+        BitSet mSpansToCheck = new BitSet(mNumLanes);
+        mSpansToCheck.set(0, mNumLanes, true);
+
+        for (Span span : mSpans) {
+            if (span.mViews.size() != 0 && checkSpanForGap(span, layoutManager, alignLine)) {
+                return layoutManager.getReverseLayout() ? span.mViews.get(span.mViews.size() - 1) : span.mViews.get(0);
+            }
+        }
+
+        // everything looks good
+        return null;
+    }
+
+
+    private boolean checkSpanForGap(Span span, VirtualLayoutManager layoutManager, int line) {
+        OrientationHelper orientationHelper = layoutManager.getMainOrientationHelper();
+        if (layoutManager.getReverseLayout()) {
+            if (span.getEndLine(orientationHelper) < line) {
+                return true;
+            }
+        } else if (span.getStartLine(orientationHelper) > line) {
+            return true;
+        }
+        return false;
+    }
+
 
     private void recycle(RecyclerView.Recycler recycler, LayoutStateWrapper layoutState,
                          Span updatedSpan, int recycleLine, LayoutManagerHelper helper) {
