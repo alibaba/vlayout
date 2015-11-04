@@ -107,11 +107,11 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
 
     @Override
-    public void afterFinishLayout(RecyclerView.Recycler recycler, RecyclerView.State state,
-                                  int startPosition, int endPosition, int scrolled,
-                                  LayoutManagerHelper helper) {
+    public void afterLayout(RecyclerView.Recycler recycler, RecyclerView.State state,
+                            int startPosition, int endPosition, int scrolled,
+                            LayoutManagerHelper helper) {
         if (DEBUG) {
-            Log.d(TAG, "call afterFinishLayout() on " + this.getClass().getSimpleName());
+            Log.d(TAG, "call afterLayout() on " + this.getClass().getSimpleName());
         }
 
 

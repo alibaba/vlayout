@@ -1,5 +1,9 @@
 package com.alibaba.android.vlayout.layout;
 
+import android.view.View;
+
+import com.alibaba.android.vlayout.LayoutManagerHelper;
+
 /**
  * Absolute layout which only shows after scrolling to its' position,
  * it'll layout View based on leftMargin/topMargin/rightMargin/bottomMargin.
@@ -27,7 +31,7 @@ public class ScrollFixLayoutHelper extends FixLayoutHelper {
     }
 
     @Override
-    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical) {
+    public int getExtraMargin(int offset, View child, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
         if (layoutInVertical) {
             if (isLayoutEnd) {
                 return mMarginBottom;

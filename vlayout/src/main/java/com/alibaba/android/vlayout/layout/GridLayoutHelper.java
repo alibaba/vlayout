@@ -374,7 +374,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
 
     @Override
-    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical) {
+    public int getExtraMargin(int offset, View child, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
         if (isLayoutEnd) {
             if (offset >= getItemCount() - mSpanCount)
                 return layoutInVertical ? mMarginBottom : mMarginRight;
@@ -383,7 +383,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                 return layoutInVertical ? mMarginTop : mMarginLeft;
         }
 
-        return super.getExtraMargin(offset, isLayoutEnd, layoutInVertical);
+        return super.getExtraMargin(offset, child, isLayoutEnd, layoutInVertical, helper);
     }
 
     private static final int MAIN_DIR_SPEC =
@@ -398,12 +398,19 @@ public class GridLayoutHelper extends BaseLayoutHelper {
     }
 
     @Override
-    public void checkAnchorInfo(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo) {
+    public void checkAnchorInfo(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo, LayoutManagerHelper helper) {
         if (state.getItemCount() > 0 && !state.isPreLayout()) {
             int span = mSpanSizeLookup.getCachedSpanIndex(anchorInfo.position, mSpanCount);
-            while (span > 0 && anchorInfo.position > 0) {
-                anchorInfo.position--;
-                span = mSpanSizeLookup.getCachedSpanIndex(anchorInfo.position, mSpanCount);
+            if (anchorInfo.layoutFromEnd) {
+                while (span > 0 && anchorInfo.position > 0) {
+                    anchorInfo.position--;
+                    span = mSpanSizeLookup.getCachedSpanIndex(anchorInfo.position, mSpanCount);
+                }
+            } else {
+                while (span < mSpanCount - 1 && anchorInfo.position < getItemCount()) {
+                    anchorInfo.position++;
+                    span = mSpanSizeLookup.getCachedSpanIndex(anchorInfo.position, mSpanCount);
+                }
             }
         }
     }

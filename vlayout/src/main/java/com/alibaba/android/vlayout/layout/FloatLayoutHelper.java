@@ -129,10 +129,10 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
     }
 
     @Override
-    public void afterFinishLayout(RecyclerView.Recycler recycler, RecyclerView.State state,
-                                  int startPosition, int endPosition, int scrolled,
-                                  LayoutManagerHelper helper) {
-        super.afterFinishLayout(recycler, state, startPosition, endPosition, scrolled, helper);
+    public void afterLayout(RecyclerView.Recycler recycler, RecyclerView.State state,
+                            int startPosition, int endPosition, int scrolled,
+                            LayoutManagerHelper helper) {
+        super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
 
         // disabled if mPos is negative number
         if (mPos < 0) return;

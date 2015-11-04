@@ -88,8 +88,9 @@ public abstract class LayoutHelper {
      *
      * @param state      current {@link }RecyclerView} 's state
      * @param anchorInfo the chosen anchorInfo
+     * @param helper
      */
-    public void checkAnchorInfo(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo) {
+    public void checkAnchorInfo(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo, LayoutManagerHelper helper) {
 
     }
 
@@ -139,10 +140,11 @@ public abstract class LayoutHelper {
      * @param childPos   recycled child index
      * @param startIndex start index of child will be recycled
      * @param endIndex   end index of child will be recycled
-     * @param helper
+     * @param helper     a helper of type {@link LayoutManagerHelper}
+     * @param fromStart  whether is recycleChildren from start
      * @return whether the child in <code>childPos</code> can be recycled
      */
-    public boolean isRecyclable(int childPos, int startIndex, int endIndex, LayoutManagerHelper helper) {
+    public boolean isRecyclable(int childPos, int startIndex, int endIndex, LayoutManagerHelper helper, boolean fromStart) {
         return true;
     }
 
@@ -164,6 +166,10 @@ public abstract class LayoutHelper {
                                   LayoutStateWrapper layoutState, LayoutChunkResult result,
                                   LayoutManagerHelper helper);
 
+    public void onRefreshLayout(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo, LayoutManagerHelper helper) {
+
+    }
+
     /**
      * Called before <code>doLayout</code>
      *
@@ -184,9 +190,13 @@ public abstract class LayoutHelper {
      * @param scrolled      how many offset scrolled if layout is happened in a scrolling process
      * @param helper        LayoutManagerHelper
      */
-    public abstract void afterFinishLayout(RecyclerView.Recycler recycler, RecyclerView.State state,
-                                           int startPosition, int endPosition, int scrolled,
-                                           LayoutManagerHelper helper);
+    public abstract void afterLayout(RecyclerView.Recycler recycler, RecyclerView.State state,
+                                     int startPosition, int endPosition, int scrolled,
+                                     LayoutManagerHelper helper);
+
+    public void onItemsChanged(LayoutManagerHelper helper) {
+
+    }
 
     /**
      * Called when this layoutHelper will be removed from LayoutManager, please release views and other resources here
@@ -214,11 +224,12 @@ public abstract class LayoutHelper {
      * Get margins between layout when layout child at <code>offset</code>
      *
      * @param offset           anchor child's offset in current layoutHelper, for example, 0 means first item
+     * @param child            anchor child view
      * @param isLayoutEnd      is the layout process will do to end or start, true means it will lay views from start to end
-     * @param layoutInVertical is layout child in vertical or horizontal
-     * @return extra margin must be calculated in {@link VirtualLayoutManager}
+     * @param layoutInVertical is layout child in vertical or horizontal   @return extra margin must be calculated in {@link VirtualLayoutManager}
+     * @param helper
      */
-    public abstract int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical);
+    public abstract int getExtraMargin(int offset, View child, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper);
 
 
     public void onSaveState(final Bundle bundle) {

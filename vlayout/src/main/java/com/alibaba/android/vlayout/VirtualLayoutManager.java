@@ -39,6 +39,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
 
     private OrientationHelper mOrientationHelper;
+    private OrientationHelper mSecondaryOrientationHelper;
 
     private RecyclerView mRecyclerView;
 
@@ -59,6 +60,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     public VirtualLayoutManager(@NonNull final Context context, int orientation, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         this.mOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation);
+        this.mSecondaryOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation == VERTICAL ? VERTICAL : HORIZONTAL);
         setHelperFinder(new RangeLayoutHelperFinder());
     }
 
@@ -135,15 +137,27 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     }
 
     /**
-     * stackFromEnd is not supported by VirtualLayoutManager. Consider using
+     * reverseLayout is not supported by VirtualLayoutManager. It's get disabled until all the LayoutHelpers support it.
+     */
+    @Override
+    public void setReverseLayout(boolean reverseLayout) {
+        if (reverseLayout) {
+            throw new UnsupportedOperationException(
+                    "VirtualLayoutManager does not support reverse layout in current version.");
+        }
+
+        super.setReverseLayout(false);
+    }
+
+    /**
+     * stackFromEnd is not supported by VirtualLayoutManager. It's get disabled util all the layoutHelpers support it.
      * {@link #setReverseLayout(boolean)}.
      */
     @Override
     public void setStackFromEnd(boolean stackFromEnd) {
         if (stackFromEnd) {
             throw new UnsupportedOperationException(
-                    "VirtualLayoutManager does not support stack from end."
-                            + " Consider using reverse layout");
+                    "VirtualLayoutManager does not support stack from end.");
         }
         super.setStackFromEnd(false);
     }
@@ -159,9 +173,10 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         while (changed) {
             mTempAnchorInfoWrapper.position = anchorInfo.mPosition;
             mTempAnchorInfoWrapper.coordinate = anchorInfo.mCoordinate;
+            mTempAnchorInfoWrapper.layoutFromEnd = anchorInfo.mLayoutFromEnd;
             LayoutHelper layoutHelper = mHelperFinder.getLayoutHelper(anchorInfo.mPosition);
             if (layoutHelper != null)
-                layoutHelper.checkAnchorInfo(state, mTempAnchorInfoWrapper);
+                layoutHelper.checkAnchorInfo(state, mTempAnchorInfoWrapper, this);
 
             if (mTempAnchorInfoWrapper.position == anchorInfo.mPosition) {
                 changed = false;
@@ -172,6 +187,13 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
             mTempAnchorInfoWrapper.position = -1;
         }
+
+
+        mTempAnchorInfoWrapper.position = anchorInfo.mPosition;
+        mTempAnchorInfoWrapper.coordinate = anchorInfo.mCoordinate;
+        for (LayoutHelper layoutHelper : mHelperFinder) {
+            layoutHelper.onRefreshLayout(state, mTempAnchorInfoWrapper, this);
+        }
     }
 
     @Override
@@ -180,8 +202,8 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         if (position != RecyclerView.NO_POSITION) {
             LayoutHelper helper = mHelperFinder.getLayoutHelper(position);
             if (helper != null) {
-                return helper.getExtraMargin(position - helper.getRange().getLower(),
-                        isLayoutEnd, getOrientation() == VERTICAL);
+                return helper.getExtraMargin(position - helper.getRange().getLower(), child,
+                        isLayoutEnd, getOrientation() == VERTICAL, this);
             }
         }
 
@@ -208,7 +230,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
             final int startPosition = findFirstVisibleItemPosition();
             final int endPosition = findLastVisibleItemPosition();
             for (LayoutHelper layoutHelper : mHelperFinder) {
-                layoutHelper.afterFinishLayout(recycler, state, startPosition, endPosition, scrolled, this);
+                layoutHelper.afterLayout(recycler, state, startPosition, endPosition, scrolled, this);
             }
         }
     }
@@ -216,6 +238,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+
         runPreLayout(recycler, state);
 
         super.onLayoutChildren(recycler, state);
@@ -356,6 +379,10 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     @Override
     public void onItemsChanged(RecyclerView recyclerView) {
         // TODO: do update
+
+        for (LayoutHelper helper : mHelperFinder) {
+            helper.onItemsChanged(this);
+        }
     }
 
 
@@ -515,6 +542,8 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         public int position;
 
         public int coordinate;
+
+        public boolean layoutFromEnd;
 
         AnchorInfoWrapper() {
 
@@ -710,6 +739,11 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     }
 
     @Override
+    public OrientationHelper getSecondaryOrientationHelper() {
+        return mSecondaryOrientationHelper;
+    }
+
+    @Override
     public void measureChild(View child, int widthSpec, int heightSpec) {
         measureChildWithDecorationsAndMargin(child, widthSpec, heightSpec);
     }
@@ -742,16 +776,20 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
             int startPos = getPosition(startView);
             int endPos = getPosition(endView);
 
-            for (int i = endIndex - 1; i >= startIndex; i--) {
-                View v = getChildAt(i);
+            int idx = startIndex;
+
+            for (int i = startIndex; i < endIndex; i++) {
+                View v = getChildAt(idx);
                 int pos = getPosition(v);
                 if (pos != RecyclerView.NO_POSITION) {
                     LayoutHelper layoutHelper = mHelperFinder.getLayoutHelper(pos);
-                    if (layoutHelper == null || layoutHelper.isRecyclable(pos, startPos, endPos, this)) {
-                        removeAndRecycleViewAt(i, recycler);
+                    if (layoutHelper == null || layoutHelper.isRecyclable(pos, startPos, endPos, this, true)) {
+                        removeAndRecycleViewAt(idx, recycler);
+                    } else {
+                        idx++;
                     }
                 } else
-                    removeAndRecycleViewAt(i, recycler);
+                    removeAndRecycleViewAt(idx, recycler);
             }
         } else {
 
@@ -766,7 +804,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
                 int pos = getPosition(v);
                 if (pos != RecyclerView.NO_POSITION) {
                     LayoutHelper layoutHelper = mHelperFinder.getLayoutHelper(pos);
-                    if (layoutHelper == null || layoutHelper.isRecyclable(pos, startPos, endPos, this)) {
+                    if (layoutHelper == null || layoutHelper.isRecyclable(pos, startPos, endPos, this, false)) {
                         removeAndRecycleViewAt(i, recycler);
                     }
                 } else

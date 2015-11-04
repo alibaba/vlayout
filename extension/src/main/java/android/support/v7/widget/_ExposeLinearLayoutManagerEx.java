@@ -1054,7 +1054,7 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             mLayoutState.mCurrentPosition = getPosition(child) + mLayoutState.mItemDirection;
             mLayoutState.mOffset = mOrientationHelper.getDecoratedEnd(child) + getExtraMargin(child, true);
             // calculate how much we can scroll without adding new children (independent of layout)
-            fastScrollSpace = mOrientationHelper.getDecoratedEnd(child)
+            fastScrollSpace = mLayoutState.mOffset
                     - mOrientationHelper.getEndAfterPadding();
 
         } else {
@@ -1065,7 +1065,7 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             mLayoutState.mCurrentPosition = getPosition(child) + mLayoutState.mItemDirection;
 
             mLayoutState.mOffset = mOrientationHelper.getDecoratedStart(child) + getExtraMargin(child, false);
-            fastScrollSpace = -mOrientationHelper.getDecoratedStart(child)
+            fastScrollSpace = -mLayoutState.mOffset
                     + mOrientationHelper.getStartAfterPadding();
         }
         mLayoutState.mAvailable = requiredSpace;

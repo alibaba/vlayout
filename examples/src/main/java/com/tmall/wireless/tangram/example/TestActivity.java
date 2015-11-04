@@ -67,16 +67,25 @@ public class TestActivity extends Activity {
                     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
                         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
                                 ViewGroup.LayoutParams.MATCH_PARENT, 300);
-                        layoutParams.height = (int) (200 + (position % 10) * 10);
+                        layoutParams.height = (int) (200 + (position % 15) * 10);
 
                         holder.itemView.findViewById(R.id.title).setLayoutParams(layoutParams);
-
+                        if (position == 30) {
+                            StaggeredGridLayoutManager.LayoutParams lp = new StaggeredGridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            lp.setFullSpan(true);
+                            holder.itemView.setLayoutParams(lp);
+                        } else {
+                            ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
+                            if (lp instanceof StaggeredGridLayoutManager.LayoutParams) {
+                                ((StaggeredGridLayoutManager.LayoutParams) lp).setFullSpan(false);
+                            }
+                        }
                         ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(position));
                     }
 
                     @Override
                     public int getItemCount() {
-                        return 40;
+                        return 60;
                     }
                 });
     }

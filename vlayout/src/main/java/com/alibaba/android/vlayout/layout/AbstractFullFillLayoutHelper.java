@@ -101,12 +101,15 @@ public abstract class AbstractFullFillLayoutHelper extends BaseLayoutHelper {
     }
 
     @Override
-    public void checkAnchorInfo(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo) {
-        anchorInfo.position = getRange().getLower();
+    public void checkAnchorInfo(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo, LayoutManagerHelper helper) {
+        if (anchorInfo.layoutFromEnd) {
+            anchorInfo.position = getRange().getUpper();
+        } else
+            anchorInfo.position = getRange().getLower();
     }
 
     @Override
-    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical) {
+    public int getExtraMargin(int offset, View child, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
         if (layoutInVertical) {
             if (isLayoutEnd) {
                 return mMarginBottom;
@@ -136,7 +139,7 @@ public abstract class AbstractFullFillLayoutHelper extends BaseLayoutHelper {
 
 
     @Override
-    public boolean isRecyclable(int childPos, int startIndex, int endIndex, LayoutManagerHelper helper) {
+    public boolean isRecyclable(int childPos, int startIndex, int endIndex, LayoutManagerHelper helper, boolean fromStart) {
         Range<Integer> range = getRange();
         if (range.contains(childPos)) {
             return Range.create(startIndex, endIndex).contains(range);

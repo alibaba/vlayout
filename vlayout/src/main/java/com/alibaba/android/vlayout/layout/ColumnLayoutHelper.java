@@ -145,12 +145,16 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
     }
 
     @Override
-    public void checkAnchorInfo(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo) {
-        anchorInfo.position = getRange().getLower();
+    public void checkAnchorInfo(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo, LayoutManagerHelper helper) {
+        if (anchorInfo.layoutFromEnd) {
+            anchorInfo.position = getRange().getUpper();
+        } else {
+            anchorInfo.position = getRange().getLower();
+        }
     }
 
     @Override
-    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical) {
+    public int getExtraMargin(int offset, View child, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
         if (layoutInVertical) {
             if (isLayoutEnd) {
                 return mMarginBottom;

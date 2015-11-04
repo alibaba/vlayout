@@ -34,6 +34,20 @@ import java.util.List;
  */
 public class VLayoutActivity extends Activity {
 
+    private static final boolean FIX_LAYOUT = true;
+
+    private static final boolean LINEAR_LAYOUT = true;
+
+    private static final boolean ONEN_LAYOUT = true;
+
+    private static final boolean COLUMN_LAYOUT = true;
+
+    private static final boolean GRID_LAYOUT = true;
+
+    private static final boolean STICKY_LAYOUT = false;
+
+    private static final boolean STAGGER_LAYOUT = false;
+
     private TextView mFirstText;
     private TextView mLastText;
 
@@ -109,55 +123,72 @@ public class VLayoutActivity extends Activity {
 
         List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
 
-        adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 5));
+        if (LINEAR_LAYOUT)
+            adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 5));
 
-        adapters.add(new SubAdapter(this, new StickyLayoutHelper(), 1));
+        if (STICKY_LAYOUT)
+            adapters.add(new SubAdapter(this, new StickyLayoutHelper(), 1, new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
+
 
         ColumnLayoutHelper layoutHelper = new ColumnLayoutHelper();
         // layoutHelper.setBgColor(0xff00f0f0);
-        adapters.add(new SubAdapter(this, layoutHelper, 3));
+        if (COLUMN_LAYOUT)
+            adapters.add(new SubAdapter(this, layoutHelper, 3));
 
 
-        adapters.add(new SubAdapter(this, new OnePlusNLayoutHelper(), 4) {
-            @Override
-            public void onBindViewHolder(MainViewHolder holder, int position) {
-                super.onBindViewHolder(holder, position);
-                if (position == 0) {
-                    holder.itemView.setLayoutParams(new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 450));
+        if (ONEN_LAYOUT)
+            adapters.add(new SubAdapter(this, new OnePlusNLayoutHelper(), 4) {
+                @Override
+                public void onBindViewHolder(MainViewHolder holder, int position) {
+                    super.onBindViewHolder(holder, position);
+                    if (position == 0) {
+                        holder.itemView.setLayoutParams(new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 450));
+                    }
                 }
-            }
-        });
-        adapters.add(new SubAdapter(this, new ColumnLayoutHelper(), 4));
+            });
 
-        adapters.add(new SubAdapter(this, new FixLayoutHelper(), 1) {
-            @Override
-            public void onBindViewHolder(MainViewHolder holder, int position) {
-                super.onBindViewHolder(holder, position);
-                VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(200, 200);
-                layoutParams.topMargin = 10;
-                layoutParams.leftMargin = 10;
-                holder.itemView.setLayoutParams(layoutParams);
-            }
-        });
+        if (COLUMN_LAYOUT)
+            adapters.add(new SubAdapter(this, new ColumnLayoutHelper(), 4));
 
-        adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 1));
-        adapters.add(new SubAdapter(this, new GridLayoutHelper(4), 16));
+        if (FIX_LAYOUT) {
+            adapters.add(new SubAdapter(this, new FixLayoutHelper(), 1) {
+                @Override
+                public void onBindViewHolder(MainViewHolder holder, int position) {
+                    super.onBindViewHolder(holder, position);
+                    VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(200, 200);
+                    layoutParams.topMargin = 10;
+                    layoutParams.leftMargin = 10;
+                    holder.itemView.setLayoutParams(layoutParams);
+                }
+            });
+        }
+
+        if (STICKY_LAYOUT)
+            adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 1, new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
 
 
-        adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 10));
-        adapters.add(new SubAdapter(this, new GridLayoutHelper(3), 45));
+        if (GRID_LAYOUT)
+            adapters.add(new SubAdapter(this, new GridLayoutHelper(4), 20));
 
-        adapters.clear();
+        if (LINEAR_LAYOUT)
+            adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 10));
 
-        adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(3), 15) {
-            @Override
-            public void onBindViewHolder(MainViewHolder holder, int position) {
-                super.onBindViewHolder(holder, position);
-                VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
-                layoutParams.height = 240 + position % 7 * 20;
-                holder.itemView.setLayoutParams(layoutParams);
-            }
-        });
+        if (STAGGER_LAYOUT) {
+            adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(3), 27) {
+                @Override
+                public void onBindViewHolder(MainViewHolder holder, int position) {
+                    super.onBindViewHolder(holder, position);
+                    VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+                    layoutParams.height = 240 + position % 7 * 20;
+                    holder.itemView.setLayoutParams(layoutParams);
+                }
+            });
+        }
+
+        if (GRID_LAYOUT) {
+            adapters.add(new SubAdapter(this, new GridLayoutHelper(3), 45));
+        }
+
 
         delegateAdapter.setAdapters(adapters);
 
@@ -165,7 +196,7 @@ public class VLayoutActivity extends Activity {
             @Override
             public void run() {
                 // recyclerView.scrollToPosition(22);
-                recyclerView.getAdapter().notifyDataSetChanged();
+                // recyclerView.getAdapter().notifyDataSetChanged();
             }
         }, 6000);
     }

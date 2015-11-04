@@ -21,6 +21,8 @@ public interface LayoutManagerHelper {
      */
     View generateLayoutView();
 
+    int getChildCount();
+
     @Nullable
     View getChildAt(int index);
 
@@ -47,6 +49,8 @@ public interface LayoutManagerHelper {
      * Measure and layout helpers
      */
     OrientationHelper getMainOrientationHelper();
+
+    OrientationHelper getSecondaryOrientationHelper();
 
     void measureChild(View view, int widthSpec, int heightSpec);
 
