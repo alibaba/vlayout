@@ -16,16 +16,17 @@ import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 
 public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
 
+    private View[] mEqViews;
+
     private View[] mViews;
 
     private Rect mTempArea = new Rect();
 
     private float[] mWeights = new float[0];
 
-
     public void setWeights(float[] weights) {
         if (weights != null) {
-            this.mWeights = Arrays.copyOf(weights, Math.min(getItemCount(), weights.length));
+            this.mWeights = Arrays.copyOf(weights, weights.length);
         } else {
             this.mWeights = new float[0];
         }
@@ -41,9 +42,18 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
         final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
 
-        if (mViews == null || mViews.length != getItemCount()) {
-            mViews = new View[getItemCount()];
+        final int itemCount = getItemCount();
+
+        if (mViews == null || mViews.length != itemCount) {
+            mViews = new View[itemCount];
         }
+
+        if (mEqViews == null || mEqViews.length != itemCount) {
+            mEqViews = new View[itemCount];
+        } else {
+            Arrays.fill(mEqViews, null);
+        }
+
 
         final int count = getAllChildren(mViews, recycler, layoutState, result, helper);
 
@@ -87,13 +97,17 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
                 uniformHeight = (int) (totalWidth / mAspectRatio);
             }
 
+
+            int eqSize = 0;
+
             for (int i = 0; i < count; i++) {
                 View view = mViews[i];
                 ViewGroup.LayoutParams params = view.getLayoutParams();
                 final int heightSpec = helper.getChildMeasureSpec(
                         helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
                         uniformHeight > 0 ? uniformHeight : params.height, true);
-                if (mWeights != null && i < mWeights.length) {
+                if (mWeights != null && i < mWeights.length && !Float.isNaN(mWeights[i]) && mWeights[i] >= 0) {
+
                     // calculate width with weight in percentage
                     int resizeWidth = (int) (mWeights[i] * 1.0f / 100 * availableWidth + 0.5f);
 
@@ -101,18 +115,30 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
 
                     // add width into usedWidth
                     usedWidth += resizeWidth;
+
+                    // find minHeight
+                    minHeight = Math.min(minHeight, view.getMeasuredHeight());
                 } else {
-                    //cols只配置了部分，那么剩下的组件平分剩下的区域
-                    helper.measureChild(view,
-                            View.MeasureSpec.makeMeasureSpec(
-                                    (int) ((availableWidth - usedWidth) * 1.0f / (count - (mWeights == null ? 0 : mWeights.length)) + 0.5f), View.MeasureSpec.EXACTLY),
-                            heightSpec);
+                    mEqViews[eqSize++] = view;
                 }
+            }
+
+
+            for (int i = 0; i < eqSize; i++) {
+                View view = mEqViews[i];
+                ViewGroup.LayoutParams params = view.getLayoutParams();
+                final int heightSpec = helper.getChildMeasureSpec(
+                        helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
+                        uniformHeight > 0 ? uniformHeight : params.height, true);
+                //cols只配置了部分，那么剩下的组件平分剩下的区域
+                helper.measureChild(view,
+                        View.MeasureSpec.makeMeasureSpec(
+                                (int) ((availableWidth - usedWidth) * 1.0f / eqSize + 0.5f), View.MeasureSpec.EXACTLY),
+                        heightSpec);
 
                 // find minHeight
                 minHeight = Math.min(minHeight, view.getMeasuredHeight());
             }
-
 
             // uniform all views into min height
             for (int i = 0; i < count; i++) {
@@ -142,6 +168,9 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
             }
 
         }
+
+        Arrays.fill(mViews, null);
+        Arrays.fill(mEqViews, null);
     }
 
     @Override

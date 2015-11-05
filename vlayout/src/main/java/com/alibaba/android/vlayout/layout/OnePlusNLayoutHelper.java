@@ -81,7 +81,6 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
     private float mDefaultWeight = Float.NaN;
 
-
     private boolean mMarginCollapse = true;
 
     public OnePlusNLayoutHelper() {
@@ -117,16 +116,11 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
         if (end - start > 3) {
             throw new IllegalArgumentException("OnePlusNLayoutHelper only supports maximum 4 children now");
         }
-        mChildrenViews = new View[getItemCount()];
     }
 
 
     public void setDefaultWeight(float weight) {
-        if (weight == 0) {
-            mDefaultWeight = Float.NaN;
-        } else {
-            mDefaultWeight = weight;
-        }
+        mDefaultWeight = weight >= 0 ? weight : Float.NaN;
     }
 
 
@@ -221,13 +215,15 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                 lp2.topMargin = lp1.topMargin;
                 lp2.bottomMargin = lp1.bottomMargin;
 
+
                 int width1 = Float.isNaN(weight1) ?
                         (int) ((parentWidth - parentHPadding - lp1.leftMargin - lp1.rightMargin - lp2.leftMargin
                                 - lp2.rightMargin) / 2.0f + 0.5f)
                         : (int) ((parentWidth - parentHPadding - lp1.leftMargin - lp1.rightMargin - lp2.leftMargin
                         - lp2.rightMargin) * weight1 / 100 + 0.5f);
-                int width2 = (int) ((parentWidth - parentHPadding - lp1.leftMargin - lp1.rightMargin - lp2.leftMargin
-                        - lp2.rightMargin) - width1);
+                int width2 =
+                        (int) ((parentWidth - parentHPadding - lp1.leftMargin - lp1.rightMargin - lp2.leftMargin
+                                - lp2.rightMargin) - width1);
 
                 helper.measureChild(child1,
                         MeasureSpec.makeMeasureSpec(width1 + lp1.leftMargin + lp1.rightMargin, MeasureSpec.EXACTLY),

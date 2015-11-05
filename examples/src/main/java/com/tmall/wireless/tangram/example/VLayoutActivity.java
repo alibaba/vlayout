@@ -113,7 +113,7 @@ public class VLayoutActivity extends Activity {
 
         recyclerView.setRecycledViewPool(viewPool);
 
-        recyclerView.addItemDecoration(itemDecoration);
+        // recyclerView.addItemDecoration(itemDecoration);
 
         viewPool.setMaxRecycledViews(0, 20);
 
@@ -132,6 +132,7 @@ public class VLayoutActivity extends Activity {
 
         ColumnLayoutHelper layoutHelper = new ColumnLayoutHelper();
         // layoutHelper.setBgColor(0xff00f0f0);
+        layoutHelper.setWeights(new float[]{40.0f, Float.NaN, 40});
         if (COLUMN_LAYOUT)
             adapters.add(new SubAdapter(this, layoutHelper, 3));
 
@@ -173,7 +174,7 @@ public class VLayoutActivity extends Activity {
             adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 10));
 
         if (STAGGER_LAYOUT) {
-            adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(3), 27) {
+            adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(3, 0), 27) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
@@ -237,12 +238,11 @@ public class VLayoutActivity extends Activity {
             // only vertical
             holder.itemView.setLayoutParams(
                     new VirtualLayoutManager.LayoutParams(mLayoutParams));
-            // ((TextView) holder.itemView).setText(Integer.toString(position));
         }
 
         @Override
         protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-            ((TextView) holder.itemView).setText(Integer.toString(offsetTotal));
+            ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
         }
 
         @Override
