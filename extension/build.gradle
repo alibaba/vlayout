@@ -1,8 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: "maven"
 
-def VERSION_NAME = '1.0.0'
-def VERSION_CODE = 100
 
 android {
     compileSdkVersion Integer.parseInt(System.properties['compileSdkVersion'] ?: '22')
@@ -11,7 +9,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion Integer.parseInt(System.properties['targetSdkVersion'] ?: '19')
-        versionCode VERSION_CODE
+        versionCode Integer.parseInt(VERSION)
         versionName VERSION_NAME
     }
     buildTypes {

@@ -181,21 +181,4 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
             anchorInfo.position = getRange().getLower();
         }
     }
-
-    @Override
-    public int getExtraMargin(int offset, View child, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
-        if (layoutInVertical) {
-            if (isLayoutEnd) {
-                return mMarginBottom;
-            } else {
-                return -mMarginTop;
-            }
-        } else {
-            if (isLayoutEnd) {
-                return mMarginRight;
-            } else {
-                return -mMarginLeft;
-            }
-        }
-    }
 }

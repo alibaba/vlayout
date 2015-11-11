@@ -386,6 +386,18 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         return super.getExtraMargin(offset, child, isLayoutEnd, layoutInVertical, helper);
     }
 
+    @Override
+    public void clear(LayoutManagerHelper helper) {
+        super.clear(helper);
+        mSpanSizeLookup.invalidateSpanIndexCache();
+    }
+
+    @Override
+    public void onItemsChanged(LayoutManagerHelper helper) {
+        super.onItemsChanged(helper);
+        mSpanSizeLookup.invalidateSpanIndexCache();
+    }
+
     private static final int MAIN_DIR_SPEC =
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 

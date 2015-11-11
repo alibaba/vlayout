@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 
+import static android.support.v7.widget.LinearLayoutManager.INVALID_OFFSET;
 import static com.alibaba.android.vlayout.VirtualLayoutManager.HORIZONTAL;
 import static com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper.LAYOUT_END;
 import static com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper.LAYOUT_START;
@@ -149,8 +150,11 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         final int defaultNewViewLine = layoutState.getOffset();
 
         while (layoutState.hasMore(state) && !mRemainingSpans.isEmpty() && !isOutOfRange(layoutState.getCurrentPosition())) {
-
             View view = layoutState.next(recycler);
+
+            if (view == null)
+                break;
+
             RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) view.getLayoutParams();
 
             final int position = lp.getViewPosition();
@@ -675,8 +679,11 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     public void onRefreshLayout(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo, LayoutManagerHelper helper) {
         super.onRefreshLayout(state, anchorInfo, helper);
         ensureLanes();
-        for (Span span : mSpans) {
-            span.clear();
+
+        if (isOutOfRange(anchorInfo.position)) {
+            for (Span span : mSpans) {
+                span.clear();
+            }
         }
     }
 
@@ -699,13 +706,59 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
         View reference = helper.findViewByPosition(anchorInfo.position);
 
+        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+
         if (reference == null) {
             for (Span span : mSpans) {
+                span.clear();
                 span.setLine(anchorInfo.coordinate);
             }
         } else {
+            int anchorPos = anchorInfo.layoutFromEnd ? Integer.MIN_VALUE : Integer.MAX_VALUE;
             for (Span span : mSpans) {
-                span.cacheReferenceLineAndClear(helper.getReverseLayout(), -anchorInfo.coordinate, helper.getMainOrientationHelper());
+                if (!span.mViews.isEmpty()) {
+                    if (anchorInfo.layoutFromEnd) {
+                        View view = span.mViews.get(span.mViews.size() - 1);
+                        anchorPos = Math.max(anchorPos, helper.getPosition(view));
+                    } else {
+                        View view = span.mViews.get(0);
+                        anchorPos = Math.min(anchorPos, helper.getPosition(view));
+                    }
+                }
+            }
+
+            int offset = INVALID_OFFSET;
+            if (!isOutOfRange(anchorPos)) {
+                View view = helper.findViewByPosition(anchorPos);
+
+                if (view != null) {
+                    if (anchorInfo.layoutFromEnd) {
+                        anchorInfo.position = anchorPos;
+                        final int endRef = orientationHelper.getDecoratedEnd(reference);
+                        if (endRef < anchorInfo.coordinate) {
+                            offset = anchorInfo.coordinate - endRef;
+                            anchorInfo.coordinate = orientationHelper.getDecoratedEnd(view) + offset;
+                        } else {
+                            anchorInfo.coordinate = orientationHelper.getDecoratedEnd(view);
+                        }
+
+                    } else {
+                        anchorInfo.position = anchorPos;
+                        final int startRef = orientationHelper.getDecoratedStart(reference);
+                        if (startRef > anchorInfo.coordinate) {
+                            // move align up
+                            offset = anchorInfo.coordinate - startRef;
+                            anchorInfo.coordinate = orientationHelper.getDecoratedStart(view) + offset;
+                        } else {
+                            anchorInfo.coordinate = orientationHelper.getDecoratedStart(view);
+                        }
+                    }
+                }
+            }
+
+
+            for (Span span : mSpans) {
+                span.cacheReferenceLineAndClear(helper.getReverseLayout() ^ anchorInfo.layoutFromEnd, offset, orientationHelper);
             }
         }
     }
@@ -862,7 +915,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
             if ((reverseLayout && reference < helper.getEndAfterPadding()) ||
                     (!reverseLayout && reference > helper.getStartAfterPadding())) {
-                return;
+                // return;
             }
             if (offset != INVALID_OFFSET) {
                 reference += offset;

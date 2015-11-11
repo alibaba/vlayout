@@ -34,17 +34,17 @@ import java.util.List;
  */
 public class VLayoutActivity extends Activity {
 
-    private static final boolean FIX_LAYOUT = true;
+    private static final boolean FIX_LAYOUT = false;
 
-    private static final boolean LINEAR_LAYOUT = true;
+    private static final boolean LINEAR_LAYOUT = false;
 
-    private static final boolean ONEN_LAYOUT = true;
+    private static final boolean ONEN_LAYOUT = false;
 
     private static final boolean COLUMN_LAYOUT = true;
 
-    private static final boolean GRID_LAYOUT = true;
+    private static final boolean GRID_LAYOUT = false;
 
-    private static final boolean STICKY_LAYOUT = true;
+    private static final boolean STICKY_LAYOUT = false;
 
     private static final boolean STAGGER_LAYOUT = true;
 
@@ -52,6 +52,8 @@ public class VLayoutActivity extends Activity {
     private TextView mLastText;
 
     private TextView mCountText;
+
+    private Runnable trigger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,8 @@ public class VLayoutActivity extends Activity {
                     } catch (Exception e) {
                         Log.e("VlayoutActivity", e.getMessage(), e);
                     }
+                }else {
+                    recyclerView.requestLayout();
                 }
             }
         });
@@ -117,7 +121,7 @@ public class VLayoutActivity extends Activity {
 
         viewPool.setMaxRecycledViews(0, 20);
 
-        DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, true);
+        final DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, true);
 
         recyclerView.setAdapter(delegateAdapter);
 
@@ -174,7 +178,7 @@ public class VLayoutActivity extends Activity {
             adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 10));
 
         if (STAGGER_LAYOUT) {
-            adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(3, 0), 27) {
+            adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 0), 27) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
@@ -192,14 +196,23 @@ public class VLayoutActivity extends Activity {
 
         delegateAdapter.setAdapters(adapters);
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+
+        final Handler mainHandler = new Handler(Looper.getMainLooper());
+
+        trigger = new Runnable() {
             @Override
             public void run() {
                 // recyclerView.scrollToPosition(22);
                 // recyclerView.getAdapter().notifyDataSetChanged();
+                recyclerView.requestLayout();
+                // mainHandler.postDelayed(trigger, 1000);
             }
-        }, 6000);
+        };
+
+
+        mainHandler.postDelayed(trigger, 1000);
     }
+
 
     static class SubAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
 

@@ -378,11 +378,11 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     @Override
     public void onItemsChanged(RecyclerView recyclerView) {
-        // TODO: do update
-
         for (LayoutHelper helper : mHelperFinder) {
             helper.onItemsChanged(this);
         }
+
+        // setLayoutHelpers(mHelperFinder.getLayoutHelpers());
     }
 
 

@@ -206,7 +206,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
             // Log.i("TEST", "abnormal pos: " + mPos + " start: " + startPosition + " end: " + endPosition);
         }
 
-        if (mDoNormalHandle) {
+        if (mDoNormalHandle && state.isPreLayout()) {
             mFixView = null;
             return;
         }

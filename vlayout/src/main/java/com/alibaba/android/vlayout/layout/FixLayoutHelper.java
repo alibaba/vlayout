@@ -139,7 +139,7 @@ public class FixLayoutHelper extends BaseLayoutHelper {
         // disabled if mPos is negative number
         if (mPos < 0) return;
 
-        if (mDoNormalHandle) {
+        if (mDoNormalHandle && state.isPreLayout()) {
             mFixView = null;
             return;
         }
@@ -157,6 +157,7 @@ public class FixLayoutHelper extends BaseLayoutHelper {
                 mFixView = recycler.getViewForPosition(mPos);
                 doMeasureAndLayout(mFixView, helper);
                 helper.addOffFlowView(mFixView, false);
+
             }
         }
 
