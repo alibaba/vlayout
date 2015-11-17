@@ -46,7 +46,7 @@ public abstract class LayoutHelper {
      */
     void setRange(int start, int end) {
         if (end < start) {
-            throw new IllegalArgumentException("end should be larger then start position");
+            throw new IllegalArgumentException("end should be larger or equeal then start position");
         }
 
         if ((end - start + 1) != getItemCount()) {

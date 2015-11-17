@@ -42,7 +42,7 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean COLUMN_LAYOUT = true;
 
-    private static final boolean GRID_LAYOUT = false;
+    private static final boolean GRID_LAYOUT = true;
 
     private static final boolean STICKY_LAYOUT = false;
 
@@ -77,7 +77,7 @@ public class VLayoutActivity extends Activity {
                     } catch (Exception e) {
                         Log.e("VlayoutActivity", e.getMessage(), e);
                     }
-                }else {
+                } else {
                     recyclerView.requestLayout();
                 }
             }
@@ -171,8 +171,11 @@ public class VLayoutActivity extends Activity {
             adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 1, new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
 
 
-        if (GRID_LAYOUT)
-            adapters.add(new SubAdapter(this, new GridLayoutHelper(4), 20));
+        if (GRID_LAYOUT) {
+            GridLayoutHelper helper = new GridLayoutHelper(4);
+            helper.setAspectRatio(3f);
+            adapters.add(new SubAdapter(this, helper, 20));
+        }
 
         if (LINEAR_LAYOUT)
             adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 10));

@@ -34,6 +34,9 @@ public class GridLayoutHelper extends BaseLayoutHelper {
     @SuppressWarnings("FieldCanBeLocal")
     private int mSizePerSpan = 0;
 
+
+    private int mTotalSize = 0;
+
     private boolean mIsAutoExpand = true;
 
     @NonNull
@@ -141,6 +144,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         this.mHGap = hGap;
     }
 
+
     @Override
     public void layoutViews(RecyclerView.Recycler recycler, RecyclerView.State state, LayoutStateWrapper layoutState, LayoutChunkResult result, LayoutManagerHelper helper) {
         // reach the end of this layout
@@ -157,11 +161,11 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
 
         if (layoutInVertical) {
-            mSizePerSpan = (helper.getContentWidth() - helper.getPaddingRight() - getHorizontalMargin() -
-                    helper.getPaddingLeft() - (mSpanCount - 1) * mHGap) / mSpanCount;
+            mTotalSize = helper.getContentWidth() - helper.getPaddingRight() - helper.getPaddingLeft() - getHorizontalMargin();
+            mSizePerSpan = (mTotalSize - (mSpanCount - 1) * mHGap) / mSpanCount;
         } else {
-            mSizePerSpan = (helper.getContentHeight() - helper.getPaddingBottom() - getVerticalMargin() -
-                    helper.getPaddingTop() - (mSpanCount - 1) * mVGap) / mSpanCount;
+            mTotalSize = helper.getContentHeight() - helper.getPaddingBottom() - helper.getPaddingTop() - getVerticalMargin();
+            mSizePerSpan = (mTotalSize - (mSpanCount - 1) * mVGap) / mSpanCount;
         }
 
 
@@ -289,10 +293,11 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                             Math.max(0, spanSize - 1) * (layoutInVertical ? mHGap : mVGap),
                     View.MeasureSpec.EXACTLY);
             final LayoutParams lp = (LayoutParams) view.getLayoutParams();
+
             if (helper.getOrientation() == VERTICAL) {
-                helper.measureChild(view, spec, getMainDirSpec(lp.height));
+                helper.measureChild(view, spec, getMainDirSpec(lp.height, mTotalSize));
             } else {
-                helper.measureChild(view, getMainDirSpec(lp.width), spec);
+                helper.measureChild(view, getMainDirSpec(lp.width, mTotalSize), spec);
             }
             final int size = orientationHelper.getDecoratedMeasurement(view);
             if (size > maxSize) {
@@ -301,7 +306,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         }
 
         // views that did not measure the maxSize has to be re-measured
-        final int maxMeasureSpec = getMainDirSpec(maxSize);
+        final int maxMeasureSpec = getMainDirSpec(maxSize, mTotalSize);
         for (int i = 0; i < count; i++) {
             final View view = mSet[i];
             if (orientationHelper.getDecoratedMeasurement(view) != maxSize) {
@@ -401,9 +406,11 @@ public class GridLayoutHelper extends BaseLayoutHelper {
     private static final int MAIN_DIR_SPEC =
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 
-    private int getMainDirSpec(int dim) {
+    private int getMainDirSpec(int dim, int otherSize) {
         if (dim < 0) {
             return MAIN_DIR_SPEC;
+        } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
+            return View.MeasureSpec.makeMeasureSpec((int) (otherSize / mAspectRatio), View.MeasureSpec.EXACTLY);
         } else {
             return View.MeasureSpec.makeMeasureSpec(dim, View.MeasureSpec.EXACTLY);
         }
