@@ -45,6 +45,17 @@ public class GridLayoutHelper extends BaseLayoutHelper {
     private int mVGap = 0;
     private int mHGap = 0;
 
+
+    private float[] mWeights = new float[0];
+
+
+    private View[] mSet;
+
+    private int[] mSpanIndices;
+
+    private int[] mSpanCols;
+
+
     /**
      * @param spanCount number of columns/rows in grid, must be greater than 0
      */
@@ -80,6 +91,15 @@ public class GridLayoutHelper extends BaseLayoutHelper {
     }
 
 
+    public void setWeights(float[] weights) {
+        if (weights != null) {
+            this.mWeights = Arrays.copyOf(weights, weights.length);
+        } else {
+            this.mWeights = new float[0];
+        }
+    }
+
+
     public void setSpanSizeLookup(SpanSizeLookup spanSizeLookup) {
         if (spanSizeLookup != null) {
             // TODO: handle reverse layout?
@@ -93,9 +113,6 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         this.mIsAutoExpand = isAutoExpand;
     }
 
-
-    private View[] mSet;
-    private int[] mSpanIndic;
 
     /**
      * {@inheritDoc}
@@ -114,6 +131,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         }
         mSpanCount = spanCount;
         mSpanSizeLookup.invalidateSpanIndexCache();
+
+        ensureSpanCount();
     }
 
     /**
@@ -173,13 +192,9 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         int consumedSpanCount = 0;
         int remainingSpan = mSpanCount;
 
-        if (mSet == null || mSet.length != mSpanCount) {
-            mSet = new View[mSpanCount];
-        }
 
-        if (mSpanIndic == null || mSpanIndic.length != mSpanCount) {
-            mSpanIndic = new int[mSpanCount];
-        }
+        ensureSpanCount();
+
 
         if (!layingOutInPrimaryDirection) {
             // fill the remaining spacing this row
@@ -284,14 +299,63 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             }
         }
 
+
+        boolean weighted = false;
+        if (mWeights != null && mWeights.length > 0) {
+            weighted = true;
+            int totalSpace;
+            if (layoutInVertical) {
+                totalSpace = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight()
+                        - getHorizontalMargin() - (count - 1) * mHGap;
+            } else {
+                totalSpace = helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom()
+                        - getVerticalMargin() - (count - 1) * mVGap;
+            }
+
+            // calculate width with weight in percentage
+
+            int eqCnt = 0, remainingSpace = totalSpace;
+            int colCnt = (remainingSpan > 0 && mIsAutoExpand) ? count : mSpanCount;
+            for (int i = 0; i < colCnt; i++) {
+                if (i < mWeights.length && !Float.isNaN(mWeights[i]) && mWeights[i] >= 0) {
+                    float weight = mWeights[i];
+                    mSpanCols[i] = (int) (weight * 1.0f / 100 * totalSpace + 0.5f);
+                    remainingSpace -= mSpanCols[i];
+                } else {
+                    eqCnt++;
+                    mSpanCols[i] = -1;
+                }
+            }
+
+            if (eqCnt > 0) {
+                int eqLength = remainingSpace / eqCnt;
+                for (int i = 0; i < colCnt; i++) {
+                    if (mSpanCols[i] < 0) {
+                        mSpanCols[i] = eqLength;
+                    }
+                }
+            }
+        }
+
+
         for (int i = 0; i < count; i++) {
             View view = mSet[i];
             helper.addChildView(layoutState, view, layingOutInPrimaryDirection ? -1 : 0);
 
-            int spanSize = getSpanSize(recycler, state, helper.getPosition(view));
-            final int spec = View.MeasureSpec.makeMeasureSpec(mSizePerSpan * spanSize +
-                            Math.max(0, spanSize - 1) * (layoutInVertical ? mHGap : mVGap),
-                    View.MeasureSpec.EXACTLY);
+            int spanSize = getSpanSize(recycler, state, helper.getPosition(view)), spec;
+            if (weighted) {
+                final int index = mSpanIndices[i];
+                int spanLength = 0;
+                for (int j = 0; j < spanSize; j++) {
+                    spanLength += mSpanCols[j + index];
+                }
+
+                spec = View.MeasureSpec.makeMeasureSpec(Math.max(0, spanLength), View.MeasureSpec.EXACTLY);
+            } else {
+                spec = View.MeasureSpec.makeMeasureSpec(mSizePerSpan * spanSize +
+                                Math.max(0, spanSize - 1) * (layoutInVertical ? mHGap : mVGap),
+                        View.MeasureSpec.EXACTLY);
+            }
             final LayoutParams lp = (LayoutParams) view.getLayoutParams();
 
             if (helper.getOrientation() == VERTICAL) {
@@ -310,10 +374,21 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         for (int i = 0; i < count; i++) {
             final View view = mSet[i];
             if (orientationHelper.getDecoratedMeasurement(view) != maxSize) {
-                int spanSize = getSpanSize(recycler, state, helper.getPosition(view));
-                final int spec = View.MeasureSpec.makeMeasureSpec(mSizePerSpan * spanSize +
-                                Math.max(0, spanSize - 1) * (layoutInVertical ? mHGap : mVGap),
-                        View.MeasureSpec.EXACTLY);
+                int spanSize = getSpanSize(recycler, state, helper.getPosition(view)), spec;
+                if (weighted) {
+                    final int index = mSpanIndices[i];
+                    int spanLength = 0;
+                    for (int j = 0; j < spanSize; j++) {
+                        spanLength += mSpanCols[j + index];
+                    }
+
+                    spec = View.MeasureSpec.makeMeasureSpec(Math.max(0, spanLength), View.MeasureSpec.EXACTLY);
+                } else {
+                    spec = View.MeasureSpec.makeMeasureSpec(mSizePerSpan * spanSize +
+                                    Math.max(0, spanSize - 1) * (layoutInVertical ? mHGap : mVGap),
+                            View.MeasureSpec.EXACTLY);
+                }
+
                 if (helper.getOrientation() == VERTICAL) {
                     helper.measureChild(view, spec, maxMeasureSpec);
                 } else {
@@ -346,18 +421,32 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         for (int i = 0; i < count; i++) {
             View view = mSet[i];
+            final int index = mSpanIndices[i];
 
             LayoutParams params = (LayoutParams) view.getLayoutParams();
-            if (helper.getOrientation() == VERTICAL) {
-                left = helper.getPaddingLeft() + mMarginLeft + mSizePerSpan * mSpanIndic[i] + mSpanIndic[i] * mHGap;
+            if (layoutInVertical) {
+                if (weighted) {
+                    left = helper.getPaddingLeft() + mMarginLeft;
+                    for (int j = 0; j < index; j++)
+                        left += mSpanCols[j] + mHGap;
+                } else
+                    left = helper.getPaddingLeft() + mMarginLeft + mSizePerSpan * index + index * mHGap;
+
                 right = left + orientationHelper.getDecoratedMeasurementInOther(view);
             } else {
-                top = helper.getPaddingTop() + mMarginTop + mSizePerSpan * mSpanIndic[i] + mSpanIndic[i] * mVGap;
+
+                if (weighted) {
+                    top = helper.getPaddingTop() + mMarginTop;
+                    for (int j = 0; j < index; j++)
+                        top += mSpanCols[j] + mVGap;
+                } else
+                    top = helper.getPaddingTop() + mMarginTop + mSizePerSpan * index + index * mVGap;
+
                 bottom = top + orientationHelper.getDecoratedMeasurementInOther(view);
             }
 
             if (DEBUG) {
-                Log.d(TAG, "layout item in position: " + params.getViewPosition() + " with text " + ((TextView) view).getText() + " with SpanIndex: " + mSpanIndic[i] + " into (" +
+                Log.d(TAG, "layout item in position: " + params.getViewPosition() + " with text " + ((TextView) view).getText() + " with SpanIndex: " + index + " into (" +
                         left + ", " + top + ", " + right + ", " + bottom + " )");
             }
 
@@ -374,7 +463,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         }
 
         Arrays.fill(mSet, null);
-        Arrays.fill(mSpanIndic, 0);
+        Arrays.fill(mSpanIndices, 0);
+        Arrays.fill(mSpanCols, 0);
     }
 
 
@@ -413,6 +503,22 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             return View.MeasureSpec.makeMeasureSpec((int) (otherSize / mAspectRatio), View.MeasureSpec.EXACTLY);
         } else {
             return View.MeasureSpec.makeMeasureSpec(dim, View.MeasureSpec.EXACTLY);
+        }
+    }
+
+
+    private void ensureSpanCount() {
+
+        if (mSet == null || mSet.length != mSpanCount) {
+            mSet = new View[mSpanCount];
+        }
+
+        if (mSpanIndices == null || mSpanIndices.length != mSpanCount) {
+            mSpanIndices = new int[mSpanCount];
+        }
+
+        if (mSpanCols == null || mSpanCols.length != mSpanCount) {
+            mSpanCols = new int[mSpanCount];
         }
     }
 
@@ -485,9 +591,9 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             View view = mSet[i];
             int spanSize = getSpanSize(recycler, state, layoutManagerHelper.getPosition(view));
             if (spanDiff == -1 && spanSize > 1) {
-                mSpanIndic[i] = span - (spanSize - 1);
+                mSpanIndices[i] = span - (spanSize - 1);
             } else {
-                mSpanIndic[i] = span;
+                mSpanIndices[i] = span;
             }
             span += spanDiff * spanSize;
         }

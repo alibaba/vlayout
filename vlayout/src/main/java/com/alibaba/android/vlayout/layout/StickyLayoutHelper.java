@@ -290,10 +290,15 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
     private void doMeasure(View view, LayoutManagerHelper helper) {
         final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-        final int widthSpec = helper.getChildMeasureSpec(helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(),
-                params.width, !layoutInVertical);
-        final int heightSpec = helper.getChildMeasureSpec(helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
-                params.height, layoutInVertical);
+        final int widthSize = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - getHorizontalMargin();
+
+        final int widthSpec = helper.getChildMeasureSpec(widthSize, params.width, !layoutInVertical);
+        int heightSpec;
+        if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
+            heightSpec = View.MeasureSpec.makeMeasureSpec((int) (widthSize / mAspectRatio + 0.5), View.MeasureSpec.EXACTLY);
+        } else
+            heightSpec = helper.getChildMeasureSpec(helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
+                    params.height, layoutInVertical);
 
         helper.measureChild(view, widthSpec, heightSpec);
     }

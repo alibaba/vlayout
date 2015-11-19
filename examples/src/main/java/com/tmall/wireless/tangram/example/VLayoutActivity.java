@@ -34,17 +34,17 @@ import java.util.List;
  */
 public class VLayoutActivity extends Activity {
 
-    private static final boolean FIX_LAYOUT = false;
+    private static final boolean FIX_LAYOUT = true;
 
-    private static final boolean LINEAR_LAYOUT = false;
+    private static final boolean LINEAR_LAYOUT = true;
 
-    private static final boolean ONEN_LAYOUT = false;
+    private static final boolean ONEN_LAYOUT = true;
 
     private static final boolean COLUMN_LAYOUT = true;
 
     private static final boolean GRID_LAYOUT = true;
 
-    private static final boolean STICKY_LAYOUT = false;
+    private static final boolean STICKY_LAYOUT = true;
 
     private static final boolean STAGGER_LAYOUT = true;
 
@@ -173,7 +173,8 @@ public class VLayoutActivity extends Activity {
 
         if (GRID_LAYOUT) {
             GridLayoutHelper helper = new GridLayoutHelper(4);
-            helper.setAspectRatio(3f);
+            helper.setAspectRatio(4f);
+            helper.setWeights(new float[]{40, 20, 30, 30});
             adapters.add(new SubAdapter(this, helper, 20));
         }
 
