@@ -413,53 +413,6 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         return new LayoutParams(c, attrs);
     }
 
-
-    /**
-     * Considering margins in {@link LayoutParams} when doing calculation
-     */
-    @Override
-    public int getDecoratedMeasuredWidth(View child) {
-        final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
-        return super.getDecoratedMeasuredWidth(child) + lp.leftMargin + lp.rightMargin;
-    }
-
-    @Override
-    public int getDecoratedMeasuredHeight(View child) {
-        final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
-        return super.getDecoratedMeasuredHeight(child) + lp.topMargin + lp.bottomMargin;
-    }
-
-    @Override
-    public int getDecoratedLeft(View child) {
-        final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
-        return super.getDecoratedLeft(child) - lp.leftMargin;
-    }
-
-    @Override
-    public int getDecoratedTop(View child) {
-        final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
-        return super.getDecoratedTop(child) - lp.topMargin;
-    }
-
-    @Override
-    public int getDecoratedRight(View child) {
-        final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
-        return super.getDecoratedRight(child) + lp.rightMargin;
-    }
-
-    @Override
-    public int getDecoratedBottom(View child) {
-        final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
-        return super.getDecoratedBottom(child) + lp.bottomMargin;
-    }
-
-    @Override
-    public void layoutDecorated(View child, int left, int top, int right, int bottom) {
-        final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
-        super.layoutDecorated(child, left + lp.leftMargin, top + lp.topMargin,
-                right - lp.rightMargin, bottom - lp.bottomMargin);
-    }
-
     @Override
     public void onAdapterChanged(RecyclerView.Adapter oldAdapter, RecyclerView.Adapter newAdapter) {
         super.onAdapterChanged(oldAdapter, newAdapter);
@@ -755,7 +708,9 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     @Override
     public void layoutChild(View child, int left, int top, int right, int bottom) {
-        layoutDecorated(child, left, top, right, bottom);
+        final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
+        layoutDecorated(child, left + lp.leftMargin, top + lp.topMargin,
+                right - lp.rightMargin, bottom - lp.bottomMargin);
     }
 
     @Override

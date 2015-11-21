@@ -171,9 +171,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             return;
         }
 
+        boolean isStartLine = false, isEndLine = false;
         final int currentPosition = layoutState.getCurrentPosition();
-        final boolean isStartLine = (currentPosition - getRange().getLower()) < getItemCount();
-        final boolean isLastLine = (getRange().getUpper() - currentPosition) < getItemCount();
 
         final int itemDirection = layoutState.getItemDirection();
         final boolean layingOutInPrimaryDirection =
@@ -229,6 +228,14 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                     if (view == null)
                         break;
 
+                    if (!isStartLine) {
+                        isStartLine = helper.getReverseLayout() ? index == getRange().getUpper() : index == getRange().getLower();
+                    }
+
+                    if (!isEndLine) {
+                        isEndLine = helper.getReverseLayout() ? index == getRange().getLower() : index == getRange().getUpper();
+                    }
+
                     revRemainingSpan -= spanSize;
                     if (revRemainingSpan < 0)
                         break;
@@ -275,6 +282,14 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             View view = layoutState.next(recycler);
             if (view == null) {
                 break;
+            }
+
+            if (!isStartLine) {
+                isStartLine = helper.getReverseLayout() ? pos == getRange().getUpper() : pos == getRange().getLower();
+            }
+
+            if (!isEndLine) {
+                isEndLine = helper.getReverseLayout() ? pos == getRange().getLower() : pos == getRange().getUpper();
             }
 
             consumedSpanCount += spanSize;
@@ -401,39 +416,35 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             }
         }
 
-        result.mConsumed = maxSize + (layoutInVertical ? mVGap : mHGap);
+        int startMargin = 0, endMargin = 0;
+
+        if (isStartLine) {
+            startMargin = layoutInVertical ? mMarginTop : mMarginLeft;
+        }
+
+        if (isEndLine) {
+            endMargin = layoutInVertical ? mMarginBottom : mMarginRight;
+        }
+
+
+        result.mConsumed = maxSize + startMargin + endMargin + (layoutInVertical ? mVGap : mHGap);
 
 
         int left = 0, right = 0, top = 0, bottom = 0;
-        if (helper.getOrientation() == VERTICAL) {
+        if (layoutInVertical) {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                bottom = layoutState.getOffset();
-
-                if (!isLastLine)
-                    bottom -= mVGap;
-
+                bottom = layoutState.getOffset() - endMargin;
                 top = bottom - maxSize;
             } else {
-                top = layoutState.getOffset();
-
-                if (!isStartLine)
-                    top += mVGap;
-
+                top = layoutState.getOffset() + startMargin;
                 bottom = top + maxSize;
             }
         } else {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                right = layoutState.getOffset();
-                if (!isLastLine)
-                    right -= mHGap;
-
+                right = layoutState.getOffset() - endMargin;
                 left = right - maxSize;
             } else {
-                left = layoutState.getOffset();
-
-                if (!isStartLine)
-                    left += mHGap;
-
+                left = layoutState.getOffset() + startMargin;
                 right = left + maxSize;
             }
         }
@@ -490,11 +501,12 @@ public class GridLayoutHelper extends BaseLayoutHelper {
     @Override
     public int getExtraMargin(int offset, View child, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
         if (isLayoutEnd) {
-            if (offset >= getItemCount() - mSpanCount)
+            if (offset == getItemCount() - 1) {
                 return layoutInVertical ? mMarginBottom : mMarginRight;
+            }
         } else {
-            if (offset < mSpanCount)
-                return layoutInVertical ? mMarginTop : mMarginLeft;
+            if (offset == 0)
+                return layoutInVertical ? -mMarginTop : -mMarginLeft;
         }
 
         return super.getExtraMargin(offset, child, isLayoutEnd, layoutInVertical, helper);

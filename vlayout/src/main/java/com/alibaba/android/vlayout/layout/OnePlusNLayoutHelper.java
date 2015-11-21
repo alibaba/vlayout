@@ -555,7 +555,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
     public int getExtraMargin(int offset, View child, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
         if (getItemCount() == 3) {
             if (offset == 1 && isLayoutEnd) {
-                Log.e(TAG, "hello");
+                Log.w(TAG, "Should not happen after adjust anchor");
                 return 0;
             }
         } else if (getItemCount() == 4) {

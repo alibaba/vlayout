@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
 import com.alibaba.android.vlayout.layout.FixLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
@@ -36,17 +38,17 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean FIX_LAYOUT = false;
 
-    private static final boolean LINEAR_LAYOUT = false;
+    private static final boolean LINEAR_LAYOUT = true;
 
     private static final boolean ONEN_LAYOUT = true;
 
     private static final boolean COLUMN_LAYOUT = false;
 
-    private static final boolean GRID_LAYOUT = false;
+    private static final boolean GRID_LAYOUT = true;
 
     private static final boolean STICKY_LAYOUT = false;
 
-    private static final boolean STAGGER_LAYOUT = false;
+    private static final boolean STAGGER_LAYOUT = true;
 
     private TextView mFirstText;
     private TextView mLastText;
@@ -107,7 +109,7 @@ public class VLayoutActivity extends Activity {
 
         RecyclerView.ItemDecoration itemDecoration = new RecyclerView.ItemDecoration() {
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                int position = ((VirtualLayoutManager.LayoutParams) view.getLayoutParams()).getViewPosition();
+                int position = ((LayoutParams) view.getLayoutParams()).getViewPosition();
                 outRect.set(4, 4, 4, 4);
             }
         };
@@ -131,7 +133,7 @@ public class VLayoutActivity extends Activity {
             adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 5));
 
         if (STICKY_LAYOUT)
-            adapters.add(new SubAdapter(this, new StickyLayoutHelper(), 1, new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
+            adapters.add(new SubAdapter(this, new StickyLayoutHelper(), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
 
 
         ColumnLayoutHelper layoutHelper = new ColumnLayoutHelper();
@@ -140,22 +142,40 @@ public class VLayoutActivity extends Activity {
         if (COLUMN_LAYOUT)
             adapters.add(new SubAdapter(this, layoutHelper, 3));
 
-        if (false)
-            adapters.add(new SubAdapter(this, new OnePlusNLayoutHelper(), 4) {
+        if (ONEN_LAYOUT) {
+            OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
+            helper.setAspectRatio(2.0f);
+            adapters.add(new SubAdapter(this, helper, 4) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
+                    LayoutParams lp = (LayoutParams) holder.itemView.getLayoutParams();
                     if (position == 0) {
-                        holder.itemView.setLayoutParams(new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 450));
+                        lp.rightMargin = 1;
+                    } else if (position == 1) {
+
+                    } else if (position == 2) {
+                        lp.topMargin = 1;
+                        lp.rightMargin = 1;
                     }
                 }
             });
+        }
 
         if (ONEN_LAYOUT) {
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
             helper.setAspectRatio(1.8f);
-            VirtualLayoutManager.LayoutParams lp = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            adapters.add(new SubAdapter(this, helper, 3, lp));
+            LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            adapters.add(new SubAdapter(this, helper, 3, lp) {
+                @Override
+                public void onBindViewHolder(MainViewHolder holder, int position) {
+                    super.onBindViewHolder(holder, position);
+                    LayoutParams lp = (LayoutParams) holder.itemView.getLayoutParams();
+                    if (position == 0) {
+                        lp.rightMargin = 1;
+                    }
+                }
+            });
         }
 
         if (COLUMN_LAYOUT)
@@ -166,7 +186,7 @@ public class VLayoutActivity extends Activity {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
-                    VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(200, 200);
+                    LayoutParams layoutParams = new LayoutParams(200, 200);
                     layoutParams.topMargin = 10;
                     layoutParams.leftMargin = 10;
                     holder.itemView.setLayoutParams(layoutParams);
@@ -175,35 +195,45 @@ public class VLayoutActivity extends Activity {
         }
 
         if (STICKY_LAYOUT)
-            adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 1, new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
+            adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
 
 
         if (GRID_LAYOUT) {
             GridLayoutHelper helper = new GridLayoutHelper(4);
             helper.setAspectRatio(4f);
-            helper.setWeights(new float[]{40, 20, 30, 30});
-            adapters.add(new SubAdapter(this, helper, 20));
+            //≈helper.setWeights(new float[]{40, 20, 30, 30});
+            helper.setMargin(0, 10, 0, 10);
+            adapters.add(new SubAdapter(this, helper, 20) {
+                @Override
+                public void onBindViewHolder(MainViewHolder holder, int position) {
+                    super.onBindViewHolder(holder, position);
+                    LayoutParams lp = (LayoutParams) holder.itemView.getLayoutParams();
+                    lp.bottomMargin = 1;
+                    lp.rightMargin = 1;
+                }
+            });
         }
 
         if (LINEAR_LAYOUT)
             adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 10));
+
+        if (GRID_LAYOUT) {
+            GridLayoutHelper helper = new GridLayoutHelper(3);
+            helper.setMargin(0, 10, 0, 10);
+            adapters.add(new SubAdapter(this, helper, 3));
+        }
 
         if (STAGGER_LAYOUT) {
             adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 0), 27) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
-                    VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
+                    LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
                     layoutParams.height = 240 + position % 7 * 20;
                     holder.itemView.setLayoutParams(layoutParams);
                 }
             });
         }
-
-        if (GRID_LAYOUT) {
-            adapters.add(new SubAdapter(this, new GridLayoutHelper(3), 45));
-        }
-
 
         delegateAdapter.setAdapters(adapters);
 
@@ -232,15 +262,15 @@ public class VLayoutActivity extends Activity {
         private LayoutHelper mLayoutHelper;
 
 
-        private VirtualLayoutManager.LayoutParams mLayoutParams;
+        private LayoutParams mLayoutParams;
         private int mCount = 0;
 
 
         public SubAdapter(Context context, LayoutHelper layoutHelper, int count) {
-            this(context, layoutHelper, count, new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
+            this(context, layoutHelper, count, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
         }
 
-        public SubAdapter(Context context, LayoutHelper layoutHelper, int count, VirtualLayoutManager.LayoutParams layoutParams) {
+        public SubAdapter(Context context, LayoutHelper layoutHelper, int count, @NonNull LayoutParams layoutParams) {
             this.mContext = context;
             this.mLayoutHelper = layoutHelper;
             this.mCount = count;
@@ -261,7 +291,7 @@ public class VLayoutActivity extends Activity {
         public void onBindViewHolder(MainViewHolder holder, int position) {
             // only vertical
             holder.itemView.setLayoutParams(
-                    new VirtualLayoutManager.LayoutParams(mLayoutParams));
+                    new LayoutParams(mLayoutParams));
         }
 
         @Override
