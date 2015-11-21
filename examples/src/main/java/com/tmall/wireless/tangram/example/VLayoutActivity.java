@@ -38,9 +38,9 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean FIX_LAYOUT = false;
 
-    private static final boolean LINEAR_LAYOUT = true;
+    private static final boolean LINEAR_LAYOUT = false;
 
-    private static final boolean ONEN_LAYOUT = true;
+    private static final boolean ONEN_LAYOUT = false;
 
     private static final boolean COLUMN_LAYOUT = false;
 
@@ -219,7 +219,7 @@ public class VLayoutActivity extends Activity {
 
         if (GRID_LAYOUT) {
             GridLayoutHelper helper = new GridLayoutHelper(3);
-            helper.setMargin(0, 10, 0, 10);
+            helper.setMargin(0, 10, 0, 20);
             adapters.add(new SubAdapter(this, helper, 3));
         }
 

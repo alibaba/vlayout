@@ -210,6 +210,15 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         return 0;
     }
 
+
+    public int obtainExtraMargin(View child, boolean isLayoutEnd) {
+        if (child != null) {
+            return getExtraMargin(child, isLayoutEnd);
+        }
+
+        return 0;
+    }
+
     private int mNested = 0;
 
     private void runPreLayout(RecyclerView.Recycler recycler, RecyclerView.State state) {

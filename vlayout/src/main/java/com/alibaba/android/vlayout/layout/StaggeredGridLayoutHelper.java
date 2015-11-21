@@ -345,7 +345,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                         View child = layoutManager.getChildAt(i + 1);
                         int aPos = layoutManager.getPosition(child);
                         if (aPos == position - 1) {
-                            alignLine = orientationHelper.getDecoratedStart(child);
+                            alignLine = orientationHelper.getDecoratedStart(child) + layoutManager.obtainExtraMargin(child, false);
                         } else {
                             alignLine = orientationHelper.getDecoratedEnd(view);
                         }
@@ -363,7 +363,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                         alignLine = orientationHelper.getDecoratedStart(view);
                     } else {
                         View child = layoutManager.getChildAt(i - 1);
-                        alignLine = orientationHelper.getDecoratedEnd(child);
+                        alignLine = orientationHelper.getDecoratedEnd(child) + layoutManager.obtainExtraMargin(child, true);
                     }
                     break;
                 }
