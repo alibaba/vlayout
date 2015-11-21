@@ -40,7 +40,7 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean LINEAR_LAYOUT = false;
 
-    private static final boolean ONEN_LAYOUT = false;
+    private static final boolean ONEN_LAYOUT = true;
 
     private static final boolean COLUMN_LAYOUT = false;
 
@@ -144,7 +144,16 @@ public class VLayoutActivity extends Activity {
 
         if (ONEN_LAYOUT) {
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
+            helper.setAspectRatio(4.0f);
+            helper.setColWeights(new float[]{40f, 45f});
+            adapters.add(new SubAdapter(this, helper, 2));
+        }
+
+        if (ONEN_LAYOUT) {
+            OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
             helper.setAspectRatio(2.0f);
+            helper.setColWeights(new float[]{40f});
+            helper.setRowWeight(30f);
             adapters.add(new SubAdapter(this, helper, 4) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
@@ -165,6 +174,7 @@ public class VLayoutActivity extends Activity {
         if (ONEN_LAYOUT) {
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
             helper.setAspectRatio(1.8f);
+            helper.setColWeights(new float[]{33.33f, 50f, 40f});
             LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             adapters.add(new SubAdapter(this, helper, 3, lp) {
                 @Override
@@ -201,7 +211,7 @@ public class VLayoutActivity extends Activity {
         if (GRID_LAYOUT) {
             GridLayoutHelper helper = new GridLayoutHelper(4);
             helper.setAspectRatio(4f);
-            //≈helper.setWeights(new float[]{40, 20, 30, 30});
+            //≈helper.setColWeights(new float[]{40, 20, 30, 30});
             helper.setMargin(0, 10, 0, 10);
             adapters.add(new SubAdapter(this, helper, 20) {
                 @Override
