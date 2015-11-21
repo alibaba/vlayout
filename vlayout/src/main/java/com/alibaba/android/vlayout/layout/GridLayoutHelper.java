@@ -171,6 +171,10 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             return;
         }
 
+        final int currentPosition = layoutState.getCurrentPosition();
+        final boolean isStartLine = (currentPosition - getRange().getLower()) < getItemCount();
+        final boolean isLastLine = (getRange().getUpper() - currentPosition) < getItemCount();
+
         final int itemDirection = layoutState.getItemDirection();
         final boolean layingOutInPrimaryDirection =
                 itemDirection == LayoutStateWrapper.ITEM_DIRECTION_TAIL;
@@ -403,18 +407,33 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         int left = 0, right = 0, top = 0, bottom = 0;
         if (helper.getOrientation() == VERTICAL) {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                bottom = layoutState.getOffset() - mVGap;
+                bottom = layoutState.getOffset();
+
+                if (!isLastLine)
+                    bottom -= mVGap;
+
                 top = bottom - maxSize;
             } else {
-                top = layoutState.getOffset() + mVGap;
+                top = layoutState.getOffset();
+
+                if (!isStartLine)
+                    top += mVGap;
+
                 bottom = top + maxSize;
             }
         } else {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                right = layoutState.getOffset() - mHGap;
+                right = layoutState.getOffset();
+                if (!isLastLine)
+                    right -= mHGap;
+
                 left = right - maxSize;
             } else {
                 left = layoutState.getOffset();
+
+                if (!isStartLine)
+                    left += mHGap;
+
                 right = left + maxSize;
             }
         }

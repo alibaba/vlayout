@@ -34,19 +34,19 @@ import java.util.List;
  */
 public class VLayoutActivity extends Activity {
 
-    private static final boolean FIX_LAYOUT = true;
+    private static final boolean FIX_LAYOUT = false;
 
-    private static final boolean LINEAR_LAYOUT = true;
+    private static final boolean LINEAR_LAYOUT = false;
 
     private static final boolean ONEN_LAYOUT = true;
 
-    private static final boolean COLUMN_LAYOUT = true;
+    private static final boolean COLUMN_LAYOUT = false;
 
-    private static final boolean GRID_LAYOUT = true;
+    private static final boolean GRID_LAYOUT = false;
 
-    private static final boolean STICKY_LAYOUT = true;
+    private static final boolean STICKY_LAYOUT = false;
 
-    private static final boolean STAGGER_LAYOUT = true;
+    private static final boolean STAGGER_LAYOUT = false;
 
     private TextView mFirstText;
     private TextView mLastText;
@@ -140,7 +140,7 @@ public class VLayoutActivity extends Activity {
         if (COLUMN_LAYOUT)
             adapters.add(new SubAdapter(this, layoutHelper, 3));
 
-        if (ONEN_LAYOUT)
+        if (false)
             adapters.add(new SubAdapter(this, new OnePlusNLayoutHelper(), 4) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
@@ -150,6 +150,13 @@ public class VLayoutActivity extends Activity {
                     }
                 }
             });
+
+        if (ONEN_LAYOUT) {
+            OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
+            helper.setAspectRatio(1.8f);
+            VirtualLayoutManager.LayoutParams lp = new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            adapters.add(new SubAdapter(this, helper, 3, lp));
+        }
 
         if (COLUMN_LAYOUT)
             adapters.add(new SubAdapter(this, new ColumnLayoutHelper(), 4));
