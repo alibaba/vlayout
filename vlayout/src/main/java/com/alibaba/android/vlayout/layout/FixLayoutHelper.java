@@ -12,7 +12,6 @@ import static android.support.v7.widget._ExposeLinearLayoutManagerEx.VERTICAL;
 /**
  * Created by villadora on 15/8/18.
  */
-// TODO: not use margin to control offset
 public class FixLayoutHelper extends BaseLayoutHelper {
 
     private static final String TAG = "FixLayoutHelper";
@@ -28,16 +27,21 @@ public class FixLayoutHelper extends BaseLayoutHelper {
 
     private int mAlignType = TOP_LEFT;
 
+    protected int mX = 0;
+    protected int mY = 0;
+
     protected View mFixView = null;
 
     protected boolean mDoNormalHandle = false;
 
-    public FixLayoutHelper() {
-        this(TOP_LEFT);
+    public FixLayoutHelper(int x, int y) {
+        this(TOP_LEFT, x, y);
     }
 
-    public FixLayoutHelper(int alignType) {
+    public FixLayoutHelper(int alignType, int x, int y) {
         this.mAlignType = alignType;
+        this.mX = x;
+        this.mY = y;
         setItemCount(1);
     }
 
@@ -48,6 +52,7 @@ public class FixLayoutHelper extends BaseLayoutHelper {
         else
             super.setItemCount(0);
     }
+
 
     /**
      * The margins in FixLayoutHelper are disabled
@@ -195,24 +200,24 @@ public class FixLayoutHelper extends BaseLayoutHelper {
 
         int left, top, right, bottom;
         if (mAlignType == TOP_RIGHT) {
-            top = helper.getPaddingTop();
-            right = helper.getContentWidth() - helper.getPaddingRight();
+            top = helper.getPaddingTop() + mY;
+            right = helper.getContentWidth() - helper.getPaddingRight() - mX;
             left = right - params.leftMargin - params.rightMargin - view.getMeasuredWidth();
             bottom = top + params.topMargin + params.bottomMargin + view.getMeasuredHeight();
         } else if (mAlignType == BOTTOM_LEFT) {
-            left = helper.getPaddingLeft();
-            bottom = helper.getContentHeight() - helper.getPaddingBottom();
+            left = helper.getPaddingLeft() + mX;
+            bottom = helper.getContentHeight() - helper.getPaddingBottom() - mY;
             right = left + params.leftMargin + params.rightMargin + view.getMeasuredWidth();
             top = bottom - view.getMeasuredHeight() - params.topMargin - params.bottomMargin;
         } else if (mAlignType == BOTTOM_RIGHT) {
-            right = helper.getContentWidth() - helper.getPaddingRight();
-            bottom = helper.getContentHeight() - helper.getPaddingBottom();
+            right = helper.getContentWidth() - helper.getPaddingRight() - mX;
+            bottom = helper.getContentHeight() - helper.getPaddingBottom() - mY;
             left = right - params.leftMargin - params.rightMargin - view.getMeasuredWidth();
             top = bottom - view.getMeasuredHeight() - params.topMargin - params.bottomMargin;
         } else {
             // TOP_LEFT
-            left = helper.getPaddingLeft();
-            top = helper.getPaddingTop();
+            left = helper.getPaddingLeft() + mX;
+            top = helper.getPaddingTop() + mY;
             right = left + (layoutInVertical ? orientationHelper.getDecoratedMeasurementInOther(view) : orientationHelper.getDecoratedMeasurement(view));
             bottom = top + (layoutInVertical ? orientationHelper.getDecoratedMeasurement(view) : orientationHelper.getDecoratedMeasurementInOther(view));
         }

@@ -14,6 +14,7 @@ import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.VirtualLayoutAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.DefaultLayoutHelper;
+import com.alibaba.android.vlayout.layout.FixLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.ScrollFixLayoutHelper;
 
@@ -50,7 +51,7 @@ public class MainActivity extends Activity {
         gridLayoutHelper.setItemCount(25);
 
 
-        final ScrollFixLayoutHelper scrollFixLayoutHelper = new ScrollFixLayoutHelper();
+        final ScrollFixLayoutHelper scrollFixLayoutHelper = new ScrollFixLayoutHelper(FixLayoutHelper.TOP_RIGHT, 100, 100);
 
         helpers.add(DefaultLayoutHelper.newHelper(7));
         helpers.add(scrollFixLayoutHelper);

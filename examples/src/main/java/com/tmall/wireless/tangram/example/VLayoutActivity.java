@@ -25,6 +25,7 @@ import com.alibaba.android.vlayout.layout.FixLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
+import com.alibaba.android.vlayout.layout.ScrollFixLayoutHelper;
 import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.alibaba.android.vlayout.layout.StickyLayoutHelper;
 
@@ -36,7 +37,7 @@ import java.util.List;
  */
 public class VLayoutActivity extends Activity {
 
-    private static final boolean FIX_LAYOUT = false;
+    private static final boolean FIX_LAYOUT = true;
 
     private static final boolean LINEAR_LAYOUT = false;
 
@@ -192,13 +193,11 @@ public class VLayoutActivity extends Activity {
             adapters.add(new SubAdapter(this, new ColumnLayoutHelper(), 4));
 
         if (FIX_LAYOUT) {
-            adapters.add(new SubAdapter(this, new FixLayoutHelper(), 1) {
+            adapters.add(new SubAdapter(this, new FixLayoutHelper(FixLayoutHelper.TOP_RIGHT, 20, 20), 1) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
                     LayoutParams layoutParams = new LayoutParams(200, 200);
-                    layoutParams.topMargin = 10;
-                    layoutParams.leftMargin = 10;
                     holder.itemView.setLayoutParams(layoutParams);
                 }
             });
@@ -220,6 +219,17 @@ public class VLayoutActivity extends Activity {
                     LayoutParams lp = (LayoutParams) holder.itemView.getLayoutParams();
                     lp.bottomMargin = 1;
                     lp.rightMargin = 1;
+                }
+            });
+        }
+
+        if (FIX_LAYOUT) {
+            adapters.add(new SubAdapter(this, new ScrollFixLayoutHelper(20, 20), 1) {
+                @Override
+                public void onBindViewHolder(MainViewHolder holder, int position) {
+                    super.onBindViewHolder(holder, position);
+                    LayoutParams layoutParams = new LayoutParams(200, 200);
+                    holder.itemView.setLayoutParams(layoutParams);
                 }
             });
         }
