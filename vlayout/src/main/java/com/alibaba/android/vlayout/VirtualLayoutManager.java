@@ -9,12 +9,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget._ExposeLinearLayoutManagerEx;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.layout.DefaultLayoutHelper;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -297,6 +300,44 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     private LayoutStateWrapper mTempLayoutStateWrapper = new LayoutStateWrapper();
 
+    private List<Pair<Range<Integer>, Integer>> mRangeLengths = new LinkedList<>();
+
+    @Nullable
+    private int findRangeLength(@NonNull final Range<Integer> range) {
+        final int count = mRangeLengths.size();
+        if (count == 0) {
+            return -1;
+        }
+
+        int s = 0, e = count - 1, m = -1;
+        Pair<Range<Integer>, Integer> rs = null;
+
+        // binary search range
+        while (s <= e) {
+            m = (s + e) / 2;
+            rs = mRangeLengths.get(m);
+
+            Range<Integer> r = rs.first;
+            if (r == null) {
+                rs = null;
+                break;
+            }
+
+            if (r.contains(range.getLower()) || r.contains(range.getUpper()) || range.contains(r)) {
+                break;
+            } else if (r.getLower() > range.getUpper()) {
+                e = m - 1;
+            } else if (r.getUpper() < range.getLower()) {
+                s = m + 1;
+            }
+
+            rs = null;
+        }
+
+        return rs == null ? -1 : m;
+    }
+
+
     @Override
     protected void layoutChunk(RecyclerView.Recycler recycler, RecyclerView.State state, LayoutState layoutState, com.alibaba.android.vlayout.layout.LayoutChunkResult result) {
         final int position = layoutState.mCurrentPosition;
@@ -307,14 +348,69 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
         layoutHelper.doLayout(recycler, state, mTempLayoutStateWrapper, result, this);
 
+
         mTempLayoutStateWrapper.mLayoutState = null;
 
 
         // no item consumed
         if (layoutState.mCurrentPosition == position) {
+            Log.w(TAG, "layoutHelper[" + layoutHelper.getClass().getSimpleName() + "@" + layoutHelper.toString() + "] consumes no item!");
             // break as no item consumed
             result.mFinished = true;
+        } else {
+            final int positionAfterLayout = layoutState.mCurrentPosition - layoutState.mItemDirection;
+            final int consumed = result.mIgnoreConsumed ? 0 : result.mConsumed;
+
+            // TODO: change when supporting reverseLayout
+            Range<Integer> range = new Range<>(Math.min(position, positionAfterLayout), Math.max(position, positionAfterLayout));
+
+            final int idx = findRangeLength(range);
+            if (idx >= 0) {
+                Pair<Range<Integer>, Integer> pair = mRangeLengths.get(idx);
+                if (pair != null && pair.first.equals(range) && pair.second == consumed)
+                    return;
+
+                mRangeLengths.remove(idx);
+            }
+
+            mRangeLengths.add(Pair.create(range, consumed));
+            Collections.sort(mRangeLengths, new Comparator<Pair<Range<Integer>, Integer>>() {
+                @Override
+                public int compare(Pair<Range<Integer>, Integer> a, Pair<Range<Integer>, Integer> b) {
+                    if (a == null && b == null) return 0;
+                    if (a == null) return -1;
+                    if (b == null) return 1;
+
+                    Range<Integer> lr = a.first;
+                    Range<Integer> rr = b.first;
+
+                    return lr.getLower() - rr.getLower();
+                }
+            });
         }
+    }
+
+
+    public int getOffsetToStart() {
+        if (getChildCount() == 0) return -1;
+
+        final View view = getChildAt(0);
+
+        int position = getPosition(view);
+        final int idx = findRangeLength(Range.create(position, position));
+        if (idx < 0 || idx >= mRangeLengths.size()) {
+            return -1;
+        }
+
+        int offset = -mOrientationHelper.getDecoratedStart(view);
+        for (int i = 0; i < idx; i++) {
+            Pair<Range<Integer>, Integer> pair = mRangeLengths.get(i);
+            if (pair != null) {
+                offset += pair.second;
+            }
+        }
+
+        return offset;
     }
 
 

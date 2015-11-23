@@ -56,6 +56,8 @@ public class VLayoutActivity extends Activity {
 
     private TextView mCountText;
 
+    private TextView mTotalOffsetText;
+
     private Runnable trigger;
 
     @Override
@@ -66,6 +68,7 @@ public class VLayoutActivity extends Activity {
         mFirstText = (TextView) findViewById(R.id.first);
         mLastText = (TextView) findViewById(R.id.last);
         mCountText = (TextView) findViewById(R.id.count);
+        mTotalOffsetText = (TextView) findViewById(R.id.total_offset);
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_view);
 
@@ -100,6 +103,7 @@ public class VLayoutActivity extends Activity {
                 mFirstText.setText("First: " + layoutManager.findFirstVisibleItemPosition());
                 mLastText.setText("Existing: " + MainViewHolder.existing + " Created: " + MainViewHolder.createdTimes);
                 mCountText.setText("Count: " + recyclerView.getChildCount());
+                mTotalOffsetText.setText("Total Offset: " + layoutManager.getOffsetToStart());
             }
         });
 

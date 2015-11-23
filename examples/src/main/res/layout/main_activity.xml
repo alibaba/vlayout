@@ -60,6 +60,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Jump"/>
+
+            <TextView
+                android:id="@+id/total_offset"
+                style="@style/IndicateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:paddingLeft="20dp"/>
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
