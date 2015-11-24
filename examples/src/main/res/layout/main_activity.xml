@@ -8,8 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#aaaaaa"
+        android:clipToPadding="true"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
+        android:paddingTop="30dp"
         android:requiresFadingEdge="none"
         android:scrollbars="vertical">
 

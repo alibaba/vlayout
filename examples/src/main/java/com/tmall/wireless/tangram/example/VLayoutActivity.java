@@ -37,9 +37,9 @@ import java.util.List;
  */
 public class VLayoutActivity extends Activity {
 
-    private static final boolean FIX_LAYOUT = true;
+    private static final boolean FIX_LAYOUT = false;
 
-    private static final boolean LINEAR_LAYOUT = false;
+    private static final boolean LINEAR_LAYOUT = true;
 
     private static final boolean ONEN_LAYOUT = true;
 
@@ -47,9 +47,9 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean GRID_LAYOUT = true;
 
-    private static final boolean STICKY_LAYOUT = false;
+    private static final boolean STICKY_LAYOUT = true;
 
-    private static final boolean STAGGER_LAYOUT = true;
+    private static final boolean STAGGER_LAYOUT = false;
 
     private TextView mFirstText;
     private TextView mLastText;
@@ -91,6 +91,7 @@ public class VLayoutActivity extends Activity {
 
 
         final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
+
 
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -135,7 +136,7 @@ public class VLayoutActivity extends Activity {
         List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
 
         if (LINEAR_LAYOUT)
-            adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 5));
+            adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 6));
 
         if (STICKY_LAYOUT)
             adapters.add(new SubAdapter(this, new StickyLayoutHelper(), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
@@ -207,7 +208,7 @@ public class VLayoutActivity extends Activity {
             });
         }
 
-        if (STICKY_LAYOUT)
+        if (false && STICKY_LAYOUT)
             adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
 
 
