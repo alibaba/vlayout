@@ -83,7 +83,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
         // Do normal measure&layout phase by default
         mDoNormalHandle = true;
 
-        final int remainingSpace = layoutState.getAvailable() - result.mConsumed;
+        final int remainingSpace = layoutState.getAvailable() - result.mConsumed + layoutState.getExtra();
 
         int left, top, right, bottom;
         if (helper.getOrientation() == VERTICAL) {
@@ -124,8 +124,6 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
                     top = 0;
                     bottom = result.mConsumed;
                 }
-
-                // Log.i("TEST", "fastScroll: " + layoutState.getScrollingOffset());
             }
 
         } else {
