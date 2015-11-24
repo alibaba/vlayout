@@ -286,7 +286,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         super.offsetChildrenHorizontal(dx);
 
         for (LayoutHelper helper : mHelperFinder) {
-            helper.offsetChildrenHorizontal(dx, this);
+            helper.onOffsetChildrenHorizontal(dx, this);
         }
     }
 
@@ -294,7 +294,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     public void offsetChildrenVertical(int dy) {
         super.offsetChildrenVertical(dy);
         for (LayoutHelper helper : mHelperFinder) {
-            helper.offsetChildrenVertical(dy, this);
+            helper.onOffsetChildrenVertical(dy, this);
         }
     }
 

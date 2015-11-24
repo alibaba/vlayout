@@ -773,6 +773,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     public void onSaveState(Bundle bundle) {
         super.onSaveState(bundle);
         bundle.putIntArray(LOOKUP_BUNDLE_KEY, mLazySpanLookup.mData);
+        // TODO: store span info
     }
 
     @Override
@@ -783,8 +784,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
 
     @Override
-    public void offsetChildrenVertical(int dy, LayoutManagerHelper helper) {
-        super.offsetChildrenVertical(dy, helper);
+    public void onOffsetChildrenVertical(int dy, LayoutManagerHelper helper) {
+        super.onOffsetChildrenVertical(dy, helper);
         if (helper.getOrientation() == VERTICAL) {
             for (Span span : mSpans) {
                 span.onOffset(dy);
@@ -793,8 +794,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     }
 
     @Override
-    public void offsetChildrenHorizontal(int dx, LayoutManagerHelper helper) {
-        super.offsetChildrenHorizontal(dx, helper);
+    public void onOffsetChildrenHorizontal(int dx, LayoutManagerHelper helper) {
+        super.onOffsetChildrenHorizontal(dx, helper);
         if (helper.getOrientation() == HORIZONTAL) {
             for (Span span : mSpans) {
                 span.onOffset(dx);

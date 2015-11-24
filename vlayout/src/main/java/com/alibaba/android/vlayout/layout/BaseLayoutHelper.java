@@ -20,7 +20,6 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     public static boolean DEBUG = false;
 
-
     protected Rect mLayoutRegion = new Rect();
 
     View mLayoutView;
@@ -28,6 +27,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
     int mBgColor;
 
     float mAspectRatio = Float.NaN;
+
 
     public BaseLayoutHelper() {
 
@@ -268,4 +268,5 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
         mLayoutRegion.set(areaRect);
     }
+
 }

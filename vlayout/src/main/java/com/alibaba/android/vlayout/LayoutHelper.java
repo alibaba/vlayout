@@ -110,7 +110,7 @@ public abstract class LayoutHelper {
      *
      * @param dx Pixels to offset by
      */
-    public void offsetChildrenHorizontal(int dx, LayoutManagerHelper helper) {
+    public void onOffsetChildrenHorizontal(int dx, LayoutManagerHelper helper) {
 
     }
 
@@ -120,7 +120,7 @@ public abstract class LayoutHelper {
      *
      * @param dy Pixels to offset by
      */
-    public void offsetChildrenVertical(int dy, LayoutManagerHelper helper) {
+    public void onOffsetChildrenVertical(int dy, LayoutManagerHelper helper) {
 
     }
 
