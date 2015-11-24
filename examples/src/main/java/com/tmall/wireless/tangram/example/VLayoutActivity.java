@@ -208,7 +208,7 @@ public class VLayoutActivity extends Activity {
             });
         }
 
-        if (false && STICKY_LAYOUT)
+        if (STICKY_LAYOUT)
             adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
 
 
