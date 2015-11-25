@@ -135,8 +135,10 @@ public class VLayoutActivity extends Activity {
 
         List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
 
-        if (LINEAR_LAYOUT)
+        if (LINEAR_LAYOUT) {
+            adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 0));
             adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 6));
+        }
 
         if (STICKY_LAYOUT)
             adapters.add(new SubAdapter(this, new StickyLayoutHelper(), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
@@ -178,6 +180,7 @@ public class VLayoutActivity extends Activity {
         }
 
         if (ONEN_LAYOUT) {
+            adapters.add(new SubAdapter(this, new OnePlusNLayoutHelper(), 0));
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
             helper.setAspectRatio(1.8f);
             helper.setColWeights(new float[]{33.33f, 50f, 40f});
@@ -194,10 +197,13 @@ public class VLayoutActivity extends Activity {
             });
         }
 
-        if (COLUMN_LAYOUT)
+        if (COLUMN_LAYOUT) {
+            adapters.add(new SubAdapter(this, new ColumnLayoutHelper(), 0));
             adapters.add(new SubAdapter(this, new ColumnLayoutHelper(), 4));
+        }
 
         if (FIX_LAYOUT) {
+            adapters.add(new SubAdapter(this, new FixLayoutHelper(10, 10), 0));
             adapters.add(new SubAdapter(this, new FixLayoutHelper(FixLayoutHelper.TOP_RIGHT, 20, 20), 1) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
@@ -208,11 +214,15 @@ public class VLayoutActivity extends Activity {
             });
         }
 
-        if (STICKY_LAYOUT)
+        if (STICKY_LAYOUT) {
+            adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 0));
             adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
+        }
 
 
         if (GRID_LAYOUT) {
+            adapters.add(new SubAdapter(this, new GridLayoutHelper(4), 0));
+
             GridLayoutHelper helper = new GridLayoutHelper(4);
             helper.setAspectRatio(4f);
             //≈helper.setColWeights(new float[]{40, 20, 30, 30});
@@ -249,6 +259,7 @@ public class VLayoutActivity extends Activity {
         }
 
         if (STAGGER_LAYOUT) {
+            adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 0), 0));
             adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 0), 27) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {

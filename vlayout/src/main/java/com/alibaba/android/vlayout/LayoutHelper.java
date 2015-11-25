@@ -49,6 +49,12 @@ public abstract class LayoutHelper {
             throw new IllegalArgumentException("end should be larger or equeal then start position");
         }
 
+        if (start == -1 && end == -1) {
+            this.mRange = RANGE_EMPTY;
+            onRangeChange(start, end);
+            return;
+        }
+
         if ((end - start + 1) != getItemCount()) {
             throw new MismatchChildCountException("ItemCount mismatch when range: " + mRange.toString() + " childCount: " + getItemCount());
         }
