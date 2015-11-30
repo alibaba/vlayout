@@ -744,6 +744,11 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         return layoutView;
     }
 
+    @Override
+    public void addChildView(View view, int position) {
+        addView(view, position);
+    }
+
 
     @Override
     public void addChildView(LayoutStateWrapper layoutState, View view) {
@@ -910,6 +915,15 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
                     View.MeasureSpec.getSize(spec) - startInset - endInset, mode);
         }
         return spec;
+    }
+
+
+    @Override
+    public View findViewByPosition(int position) {
+        View view = super.findViewByPosition(position);
+        if (view != null && getPosition(view) == position)
+            return view;
+        return null;
     }
 
 }

@@ -26,6 +26,8 @@ public interface LayoutManagerHelper {
     @Nullable
     View getChildAt(int index);
 
+    void addChildView(View view, int position);
+
     void addChildView(VirtualLayoutManager.LayoutStateWrapper layoutState, View view, int position);
 
     void addChildView(VirtualLayoutManager.LayoutStateWrapper layoutState, View view);
