@@ -142,7 +142,8 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
                     return;
                 } else {
                     mLayoutRegion.set(0, 0, 0, 0);
-                    mLayoutView.layout(0, 0, 0, 0);
+                    if (mLayoutView != null)
+                        mLayoutView.layout(0, 0, 0, 0);
                 }
             }
         }

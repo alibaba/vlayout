@@ -429,10 +429,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         result.mConsumed = maxSize + startMargin + endMargin;
 
-        if ((!isStartLine || (layoutState.getLayoutDirection() != LayoutStateWrapper.LAYOUT_START))
-                || (!isEndLine || (layoutState.getLayoutDirection() != LayoutStateWrapper.LAYOUT_END))) {
-            result.mConsumed += (layoutInVertical ? mVGap : mHGap);
-        }
+        result.mConsumed += (layoutInVertical ? mVGap : mHGap);
 
 
         int left = 0, right = 0, top = 0, bottom = 0;
