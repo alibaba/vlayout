@@ -734,15 +734,21 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
 
     @Override
-    public View generateLayoutView() {
-        // TODO: reuse LayoutViews
-        LayoutView layoutView = new LayoutView(mRecyclerView.getContext());
+    public final View generateLayoutView() {
+        if (mRecyclerView == null) return null;
+
+        View layoutView = createLayoutView(mRecyclerView.getContext());
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         attachViewHolder(params, new LayoutViewHolder(layoutView));
 
         layoutView.setLayoutParams(params);
         return layoutView;
     }
+
+    protected View createLayoutView(final Context context) {
+        return new LayoutView(context);
+    }
+
 
     @Override
     public void addChildView(View view, int position) {

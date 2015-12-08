@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.LayoutHelper;
+import com.alibaba.android.vlayout.RecyclablePagerAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
@@ -121,7 +123,7 @@ public class VLayoutActivity extends Activity {
         };
 
 
-        RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
+        final RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
 
         recyclerView.setRecycledViewPool(viewPool);
 
@@ -134,6 +136,49 @@ public class VLayoutActivity extends Activity {
         recyclerView.setAdapter(delegateAdapter);
 
         List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
+
+
+        adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 1) {
+
+            @Override
+            public void onViewRecycled(MainViewHolder holder) {
+                if (holder.itemView instanceof ViewPager) {
+                    ((ViewPager) holder.itemView).setAdapter(null);
+                }
+            }
+
+            @Override
+            public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                if (viewType == 1)
+                    return new MainViewHolder(
+                            LayoutInflater.from(VLayoutActivity.this).inflate(R.layout.view_pager, parent, false));
+
+                return super.onCreateViewHolder(parent, viewType);
+            }
+
+            @Override
+            public int getItemViewType(int position) {
+                return 1;
+            }
+
+            @Override
+            protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
+
+            }
+
+            @Override
+            public void onBindViewHolder(MainViewHolder holder, int position) {
+                if (holder.itemView instanceof ViewPager) {
+                    ViewPager viewPager = (ViewPager) holder.itemView;
+
+                    viewPager.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
+
+                    // from position to get adapter
+                    viewPager.setAdapter(new PagerAdapter(this, viewPool));
+                }
+            }
+        });
+
 
         if (LINEAR_LAYOUT) {
             adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 0));
@@ -290,6 +335,32 @@ public class VLayoutActivity extends Activity {
         mainHandler.postDelayed(trigger, 1000);
     }
 
+    // RecyclableViewPager
+
+    static class PagerAdapter extends RecyclablePagerAdapter<MainViewHolder> {
+        public PagerAdapter(SubAdapter adapter, RecyclerView.RecycledViewPool pool) {
+            super(adapter, pool);
+        }
+
+        @Override
+        public int getCount() {
+            return 6;
+        }
+
+        @Override
+        public void onBindViewHolder(MainViewHolder viewHolder, int position) {
+            // only vertical
+            viewHolder.itemView.setLayoutParams(
+                    new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            ((TextView) viewHolder.itemView.findViewById(R.id.title)).setText("Banner: " + position);
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return 0;
+        }
+    }
+
 
     static class SubAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
 
@@ -330,6 +401,7 @@ public class VLayoutActivity extends Activity {
                     new LayoutParams(mLayoutParams));
         }
 
+
         @Override
         protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
             ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
@@ -340,6 +412,7 @@ public class VLayoutActivity extends Activity {
             return mCount;
         }
     }
+
 
     static class MainViewHolder extends RecyclerView.ViewHolder {
 
