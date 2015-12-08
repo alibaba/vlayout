@@ -530,10 +530,10 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 
     private int getMainDirSpec(int dim, int otherSize) {
-        if (dim < 0) {
-            return MAIN_DIR_SPEC;
-        } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
+        if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
             return View.MeasureSpec.makeMeasureSpec((int) (otherSize / mAspectRatio), View.MeasureSpec.EXACTLY);
+        } else if (dim < 0) {
+            return MAIN_DIR_SPEC;
         } else {
             return View.MeasureSpec.makeMeasureSpec(dim, View.MeasureSpec.EXACTLY);
         }
