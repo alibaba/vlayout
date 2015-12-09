@@ -430,7 +430,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         result.mConsumed = maxSize + startMargin + endMargin;
 
         final boolean layoutStart = layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START;
-        if ((!isEndLine || !layoutStart) && (!isStartLine || layoutStart)) {
+        if (!mLayoutWithAnchor && (!isEndLine || !layoutStart) && (!isStartLine || layoutStart)) {
             result.mConsumed += (layoutInVertical ? mVGap : mHGap);
         }
 
@@ -438,18 +438,18 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         int left = 0, right = 0, top = 0, bottom = 0;
         if (layoutInVertical) {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                bottom = layoutState.getOffset() - endMargin - (isEndLine ? 0 : mVGap);
+                bottom = layoutState.getOffset() - endMargin - ((mLayoutWithAnchor || isEndLine) ? 0 : mVGap);
                 top = bottom - maxSize;
             } else {
-                top = layoutState.getOffset() + startMargin + (isStartLine ? 0 : mVGap);
+                top = layoutState.getOffset() + startMargin + ((mLayoutWithAnchor || isStartLine) ? 0 : mVGap);
                 bottom = top + maxSize;
             }
         } else {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                right = layoutState.getOffset() - endMargin - (isEndLine ? 0 : mHGap);
+                right = layoutState.getOffset() - endMargin - (mLayoutWithAnchor || isEndLine ? 0 : mHGap);
                 left = right - maxSize;
             } else {
-                left = layoutState.getOffset() + startMargin + (isStartLine ? 0 : mHGap);
+                left = layoutState.getOffset() + startMargin + (mLayoutWithAnchor || isStartLine ? 0 : mHGap);
                 right = left + maxSize;
             }
         }
@@ -497,6 +497,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             result.mFocusable |= view.isFocusable();
         }
 
+
+        mLayoutWithAnchor = false;
         Arrays.fill(mSet, null);
         Arrays.fill(mSpanIndices, 0);
         Arrays.fill(mSpanCols, 0);
@@ -515,8 +517,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         }
 
 
-        return layoutInVertical ? -mVGap : -mHGap;
-        // super.getExtraMargin(offset, child, isLayoutEnd, layoutInVertical, helper);
+        // return layoutInVertical ? -mVGap : -mHGap;
+        return super.getExtraMargin(offset, child, isLayoutEnd, layoutInVertical, helper);
     }
 
     @Override
@@ -560,12 +562,15 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         }
     }
 
+
+    private boolean mLayoutWithAnchor = false;
+
     @Override
     public void checkAnchorInfo(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo, LayoutManagerHelper helper) {
         if (state.getItemCount() > 0 && !state.isPreLayout()) {
             int span = mSpanSizeLookup.getCachedSpanIndex(anchorInfo.position, mSpanCount);
             if (anchorInfo.layoutFromEnd) {
-                while (span < mSpanCount - 1 && anchorInfo.position < getItemCount()) {
+                while (span < mSpanCount - 1 && anchorInfo.position < getRange().getUpper()) {
                     anchorInfo.position++;
                     span = mSpanSizeLookup.getCachedSpanIndex(anchorInfo.position, mSpanCount);
                 }
@@ -575,6 +580,22 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                     span = mSpanSizeLookup.getCachedSpanIndex(anchorInfo.position, mSpanCount);
                 }
             }
+
+            mLayoutWithAnchor = true;
+
+/*
+            if (anchorInfo.position == getRange().getLower() || anchorInfo.position == getRange().getUpper()) {
+                return;
+            }
+
+            boolean layoutInVertical = helper.getOrientation() == VERTICAL;
+            if (anchorInfo.layoutFromEnd) {
+                anchorInfo.coordinate += layoutInVertical ? mVGap : mHGap;
+            } else {
+                anchorInfo.coordinate -= layoutInVertical ? mVGap : mHGap;
+            }
+ */
+
         }
     }
 

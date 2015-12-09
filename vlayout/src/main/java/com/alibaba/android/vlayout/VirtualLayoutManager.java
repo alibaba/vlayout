@@ -185,8 +185,9 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
                 changed = false;
             } else {
                 anchorInfo.mPosition = mTempAnchorInfoWrapper.position;
-                anchorInfo.mCoordinate = mTempAnchorInfoWrapper.coordinate;
             }
+
+            anchorInfo.mCoordinate = mTempAnchorInfoWrapper.coordinate;
 
             mTempAnchorInfoWrapper.position = -1;
         }

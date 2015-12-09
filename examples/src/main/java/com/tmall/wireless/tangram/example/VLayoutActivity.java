@@ -39,6 +39,8 @@ import java.util.List;
  */
 public class VLayoutActivity extends Activity {
 
+    private static final boolean BANNER_LAYOUT = false;
+
     private static final boolean FIX_LAYOUT = false;
 
     private static final boolean LINEAR_LAYOUT = true;
@@ -49,7 +51,7 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean GRID_LAYOUT = true;
 
-    private static final boolean STICKY_LAYOUT = true;
+    private static final boolean STICKY_LAYOUT = false;
 
     private static final boolean STAGGER_LAYOUT = false;
 
@@ -138,46 +140,48 @@ public class VLayoutActivity extends Activity {
         List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
 
 
-        adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 1) {
+        if (BANNER_LAYOUT) {
+            adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 1) {
 
-            @Override
-            public void onViewRecycled(MainViewHolder holder) {
-                if (holder.itemView instanceof ViewPager) {
-                    ((ViewPager) holder.itemView).setAdapter(null);
+                @Override
+                public void onViewRecycled(MainViewHolder holder) {
+                    if (holder.itemView instanceof ViewPager) {
+                        ((ViewPager) holder.itemView).setAdapter(null);
+                    }
                 }
-            }
 
-            @Override
-            public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                if (viewType == 1)
-                    return new MainViewHolder(
-                            LayoutInflater.from(VLayoutActivity.this).inflate(R.layout.view_pager, parent, false));
+                @Override
+                public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    if (viewType == 1)
+                        return new MainViewHolder(
+                                LayoutInflater.from(VLayoutActivity.this).inflate(R.layout.view_pager, parent, false));
 
-                return super.onCreateViewHolder(parent, viewType);
-            }
-
-            @Override
-            public int getItemViewType(int position) {
-                return 1;
-            }
-
-            @Override
-            protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-
-            }
-
-            @Override
-            public void onBindViewHolder(MainViewHolder holder, int position) {
-                if (holder.itemView instanceof ViewPager) {
-                    ViewPager viewPager = (ViewPager) holder.itemView;
-
-                    viewPager.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
-
-                    // from position to get adapter
-                    viewPager.setAdapter(new PagerAdapter(this, viewPool));
+                    return super.onCreateViewHolder(parent, viewType);
                 }
-            }
-        });
+
+                @Override
+                public int getItemViewType(int position) {
+                    return 1;
+                }
+
+                @Override
+                protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
+
+                }
+
+                @Override
+                public void onBindViewHolder(MainViewHolder holder, int position) {
+                    if (holder.itemView instanceof ViewPager) {
+                        ViewPager viewPager = (ViewPager) holder.itemView;
+
+                        viewPager.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
+
+                        // from position to get adapter
+                        viewPager.setAdapter(new PagerAdapter(this, viewPool));
+                    }
+                }
+            });
+        }
 
 
         if (LINEAR_LAYOUT) {
@@ -188,12 +192,12 @@ public class VLayoutActivity extends Activity {
         if (STICKY_LAYOUT)
             adapters.add(new SubAdapter(this, new StickyLayoutHelper(), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
 
-
-        ColumnLayoutHelper layoutHelper = new ColumnLayoutHelper();
-        // layoutHelper.setBgColor(0xff00f0f0);
-        layoutHelper.setWeights(new float[]{40.0f, Float.NaN, 40});
-        if (COLUMN_LAYOUT)
+        if (COLUMN_LAYOUT) {
+            ColumnLayoutHelper layoutHelper = new ColumnLayoutHelper();
+            // layoutHelper.setBgColor(0xff00f0f0);
+            layoutHelper.setWeights(new float[]{40.0f, Float.NaN, 40});
             adapters.add(new SubAdapter(this, layoutHelper, 3));
+        }
 
         if (ONEN_LAYOUT) {
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
@@ -271,15 +275,15 @@ public class VLayoutActivity extends Activity {
             GridLayoutHelper helper = new GridLayoutHelper(4);
             helper.setAspectRatio(4f);
             //helper.setColWeights(new float[]{40, 20, 30, 30});
-            helper.setMargin(0, 10, 0, 10);
-            helper.setGap(4);
-            adapters.add(new SubAdapter(this, helper, 20) {
+            // helper.setMargin(0, 10, 0, 10);
+            helper.setGap(10);
+            adapters.add(new SubAdapter(this, helper, 80) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
                     LayoutParams lp = (LayoutParams) holder.itemView.getLayoutParams();
-                    lp.bottomMargin = 1;
-                    lp.rightMargin = 1;
+                    // lp.bottomMargin = 1;
+                    // lp.rightMargin = 1;
                 }
             });
         }
