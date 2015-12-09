@@ -270,8 +270,9 @@ public class VLayoutActivity extends Activity {
 
             GridLayoutHelper helper = new GridLayoutHelper(4);
             helper.setAspectRatio(4f);
-            //≈helper.setColWeights(new float[]{40, 20, 30, 30});
+            //helper.setColWeights(new float[]{40, 20, 30, 30});
             helper.setMargin(0, 10, 0, 10);
+            helper.setGap(4);
             adapters.add(new SubAdapter(this, helper, 20) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {

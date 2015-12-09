@@ -1,8 +1,3 @@
-<manifest
-    package="com.tmall.wireless.vlayout.extension">
+<manifest package="com.tmall.wireless.vlayout.extension">
 
-    <application>
-
-    </application>
-    
 </manifest>

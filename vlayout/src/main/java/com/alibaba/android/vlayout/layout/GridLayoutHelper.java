@@ -429,24 +429,27 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         result.mConsumed = maxSize + startMargin + endMargin;
 
-        result.mConsumed += (layoutInVertical ? mVGap : mHGap);
+        final boolean layoutStart = layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START;
+        if ((!isEndLine || !layoutStart) && (!isStartLine || layoutStart)) {
+            result.mConsumed += (layoutInVertical ? mVGap : mHGap);
+        }
 
 
         int left = 0, right = 0, top = 0, bottom = 0;
         if (layoutInVertical) {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                bottom = layoutState.getOffset() - endMargin;
+                bottom = layoutState.getOffset() - endMargin - (isEndLine ? 0 : mVGap);
                 top = bottom - maxSize;
             } else {
-                top = layoutState.getOffset() + startMargin;
+                top = layoutState.getOffset() + startMargin + (isStartLine ? 0 : mVGap);
                 bottom = top + maxSize;
             }
         } else {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                right = layoutState.getOffset() - endMargin;
+                right = layoutState.getOffset() - endMargin - (isEndLine ? 0 : mHGap);
                 left = right - maxSize;
             } else {
-                left = layoutState.getOffset() + startMargin;
+                left = layoutState.getOffset() + startMargin + (isStartLine ? 0 : mHGap);
                 right = left + maxSize;
             }
         }
@@ -511,7 +514,9 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                 return layoutInVertical ? -mMarginTop : -mMarginLeft;
         }
 
-        return super.getExtraMargin(offset, child, isLayoutEnd, layoutInVertical, helper);
+
+        return layoutInVertical ? -mVGap : -mHGap;
+        // super.getExtraMargin(offset, child, isLayoutEnd, layoutInVertical, helper);
     }
 
     @Override

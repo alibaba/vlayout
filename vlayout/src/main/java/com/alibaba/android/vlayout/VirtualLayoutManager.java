@@ -250,24 +250,26 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-
         runPreLayout(recycler, state);
 
-        super.onLayoutChildren(recycler, state);
-
-        runPostLayout(recycler, state, Integer.MAX_VALUE); // hack to indicate its an initial layout
+        try {
+            super.onLayoutChildren(recycler, state);
+        } finally {
+            runPostLayout(recycler, state, Integer.MAX_VALUE); // hack to indicate its an initial layout
+        }
     }
 
     @Override
     protected int scrollBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        // detach fixedPositions
+
         runPreLayout(recycler, state);
 
-        final int scrolled = super.scrollBy(dy, recycler, state);
-
-        // attach fixedPositions
-        runPostLayout(recycler, state, scrolled);
-
+        int scrolled = 0;
+        try {
+            scrolled = super.scrollBy(dy, recycler, state);
+        } finally {
+            runPostLayout(recycler, state, scrolled);
+        }
 
         return scrolled;
     }
