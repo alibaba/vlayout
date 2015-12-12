@@ -360,10 +360,13 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
 
 
     @Override
-    public void clear(LayoutManagerHelper helper) {
-        super.clear(helper);
-        if (mFixView != null)
+    public void onClear(LayoutManagerHelper helper) {
+        super.onClear(helper);
+        if (mFixView != null) {
             helper.removeChildView(mFixView);
+            helper.recycleView(mFixView);
+            mFixView = null;
+        }
     }
 
     private void doMeasure(View view, LayoutManagerHelper helper) {

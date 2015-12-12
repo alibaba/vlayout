@@ -157,11 +157,16 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
 
     @Override
-    public void clear(LayoutManagerHelper helper) {
+    public final void clear(LayoutManagerHelper helper) {
         if (mLayoutView != null) {
             helper.removeChildView(mLayoutView);
             mLayoutView = null;
         }
+        onClear(helper);
+    }
+
+    protected void onClear(LayoutManagerHelper helper) {
+
     }
 
 

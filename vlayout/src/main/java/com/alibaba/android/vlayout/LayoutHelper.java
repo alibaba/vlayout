@@ -207,7 +207,8 @@ public abstract class LayoutHelper {
     /**
      * Called when this layoutHelper will be removed from LayoutManager, please release views and other resources here
      *
-     * @param helper LayoutManagerHelper
+     * @param helper           LayoutManagerHelper
+     * @param recycledViewPool pool for recycled all the views
      */
     public abstract void clear(LayoutManagerHelper helper);
 

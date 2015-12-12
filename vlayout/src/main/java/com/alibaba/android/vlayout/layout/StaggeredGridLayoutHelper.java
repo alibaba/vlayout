@@ -295,8 +295,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
 
     @Override
-    public void clear(LayoutManagerHelper helper) {
-        super.clear(helper);
+    public void onClear(LayoutManagerHelper helper) {
+        super.onClear(helper);
         mLazySpanLookup.clear();
         mSpans = null;
         mLayoutManager = null;

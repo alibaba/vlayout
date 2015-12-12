@@ -83,6 +83,7 @@ public interface LayoutManagerHelper {
 
     boolean getReverseLayout();
 
+    void recycleView(View child);
 
 }
 

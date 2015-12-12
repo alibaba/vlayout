@@ -172,13 +172,15 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
 
 
     @Override
-    public void clear(LayoutManagerHelper helper) {
-        super.clear(helper);
+    public void onClear(LayoutManagerHelper helper) {
+        super.onClear(helper);
         if (mFixView != null) {
             mFixView.setTranslationX(0);
             mFixView.setTranslationY(0);
             mFixView.setOnTouchListener(null);
             helper.removeChildView(mFixView);
+            helper.recycleView(mFixView);
+            mFixView = null;
         }
     }
 

@@ -558,6 +558,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         mRecyclerView = null;
     }
 
+
     @SuppressWarnings("unused")
     public static class LayoutParams extends RecyclerView.LayoutParams {
 
@@ -933,6 +934,14 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         if (view != null && getPosition(view) == position)
             return view;
         return null;
+    }
+
+    @Override
+    public void recycleView(View view) {
+        if (mRecyclerView != null) {
+            RecyclerView.ViewHolder holder = mRecyclerView.getChildViewHolder(view);
+            mRecyclerView.getRecycledViewPool().putRecycledView(holder);
+        }
     }
 
 }
