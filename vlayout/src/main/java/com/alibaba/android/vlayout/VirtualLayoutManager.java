@@ -63,7 +63,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     public VirtualLayoutManager(@NonNull final Context context, int orientation, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         this.mOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation);
-        this.mSecondaryOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation == VERTICAL ? VERTICAL : HORIZONTAL);
+        this.mSecondaryOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation == VERTICAL ? HORIZONTAL : VERTICAL);
         setHelperFinder(new RangeLayoutHelperFinder());
     }
 
