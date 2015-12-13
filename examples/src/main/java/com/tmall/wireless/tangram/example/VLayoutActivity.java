@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class VLayoutActivity extends Activity {
 
-    private static final boolean BANNER_LAYOUT = false;
+    private static final boolean BANNER_LAYOUT = true;
 
     private static final boolean FIX_LAYOUT = false;
 
@@ -47,13 +47,13 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean ONEN_LAYOUT = true;
 
-    private static final boolean COLUMN_LAYOUT = false;
+    private static final boolean COLUMN_LAYOUT = true;
 
     private static final boolean GRID_LAYOUT = true;
 
     private static final boolean STICKY_LAYOUT = false;
 
-    private static final boolean STAGGER_LAYOUT = false;
+    private static final boolean STAGGER_LAYOUT = true;
 
     private TextView mFirstText;
     private TextView mLastText;
@@ -309,8 +309,8 @@ public class VLayoutActivity extends Activity {
         }
 
         if (STAGGER_LAYOUT) {
-            adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 0), 0));
-            adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 0), 27) {
+            // adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 0), 0));
+            adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 10), 27) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
