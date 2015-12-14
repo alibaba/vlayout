@@ -41,7 +41,7 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean BANNER_LAYOUT = true;
 
-    private static final boolean FIX_LAYOUT = false;
+    private static final boolean FIX_LAYOUT = true;
 
     private static final boolean LINEAR_LAYOUT = true;
 
@@ -51,7 +51,7 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean GRID_LAYOUT = true;
 
-    private static final boolean STICKY_LAYOUT = false;
+    private static final boolean STICKY_LAYOUT = true;
 
     private static final boolean STAGGER_LAYOUT = true;
 
@@ -304,21 +304,31 @@ public class VLayoutActivity extends Activity {
 
         if (GRID_LAYOUT) {
             GridLayoutHelper helper = new GridLayoutHelper(3);
-            helper.setMargin(0, 10, 0, 20);
+            helper.setMargin(0, 10, 0, 10);
             adapters.add(new SubAdapter(this, helper, 3));
         }
 
         if (STAGGER_LAYOUT) {
             // adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 0), 0));
-            adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 10), 27) {
+            final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(2, 10);
+            helper.setMargin(0, 10, 0, 10);
+            adapters.add(new SubAdapter(this, helper, 27) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
                     LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
-                    layoutParams.height = 240 + position % 7 * 20;
+                    layoutParams.height = 340 + position % 7 * 20;
                     holder.itemView.setLayoutParams(layoutParams);
                 }
             });
+        }
+
+        if (COLUMN_LAYOUT) {
+            // adapters.add(new SubAdapter(this, new ColumnLayoutHelper(), 3));
+        }
+
+        if (GRID_LAYOUT) {
+            // adapters.add(new SubAdapter(this, new GridLayoutHelper(4), 24));
         }
 
         delegateAdapter.setAdapters(adapters);

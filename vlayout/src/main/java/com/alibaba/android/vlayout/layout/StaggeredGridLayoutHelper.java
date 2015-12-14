@@ -39,7 +39,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     private Span[] mSpans;
 
-    private int mGap = 0;
+    private int mHGap = 0;
+
+    private int mVGap = 0;
 
 
     // length specs
@@ -67,9 +69,26 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     }
 
     public StaggeredGridLayoutHelper(int lanes, int gap) {
-        this.mNumLanes = lanes;
+        setLane(lanes);
+        setGap(gap);
+    }
+
+    public void setGap(int gap) {
+        setHGap(gap);
+        setVGap(gap);
+    }
+
+    public void setHGap(int hGap) {
+        this.mHGap = hGap;
+    }
+
+    public void setVGap(int vGap) {
+        this.mVGap = vGap;
+    }
+
+    public void setLane(int lane) {
+        this.mNumLanes = lane;
         ensureLanes();
-        mGap = gap;
     }
 
 
@@ -93,7 +112,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         } else {
             availableWidth = helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom();
         }
-        mColLength = (int) ((availableWidth - mGap * (mNumLanes - 1)) / mNumLanes + 0.5);
+        mColLength = (int) ((availableWidth - mHGap * (mNumLanes - 1)) / mNumLanes + 0.5);
         int totalGaps = availableWidth - mColLength * mNumLanes;
         mEachGap = (int) (totalGaps / (mNumLanes - 1) + 0.5);
         mLastGap = totalGaps - (mNumLanes - 2) * mEachGap;
@@ -168,6 +187,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 currentSpan = mSpans[spanIndex];
             }
 
+            final boolean isStartLine = currentSpan.mViews.size() == 0;
 
             helper.addChildView(layoutState, view);
 
@@ -182,14 +202,20 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
 
 
-            final int start;
-            final int end;
+            int start;
+            int end;
 
             if (layoutState.getLayoutDirection() == LAYOUT_END) {
                 start = currentSpan.getEndLine(defaultNewViewLine, orientationHelper);
+
+                if (!isStartLine)
+                    start += (layoutInVertical ? mVGap : mHGap);
+                else
+                    start += layoutInVertical ? mMarginTop : mMarginLeft;
+
                 end = start + orientationHelper.getDecoratedMeasurement(view);
             } else {
-                end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper);
+                end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mVGap : mHGap);
                 start = end - orientationHelper.getDecoratedMeasurement(view);
             }
 
@@ -265,8 +291,11 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
 
     @Override
-    public int getExtraMargin(int offset, View child, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
+    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
         OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        final View child = helper.findViewByPosition(offset + getRange().getLower());
+        if (child == null) return 0;
+
         if (layoutInVertical) {
             // in middle nothing need to do
             if (isLayoutEnd) {
@@ -302,9 +331,10 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         mLayoutManager = null;
     }
 
-
+    /**
+     * check whether there are gaps that need to be fixed
+     */
     private void checkForGaps() {
-
         if (mLayoutManager == null) return;
 
         final VirtualLayoutManager layoutManager = mLayoutManager.get();
@@ -315,6 +345,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
         final Range<Integer> range = getRange();
 
+        // align position, which should check gap for
         final int minPos, maxPos, alignPos;
         if (layoutManager.getReverseLayout()) {
             minPos = layoutManager.findLastVisibleItemPosition();
@@ -332,7 +363,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         int viewAnchor = Integer.MIN_VALUE;
         int alignLine = Integer.MIN_VALUE;
 
-
+        // find view anchor and get align line, the views should be aligned to alignLine
         if (layoutManager.getReverseLayout()) {
             for (int i = childCount - 1; i >= 0; i--) {
                 View view = layoutManager.getChildAt(i);
@@ -340,13 +371,17 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 if (position == alignPos) {
                     viewAnchor = position;
                     if (i == childCount - 1) {
+                        // if last child, alignLine is the end of child
                         alignLine = orientationHelper.getDecoratedEnd(view);
                     } else {
+                        // if not, alignLine is the start of next child
                         View child = layoutManager.getChildAt(i + 1);
                         int aPos = layoutManager.getPosition(child);
                         if (aPos == position - 1) {
+                            // if position is sequence, which means the next child is not hidden one
                             alignLine = orientationHelper.getDecoratedStart(child) + layoutManager.obtainExtraMargin(child, false);
                         } else {
+                            // if next child is hidden one, use end of current view
                             alignLine = orientationHelper.getDecoratedEnd(view);
                         }
                     }
@@ -360,8 +395,10 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 if (position == alignPos) {
                     viewAnchor = position;
                     if (i == 0) {
+                        // if first child, alignLine is the start
                         alignLine = orientationHelper.getDecoratedStart(view);
                     } else {
+                        // if not, alignLine is the end of previous child
                         View child = layoutManager.getChildAt(i - 1);
                         alignLine = orientationHelper.getDecoratedEnd(child) + layoutManager.obtainExtraMargin(child, true);
                     }
@@ -371,6 +408,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         if (viewAnchor == Integer.MIN_VALUE) {
+            // if not find view anchor, break
             return;
         }
 

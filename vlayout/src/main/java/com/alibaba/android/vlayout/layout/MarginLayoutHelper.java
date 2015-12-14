@@ -1,7 +1,5 @@
 package com.alibaba.android.vlayout.layout;
 
-import android.view.View;
-
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 
@@ -24,7 +22,7 @@ public abstract class MarginLayoutHelper extends LayoutHelper {
         this.mMarginBottom = bottomMargin;
     }
 
-    public int getExtraMargin(int offset, View child, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
+    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
         return 0;
     }
 

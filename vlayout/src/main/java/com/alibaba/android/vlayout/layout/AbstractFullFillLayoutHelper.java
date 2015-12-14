@@ -109,7 +109,7 @@ public abstract class AbstractFullFillLayoutHelper extends BaseLayoutHelper {
     }
 
     @Override
-    public int getExtraMargin(int offset, View child, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
+    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
         if (layoutInVertical) {
             if (isLayoutEnd) {
                 return mMarginBottom;

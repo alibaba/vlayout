@@ -205,8 +205,9 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         int position = getPosition(child);
         if (position != RecyclerView.NO_POSITION) {
             LayoutHelper helper = mHelperFinder.getLayoutHelper(position);
+
             if (helper != null) {
-                return helper.getExtraMargin(position - helper.getRange().getLower(), child,
+                return helper.getExtraMargin(position - helper.getRange().getLower(),
                         isLayoutEnd, getOrientation() == VERTICAL, this);
             }
         }

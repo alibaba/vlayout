@@ -506,7 +506,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
 
     @Override
-    public int getExtraMargin(int offset, View child, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
+    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
         if (isLayoutEnd) {
             if (offset == getItemCount() - 1) {
                 return layoutInVertical ? mMarginBottom : mMarginRight;
@@ -518,7 +518,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
 
         // return layoutInVertical ? -mVGap : -mHGap;
-        return super.getExtraMargin(offset, child, isLayoutEnd, layoutInVertical, helper);
+        return super.getExtraMargin(offset, isLayoutEnd, layoutInVertical, helper);
     }
 
     @Override
