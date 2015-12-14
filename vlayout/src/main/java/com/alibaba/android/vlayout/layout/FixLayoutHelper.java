@@ -21,8 +21,6 @@ public class FixLayoutHelper extends BaseLayoutHelper {
     public static final int BOTTOM_LEFT = 2;
     public static final int BOTTOM_RIGHT = 3;
 
-    private int mZIndex = 1;
-
     private int mPos = -1;
 
     private int mAlignType = TOP_LEFT;
@@ -180,6 +178,10 @@ public class FixLayoutHelper extends BaseLayoutHelper {
         return true;
     }
 
+    @Override
+    public View getFixedView() {
+        return mFixView;
+    }
 
     @Override
     public void onClear(LayoutManagerHelper helper) {

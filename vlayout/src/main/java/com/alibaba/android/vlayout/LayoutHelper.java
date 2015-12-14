@@ -2,6 +2,7 @@ package com.alibaba.android.vlayout;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -137,6 +138,17 @@ public abstract class LayoutHelper {
      */
     public int getZIndex() {
         return 0;
+    }
+
+
+    /**
+     * Get View that fixed in some position
+     *
+     * @return
+     */
+    @Nullable
+    public View getFixedView() {
+        return null;
     }
 
 

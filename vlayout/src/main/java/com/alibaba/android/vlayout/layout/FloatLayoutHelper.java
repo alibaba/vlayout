@@ -2,6 +2,7 @@ package com.alibaba.android.vlayout.layout;
 
 import android.animation.ObjectAnimator;
 import android.graphics.Rect;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
@@ -63,7 +64,6 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
     @Override
     public void onRangeChange(int start, int end) {
         this.mPos = start;
-        mFixView = null;
     }
 
     @Override
@@ -170,6 +170,12 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
         return true;
     }
 
+
+    @Nullable
+    @Override
+    public View getFixedView() {
+        return mFixView;
+    }
 
     @Override
     public void onClear(LayoutManagerHelper helper) {

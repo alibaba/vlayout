@@ -1,5 +1,6 @@
 package com.alibaba.android.vlayout.layout;
 
+import android.support.annotation.Nullable;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -358,6 +359,12 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
         }
     }
 
+
+    @Nullable
+    @Override
+    public View getFixedView() {
+        return mFixView;
+    }
 
     @Override
     public void onClear(LayoutManagerHelper helper) {

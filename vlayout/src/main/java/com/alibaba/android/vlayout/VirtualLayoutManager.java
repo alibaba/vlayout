@@ -738,6 +738,21 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     }
 
 
+    public List<View> getFixedViews() {
+        if (mRecyclerView == null) return Collections.emptyList();
+
+        // TODO: support zIndex?
+        List<View> views = new LinkedList<>();
+        for (LayoutHelper helper : mHelperFinder) {
+            View fixedView = helper.getFixedView();
+            if (fixedView != null) {
+                views.add(fixedView);
+            }
+        }
+
+        return views;
+    }
+
     @Override
     public final View generateLayoutView() {
         if (mRecyclerView == null) return null;
@@ -789,6 +804,8 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     @Override
     public void addOffFlowView(View view, boolean head) {
+        // TODO: add to next view
+
         addHiddenView(view, head);
     }
 
