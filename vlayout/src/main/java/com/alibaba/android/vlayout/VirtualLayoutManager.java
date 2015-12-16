@@ -46,6 +46,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     private RecyclerView mRecyclerView;
 
+    private boolean mNoScrolling = false;
 
     public VirtualLayoutManager(@NonNull final Context context) {
         this(context, VERTICAL);
@@ -87,6 +88,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         if (helpers.size() > 0)
             this.mHelperFinder.setLayouts(helpers);
 
+        mSpaceMeasured = false;
         requestLayout();
     }
 
@@ -114,6 +116,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         }
 
         this.mHelperFinder.setLayouts(helpers);
+        mSpaceMeasured = false;
         requestLayout();
     }
 
@@ -280,8 +283,10 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     public void onScrollStateChanged(int state) {
         super.onScrollStateChanged(state);
 
+        int startPosition = findFirstVisibleItemPosition();
+        int endPosition = findLastVisibleItemPosition();
         for (LayoutHelper helper : mHelperFinder) {
-            helper.onScrollStateChanged(state, this);
+            helper.onScrollStateChanged(state, startPosition, endPosition, this);
         }
     }
 
@@ -844,6 +849,17 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         return getChildMeasureSpec(parentSize, 0, size, canScroll);
     }
 
+
+    @Override
+    public boolean canScrollHorizontally() {
+        return super.canScrollHorizontally() && !mNoScrolling;
+    }
+
+    @Override
+    public boolean canScrollVertically() {
+        return super.canScrollVertically() && !mNoScrolling;
+    }
+
     @Override
     public void layoutChild(View child, int left, int top, int right, int bottom) {
         final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
@@ -962,4 +978,33 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         }
     }
 
+
+
+
+    /*
+     * extend to full show view
+     */
+
+
+    private boolean mSpaceMeasured = false;
+
+    private int mMeasuredFullSpace = 0;
+
+    @Override
+    public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
+        if (!mNoScrolling) {
+            super.onMeasure(recycler, state, widthSpec, heightSpec);
+            return;
+        }
+
+        int measuredSize = mSpaceMeasured ? 0 : Integer.MAX_VALUE >> 2;
+
+
+        if (getOrientation() == VERTICAL) {
+            super.onMeasure(recycler, state, widthSpec, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST));
+        } else {
+            super.onMeasure(recycler, state, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST), heightSpec);
+        }
+
+    }
 }

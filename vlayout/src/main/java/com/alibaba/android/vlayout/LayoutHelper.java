@@ -105,8 +105,10 @@ public abstract class LayoutHelper {
      * This method is called when scroll state is changed
      *
      * @param state The new scroll state for RecyclerView
+     * @param startPosition
+     * @param endPosition
      */
-    public void onScrollStateChanged(int state, LayoutManagerHelper helper) {
+    public void onScrollStateChanged(int state, int startPosition, int endPosition, LayoutManagerHelper helper) {
 
     }
 
