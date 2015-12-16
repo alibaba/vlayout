@@ -64,6 +64,10 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
     };
 
+    public StaggeredGridLayoutHelper() {
+        this(1, 0);
+    }
+
     public StaggeredGridLayoutHelper(int lanes) {
         this(lanes, 0);
     }
@@ -190,7 +194,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 currentSpan = mSpans[spanIndex];
             }
 
-            final boolean isStartLine = currentSpan.mViews.size() == 0;
+            final boolean isStartLine = (position - getRange().getLower()) < mNumLanes;
 
             helper.addChildView(layoutState, view);
 

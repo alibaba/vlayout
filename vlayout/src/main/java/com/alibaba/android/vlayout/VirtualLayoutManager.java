@@ -18,8 +18,11 @@ import com.alibaba.android.vlayout.layout.DefaultLayoutHelper;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -69,6 +72,10 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     }
 
 
+    public void setNoScrolling(boolean noScrolling) {
+        this.mNoScrolling = noScrolling;
+    }
+
     private LayoutHelperFinder mHelperFinder;
 
     public void setHelperFinder(@NonNull final LayoutHelperFinder finder) {
@@ -93,11 +100,12 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     }
 
     public void setLayoutHelpers(@Nullable List<LayoutHelper> helpers) {
-        // SparseArray<LayoutHelper> newHelpersSet = new SparseArray<>();
-        // newHelpersSet.put(System.identityHashCode(helper), helper);
+        HashMap<Integer, LayoutHelper> newHelpersSet = new HashMap<>();
+        HashMap<Integer, LayoutHelper> oldHelpersSet = new HashMap<>();
+
 
         for (LayoutHelper helper : mHelperFinder) {
-            helper.clear(this);
+            oldHelpersSet.put(System.identityHashCode(helper), helper);
         }
 
         // set ranges
@@ -116,6 +124,26 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         }
 
         this.mHelperFinder.setLayouts(helpers);
+
+        for (LayoutHelper helper : mHelperFinder) {
+            newHelpersSet.put(System.identityHashCode(helper), helper);
+        }
+
+
+        for (Iterator<Map.Entry<Integer, LayoutHelper>> it = oldHelpersSet.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<Integer, LayoutHelper> entry = it.next();
+            Integer key = entry.getKey();
+            if (newHelpersSet.containsKey(key)) {
+                newHelpersSet.remove(key);
+                it.remove();
+            }
+        }
+
+
+        for (LayoutHelper helper : oldHelpersSet.values()) {
+            helper.clear(this);
+        }
+
         mSpaceMeasured = false;
         requestLayout();
     }

@@ -18,15 +18,14 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+        }    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // compile project(':extension')
 
-    compile 'com.tmall.android:vlayout-ext:1.1.1.2-SNAPSHOT@aar'
+    compile 'com.tmall.android:vlayout-ext:1.1.1.2@aar'
     compile 'com.android.support:recyclerview-v7:21.0.2@aar'
     compile('com.android.support:support-v4:21.0.0@aar') {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -39,6 +38,7 @@ dependencies {
 
 
 
-
-apply from: rootProject.file('deploy.gradle')
+File deployConfig = file('../deploy.gradle')
+if (deployConfig.exists())
+   apply from: file('../deploy.gradle')
 
