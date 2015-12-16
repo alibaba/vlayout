@@ -1052,7 +1052,7 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             mLayoutState.mItemDirection = mShouldReverseLayout ? LayoutState.ITEM_DIRECTION_HEAD
                     : LayoutState.ITEM_DIRECTION_TAIL;
             mLayoutState.mCurrentPosition = getPosition(child) + mLayoutState.mItemDirection;
-            mLayoutState.mOffset = mOrientationHelper.getDecoratedEnd(child) + getExtraMargin(child, true);
+            mLayoutState.mOffset = mOrientationHelper.getDecoratedEnd(child) + computeAlignOffset(child, true, false);
             // calculate how much we can scroll without adding new children (independent of layout)
             fastScrollSpace = mLayoutState.mOffset
                     - mOrientationHelper.getEndAfterPadding();
@@ -1064,7 +1064,7 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
                     : LayoutState.ITEM_DIRECTION_HEAD;
             mLayoutState.mCurrentPosition = getPosition(child) + mLayoutState.mItemDirection;
 
-            mLayoutState.mOffset = mOrientationHelper.getDecoratedStart(child) + getExtraMargin(child, false);
+            mLayoutState.mOffset = mOrientationHelper.getDecoratedStart(child) + computeAlignOffset(child, false, false);
             fastScrollSpace = -mLayoutState.mOffset
                     + mOrientationHelper.getStartAfterPadding();
         }
@@ -1075,8 +1075,14 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         mLayoutState.mScrollingOffset = fastScrollSpace;
     }
 
-
-    protected int getExtraMargin(View child, boolean isLayoutEnd) {
+    /**
+     * adjust align offset when fill view during scrolling or get margins when layout from anchor
+     *
+     * @param child
+     * @param isLayoutEnd
+     * @return
+     */
+    protected int computeAlignOffset(View child, boolean isLayoutEnd, boolean useAnchor) {
         return 0;
     }
 
@@ -2040,10 +2046,10 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
         public void assignFromView(View child) {
             if (mLayoutFromEnd) {
-                mCoordinate = mOrientationHelper.getDecoratedEnd(child) + getExtraMargin(child, mLayoutFromEnd) +
+                mCoordinate = mOrientationHelper.getDecoratedEnd(child) + computeAlignOffset(child, mLayoutFromEnd, true) +
                         mOrientationHelper.getTotalSpaceChange();
             } else {
-                mCoordinate = mOrientationHelper.getDecoratedStart(child) + getExtraMargin(child, mLayoutFromEnd);
+                mCoordinate = mOrientationHelper.getDecoratedStart(child) + computeAlignOffset(child, mLayoutFromEnd, true);
             }
 
             mPosition = getPosition(child);

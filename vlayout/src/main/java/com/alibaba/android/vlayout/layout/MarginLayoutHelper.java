@@ -22,7 +22,7 @@ public abstract class MarginLayoutHelper extends LayoutHelper {
         this.mMarginBottom = bottomMargin;
     }
 
-    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
+    public int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
         return 0;
     }
 

@@ -130,7 +130,8 @@ public class SingleLayoutHelper extends BaseLayoutHelper {
     }
 
     @Override
-    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
+    public int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
+        final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
         if (layoutInVertical) {
             if (isLayoutEnd) {
                 return mMarginBottom;

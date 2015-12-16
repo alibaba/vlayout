@@ -572,7 +572,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
     }
 
     @Override
-    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
+    public int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
         if (getItemCount() == 3) {
             if (offset == 1 && isLayoutEnd) {
                 Log.w(TAG, "Should not happen after adjust anchor");
@@ -584,7 +584,8 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             }
         }
 
-        if (layoutInVertical) {
+
+        if (helper.getOrientation() == VERTICAL) {
             if (isLayoutEnd) {
                 return mMarginBottom;
             } else {

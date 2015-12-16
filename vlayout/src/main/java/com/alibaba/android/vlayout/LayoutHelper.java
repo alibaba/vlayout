@@ -104,7 +104,7 @@ public abstract class LayoutHelper {
     /**
      * This method is called when scroll state is changed
      *
-     * @param state The new scroll state for RecyclerView
+     * @param state         The new scroll state for RecyclerView
      * @param startPosition
      * @param endPosition
      */
@@ -243,13 +243,15 @@ public abstract class LayoutHelper {
 
     /**
      * Get margins between layout when layout child at <code>offset</code>
+     * Or compute offset for align line during scrolling
      *
-     * @param offset           anchor child's offset in current layoutHelper, for example, 0 means first item
-     * @param isLayoutEnd      is the layout process will do to end or start, true means it will lay views from start to end
-     * @param layoutInVertical is layout child in vertical or horizontal   @return extra margin must be calculated in {@link VirtualLayoutManager}
-     * @param helper
+     * @param offset      anchor child's offset in current layoutHelper, for example, 0 means first item
+     * @param isLayoutEnd is the layout process will do to end or start, true means it will lay views from start to end
+     * @param useAnchor   whether offset is computed for scrolling or for anchor reset
+     * @param helper      view layout helper
+     * @return extra offset must be calculated in {@link VirtualLayoutManager}
      */
-    public abstract int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper);
+    public abstract int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper);
 
 
     public void onSaveState(final Bundle bundle) {

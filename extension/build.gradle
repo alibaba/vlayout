@@ -28,4 +28,6 @@ dependencies {
 }
 
 
-apply from: rootProject.file('deploy.gradle')
+File deployConfig = file('../deploy.gradle')
+if (deployConfig.exists())
+   apply from: file('../deploy.gradle')

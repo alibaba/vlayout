@@ -175,6 +175,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
         final int defaultNewViewLine = layoutState.getOffset();
 
+        boolean isStartLine = false, isEndLine = false;
         while (layoutState.hasMore(state) && !mRemainingSpans.isEmpty() && !isOutOfRange(layoutState.getCurrentPosition())) {
             View view = layoutState.next(recycler);
 
@@ -194,7 +195,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 currentSpan = mSpans[spanIndex];
             }
 
-            final boolean isStartLine = (position - getRange().getLower()) < mNumLanes;
+            isStartLine = isStartLine || (position == getRange().getLower());
+            isEndLine = isEndLine || (position == getRange().getUpper());
 
             helper.addChildView(layoutState, view);
 
@@ -274,18 +276,18 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
             if (!isOutOfRange(layoutState.getCurrentPosition()) && layoutState.hasMore(state)) {
                 final int maxStart = getMaxStart(orientationHelper.getStartAfterPadding(), orientationHelper);
-                result.mConsumed = Math.max(0, layoutState.getOffset() - maxStart);
+                result.mConsumed = layoutState.getOffset() - maxStart;
             } else {
                 final int minStart = getMinStart(orientationHelper.getEndAfterPadding(), orientationHelper);
-                result.mConsumed = Math.max(0, layoutState.getOffset() - minStart);
+                result.mConsumed = layoutState.getOffset() - minStart;
             }
         } else {
             if (!isOutOfRange(layoutState.getCurrentPosition()) && layoutState.hasMore(state)) {
                 final int minEnd = getMinEnd(orientationHelper.getEndAfterPadding(), orientationHelper);
-                result.mConsumed = Math.max(0, minEnd - layoutState.getOffset());
+                result.mConsumed = minEnd - layoutState.getOffset();
             } else {
                 final int maxEnd = getMaxEnd(orientationHelper.getEndAfterPadding(), orientationHelper);
-                result.mConsumed = Math.max(0, maxEnd - layoutState.getOffset());
+                result.mConsumed = maxEnd - layoutState.getOffset();
             }
         }
     }
@@ -304,10 +306,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
 
     @Override
-    public int getExtraMargin(int offset, boolean isLayoutEnd,
-                              boolean layoutInVertical, LayoutManagerHelper helper) {
-        OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+    public int computeAlignOffset(int offset, boolean isLayoutEnd,
+                                  boolean useAnchor, LayoutManagerHelper helper) {
+        final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
+        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
         final View child = helper.findViewByPosition(offset + getRange().getLower());
+
         if (child == null) return 0;
 
         if (layoutInVertical) {
@@ -315,16 +319,16 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             if (isLayoutEnd) {
                 if (offset == getItemCount() - 1) {
                     return mMarginBottom;
-                } else {
+                } else if (!useAnchor) {
                     final int minEnd = getMinEnd(orientationHelper.getDecoratedStart(child), orientationHelper);
-                    // return orientationHelper.getDecoratedEnd(child) - minEnd;
+                    return minEnd - orientationHelper.getDecoratedEnd(child);
                 }
             } else {
                 if (offset == 0) {
                     return -mMarginTop;
-                } else {
+                } else if (!useAnchor) {
                     final int maxStart = getMaxStart(orientationHelper.getDecoratedEnd(child), orientationHelper);
-                    // return orientationHelper.getDecoratedStart(child) - maxStart;
+                    return maxStart - orientationHelper.getDecoratedStart(child);
                 }
             }
         } else {

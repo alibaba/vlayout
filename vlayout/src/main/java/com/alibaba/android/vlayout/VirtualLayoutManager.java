@@ -232,14 +232,14 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     }
 
     @Override
-    protected int getExtraMargin(View child, boolean isLayoutEnd) {
+    protected int computeAlignOffset(View child, boolean isLayoutEnd, boolean useAnchor) {
         int position = getPosition(child);
         if (position != RecyclerView.NO_POSITION) {
             LayoutHelper helper = mHelperFinder.getLayoutHelper(position);
 
             if (helper != null) {
-                return helper.getExtraMargin(position - helper.getRange().getLower(),
-                        isLayoutEnd, getOrientation() == VERTICAL, this);
+                return helper.computeAlignOffset(position - helper.getRange().getLower(),
+                        isLayoutEnd, useAnchor, this);
             }
         }
 
@@ -249,7 +249,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     public int obtainExtraMargin(View child, boolean isLayoutEnd) {
         if (child != null) {
-            return getExtraMargin(child, isLayoutEnd);
+            return computeAlignOffset(child, isLayoutEnd, true);
         }
 
         return 0;
