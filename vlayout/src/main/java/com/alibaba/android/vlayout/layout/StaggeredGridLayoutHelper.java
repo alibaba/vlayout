@@ -127,6 +127,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     @Override
     public void afterLayout(RecyclerView.Recycler recycler, RecyclerView.State state, int startPosition, int endPosition, int scrolled, LayoutManagerHelper helper) {
         super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
+
+        if (startPosition > getRange().getUpper() || endPosition < getRange().getLower()) return;
+
         if (!state.isPreLayout() && helper.getChildCount() > 0) {
             ViewCompat.postOnAnimation(helper.getChildAt(0), checkForGapsRunnable);
         }
@@ -212,7 +215,6 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                     start += (layoutInVertical ? mVGap : mHGap);
                 else
                     start += layoutInVertical ? mMarginTop : mMarginLeft;
-
                 end = start + orientationHelper.getDecoratedMeasurement(view);
             } else {
                 end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mVGap : mHGap);
@@ -249,15 +251,18 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
         if (isOutOfRange(layoutState.getCurrentPosition())) {
             // reach the end of layout, cache the gap
+            // TODO: how to reatin gap
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
                 for (Span span : mSpans) {
-                    if (span.mCachedStart != INVALID_LINE)
-                        span.mLastEdgeStart = span.mCachedStart;
+                    if (span.mCachedStart != INVALID_LINE) {
+                        // span.mLastEdgeStart = span.mCachedStart;
+                    }
                 }
             } else {
                 for (Span span : mSpans) {
-                    if (span.mCachedEnd != INVALID_LINE)
-                        span.mLastEdgeEnd = span.mCachedEnd;
+                    if (span.mCachedEnd != INVALID_LINE) {
+                        // span.mLastEdgeEnd = span.mCachedEnd;
+                    }
                 }
             }
         }
@@ -283,7 +288,11 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
 
     @Override
-    public void onScrollStateChanged(int state, LayoutManagerHelper helper) {
+    public void onScrollStateChanged(int state, int startPosition,
+                                     int endPosition, LayoutManagerHelper helper) {
+        if (startPosition > getRange().getUpper() || endPosition < getRange().getLower())
+            return;
+
         if (state == RecyclerView.SCROLL_STATE_IDLE) {
             checkForGaps();
         }
@@ -291,7 +300,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
 
     @Override
-    public int getExtraMargin(int offset, boolean isLayoutEnd, boolean layoutInVertical, LayoutManagerHelper helper) {
+    public int getExtraMargin(int offset, boolean isLayoutEnd,
+                              boolean layoutInVertical, LayoutManagerHelper helper) {
         OrientationHelper orientationHelper = helper.getMainOrientationHelper();
         final View child = helper.findViewByPosition(offset + getRange().getLower());
         if (child == null) return 0;
@@ -300,19 +310,17 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             // in middle nothing need to do
             if (isLayoutEnd) {
                 if (offset == getItemCount() - 1) {
-                    final int maxEnd = getMaxEnd(orientationHelper.getDecoratedEnd(child), orientationHelper);
-                    return maxEnd - orientationHelper.getDecoratedEnd(child);
+                    return mMarginBottom;
                 } else {
                     final int minEnd = getMinEnd(orientationHelper.getDecoratedStart(child), orientationHelper);
-                    return minEnd - orientationHelper.getDecoratedEnd(child);
+                    // return orientationHelper.getDecoratedEnd(child) - minEnd;
                 }
             } else {
                 if (offset == 0) {
-                    final int minStart = getMinStart(orientationHelper.getDecoratedStart(child), orientationHelper);
-                    return minStart - orientationHelper.getDecoratedStart(child);
+                    return -mMarginTop;
                 } else {
                     final int maxStart = getMaxStart(orientationHelper.getDecoratedEnd(child), orientationHelper);
-                    return maxStart - orientationHelper.getDecoratedStart(child);
+                    // return orientationHelper.getDecoratedStart(child) - maxStart;
                 }
             }
         } else {
@@ -334,6 +342,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     /**
      * check whether there are gaps that need to be fixed
      */
+
     private void checkForGaps() {
         if (mLayoutManager == null) return;
 
@@ -379,7 +388,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                         int aPos = layoutManager.getPosition(child);
                         if (aPos == position - 1) {
                             // if position is sequence, which means the next child is not hidden one
-                            alignLine = orientationHelper.getDecoratedStart(child) + layoutManager.obtainExtraMargin(child, false);
+                            alignLine = orientationHelper.getDecoratedStart(child) - layoutManager.obtainExtraMargin(child, false)
+                                    + layoutManager.obtainExtraMargin(view, true);
                         } else {
                             // if next child is hidden one, use end of current view
                             alignLine = orientationHelper.getDecoratedEnd(view);
@@ -395,12 +405,14 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 if (position == alignPos) {
                     viewAnchor = position;
                     if (i == 0) {
+                        // TODO: there is problem
                         // if first child, alignLine is the start
                         alignLine = orientationHelper.getDecoratedStart(view);
                     } else {
                         // if not, alignLine is the end of previous child
                         View child = layoutManager.getChildAt(i - 1);
-                        alignLine = orientationHelper.getDecoratedEnd(child) + layoutManager.obtainExtraMargin(child, true);
+                        alignLine = orientationHelper.getDecoratedEnd(child) + layoutManager.obtainExtraMargin(child, true)
+                                - layoutManager.obtainExtraMargin(view, false);
                     }
                     break;
                 }
@@ -744,6 +756,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
         View reference = helper.findViewByPosition(anchorInfo.position);
 
+        final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
+        int mainGap = layoutInVertical ? mVGap : mHGap;
         final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
 
         if (reference == null) {
@@ -767,6 +781,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
             int offset = INVALID_OFFSET;
             if (!isOutOfRange(anchorPos)) {
+                boolean isStartLine = anchorPos == range.getLower();
                 View view = helper.findViewByPosition(anchorPos);
 
                 if (view != null) {
@@ -775,9 +790,11 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                         final int endRef = orientationHelper.getDecoratedEnd(reference);
                         if (endRef < anchorInfo.coordinate) {
                             offset = anchorInfo.coordinate - endRef;
+                            offset += (isStartLine ? 0 : mainGap);
                             anchorInfo.coordinate = orientationHelper.getDecoratedEnd(view) + offset;
                         } else {
-                            anchorInfo.coordinate = orientationHelper.getDecoratedEnd(view);
+                            offset = (isStartLine ? 0 : mainGap);
+                            anchorInfo.coordinate = orientationHelper.getDecoratedEnd(view) + offset;
                         }
 
                     } else {
@@ -786,9 +803,11 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                         if (startRef > anchorInfo.coordinate) {
                             // move align up
                             offset = anchorInfo.coordinate - startRef;
+                            offset -= (isStartLine ? 0 : mainGap);
                             anchorInfo.coordinate = orientationHelper.getDecoratedStart(view) + offset;
                         } else {
-                            anchorInfo.coordinate = orientationHelper.getDecoratedStart(view);
+                            offset = -(isStartLine ? 0 : mainGap);
+                            anchorInfo.coordinate = orientationHelper.getDecoratedStart(view) + offset;
                         }
                     }
                 }
