@@ -312,7 +312,11 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
             mSpaceMeasured = true;
             int childCount = getChildCount();
             View lastChild = getChildAt(childCount - 1);
-            mMeasuredFullSpace = lastChild.getBottom();
+            if (lastChild != null) {
+                mMeasuredFullSpace = lastChild.getBottom();
+            }else {
+                mSpaceMeasuring = false;
+            }
             mSpaceMeasuring = false;
             if (mRecyclerView != null)
                 mRecyclerView.invalidate();
