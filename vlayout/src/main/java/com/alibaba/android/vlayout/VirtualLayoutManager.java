@@ -314,7 +314,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
             View lastChild = getChildAt(childCount - 1);
             if (lastChild != null) {
                 mMeasuredFullSpace = lastChild.getBottom();
-            }else {
+            } else {
                 mSpaceMeasuring = false;
             }
             mSpaceMeasuring = false;
@@ -661,6 +661,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         public LayoutParams(RecyclerView.LayoutParams source) {
             super(source);
         }
+
 
     }
 
