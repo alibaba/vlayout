@@ -74,6 +74,9 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     public void setNoScrolling(boolean noScrolling) {
         this.mNoScrolling = noScrolling;
+        mSpaceMeasured = false;
+        mMeasuredFullSpace = 0;
+        mSpaceMeasuring = false;
     }
 
     private LayoutHelperFinder mHelperFinder;
@@ -99,9 +102,13 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         requestLayout();
     }
 
+    /*
+     * Temp hashMap
+     */
+    private HashMap<Integer, LayoutHelper> newHelpersSet = new HashMap<>();
+    private HashMap<Integer, LayoutHelper> oldHelpersSet = new HashMap<>();
+
     public void setLayoutHelpers(@Nullable List<LayoutHelper> helpers) {
-        HashMap<Integer, LayoutHelper> newHelpersSet = new HashMap<>();
-        HashMap<Integer, LayoutHelper> oldHelpersSet = new HashMap<>();
 
 
         for (LayoutHelper helper : mHelperFinder) {
@@ -144,7 +151,12 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
             helper.clear(this);
         }
 
-        mSpaceMeasured = false;
+        if (!oldHelpersSet.isEmpty() || !newHelpersSet.isEmpty()) {
+            mSpaceMeasured = false;
+        }
+
+        oldHelpersSet.clear();
+        newHelpersSet.clear();
         requestLayout();
     }
 
@@ -283,6 +295,11 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+        if (mNoScrolling && state.didStructureChange()) {
+            mSpaceMeasured = false;
+            mSpaceMeasuring = true;
+        }
+
         runPreLayout(recycler, state);
 
         try {
@@ -290,6 +307,17 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         } finally {
             runPostLayout(recycler, state, Integer.MAX_VALUE); // hack to indicate its an initial layout
         }
+
+        if (mNoScrolling && mSpaceMeasuring) {
+            mSpaceMeasured = true;
+            int childCount = getChildCount();
+            View lastChild = getChildAt(childCount - 1);
+            mMeasuredFullSpace = lastChild.getBottom();
+            mSpaceMeasuring = false;
+            if (mRecyclerView != null)
+                mRecyclerView.invalidate();
+        }
+
     }
 
     @Override
@@ -1014,9 +1042,14 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
      */
 
 
+    // when set no scrolling, the max size should have limit
+    private static final int MAX_NO_SCROLLING_SIZE = 50000;
+
     private boolean mSpaceMeasured = false;
 
     private int mMeasuredFullSpace = 0;
+
+    private boolean mSpaceMeasuring = false;
 
     @Override
     public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
@@ -1025,8 +1058,8 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
             return;
         }
 
-        int measuredSize = mSpaceMeasured ? 0 : Integer.MAX_VALUE >> 2;
-
+        int measuredSize = mSpaceMeasured ? mMeasuredFullSpace : MAX_NO_SCROLLING_SIZE;
+        mSpaceMeasuring = !mSpaceMeasured;
 
         if (getOrientation() == VERTICAL) {
             super.onMeasure(recycler, state, widthSpec, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST));

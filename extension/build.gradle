@@ -12,6 +12,13 @@ android {
         versionCode Integer.parseInt(VERSION)
         versionName VERSION_NAME
     }
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
     buildTypes {
         release {
             minifyEnabled false

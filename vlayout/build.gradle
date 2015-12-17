@@ -14,6 +14,11 @@ android {
         versionName VERSION_NAME
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -23,9 +28,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':extension')
+    //compile project(':extension')
 
-    // compile 'com.tmall.android:vlayout-ext:1.1.1.2@aar'
+    compile 'com.tmall.android:vlayout-ext:1.1.1.2@aar'
     compile 'com.android.support:recyclerview-v7:21.0.2@aar'
     compile('com.android.support:support-v4:21.0.0@aar') {
         exclude group: 'com.android.support', module: 'support-annotations'
