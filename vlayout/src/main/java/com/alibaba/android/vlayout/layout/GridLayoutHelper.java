@@ -40,6 +40,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
     private boolean mIsAutoExpand = true;
 
+    private boolean mIgnoreExtra = false;
+
     @NonNull
     private SpanSizeLookup mSpanSizeLookup = new DefaultSpanSizeLookup();
 
@@ -114,6 +116,10 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         this.mIsAutoExpand = isAutoExpand;
     }
 
+    public void setIgnoreExtra(boolean ignoreExtra) {
+        this.mIgnoreExtra = ignoreExtra;
+    }
+
 
     /**
      * {@inheritDoc}
@@ -134,6 +140,10 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         mSpanSizeLookup.invalidateSpanIndexCache();
 
         ensureSpanCount();
+    }
+
+    public int getSpanCount() {
+        return mSpanCount;
     }
 
     /**

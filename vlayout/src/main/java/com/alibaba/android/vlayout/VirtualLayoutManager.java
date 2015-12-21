@@ -1079,7 +1079,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
 
     // when set no scrolling, the max size should have limit
-    private static final int MAX_NO_SCROLLING_SIZE = 50000;
+    private static final int MAX_NO_SCROLLING_SIZE = Integer.MAX_VALUE >> 2;
 
     private boolean mSpaceMeasured = false;
 
@@ -1094,14 +1094,23 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
             return;
         }
 
+
         int measuredSize = mSpaceMeasured ? mMeasuredFullSpace : MAX_NO_SCROLLING_SIZE;
         mSpaceMeasuring = !mSpaceMeasured;
+
+        if (getChildCount() > 0) {
+            View lastChild = getChildAt(getChildCount() - 1);
+            if (lastChild.getBottom() != mMeasuredFullSpace) {
+                measuredSize = MAX_NO_SCROLLING_SIZE;
+                mSpaceMeasured = false;
+                mSpaceMeasuring = true;
+            }
+        }
 
         if (getOrientation() == VERTICAL) {
             super.onMeasure(recycler, state, widthSpec, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST));
         } else {
             super.onMeasure(recycler, state, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST), heightSpec);
         }
-
     }
 }

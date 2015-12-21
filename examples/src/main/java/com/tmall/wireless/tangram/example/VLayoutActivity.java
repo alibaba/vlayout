@@ -96,8 +96,6 @@ public class VLayoutActivity extends Activity {
 
         final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
 
-        layoutManager.setNoScrolling(true);
-
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {

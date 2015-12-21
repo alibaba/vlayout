@@ -43,8 +43,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
     public void setStickyStart(boolean stickyStart) {
         this.mStickyStart = stickyStart;
     }
-
-
+    
     @Override
     public void setItemCount(int itemCount) {
         if (itemCount > 0)
