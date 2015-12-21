@@ -5,12 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.view.View;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.Range;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
-import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
 import java.lang.ref.WeakReference;

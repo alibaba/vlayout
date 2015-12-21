@@ -1,11 +1,9 @@
 package com.alibaba.android.vlayout.layout;
 
-import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -165,7 +163,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
         if (count == 1) {
             View view = mChildrenViews[0];
-            final VirtualLayoutManager.LayoutParams lp = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
+            final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
 
 
             if (mMarginCollapse) {
@@ -204,9 +202,9 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             if (count == 2) {
 
                 final View child1 = mChildrenViews[0];
-                final VirtualLayoutManager.LayoutParams lp1 = (VirtualLayoutManager.LayoutParams) child1.getLayoutParams();
+                final ViewGroup.MarginLayoutParams lp1 = (ViewGroup.MarginLayoutParams) child1.getLayoutParams();
                 final View child2 = mChildrenViews[1];
-                final VirtualLayoutManager.LayoutParams lp2 = (VirtualLayoutManager.LayoutParams) child2.getLayoutParams();
+                final ViewGroup.MarginLayoutParams lp2 = (ViewGroup.MarginLayoutParams) child2.getLayoutParams();
                 final float weight1 = getViewMainWeight(lp1, 0);
                 final float weight2 = getViewMainWeight(lp1, 1);
 
@@ -311,12 +309,12 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             } else if (count == 3) {
 
                 final View child1 = mChildrenViews[0];
-                final VirtualLayoutManager.LayoutParams lp1 = (VirtualLayoutManager.LayoutParams) child1.getLayoutParams();
+                final ViewGroup.MarginLayoutParams lp1 = (ViewGroup.MarginLayoutParams) child1.getLayoutParams();
                 final View child2 = helper.getReverseLayout() ? mChildrenViews[2] : mChildrenViews[1];
                 final View child3 = helper.getReverseLayout() ? mChildrenViews[1] : mChildrenViews[2];
 
-                final VirtualLayoutManager.LayoutParams lp2 = (VirtualLayoutManager.LayoutParams) child2.getLayoutParams();
-                final VirtualLayoutManager.LayoutParams lp3 = (VirtualLayoutManager.LayoutParams) child3.getLayoutParams();
+                final ViewGroup.MarginLayoutParams lp2 = (ViewGroup.MarginLayoutParams) child2.getLayoutParams();
+                final ViewGroup.MarginLayoutParams lp3 = (ViewGroup.MarginLayoutParams) child3.getLayoutParams();
 
                 final float weight1 = getViewMainWeight(lp1, 0);
                 final float weight2 = getViewMainWeight(lp1, 1);
@@ -519,13 +517,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
     }
 
 
-    private float getViewMainWeight(VirtualLayoutManager.LayoutParams params, int index) {
-        if (params instanceof LayoutParams) {
-            float weight = ((LayoutParams) params).weight;
-
-            if (weight != 0)
-                return weight;
-        }
+    private float getViewMainWeight(ViewGroup.MarginLayoutParams params, int index) {
         if (mColWeights.length > index)
             return mColWeights[index];
 
@@ -537,34 +529,6 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
         return (viewMargin <= layoutMargin) ? 0 : viewMargin - layoutMargin;
     }
 
-    public static class LayoutParams extends VirtualLayoutManager.LayoutParams {
-
-        public float weight;
-
-        public LayoutParams(Context c, AttributeSet attrs) {
-            super(c, attrs);
-        }
-
-        public LayoutParams(int positionType, int width, int height) {
-            super(positionType, width, height);
-        }
-
-        public LayoutParams(int width, int height) {
-            super(width, height);
-        }
-
-        public LayoutParams(ViewGroup.MarginLayoutParams source) {
-            super(source);
-        }
-
-        public LayoutParams(ViewGroup.LayoutParams source) {
-            super(source);
-        }
-
-        public LayoutParams(RecyclerView.LayoutParams source) {
-            super(source);
-        }
-    }
 
     @Override
     protected void layoutChild(View child, int left, int top, int right, int bottom, @NonNull LayoutManagerHelper helper) {

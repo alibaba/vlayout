@@ -318,8 +318,15 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
                 mSpaceMeasuring = false;
             }
             mSpaceMeasuring = false;
-            if (mRecyclerView != null)
-                mRecyclerView.invalidate();
+            if (mRecyclerView != null) {
+                mRecyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // post relayout
+                        mRecyclerView.requestLayout();
+                    }
+                });
+            }
         }
 
     }
@@ -575,6 +582,8 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     public RecyclerView.LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
         if (lp instanceof LayoutParams) {
             return new LayoutParams((LayoutParams) lp);
+        } else if (lp instanceof RecyclerView.LayoutParams) {
+            return new LayoutParams((RecyclerView.LayoutParams) lp);
         } else if (lp instanceof ViewGroup.MarginLayoutParams) {
             return new LayoutParams((ViewGroup.MarginLayoutParams) lp);
         } else {
@@ -584,7 +593,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     @Override
     public RecyclerView.LayoutParams generateLayoutParams(Context c, AttributeSet attrs) {
-        return new LayoutParams(c, attrs);
+        return new InflateLayoutParams(c, attrs);
     }
 
     @Override
@@ -627,23 +636,39 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     @SuppressWarnings("unused")
     public static class LayoutParams extends RecyclerView.LayoutParams {
+        public static final int INVALIDE_SIZE = Integer.MIN_VALUE;
 
 
-        public static final int NORMAL = 0;
+        private int mOriginWidth = INVALIDE_SIZE;
+        private int mOriginHeight = INVALIDE_SIZE;
 
-        public static final int PLACE_ABOVE = 1;
+        public void storeOriginWidth() {
+            if (mOriginWidth == INVALIDE_SIZE) {
+                mOriginWidth = width;
+            }
 
-        public static final int PLACE_BELOW = 2;
+        }
 
-        public int positionType = NORMAL;
+        public void storeOriginHeight() {
+            if (mOriginHeight == INVALIDE_SIZE) {
+                mOriginHeight = height;
+            }
+        }
+
+        public void restoreOriginWidth() {
+            if (mOriginWidth != INVALIDE_SIZE) {
+                width = mOriginWidth;
+            }
+        }
+
+        public void restoreOriginHeight() {
+            if (mOriginHeight != INVALIDE_SIZE) {
+                height = mOriginHeight;
+            }
+        }
 
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
-        }
-
-        public LayoutParams(int positionType, int width, int height) {
-            super(width, height);
-            this.positionType = positionType;
         }
 
         public LayoutParams(int width, int height) {
@@ -662,7 +687,13 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
             super(source);
         }
 
+    }
 
+    public static class InflateLayoutParams extends LayoutParams {
+
+        public InflateLayoutParams(Context c, AttributeSet attrs) {
+            super(c, attrs);
+        }
     }
 
 

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
@@ -375,7 +376,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                                 Math.max(0, spanSize - 1) * (layoutInVertical ? mHGap : mVGap),
                         View.MeasureSpec.EXACTLY);
             }
-            final LayoutParams lp = (LayoutParams) view.getLayoutParams();
+            final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
 
             if (helper.getOrientation() == VERTICAL) {
                 helper.measureChild(view, spec, getMainDirSpec(lp.height, mTotalSize));

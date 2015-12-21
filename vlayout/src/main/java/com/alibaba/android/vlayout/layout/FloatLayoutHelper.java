@@ -193,8 +193,7 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
     private void doMeasureAndLayout(View view, LayoutManagerHelper helper) {
         if (view == null || helper == null) return;
 
-        final VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
-        params.positionType = VirtualLayoutManager.LayoutParams.PLACE_ABOVE;
+        final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
         final int widthSpec = helper.getChildMeasureSpec(
                 helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(), params.width, !layoutInVertical);

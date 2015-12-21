@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
-import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
 import static android.support.v7.widget._ExposeLinearLayoutManagerEx.VERTICAL;
@@ -81,7 +80,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
         final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
         result.mConsumed = orientationHelper.getDecoratedMeasurement(view);
 
-        VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
+        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
         // Do normal measure&layout phase by default
         mDoNormalHandle = true;
 
@@ -247,7 +246,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
             }
 
             if (mFixView != null) {
-                VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) mFixView.getLayoutParams();
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) mFixView.getLayoutParams();
 
                 if (params.isItemRemoved()) {
                     // item is removed

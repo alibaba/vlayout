@@ -3,6 +3,7 @@ package com.alibaba.android.vlayout.layout;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
@@ -196,8 +197,7 @@ public class FixLayoutHelper extends BaseLayoutHelper {
     private void doMeasureAndLayout(View view, LayoutManagerHelper helper) {
         if (view == null || helper == null) return;
 
-        final VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
-        params.positionType = VirtualLayoutManager.LayoutParams.PLACE_ABOVE;
+        final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
 
         final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
