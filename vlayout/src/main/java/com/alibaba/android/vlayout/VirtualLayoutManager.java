@@ -323,7 +323,8 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
                     @Override
                     public void run() {
                         // post relayout
-                        mRecyclerView.requestLayout();
+                        if (mRecyclerView != null)
+                            mRecyclerView.requestLayout();
                     }
                 });
             }
