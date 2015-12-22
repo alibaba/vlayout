@@ -1099,9 +1099,9 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         int measuredSize = mSpaceMeasured ? mMeasuredFullSpace : MAX_NO_SCROLLING_SIZE;
         mSpaceMeasuring = !mSpaceMeasured;
 
-        if (getChildCount() > 0) {
+        if (getChildCount() > 0 || getChildCount() != getItemCount()) {
             View lastChild = getChildAt(getChildCount() - 1);
-            if (lastChild.getBottom() != mMeasuredFullSpace) {
+            if (getChildCount() != getItemCount() || (lastChild != null && lastChild.getBottom() != mMeasuredFullSpace)) {
                 measuredSize = MAX_NO_SCROLLING_SIZE;
                 mSpaceMeasured = false;
                 mSpaceMeasuring = true;
