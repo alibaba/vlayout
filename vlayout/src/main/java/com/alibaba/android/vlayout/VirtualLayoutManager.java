@@ -640,6 +640,8 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         public static final int INVALIDE_SIZE = Integer.MIN_VALUE;
 
 
+        public int zIndex = 0;
+
         private int mOriginWidth = INVALIDE_SIZE;
         private int mOriginHeight = INVALIDE_SIZE;
 
@@ -870,9 +872,13 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     @Override
     public void addChildView(View view, int position) {
-        addView(view, position);
+        super.addView(view, position);
     }
 
+
+    public void moveView(int fromIndex, int toIndex) {
+        super.moveView(fromIndex, toIndex);
+    }
 
     @Override
     public void addChildView(LayoutStateWrapper layoutState, View view) {
@@ -884,9 +890,9 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     public void addChildView(LayoutStateWrapper layoutState, View view, int position) {
         if (!layoutState.hasScrapList()) {
             // can not find in scrapList
-            addView(view, position);
+            super.addView(view, position);
         } else {
-            addDisappearingView(view, position);
+            super.addDisappearingView(view, position);
         }
     }
 

@@ -3,6 +3,7 @@ package com.alibaba.android.vlayout.layout;
 import android.animation.ObjectAnimator;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +14,9 @@ import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 
 import static android.support.v7.widget._ExposeLinearLayoutManagerEx.VERTICAL;
+import static com.alibaba.android.vlayout.layout.FixLayoutHelper.BOTTOM_LEFT;
+import static com.alibaba.android.vlayout.layout.FixLayoutHelper.BOTTOM_RIGHT;
+import static com.alibaba.android.vlayout.layout.FixLayoutHelper.TOP_RIGHT;
 
 /**
  * Created by villadora on 15/8/28.
@@ -36,21 +40,17 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
 
     protected boolean mDoNormalHandle = false;
 
-    private int mLeft = 0;
-    private int mTop = 0;
+    private int mX = 0;
+    private int mY = 0;
+    private int mAlignType = FixLayoutHelper.TOP_LEFT;
 
-    public void setDefaultLocation(int left, int top) {
-        this.mLeft = left;
-        this.mTop = top;
+    public void setDefaultLocation(int x, int y) {
+        this.mX = x;
+        this.mY = y;
     }
 
-    public void setZIndex(int zIndex) {
-        this.mZIndex = zIndex;
-    }
-
-    @Override
-    public int getZIndex() {
-        return mZIndex;
+    public void setAlignType(int alignType) {
+        this.mAlignType = alignType;
     }
 
     /**
@@ -104,6 +104,11 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
 
         handleStateOnResult(result, view);
 
+    }
+
+    @Override
+    public void setBgColor(int bgColor) {
+        // disable bgColor
     }
 
     @Override
@@ -203,22 +208,51 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
         // do measurement
         helper.measureChild(view, widthSpec, heightSpec);
 
+
+        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
         int left, top, right, bottom;
 
-        // TOP_LEFT
-        left = helper.getPaddingLeft() + mLeft;
-        top = helper.getPaddingTop() + mTop;
-        right = left + params.leftMargin + params.rightMargin + view.getMeasuredWidth();
-        bottom = top + params.topMargin + params.bottomMargin + view.getMeasuredHeight();
+        if (mAlignType == TOP_RIGHT) {
+            top = helper.getPaddingTop() + mY;
+            right = helper.getContentWidth() - helper.getPaddingRight() - mX;
+            left = right - params.leftMargin - params.rightMargin - view.getMeasuredWidth();
+            bottom = top + params.topMargin + params.bottomMargin + view.getMeasuredHeight();
+        } else if (mAlignType == BOTTOM_LEFT) {
+            left = helper.getPaddingLeft() + mX;
+            bottom = helper.getContentHeight() - helper.getPaddingBottom() - mY;
+            right = left + params.leftMargin + params.rightMargin + view.getMeasuredWidth();
+            top = bottom - view.getMeasuredHeight() - params.topMargin - params.bottomMargin;
+        } else if (mAlignType == BOTTOM_RIGHT) {
+            right = helper.getContentWidth() - helper.getPaddingRight() - mX;
+            bottom = helper.getContentHeight() - helper.getPaddingBottom() - mY;
+            left = right - (layoutInVertical ? orientationHelper.getDecoratedMeasurementInOther(view) : orientationHelper.getDecoratedMeasurement(view));
+            top = bottom - (layoutInVertical ? orientationHelper.getDecoratedMeasurement(view) : orientationHelper.getDecoratedMeasurementInOther(view));
+        } else {
+            // TOP_LEFT
+            left = helper.getPaddingLeft() + mX;
+            top = helper.getPaddingTop() + mY;
+            right = left + (layoutInVertical ? orientationHelper.getDecoratedMeasurementInOther(view) : orientationHelper.getDecoratedMeasurement(view));
+            bottom = top + (layoutInVertical ? orientationHelper.getDecoratedMeasurement(view) : orientationHelper.getDecoratedMeasurementInOther(view));
+        }
+
+        if (left < helper.getPaddingLeft()) {
+            left = helper.getPaddingLeft();
+            right = left + (layoutInVertical ? orientationHelper.getDecoratedMeasurementInOther(view) : orientationHelper.getDecoratedMeasurement(view));
+        }
 
         if (right > helper.getContentWidth() - helper.getPaddingRight()) {
             right = helper.getContentWidth() - helper.getPaddingRight();
             left = right - params.leftMargin - params.rightMargin - view.getMeasuredWidth();
         }
 
+        if (top < helper.getPaddingTop()) {
+            top = helper.getPaddingTop();
+            bottom = top + (layoutInVertical ? orientationHelper.getDecoratedMeasurement(view) : orientationHelper.getDecoratedMeasurementInOther(view));
+        }
+
         if (bottom > helper.getContentHeight() - helper.getPaddingBottom()) {
             bottom = helper.getContentHeight() - helper.getPaddingBottom();
-            top = bottom - params.topMargin - params.bottomMargin - view.getMeasuredHeight();
+            top = bottom - (layoutInVertical ? orientationHelper.getDecoratedMeasurement(view) : orientationHelper.getDecoratedMeasurementInOther(view));
         }
 
         layoutChild(view, left, top, right, bottom, helper);

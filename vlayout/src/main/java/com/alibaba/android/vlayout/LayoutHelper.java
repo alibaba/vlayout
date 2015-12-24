@@ -25,6 +25,9 @@ public abstract class LayoutHelper {
     Range<Integer> mRange = RANGE_EMPTY;
 
 
+    int mZIndex = 0;
+
+
     /**
      * Is the position should be handle by this {@link LayoutHelper}
      *
@@ -139,7 +142,16 @@ public abstract class LayoutHelper {
      * @return zIndex of current layoutHelper
      */
     public int getZIndex() {
-        return 0;
+        return mZIndex;
+    }
+
+    /**
+     * Set zIndex of this {@link LayoutHelper}
+     *
+     * @param zIndex
+     */
+    public void setZIndex(int zIndex) {
+        this.mZIndex = zIndex;
     }
 
 
@@ -222,7 +234,6 @@ public abstract class LayoutHelper {
      * Called when this layoutHelper will be removed from LayoutManager, please release views and other resources here
      *
      * @param helper           LayoutManagerHelper
-     * @param recycledViewPool pool for recycled all the views
      */
     public abstract void clear(LayoutManagerHelper helper);
 

@@ -28,7 +28,6 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     float mAspectRatio = Float.NaN;
 
-
     public BaseLayoutHelper() {
 
     }

@@ -32,6 +32,8 @@ public interface LayoutManagerHelper {
 
     void addChildView(VirtualLayoutManager.LayoutStateWrapper layoutState, View view);
 
+    void moveView(int fromIndex, int toIndex);
+
     void removeChildView(View view);
 
     void attachChildView(View view, boolean head);
