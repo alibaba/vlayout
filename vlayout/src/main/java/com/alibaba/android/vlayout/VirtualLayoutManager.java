@@ -313,7 +313,8 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
             int childCount = getChildCount();
             View lastChild = getChildAt(childCount - 1);
             if (lastChild != null) {
-                mMeasuredFullSpace = lastChild.getBottom();
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) lastChild.getLayoutParams();
+                mMeasuredFullSpace = getDecoratedBottom(lastChild) + params.bottomMargin + computeAlignOffset(lastChild, true, false);
             } else {
                 mSpaceMeasuring = false;
             }
@@ -1107,7 +1108,14 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
         if (getChildCount() > 0 || getChildCount() != getItemCount()) {
             View lastChild = getChildAt(getChildCount() - 1);
-            if (getChildCount() != getItemCount() || (lastChild != null && lastChild.getBottom() != mMeasuredFullSpace)) {
+
+            int bottom = mMeasuredFullSpace;
+            if (lastChild != null) {
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) lastChild.getLayoutParams();
+                bottom = getDecoratedBottom(lastChild) + params.bottomMargin + computeAlignOffset(lastChild, true, false);
+            }
+
+            if (getChildCount() != getItemCount() || (lastChild != null && bottom != mMeasuredFullSpace)) {
                 measuredSize = MAX_NO_SCROLLING_SIZE;
                 mSpaceMeasured = false;
                 mSpaceMeasuring = true;
