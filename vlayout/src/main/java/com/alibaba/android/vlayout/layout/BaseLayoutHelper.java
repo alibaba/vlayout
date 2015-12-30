@@ -104,6 +104,10 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         }
     }
 
+    protected boolean isValidScrolled(int scrolled) {
+        return scrolled != Integer.MAX_VALUE && scrolled != Integer.MIN_VALUE;
+    }
+
 
     @Override
     public void afterLayout(RecyclerView.Recycler recycler, RecyclerView.State state,
@@ -115,14 +119,14 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
 
         if (requireLayoutView()) {
-            if (scrolled != Integer.MAX_VALUE && scrolled != Integer.MIN_VALUE && mLayoutView != null) {
+            if (isValidScrolled(scrolled) && mLayoutView != null) {
                 // initial layout do reset
                 mLayoutRegion.union(mLayoutView.getLeft(), mLayoutView.getTop(), mLayoutView.getRight(), mLayoutView.getBottom());
             }
 
 
             if (!mLayoutRegion.isEmpty()) {
-                if (scrolled != Integer.MAX_VALUE && scrolled != Integer.MIN_VALUE) {
+                if (isValidScrolled(scrolled)) {
                     if (helper.getOrientation() == VirtualLayoutManager.VERTICAL)
                         mLayoutRegion.offset(0, -scrolled);
                     else {

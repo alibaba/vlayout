@@ -193,6 +193,7 @@ public class VLayoutActivity extends Activity {
         if (STICKY_LAYOUT) {
             StickyLayoutHelper layoutHelper = new StickyLayoutHelper();
             layoutHelper.setOffset(100);
+            layoutHelper.setAspectRatio(4);
             adapters.add(new SubAdapter(this, layoutHelper, 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
         }
 
@@ -267,7 +268,7 @@ public class VLayoutActivity extends Activity {
             });
         }
 
-        if (STICKY_LAYOUT && false) {
+        if (STICKY_LAYOUT) {
             StickyLayoutHelper layoutHelper = new StickyLayoutHelper(false);
             adapters.add(new SubAdapter(this, layoutHelper, 0));
             layoutHelper = new StickyLayoutHelper(false);

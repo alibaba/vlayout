@@ -244,26 +244,22 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
             final View eView = helper.findViewByPosition(mPos);
             final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
             boolean normalHandle = false;
-            if ((mStickyStart && startPosition >= mPos) || (!mStickyStart && endPosition <= mPos)) {
+            if ((mStickyStart && endPosition >= mPos) || (!mStickyStart && startPosition <= mPos)) {
 
                 if (eView == null) {
+                    if (mOffset > 0)
+                        normalHandle = true;
                     mFixView = recycler.getViewForPosition(mPos);
                 } else if (mStickyStart && orientationHelper.getDecoratedStart(eView) >= orientationHelper.getStartAfterPadding() + mOffset) {
-                    return;
+                    normalHandle = true;
+                    mFixView = eView;
                 } else if (!mStickyStart && orientationHelper.getDecoratedEnd(eView) <= orientationHelper.getEndAfterPadding() - mOffset) {
-                    return;
+                    normalHandle = true;
+                    mFixView = eView;
                 } else {
                     // TODO: reuse views
                     // mFixView = recycler.getViewForPosition(mPos);
                     mFixView = eView;
-                }
-            } else {
-                if ((mStickyStart && endPosition >= mPos) || (!mStickyStart && startPosition <= mPos)) {
-                    Log.i("STICKY", String.format("%s %d %d %d", mStickyStart, mPos, startPosition, endPosition));
-                    if (eView == null) {
-                        normalHandle = true;
-                        mFixView = recycler.getViewForPosition(mPos);
-                    }
                 }
             }
 
@@ -320,12 +316,31 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
                                 }
                             }
                         }
-                    } else if (helper.getReverseLayout() || !mStickyStart) {
-                        bottom = orientationHelper.getEndAfterPadding() - mOffset;
-                        top = bottom - consumed;
-                    } else {
-                        top = orientationHelper.getStartAfterPadding() + mOffset;
-                        bottom = top + consumed;
+
+                        if (refer == null || index < 0) {
+                            normalHandle = false;
+                        }
+
+                        if (helper.getReverseLayout() || !mStickyStart) {
+                            if (bottom > orientationHelper.getEndAfterPadding() - mOffset) {
+                                normalHandle = false;
+                            }
+                        } else {
+                            if (top < orientationHelper.getStartAfterPadding() + mOffset) {
+                                normalHandle = false;
+                            }
+                        }
+
+                    }
+
+                    if (!normalHandle) {
+                        if (helper.getReverseLayout() || !mStickyStart) {
+                            bottom = orientationHelper.getEndAfterPadding() - mOffset;
+                            top = bottom - consumed;
+                        } else {
+                            top = orientationHelper.getStartAfterPadding() + mOffset;
+                            bottom = top + consumed;
+                        }
                     }
 
                 } else {
@@ -399,8 +414,10 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
     private void doMeasure(View view, LayoutManagerHelper helper) {
         final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-        final int widthSize = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - getHorizontalMargin();
 
+
+
+        final int widthSize = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - getHorizontalMargin();
         final int widthSpec = helper.getChildMeasureSpec(widthSize, params.width, !layoutInVertical);
         int heightSpec;
         if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
