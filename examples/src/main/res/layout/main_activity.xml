@@ -11,7 +11,6 @@
         android:clipToPadding="true"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
-        android:paddingTop="30dp"
         android:requiresFadingEdge="none"
         android:scrollbars="vertical"/>
 

@@ -184,12 +184,15 @@ public class VLayoutActivity extends Activity {
 
 
         if (LINEAR_LAYOUT) {
-            adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 0));
+            LinearLayoutHelper layoutHelper = new LinearLayoutHelper();
+            layoutHelper.setAspectRatio(3.4f);
+            adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 1));
             adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 6));
         }
 
-        if (STICKY_LAYOUT)
-            adapters.add(new SubAdapter(this, new StickyLayoutHelper(), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
+        if (STICKY_LAYOUT) {
+            //adapters.add(new SubAdapter(this, new StickyLayoutHelper(), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
+        }
 
         if (COLUMN_LAYOUT) {
             ColumnLayoutHelper layoutHelper = new ColumnLayoutHelper();
@@ -263,8 +266,34 @@ public class VLayoutActivity extends Activity {
         }
 
         if (STICKY_LAYOUT) {
-            adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 0));
-            adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
+            StickyLayoutHelper layoutHelper = new StickyLayoutHelper(false);
+            layoutHelper.setOffset(100);
+            // adapters.add(new SubAdapter(this, layoutHelper, 0));
+            adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)) {
+                @Override
+                public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    return super.onCreateViewHolder(parent, viewType);
+                }
+
+                @Override
+                public int getItemViewType(int position) {
+                     return 10;
+                }
+            });
+        }
+
+        if (GRID_LAYOUT) {
+            GridLayoutHelper layoutHelper = new GridLayoutHelper(2);
+            layoutHelper.setMargin(7, 0, 7, 0);
+            layoutHelper.setWeights(new float[]{46.665f});
+            layoutHelper.setHGap(3);
+            adapters.add(new SubAdapter(this, layoutHelper, 2));
+
+            layoutHelper = new GridLayoutHelper(4);
+            layoutHelper.setWeights(new float[]{20f, 26.665f});
+            layoutHelper.setMargin(7, 0, 7, 0);
+            layoutHelper.setHGap(3);
+            adapters.add(new SubAdapter(this, layoutHelper, 8));
         }
 
 
