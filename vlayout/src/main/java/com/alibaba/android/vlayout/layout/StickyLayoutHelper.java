@@ -132,6 +132,8 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
                     mFixView = view;
                     top = orientationHelper.getStartAfterPadding() + mMarginTop + mOffset;
                     bottom = top + result.mConsumed;
+                } else {
+                    Log.i("Sticky", "remainingSpace: " + remainingSpace + "    offset: " + mOffset);
                 }
             }
 
@@ -178,6 +180,8 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
             helper.addChildView(layoutState, view);
             handleStateOnResult(result, view);
             mFixView = null;
+        } else {
+            result.mConsumed += mOffset;
         }
 
 
@@ -194,7 +198,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
             helper.removeChildView(mFixView);
             recycler.recycleView(mFixView);
             mFixView = null;
-        }else {
+        } else {
             Log.i("Tag", "mFixView is null");
         }
 

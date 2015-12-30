@@ -191,7 +191,9 @@ public class VLayoutActivity extends Activity {
         }
 
         if (STICKY_LAYOUT) {
-            //adapters.add(new SubAdapter(this, new StickyLayoutHelper(), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
+            StickyLayoutHelper layoutHelper = new StickyLayoutHelper();
+            layoutHelper.setOffset(100);
+            adapters.add(new SubAdapter(this, layoutHelper, 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
         }
 
         if (COLUMN_LAYOUT) {
@@ -265,21 +267,12 @@ public class VLayoutActivity extends Activity {
             });
         }
 
-        if (STICKY_LAYOUT) {
+        if (STICKY_LAYOUT && false) {
             StickyLayoutHelper layoutHelper = new StickyLayoutHelper(false);
+            adapters.add(new SubAdapter(this, layoutHelper, 0));
+            layoutHelper = new StickyLayoutHelper(false);
             layoutHelper.setOffset(100);
-            // adapters.add(new SubAdapter(this, layoutHelper, 0));
-            adapters.add(new SubAdapter(this, new StickyLayoutHelper(false), 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)) {
-                @Override
-                public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    return super.onCreateViewHolder(parent, viewType);
-                }
-
-                @Override
-                public int getItemViewType(int position) {
-                     return 10;
-                }
-            });
+            adapters.add(new SubAdapter(this, layoutHelper, 3, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
         }
 
         if (GRID_LAYOUT) {
