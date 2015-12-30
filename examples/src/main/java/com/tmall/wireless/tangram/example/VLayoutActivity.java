@@ -24,6 +24,7 @@ import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
 import com.alibaba.android.vlayout.layout.FixLayoutHelper;
+import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
@@ -44,6 +45,8 @@ public class VLayoutActivity extends Activity {
     private static final boolean FIX_LAYOUT = true;
 
     private static final boolean LINEAR_LAYOUT = true;
+
+    private static final boolean FLOAT_LAYOUT = true;
 
     private static final boolean ONEN_LAYOUT = true;
 
@@ -183,6 +186,13 @@ public class VLayoutActivity extends Activity {
         }
 
 
+        if (FLOAT_LAYOUT) {
+            FloatLayoutHelper layoutHelper = new FloatLayoutHelper();
+            layoutHelper.setAlignType(FixLayoutHelper.BOTTOM_RIGHT);
+            layoutHelper.setDefaultLocation(100, 200);
+            adapters.add(new SubAdapter(this, layoutHelper, 1, new LayoutParams(100, 100)));
+        }
+
         if (LINEAR_LAYOUT) {
             LinearLayoutHelper layoutHelper = new LinearLayoutHelper();
             layoutHelper.setAspectRatio(3.4f);
@@ -257,8 +267,12 @@ public class VLayoutActivity extends Activity {
         }
 
         if (FIX_LAYOUT) {
-            adapters.add(new SubAdapter(this, new FixLayoutHelper(10, 10), 0));
-            adapters.add(new SubAdapter(this, new FixLayoutHelper(FixLayoutHelper.TOP_RIGHT, 20, 20), 1) {
+            FixLayoutHelper layoutHelper = new FixLayoutHelper(10, 10);
+            adapters.add(new SubAdapter(this, layoutHelper, 0));
+
+            layoutHelper = new FixLayoutHelper(FixLayoutHelper.TOP_RIGHT, 20, 20);
+
+            adapters.add(new SubAdapter(this, layoutHelper, 1) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);

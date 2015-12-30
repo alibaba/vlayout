@@ -250,6 +250,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
                     if (mOffset > 0)
                         normalHandle = true;
                     mFixView = recycler.getViewForPosition(mPos);
+                    doMeasure(mFixView, helper);
                 } else if (mStickyStart && orientationHelper.getDecoratedStart(eView) >= orientationHelper.getStartAfterPadding() + mOffset) {
                     normalHandle = true;
                     mFixView = eView;
@@ -272,7 +273,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
                 }
 
                 // when do measure in after layout no need to consider scrolled
-                doMeasure(mFixView, helper);
+                // doMeasure(mFixView, helper);
 
                 // do layout
 
@@ -415,18 +416,29 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
         final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
 
+        int widthSize = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - getHorizontalMargin();
+        int heightSize = helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom() - getVerticalMargin();
 
+        if (layoutInVertical) {
+            final int widthSpec = helper.getChildMeasureSpec(widthSize, params.width, false);
+            int heightSpec;
+            if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
+                heightSpec = View.MeasureSpec.makeMeasureSpec((int) (widthSize / mAspectRatio + 0.5), View.MeasureSpec.EXACTLY);
+            } else
+                heightSpec = helper.getChildMeasureSpec(heightSize, params.height, true);
 
-        final int widthSize = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - getHorizontalMargin();
-        final int widthSpec = helper.getChildMeasureSpec(widthSize, params.width, !layoutInVertical);
-        int heightSpec;
-        if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
-            heightSpec = View.MeasureSpec.makeMeasureSpec((int) (widthSize / mAspectRatio + 0.5), View.MeasureSpec.EXACTLY);
-        } else
-            heightSpec = helper.getChildMeasureSpec(helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
-                    params.height, layoutInVertical);
+            helper.measureChild(view, widthSpec, heightSpec);
+        } else {
+            final int heightSpec = helper.getChildMeasureSpec(heightSize, params.height, false);
+            int widthSpec;
+            if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
+                widthSpec = View.MeasureSpec.makeMeasureSpec((int) (heightSize * mAspectRatio + 0.5), View.MeasureSpec.EXACTLY);
+            } else
+                widthSpec = helper.getChildMeasureSpec(widthSize, params.width, true);
 
-        helper.measureChild(view, widthSpec, heightSpec);
+            helper.measureChild(view, widthSpec, heightSpec);
+        }
+
     }
 }
 
