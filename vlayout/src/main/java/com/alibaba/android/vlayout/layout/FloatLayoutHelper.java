@@ -53,6 +53,15 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
         this.mAlignType = alignType;
     }
 
+    @Override
+    public void setItemCount(int itemCount) {
+        if (itemCount > 0) {
+            super.setItemCount(1);
+        } else {
+            super.setItemCount(0);
+        }
+    }
+
     /**
      * {@inheritDoc}
      * <p/>
@@ -64,11 +73,6 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
     @Override
     public void onRangeChange(int start, int end) {
         this.mPos = start;
-    }
-
-    @Override
-    public int getItemCount() {
-        return 1;
     }
 
     @Override

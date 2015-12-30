@@ -26,6 +26,8 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
     private int mPos = -1;
 
     private boolean mStickyStart = true;
+    private int mOffset = 0;
+
 
     private View mFixView = null;
     private boolean mDoNormalHandle = false;
@@ -42,6 +44,10 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
 
     public void setStickyStart(boolean stickyStart) {
         this.mStickyStart = stickyStart;
+    }
+
+    public void setOffset(int offset) {
+        this.mOffset = offset;
     }
 
     @Override
@@ -63,6 +69,8 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
         if (isOutOfRange(layoutState.getCurrentPosition())) {
             return;
         }
+
+        assert mFixView == null;
 
         // find view in currentPosition
         final View view = layoutState.next(recycler);
@@ -110,19 +118,19 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
 
 
             if (helper.getReverseLayout() || !mStickyStart) {
-                if (remainingSpace < 0 && layoutState.getItemDirection() == LayoutStateWrapper.ITEM_DIRECTION_TAIL) {
+                if (remainingSpace < mOffset && layoutState.getItemDirection() == LayoutStateWrapper.ITEM_DIRECTION_TAIL) {
                     mDoNormalHandle = false;
                     mFixView = view;
 
-                    bottom = orientationHelper.getEndAfterPadding() - mMarginBottom;
+                    bottom = orientationHelper.getEndAfterPadding() - mMarginBottom - mOffset;
                     top = bottom - result.mConsumed;
                 }
             } else {
                 // should not use 0
-                if (remainingSpace < 0 && layoutState.getItemDirection() == LayoutStateWrapper.ITEM_DIRECTION_HEAD) {
+                if (remainingSpace < mOffset && layoutState.getItemDirection() == LayoutStateWrapper.ITEM_DIRECTION_HEAD) {
                     mDoNormalHandle = false;
                     mFixView = view;
-                    top = orientationHelper.getStartAfterPadding() + mMarginTop;
+                    top = orientationHelper.getStartAfterPadding() + mMarginTop + mOffset;
                     bottom = top + result.mConsumed;
                 }
             }
@@ -139,18 +147,18 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
                 right = layoutState.getOffset() + result.mConsumed;
             }
             if (helper.getReverseLayout() || !mStickyStart) {
-                if (remainingSpace < 0) {
+                if (remainingSpace < mOffset) {
                     mDoNormalHandle = false;
                     mFixView = view;
 
-                    right = orientationHelper.getEndAfterPadding();
+                    right = orientationHelper.getEndAfterPadding() - mOffset;
                     left = right - result.mConsumed;
                 }
             } else {
-                if (remainingSpace < 0) {
+                if (remainingSpace < mOffset) {
                     mDoNormalHandle = false;
                     mFixView = view;
-                    left = orientationHelper.getStartAfterPadding();
+                    left = orientationHelper.getStartAfterPadding() + mOffset;
                     right = result.mConsumed;
                 }
             }
@@ -186,6 +194,8 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
             helper.removeChildView(mFixView);
             recycler.recycleView(mFixView);
             mFixView = null;
+        }else {
+            Log.i("Tag", "mFixView is null");
         }
 
         mDoNormalHandle = false;
@@ -212,9 +222,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
         if (mDoNormalHandle || state.isPreLayout()) {
             if (!state.isPreLayout()) {
                 // TODO: sticky only support one item now
-                int position = getRange().getUpper();
 
-                helper.findViewByPosition(position);
             }
 
             mFixView = null;
@@ -236,9 +244,9 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
 
                 if (eView == null) {
                     mFixView = recycler.getViewForPosition(mPos);
-                } else if (mStickyStart && orientationHelper.getDecoratedStart(eView) >= orientationHelper.getStartAfterPadding()) {
+                } else if (mStickyStart && orientationHelper.getDecoratedStart(eView) >= orientationHelper.getStartAfterPadding() + mOffset) {
                     return;
-                } else if (!mStickyStart && orientationHelper.getDecoratedEnd(eView) <= orientationHelper.getEndAfterPadding()) {
+                } else if (!mStickyStart && orientationHelper.getDecoratedEnd(eView) <= orientationHelper.getEndAfterPadding() - mOffset) {
                     return;
                 } else {
                     // TODO: reuse views
@@ -309,10 +317,10 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
                             }
                         }
                     } else if (helper.getReverseLayout() || !mStickyStart) {
-                        bottom = helper.getContentHeight();
+                        bottom = orientationHelper.getEndAfterPadding() - mOffset;
                         top = bottom - consumed;
                     } else {
-                        top = helper.getPaddingTop();
+                        top = orientationHelper.getStartAfterPadding() + mOffset;
                         bottom = top + consumed;
                     }
 
@@ -344,10 +352,10 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
                             }
                         }
                     } else if (helper.getReverseLayout() || !mStickyStart) {
-                        right = helper.getContentWidth();
+                        right = orientationHelper.getEndAfterPadding() - mOffset;
                         left = right - consumed;
                     } else {
-                        left = helper.getPaddingLeft();
+                        left = orientationHelper.getStartAfterPadding() + mOffset;
                         right = left + consumed;
                     }
 
@@ -357,12 +365,11 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
 
                 if (normalHandle) {
                     if (index >= 0) {
-                        helper.addChildView(mFixView, helper.getChildCount());
+                        helper.addChildView(mFixView, index);
                         mFixView = null;
                     }
                 } else
                     helper.addOffFlowView(mFixView, false);
-
 
             }
         }

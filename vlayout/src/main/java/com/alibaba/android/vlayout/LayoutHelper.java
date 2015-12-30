@@ -8,6 +8,9 @@ import android.view.View;
 
 import com.alibaba.android.vlayout.layout.LayoutChunkResult;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import static com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
 /**
@@ -166,6 +169,19 @@ public abstract class LayoutHelper {
     }
 
 
+    @NonNull
+    protected final List<View> mOffFlowViews = new LinkedList<>();
+
+    /**
+     * Get Views that out of normal flow layout
+     *
+     * @return list of views
+     */
+    @NonNull
+    public List<View> getOffFlowViews() {
+        return mOffFlowViews;
+    }
+
     /**
      * Tell LayoutManager whether the child can be recycled, the recycleChild range is (startIndex, endIndex)
      *
@@ -233,7 +249,7 @@ public abstract class LayoutHelper {
     /**
      * Called when this layoutHelper will be removed from LayoutManager, please release views and other resources here
      *
-     * @param helper           LayoutManagerHelper
+     * @param helper LayoutManagerHelper
      */
     public abstract void clear(LayoutManagerHelper helper);
 

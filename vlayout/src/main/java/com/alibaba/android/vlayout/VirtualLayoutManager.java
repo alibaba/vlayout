@@ -10,7 +10,6 @@ import android.support.v7.widget._ExposeLinearLayoutManagerEx;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -604,23 +603,10 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     }
 
 
-    private RecyclerView.OnItemTouchListener mOnItemTouchListener = new RecyclerView.OnItemTouchListener() {
-        @Override
-        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-            return false;
-        }
-
-        @Override
-        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-        }
-    };
-
     @Override
     public void onAttachedToWindow(RecyclerView view) {
         super.onAttachedToWindow(view);
         mRecyclerView = view;
-        mRecyclerView.addOnItemTouchListener(mOnItemTouchListener);
     }
 
     @Override
@@ -631,7 +617,6 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
             helper.clear(this);
         }
 
-        mRecyclerView.removeOnItemTouchListener(mOnItemTouchListener);
         mRecyclerView = null;
     }
 
@@ -1067,6 +1052,14 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         View view = super.findViewByPosition(position);
         if (view != null && getPosition(view) == position)
             return view;
+
+        for (int i = 0; i < getChildCount(); i++) {
+            view = getChildAt(i);
+            if (view != null && getPosition(view) == position) {
+                return view;
+            }
+        }
+
         return null;
     }
 
