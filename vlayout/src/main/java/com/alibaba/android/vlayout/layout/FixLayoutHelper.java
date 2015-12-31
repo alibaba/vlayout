@@ -161,14 +161,13 @@ public class FixLayoutHelper extends BaseLayoutHelper {
             if (mFixView != null) {
                 // already capture in layoutViews phase
                 // if it's not shown on screen
-                // TODO: nested scrollBy
                 if (mFixView.getParent() == null) {
-                    helper.addOffFlowView(mFixView, false);
+                    helper.addFixedView(mFixView);
                 }
             } else {
                 mFixView = recycler.getViewForPosition(mPos);
                 doMeasureAndLayout(mFixView, helper);
-                helper.addOffFlowView(mFixView, false);
+                helper.addFixedView(mFixView);
 
             }
         }

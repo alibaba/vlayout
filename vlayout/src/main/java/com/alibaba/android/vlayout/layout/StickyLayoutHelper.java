@@ -238,7 +238,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
             // already capture in layoutViews phase
             // if it's not shown on screen
             if (mFixView.getParent() == null) {
-                helper.addOffFlowView(mFixView, false);
+                helper.addFixedView(mFixView);
             }
         } else {
             final View eView = helper.findViewByPosition(mPos);
@@ -389,7 +389,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
                         mFixView = null;
                     }
                 } else
-                    helper.addOffFlowView(mFixView, false);
+                    helper.addFixedView(mFixView);
 
             }
         }

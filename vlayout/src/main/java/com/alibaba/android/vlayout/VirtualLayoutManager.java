@@ -68,6 +68,12 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         this.mOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation);
         this.mSecondaryOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation == VERTICAL ? HORIZONTAL : VERTICAL);
         setHelperFinder(new RangeLayoutHelperFinder());
+
+
+        this.mFixedContainer = new FixedLayout(this, context);
+        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        attachViewHolder(params, new LayoutViewHolder(mFixedContainer));
+        this.mFixedContainer.setLayoutParams(params);
     }
 
 
@@ -268,6 +274,10 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     private int mNested = 0;
 
+
+    @NonNull
+    private ViewGroup mFixedContainer;
+
     private void runPreLayout(RecyclerView.Recycler recycler, RecyclerView.State state) {
 
         if (mNested == 0) {
@@ -299,11 +309,15 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
             mSpaceMeasuring = true;
         }
 
+        mFixedContainer.layout(0, 0, mFixedContainer.getMeasuredWidth(), mFixedContainer.getMeasuredHeight());
+        removeView(mFixedContainer);
+
         runPreLayout(recycler, state);
 
         try {
             super.onLayoutChildren(recycler, state);
         } finally {
+            addOffFlowView(mFixedContainer, false);
             runPostLayout(recycler, state, Integer.MAX_VALUE); // hack to indicate its an initial layout
         }
 
@@ -857,8 +871,8 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
 
     @Override
-    public void addChildView(View view, int position) {
-        super.addView(view, position);
+    public void addChildView(View view, int index) {
+        super.addView(view, index);
     }
 
 
@@ -873,45 +887,34 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
 
     @Override
-    public void addChildView(LayoutStateWrapper layoutState, View view, int position) {
+    public void addChildView(LayoutStateWrapper layoutState, View view, int index) {
         if (!layoutState.hasScrapList()) {
             // can not find in scrapList
-            super.addView(view, position);
+            super.addView(view, index);
         } else {
-            super.addDisappearingView(view, position);
+            super.addDisappearingView(view, index);
         }
     }
 
     @Override
-    public void attachChildView(View view, boolean head) {
-        attachView(view, head ? 0 : -1);
-    }
-
-    @Override
-    public void detachChildView(View view) {
-        detachView(view);
-    }
-
-    @Override
     public void addOffFlowView(View view, boolean head) {
-        // TODO: add to next view
-
         addHiddenView(view, head);
     }
 
-    @Override
-    public View findHiddenViewByPosition(int position) {
-        return findHiddenView(position);
-    }
 
     @Override
-    public void removeDetachedView(View view) {
-        super.removeDetachedView(view);
+    public void addFixedView(View view) {
+        // if (view.getParent() instanceof ViewGroup)
+        //((ViewGroup) view.getParent()).removeView(view);
+        // mFixedContainer.addView(view);
+
+        addOffFlowView(view, false);
     }
 
     @Override
     public void removeChildView(View child) {
         removeView(child);
+        mFixedContainer.removeView(child);
     }
 
     @Override
@@ -1091,6 +1094,8 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     @Override
     public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
         if (!mNoScrolling) {
+            mFixedContainer.measure(widthSpec, heightSpec);
+
             super.onMeasure(recycler, state, widthSpec, heightSpec);
             return;
         }
@@ -1117,8 +1122,10 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
         if (getOrientation() == VERTICAL) {
             super.onMeasure(recycler, state, widthSpec, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST));
+            mFixedContainer.measure(widthSpec, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST));
         } else {
             super.onMeasure(recycler, state, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST), heightSpec);
+            mFixedContainer.measure(View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST), heightSpec);
         }
     }
 }

@@ -158,7 +158,7 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
                 // if it's not shown on screen
                 // TODO: nested scrollBy
                 if (mFixView.getParent() == null) {
-                    helper.addOffFlowView(mFixView, false);
+                    helper.addFixedView(mFixView);
                     mFixView.setOnTouchListener(touchDragListener);
                     mFixView.setTranslationX(mTransitionX);
                     mFixView.setTranslationY(mTransitionY);
@@ -166,7 +166,7 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
             } else {
                 mFixView = recycler.getViewForPosition(mPos);
                 doMeasureAndLayout(mFixView, helper);
-                helper.addOffFlowView(mFixView, false);
+                helper.addFixedView(mFixView);
                 mFixView.setTranslationX(mTransitionX);
                 mFixView.setTranslationY(mTransitionY);
                 mFixView.setOnTouchListener(touchDragListener);
