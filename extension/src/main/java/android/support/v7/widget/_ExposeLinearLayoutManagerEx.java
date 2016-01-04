@@ -986,6 +986,7 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         if (getChildCount() == 0) {
             return 0;
         }
+        this.ensureLayoutState();
         return ScrollbarHelper.computeScrollOffset(state, mOrientationHelper,
                 getChildClosestToStart(), getChildClosestToEnd(), this,
                 mSmoothScrollbarEnabled, mShouldReverseLayout);
@@ -995,6 +996,8 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         if (getChildCount() == 0) {
             return 0;
         }
+
+        this.ensureLayoutState();
         return ScrollbarHelper.computeScrollExtent(state, mOrientationHelper,
                 getChildClosestToStart(), getChildClosestToEnd(), this,
                 mSmoothScrollbarEnabled);
@@ -1484,6 +1487,7 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     }
 
     private View findReferenceChild(int start, int end, int itemCount) {
+        this.ensureLayoutState();
         View invalidMatch = null;
         View outOfBoundsMatch = null;
         final int boundsStart = mOrientationHelper.getStartAfterPadding();
@@ -1590,6 +1594,7 @@ public class _ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     }
 
     View findOneVisibleChild(int fromIndex, int toIndex, boolean completelyVisible) {
+        this.ensureLayoutState();
         final int start = mOrientationHelper.getStartAfterPadding();
         final int end = mOrientationHelper.getEndAfterPadding();
         final int next = toIndex > fromIndex ? 1 : -1;
