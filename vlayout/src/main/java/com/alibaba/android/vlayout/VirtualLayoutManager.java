@@ -310,14 +310,14 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         }
 
         mFixedContainer.layout(0, 0, mFixedContainer.getMeasuredWidth(), mFixedContainer.getMeasuredHeight());
-        removeView(mFixedContainer);
+        // removeView(mFixedContainer);
 
         runPreLayout(recycler, state);
 
         try {
             super.onLayoutChildren(recycler, state);
         } finally {
-            addOffFlowView(mFixedContainer, false);
+            // addOffFlowView(mFixedContainer, false);
             runPostLayout(recycler, state, Integer.MAX_VALUE); // hack to indicate its an initial layout
         }
 
@@ -904,10 +904,8 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     @Override
     public void addFixedView(View view) {
-        // if (view.getParent() instanceof ViewGroup)
-        //((ViewGroup) view.getParent()).removeView(view);
-        // mFixedContainer.addView(view);
-
+        //removeChildView(view);
+        //mFixedContainer.addView(view);
         addOffFlowView(view, false);
     }
 

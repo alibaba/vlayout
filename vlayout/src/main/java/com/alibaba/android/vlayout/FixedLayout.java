@@ -17,9 +17,8 @@ public class FixedLayout extends ViewGroup {
     public FixedLayout(@NonNull RecyclerView.LayoutManager layoutManager, Context context) {
         super(context);
         this.mLayoutManager = layoutManager;
+        setBackgroundColor(0x66ff00ff);
     }
-
-
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
