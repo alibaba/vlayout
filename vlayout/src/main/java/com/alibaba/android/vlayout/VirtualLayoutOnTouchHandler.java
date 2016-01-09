@@ -16,8 +16,4 @@ class VirtualLayoutOnTouchHandler implements RecyclerView.OnItemTouchListener {
 
     }
 
-    @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean b) {
-
-    }
 }

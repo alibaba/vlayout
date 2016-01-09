@@ -853,22 +853,32 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         return views;
     }
 
+
+    private LayoutViewFactory mLayoutViewFatory = new LayoutViewFactory() {
+        @Override
+        public View generateLayoutView(@NonNull Context context) {
+            return new LayoutView(context);
+        }
+    };
+
+    public void setLayoutViewFactory(@NonNull final LayoutViewFactory factory) {
+        if (factory == null)
+            throw new IllegalArgumentException("factory should not be null");
+        mLayoutViewFatory = factory;
+    }
+
     @Override
     public final View generateLayoutView() {
         if (mRecyclerView == null) return null;
 
-        View layoutView = createLayoutView(mRecyclerView.getContext());
+        View layoutView = mLayoutViewFatory.generateLayoutView(mRecyclerView.getContext());
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         attachViewHolder(params, new LayoutViewHolder(layoutView));
 
         layoutView.setLayoutParams(params);
         return layoutView;
     }
-
-    protected View createLayoutView(final Context context) {
-        return new LayoutView(context);
-    }
-
+    
 
     @Override
     public void addChildView(View view, int index) {

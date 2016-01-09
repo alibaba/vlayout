@@ -12,7 +12,7 @@ import static android.support.v7.widget._ExposeLinearLayoutManagerEx.VERTICAL;
 /**
  * Created by villadora on 15/8/31.
  */
-public class SingleLayoutHelper extends BaseLayoutHelper {
+public class SingleLayoutHelper extends ColumnLayoutHelper {
 
     private static final String TAG = "SingleLayoutHelper";
 
