@@ -1,10 +1,11 @@
 package com.alibaba.android.vlayout;
 
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.InnerRecycledViewPool;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.alibaba.android.vlayout.layout.InnerRecycledViewPool;
 
 /**
  * Created by villadora on 15/12/7.

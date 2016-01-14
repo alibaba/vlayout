@@ -29,7 +29,7 @@ import java.util.List;
  * A {@link RecyclerView.LayoutManager} implementation which provides
  * similar functionality to {@link android.widget.ListView}.
  */
-public class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
+class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
     private static final String TAG = "ExposeLLManagerEx";
 
@@ -1305,6 +1305,7 @@ public class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     protected void addHiddenView(View view, boolean head) {
         int index = head ? 0 : -1;
         addView(view, index);
+        // TODO:
         // mChildHelper.hide(view);
     }
 
@@ -1324,15 +1325,18 @@ public class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             e.printStackTrace();
         }
 
+        // TODO:
         // params.mViewHolder.setFlags(RecyclerView.ViewHolder.FLAG_INVALID, RecyclerView.ViewHolder.FLAG_INVALID);
     }
 
     protected View findHiddenView(int position) {
+        // TODO:
         // return mChildHelper.findHiddenNonRemovedView(position, RecyclerView.INVALID_TYPE);
         return null;
     }
 
     protected boolean isHidden(View view) {
+        // TODO:
         // return mChildHelper.isHidden(view);
         return false;
     }
@@ -1453,6 +1457,7 @@ public class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             for (int i = 0; i < size; i++) {
                 RecyclerView.ViewHolder viewHolder = mScrapList.get(i);
                 if (!mIsPreLayout) {
+                    // TODO:
                     //if (!mIsPreLayout && viewHolder.isRemoved()) {
                     continue;
                 }

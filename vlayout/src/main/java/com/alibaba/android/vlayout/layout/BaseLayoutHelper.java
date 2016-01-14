@@ -215,12 +215,26 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     }
 
+    public interface LayoutViewBindListener {
+        void onBind(View layoutView);
+    }
+
+    private LayoutViewBindListener mLayoutViewBindListener;
+
+    public void setLayoutViewBindListener(LayoutViewBindListener bindListener) {
+        mLayoutViewBindListener = bindListener;
+    }
+
     @Override
     public void bindLayoutView(@NonNull final View layoutView) {
         layoutView.measure(View.MeasureSpec.makeMeasureSpec(mLayoutRegion.width(), View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(mLayoutRegion.height(), View.MeasureSpec.EXACTLY));
         layoutView.layout(mLayoutRegion.left, mLayoutRegion.top, mLayoutRegion.right, mLayoutRegion.bottom);
         layoutView.setBackgroundColor(mBgColor);
+
+        if (mLayoutViewBindListener!= null) {
+            mLayoutViewBindListener.onBind(layoutView);
+        }
 
         // reset
         mLayoutRegion.set(0, 0, 0, 0);

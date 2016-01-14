@@ -12,6 +12,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import com.alibaba.android.vlayout.layout.DefaultLayoutHelper;
 
@@ -50,6 +51,8 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     private boolean mNoScrolling = false;
 
+    private boolean mNestedScrolling = false;
+
     public VirtualLayoutManager(@NonNull final Context context) {
         this(context, VERTICAL);
     }
@@ -82,6 +85,12 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         mSpaceMeasured = false;
         mMeasuredFullSpace = 0;
         mSpaceMeasuring = false;
+    }
+
+    public void setNestedScrolling(boolean nestedScrolling) {
+        this.mNestedScrolling = nestedScrolling;
+        mSpaceMeasuring = mSpaceMeasured = false;
+        mMeasuredFullSpace = 0;
     }
 
     private LayoutHelperFinder mHelperFinder;
@@ -321,18 +330,25 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
             runPostLayout(recycler, state, Integer.MAX_VALUE); // hack to indicate its an initial layout
         }
 
-        if (mNoScrolling && mSpaceMeasuring) {
+        if ((mNestedScrolling || mNoScrolling) && mSpaceMeasuring) {
             mSpaceMeasured = true;
             int childCount = getChildCount();
             View lastChild = getChildAt(childCount - 1);
             if (lastChild != null) {
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) lastChild.getLayoutParams();
                 mMeasuredFullSpace = getDecoratedBottom(lastChild) + params.bottomMargin + computeAlignOffset(lastChild, true, false);
+
+                if (mRecyclerView != null && mNestedScrolling) {
+                    ViewParent parent = mRecyclerView.getParent();
+                    if (parent instanceof View) {
+                        mMeasuredFullSpace = Math.min(mMeasuredFullSpace, ((View) parent).getMeasuredHeight());
+                    }
+                }
             } else {
                 mSpaceMeasuring = false;
             }
             mSpaceMeasuring = false;
-            if (mRecyclerView != null) {
+            if (mRecyclerView != null && getItemCount() > 0) {
                 mRecyclerView.post(new Runnable() {
                     @Override
                     public void run() {
@@ -878,7 +894,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         layoutView.setLayoutParams(params);
         return layoutView;
     }
-    
+
 
     @Override
     public void addChildView(View view, int index) {
@@ -1099,9 +1115,10 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
     private boolean mSpaceMeasuring = false;
 
+
     @Override
     public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
-        if (!mNoScrolling) {
+        if (!mNoScrolling && !mNestedScrolling) {
             mFixedContainer.measure(widthSpec, heightSpec);
 
             super.onMeasure(recycler, state, widthSpec, heightSpec);
@@ -1109,24 +1126,37 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
         }
 
 
-        int measuredSize = mSpaceMeasured ? mMeasuredFullSpace : MAX_NO_SCROLLING_SIZE;
-        mSpaceMeasuring = !mSpaceMeasured;
+        int initialSize = MAX_NO_SCROLLING_SIZE;
 
-        if (getChildCount() > 0 || getChildCount() != getItemCount()) {
-            View lastChild = getChildAt(getChildCount() - 1);
-
-            int bottom = mMeasuredFullSpace;
-            if (lastChild != null) {
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) lastChild.getLayoutParams();
-                bottom = getDecoratedBottom(lastChild) + params.bottomMargin + computeAlignOffset(lastChild, true, false);
-            }
-
-            if (getChildCount() != getItemCount() || (lastChild != null && bottom != mMeasuredFullSpace)) {
-                measuredSize = MAX_NO_SCROLLING_SIZE;
-                mSpaceMeasured = false;
-                mSpaceMeasuring = true;
+        if (mRecyclerView != null && mNestedScrolling) {
+            ViewParent parent = mRecyclerView.getParent();
+            if (parent instanceof View) {
+                initialSize = ((View) parent).getMeasuredHeight();
             }
         }
+
+        int measuredSize = mSpaceMeasured ? mMeasuredFullSpace : initialSize;
+
+        if (mNoScrolling) {
+            mSpaceMeasuring = !mSpaceMeasured;
+
+            if (getChildCount() > 0 || getChildCount() != getItemCount()) {
+                View lastChild = getChildAt(getChildCount() - 1);
+
+                int bottom = mMeasuredFullSpace;
+                if (lastChild != null) {
+                    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) lastChild.getLayoutParams();
+                    bottom = getDecoratedBottom(lastChild) + params.bottomMargin + computeAlignOffset(lastChild, true, false);
+                }
+
+                if (getChildCount() != getItemCount() || (lastChild != null && bottom != mMeasuredFullSpace)) {
+                    measuredSize = MAX_NO_SCROLLING_SIZE;
+                    mSpaceMeasured = false;
+                    mSpaceMeasuring = true;
+                }
+            }
+        }
+
 
         if (getOrientation() == VERTICAL) {
             super.onMeasure(recycler, state, widthSpec, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST));
