@@ -15,8 +15,8 @@ android {
         versionName "1.0"
     }
     buildTypes {
-        release {
-            minifyEnabled false
+        debug {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -24,7 +24,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-
     compile project(':vlayout')
     compile 'com.crittercism.dexmaker:dexmaker:1.4'
     compile 'com.alibaba.android:imagecompat_interface:1.1.0@jar'

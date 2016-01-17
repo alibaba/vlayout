@@ -1,4 +1,4 @@
-package com.alibaba.android.vlayout.layout;
+package com.alibaba.android.vlayout.extend;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;

@@ -28,7 +28,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:recyclerview-v7:21.0.2@aar'
+    compile 'com.android.support:recyclerview-v7:21.0.0@aar'
     compile('com.android.support:support-v4:21.0.0@aar')
 
     androidTestCompile "org.robolectric:robolectric:3.0"

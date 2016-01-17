@@ -1,4 +1,4 @@
-package com.alibaba.android.vlayout.layout;
+package com.alibaba.android.vlayout;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.View;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -60,7 +62,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * Many calculations are made depending on orientation. To keep it clean, this interface
      * helps {@link LinearLayoutManager} make those decisions.
      * Based on {@link #mOrientation}, an implementation is lazily created in
-     * {@link #ensureLayoutState} method.
+     * {@link #ensureLayoutStateExpose} method.
      */
     OrientationHelper mOrientationHelper;
 
@@ -98,6 +100,9 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      */
     final AnchorInfo mAnchorInfo;
 
+    private final ChildHelperWrapper mChildHelperWrapper;
+
+
     /**
      * Creates a vertical LinearLayoutManager
      *
@@ -119,6 +124,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         mAnchorInfo = new AnchorInfo();
         setOrientation(orientation);
         setReverseLayout(reverseLayout);
+        mChildHelperWrapper = new ChildHelperWrapper(this);
+
     }
 
 
@@ -223,7 +230,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             mPendingScrollPosition = mPendingSavedState.mAnchorPosition;
         }
 
-        ensureLayoutState();
+        ensureLayoutStateExpose();
         mLayoutState.mRecycle = false;
         // resolve layout direction
         resolveShouldLayoutReverse();
@@ -396,7 +403,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
 
     private View findReferenceChild(int start, int end, int itemCount) {
-        this.ensureLayoutState();
+        this.ensureLayoutStateExpose();
         View invalidMatch = null;
         View outOfBoundsMatch = null;
         int boundsStart = this.mOrientationHelper.getStartAfterPadding();
@@ -718,7 +725,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     }
 
 
-    void ensureLayoutState() {
+    void ensureLayoutStateExpose() {
         if (mLayoutState == null) {
             mLayoutState = new LayoutState();
         }
@@ -834,7 +841,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
 
         mLayoutState.mRecycle = true;
-        ensureLayoutState();
+        ensureLayoutStateExpose();
         final int layoutDirection = dy > 0 ? LayoutState.LAYOUT_END : LayoutState.LAYOUT_START;
         final int absDy = Math.abs(dy);
         updateLayoutState(layoutDirection, absDy, true, state);
@@ -1212,7 +1219,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             }
             return null;
         }
-        ensureLayoutState();
+        ensureLayoutStateExpose();
         final int maxScroll = (int) (MAX_SCROLL_FACTOR * mOrientationHelper.getTotalSpace());
         updateLayoutState(layoutDir, maxScroll, false, state);
         mLayoutState.mScrollingOffset = LayoutState.SCOLLING_OFFSET_NaN;
@@ -1305,40 +1312,48 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     protected void addHiddenView(View view, boolean head) {
         int index = head ? 0 : -1;
         addView(view, index);
-        // TODO:
-        // mChildHelper.hide(view);
+        mChildHelperWrapper.hide(view);
     }
 
-    protected void detachHiddenView(View view) {
-        // TODO: can not find index of a hidden view from ChildHelper
-    }
+    static final int FLAG_INVALID = 1 << 2;
+
+    private static Field vhField = null;
+    private static Method vhSetFlags = null;
 
 
     protected static void attachViewHolder(RecyclerView.LayoutParams params, RecyclerView.ViewHolder holder) {
         try {
-            Field vhField = RecyclerView.LayoutParams.class.getField("mViewHolder");
+
+            if (vhField == null) {
+                vhField = RecyclerView.LayoutParams.class.getDeclaredField("mViewHolder");
+            }
+
             vhField.setAccessible(true);
             vhField.set(params, holder);
+
+            if (vhSetFlags == null) {
+                vhSetFlags = RecyclerView.ViewHolder.class.getDeclaredMethod("setFlags", int.class, int.class);
+                vhSetFlags.setAccessible(true);
+            }
+
+            vhSetFlags.invoke(holder, FLAG_INVALID, FLAG_INVALID);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
-
-        // TODO:
-        // params.mViewHolder.setFlags(RecyclerView.ViewHolder.FLAG_INVALID, RecyclerView.ViewHolder.FLAG_INVALID);
     }
 
     protected View findHiddenView(int position) {
-        // TODO:
-        // return mChildHelper.findHiddenNonRemovedView(position, RecyclerView.INVALID_TYPE);
-        return null;
+        return mChildHelperWrapper.findHiddenNonRemovedView(position, RecyclerView.INVALID_TYPE);
     }
 
     protected boolean isHidden(View view) {
-        // TODO:
-        // return mChildHelper.isHidden(view);
-        return false;
+        return mChildHelperWrapper.isHidden(view);
     }
 
     /**
@@ -1346,6 +1361,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * space.
      */
     public static class LayoutState {
+
+        private Method vhIsRemoved = null;
 
         final static String TAG = "_ExposeLLayoutManager#LayoutState";
 
@@ -1420,6 +1437,16 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
          */
         public List<RecyclerView.ViewHolder> mScrapList = null;
 
+        public LayoutState() {
+            try {
+                vhIsRemoved = RecyclerView.ViewHolder.class.getDeclaredMethod("isRemoved");
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+
+
         /**
          * @return true if there are more items in the data adapter
          */
@@ -1457,9 +1484,18 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             for (int i = 0; i < size; i++) {
                 RecyclerView.ViewHolder viewHolder = mScrapList.get(i);
                 if (!mIsPreLayout) {
-                    // TODO:
-                    //if (!mIsPreLayout && viewHolder.isRemoved()) {
-                    continue;
+                    boolean isRemoved = false;
+                    try {
+                        isRemoved = (boolean) vhIsRemoved.invoke(viewHolder);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (!mIsPreLayout && isRemoved) {
+                        continue;
+                    }
                 }
                 final int distance = (viewHolder.getPosition() - mCurrentPosition) * mItemDirection;
                 if (distance < 0) {
@@ -1613,6 +1649,87 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
             mPosition = getPosition(child);
         }
+    }
+
+
+    static class ChildHelperWrapper {
+        private Object mInnerChildHelper;
+
+        private Method mHideMethod;
+
+        private Method mFindHiddenNonRemovedViewMethod;
+
+        private Method mIsHideMethod;
+
+        private Field mChildHelperField;
+
+        private RecyclerView.LayoutManager mLayoutManager;
+
+        void ensureChildHelper() {
+            try {
+                mInnerChildHelper = mChildHelperField.get(mLayoutManager);
+                if (mInnerChildHelper == null) return;
+                mHideMethod = mInnerChildHelper.getClass().getDeclaredMethod("hide", View.class);
+                mHideMethod.setAccessible(true);
+                mFindHiddenNonRemovedViewMethod = mInnerChildHelper.getClass().getDeclaredMethod("findHiddenNonRemovedView", int.class, int.class);
+                mFindHiddenNonRemovedViewMethod.setAccessible(true);
+                mIsHideMethod = mInnerChildHelper.getClass().getDeclaredMethod("isHidden", View.class);
+                mIsHideMethod.setAccessible(true);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        ChildHelperWrapper(RecyclerView.LayoutManager layoutManager) {
+            this.mLayoutManager = layoutManager;
+            try {
+                mChildHelperField = RecyclerView.LayoutManager.class.getDeclaredField("mChildHelper");
+                mChildHelperField.setAccessible(true);
+                ensureChildHelper();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+        }
+
+        void hide(View view) {
+            try {
+                ensureChildHelper();
+                mHideMethod.invoke(mInnerChildHelper, view);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+
+        View findHiddenNonRemovedView(int position, int type) {
+            try {
+                ensureChildHelper();
+                return (View) mFindHiddenNonRemovedViewMethod.invoke(mInnerChildHelper, position, RecyclerView.INVALID_TYPE);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        boolean isHidden(View view) {
+            try {
+                ensureChildHelper();
+                return (boolean) mIsHideMethod.invoke(mInnerChildHelper, view);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
     }
 
 }

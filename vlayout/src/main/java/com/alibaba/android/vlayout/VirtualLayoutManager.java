@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget._ExposeLinearLayoutManagerEx;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -33,7 +32,7 @@ import java.util.Map;
  * @since 1.0.0
  */
 
-public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implements LayoutManagerHelper {
+public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements LayoutManagerHelper {
     private static final String TAG = "VirtualLayoutManager";
 
     private static final boolean DEBUG = false;
@@ -226,7 +225,7 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
     private AnchorInfoWrapper mTempAnchorInfoWrapper = new AnchorInfoWrapper();
 
     @Override
-    public void onAnchorReady(RecyclerView.State state, _ExposeLinearLayoutManagerEx.AnchorInfo anchorInfo) {
+    public void onAnchorReady(RecyclerView.State state, ExposeLinearLayoutManagerEx.AnchorInfo anchorInfo) {
         super.onAnchorReady(state, anchorInfo);
 
         boolean changed = true;
@@ -325,6 +324,9 @@ public class VirtualLayoutManager extends _ExposeLinearLayoutManagerEx implement
 
         try {
             super.onLayoutChildren(recycler, state);
+        }catch (Exception e) {
+            e.printStackTrace();
+            throw e;
         } finally {
             // addOffFlowView(mFixedContainer, false);
             runPostLayout(recycler, state, Integer.MAX_VALUE); // hack to indicate its an initial layout
