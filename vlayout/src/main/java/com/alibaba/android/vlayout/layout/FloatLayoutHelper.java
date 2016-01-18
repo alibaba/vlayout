@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 
-import static android.support.v7.widget._ExposeLinearLayoutManagerEx.VERTICAL;
+
+import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 import static com.alibaba.android.vlayout.layout.FixLayoutHelper.BOTTOM_LEFT;
 import static com.alibaba.android.vlayout.layout.FixLayoutHelper.BOTTOM_RIGHT;
 import static com.alibaba.android.vlayout.layout.FixLayoutHelper.TOP_RIGHT;

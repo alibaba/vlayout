@@ -10,7 +10,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/examples" />
-            <option value="$PROJECT_DIR$/extension" />
             <option value="$PROJECT_DIR$/vlayout" />
           </set>
         </option>

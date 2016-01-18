@@ -8,7 +8,8 @@ import android.view.View;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 
-import static android.support.v7.widget._ExposeLinearLayoutManagerEx.VERTICAL;
+import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
+
 
 /**
  * Created by villadora on 15/8/10.

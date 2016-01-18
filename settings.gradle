@@ -1,2 +1,2 @@
-include ':vlayout', ':extension'
+include ':vlayout'
 include ':examples'

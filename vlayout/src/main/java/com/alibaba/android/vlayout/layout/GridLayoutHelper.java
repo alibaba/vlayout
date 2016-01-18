@@ -16,7 +16,8 @@ import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
 import java.util.Arrays;
 
-import static android.support.v7.widget._ExposeLinearLayoutManagerEx.VERTICAL;
+import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
+
 
 /**
  * LayoutHelper provides GridLayout

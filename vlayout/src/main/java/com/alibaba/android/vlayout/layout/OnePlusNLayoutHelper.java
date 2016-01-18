@@ -15,8 +15,8 @@ import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
 import java.util.Arrays;
 
-import static android.support.v7.widget._ExposeLinearLayoutManagerEx.VERTICAL;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 
 /**
  * <pre>

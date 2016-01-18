@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.alibaba.android.vlayout.layout.InnerRecycledViewPool;
+import com.alibaba.android.vlayout.extend.InnerRecycledViewPool;
 
 /**
  * Created by villadora on 15/12/7.
