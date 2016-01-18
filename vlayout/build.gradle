@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion Integer.parseInt(System.properties['targetSdkVersion'] ?: '19')
+        targetSdkVersion Integer.parseInt(System.properties['targetSdkVersion'] ?: '14')
         versionCode Integer.parseInt(VERSION ?: '10')
         versionName VERSION_NAME
     }
