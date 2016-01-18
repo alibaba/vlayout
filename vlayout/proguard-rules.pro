@@ -32,3 +32,8 @@
 -keep class android.support.v7.widget.RecyclerView$LayoutManager {
     *;
 }
+
+-keep class android.support.v7.widget.LinearLayoutManager {
+    void ensureLayoutState();
+    void resolveShouldLayoutReverse();
+}

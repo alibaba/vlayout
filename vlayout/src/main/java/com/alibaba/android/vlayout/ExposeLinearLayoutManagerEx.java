@@ -64,7 +64,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * Based on {@link #mOrientation}, an implementation is lazily created in
      * {@link #ensureLayoutStateExpose} method.
      */
-    OrientationHelper mOrientationHelper;
+    private OrientationHelper mOrientationHelper;
 
     /**
      * We need to track this so that we can ignore current position when it changes.
@@ -83,24 +83,27 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * When LayoutManager needs to scroll to a position, it sets this variable and requests a
      * layout which will check this variable and re-layout accordingly.
      */
-    int mPendingScrollPosition = RecyclerView.NO_POSITION;
+    private int mCurrentPendingScrollPosition = RecyclerView.NO_POSITION;
 
     /**
      * Used to keep the offset value when {@link #scrollToPositionWithOffset(int, int)} is
      * called.
      */
-    int mPendingScrollPositionOffset = INVALID_OFFSET;
+    private int mPendingScrollPositionOffset = INVALID_OFFSET;
 
 
-    protected SavedState mPendingSavedState = null;
+    protected SavedState mCurrentPendingSavedState = null;
 
     /**
      * Re-used variable to keep anchor information on re-layout.
      * Anchor position and coordinate defines the reference point for LLM while doing a layout.
      */
-    final AnchorInfo mAnchorInfo;
+    private final AnchorInfo mAnchorInfo;
 
     private final ChildHelperWrapper mChildHelperWrapper;
+
+    private final Method mEnsureLayoutStateMethod;
+    private final Method mResolveShouldLayoutReverseMethod;
 
 
     /**
@@ -126,13 +129,23 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         setReverseLayout(reverseLayout);
         mChildHelperWrapper = new ChildHelperWrapper(this);
 
+
+        try {
+            mEnsureLayoutStateMethod = LinearLayoutManager.class.getDeclaredMethod("ensureLayoutState");
+            mEnsureLayoutStateMethod.setAccessible(true);
+            mResolveShouldLayoutReverseMethod = LinearLayoutManager.class.getDeclaredMethod("resolveShouldLayoutReverse");
+            mResolveShouldLayoutReverseMethod.setAccessible(true);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
 
     @Override
     public Parcelable onSaveInstanceState() {
-        if (mPendingSavedState != null) {
-            return new SavedState(mPendingSavedState);
+        if (mCurrentPendingSavedState != null) {
+            return new SavedState(mCurrentPendingSavedState);
         }
         SavedState state = new SavedState();
         if (getChildCount() > 0) {
@@ -158,7 +171,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     @Override
     public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof SavedState) {
-            mPendingSavedState = (SavedState) state;
+            mCurrentPendingSavedState = (SavedState) state;
             requestLayout();
             if (DEBUG) {
                 Log.d(TAG, "loaded saved state");
@@ -214,8 +227,6 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
 
         RecyclerView.State tState = new RecyclerView.State();
-
-        super.onLayoutChildren(recycler, tState);
         // layout algorithm:
         // 1) by checking children and other variables, find an anchor coordinate and an anchor
         //  item position.
@@ -226,8 +237,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         if (DEBUG) {
             Log.d(TAG, "is pre layout:" + state.isPreLayout());
         }
-        if (mPendingSavedState != null && mPendingSavedState.hasValidAnchor()) {
-            mPendingScrollPosition = mPendingSavedState.mAnchorPosition;
+        if (mCurrentPendingSavedState != null && mCurrentPendingSavedState.hasValidAnchor()) {
+            mCurrentPendingScrollPosition = mCurrentPendingSavedState.mAnchorPosition;
         }
 
         ensureLayoutStateExpose();
@@ -260,12 +271,12 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         }
         extraForStart += mOrientationHelper.getStartAfterPadding();
         extraForEnd += mOrientationHelper.getEndPadding();
-        if (state.isPreLayout() && mPendingScrollPosition != RecyclerView.NO_POSITION &&
+        if (state.isPreLayout() && mCurrentPendingScrollPosition != RecyclerView.NO_POSITION &&
                 mPendingScrollPositionOffset != INVALID_OFFSET) {
             // if the child is visible and we are going to move it around, we should layout
             // extra items in the opposite direction to make sure new items animate nicely
             // instead of just fading in
-            final View existing = findViewByPosition(mPendingScrollPosition);
+            final View existing = findViewByPosition(mCurrentPendingScrollPosition);
             if (existing != null) {
                 final int current;
                 final int upcomingOffset;
@@ -347,12 +358,12 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         }
         layoutForPredictiveAnimations(recycler, state, startOffset, endOffset);
         if (!state.isPreLayout()) {
-            mPendingScrollPosition = RecyclerView.NO_POSITION;
+            mCurrentPendingScrollPosition = RecyclerView.NO_POSITION;
             mPendingScrollPositionOffset = INVALID_OFFSET;
             mOrientationHelper.onLayoutComplete();
         }
         mLastStackFromEnd = getStackFromEnd();
-        mPendingSavedState = null; // we don't need this anymore
+        mCurrentPendingSavedState = null; // we don't need this anymore
         if (DEBUG) {
             validateChildOrder();
         }
@@ -565,38 +576,38 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * data and returns true
      */
     private boolean updateAnchorFromPendingData(RecyclerView.State state, AnchorInfo anchorInfo) {
-        if (state.isPreLayout() || mPendingScrollPosition == RecyclerView.NO_POSITION) {
+        if (state.isPreLayout() || mCurrentPendingScrollPosition == RecyclerView.NO_POSITION) {
             return false;
         }
         // validate scroll position
-        if (mPendingScrollPosition < 0 || mPendingScrollPosition >= state.getItemCount()) {
-            mPendingScrollPosition = RecyclerView.NO_POSITION;
+        if (mCurrentPendingScrollPosition < 0 || mCurrentPendingScrollPosition >= state.getItemCount()) {
+            mCurrentPendingScrollPosition = RecyclerView.NO_POSITION;
             mPendingScrollPositionOffset = INVALID_OFFSET;
             if (DEBUG) {
-                Log.e(TAG, "ignoring invalid scroll position " + mPendingScrollPosition);
+                Log.e(TAG, "ignoring invalid scroll position " + mCurrentPendingScrollPosition);
             }
             return false;
         }
 
         // if child is visible, try to make it a reference child and ensure it is fully visible.
         // if child is not visible, align it depending on its virtual position.
-        anchorInfo.mPosition = mPendingScrollPosition;
-        if (mPendingSavedState != null && mPendingSavedState.hasValidAnchor()) {
+        anchorInfo.mPosition = mCurrentPendingScrollPosition;
+        if (mCurrentPendingSavedState != null && mCurrentPendingSavedState.hasValidAnchor()) {
             // Anchor offset depends on how that child was laid out. Here, we update it
             // according to our current view bounds
-            anchorInfo.mLayoutFromEnd = mPendingSavedState.mAnchorLayoutFromEnd;
+            anchorInfo.mLayoutFromEnd = mCurrentPendingSavedState.mAnchorLayoutFromEnd;
             if (anchorInfo.mLayoutFromEnd) {
                 anchorInfo.mCoordinate = mOrientationHelper.getEndAfterPadding() -
-                        mPendingSavedState.mAnchorOffset;
+                        mCurrentPendingSavedState.mAnchorOffset;
             } else {
                 anchorInfo.mCoordinate = mOrientationHelper.getStartAfterPadding() +
-                        mPendingSavedState.mAnchorOffset;
+                        mCurrentPendingSavedState.mAnchorOffset;
             }
             return true;
         }
 
         if (mPendingScrollPositionOffset == INVALID_OFFSET) {
-            View child = findViewByPosition(mPendingScrollPosition);
+            View child = findViewByPosition(mCurrentPendingScrollPosition);
             if (child != null) {
                 final int childSize = mOrientationHelper.getDecoratedMeasurement(child);
                 if (childSize > mOrientationHelper.getTotalSpace()) {
@@ -626,7 +637,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
                 if (getChildCount() > 0) {
                     // get position of any child, does not matter
                     int pos = getPosition(getChildAt(0));
-                    anchorInfo.mLayoutFromEnd = mPendingScrollPosition < pos
+                    anchorInfo.mLayoutFromEnd = mCurrentPendingScrollPosition < pos
                             == mShouldReverseLayout;
                 }
                 anchorInfo.assignCoordinateFromPadding();
@@ -729,8 +740,17 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         if (mLayoutState == null) {
             mLayoutState = new LayoutState();
         }
+
         if (mOrientationHelper == null) {
             mOrientationHelper = OrientationHelper.createOrientationHelper(this, getOrientation());
+        }
+
+        try {
+            mEnsureLayoutStateMethod.invoke(this);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 
@@ -750,10 +770,10 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      */
     @Override
     public void scrollToPosition(int position) {
-        mPendingScrollPosition = position;
+        mCurrentPendingScrollPosition = position;
         mPendingScrollPositionOffset = INVALID_OFFSET;
-        if (mPendingSavedState != null) {
-            mPendingSavedState.invalidateAnchor();
+        if (mCurrentPendingSavedState != null) {
+            mCurrentPendingSavedState.invalidateAnchor();
         }
         requestLayout();
     }
@@ -779,10 +799,10 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * @see #scrollToPosition(int)
      */
     public void scrollToPositionWithOffset(int position, int offset) {
-        mPendingScrollPosition = position;
+        mCurrentPendingScrollPosition = position;
         mPendingScrollPositionOffset = offset;
-        if (mPendingSavedState != null) {
-            mPendingSavedState.invalidateAnchor();
+        if (mCurrentPendingSavedState != null) {
+            mCurrentPendingSavedState.invalidateAnchor();
         }
         requestLayout();
     }
@@ -866,7 +886,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
     @Override
     public void assertNotInLayoutOrScroll(String message) {
-        if (mPendingSavedState == null) {
+        if (mCurrentPendingSavedState == null) {
             super.assertNotInLayoutOrScroll(message);
         }
     }
@@ -1303,7 +1323,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
     @Override
     public boolean supportsPredictiveItemAnimations() {
-        return mPendingSavedState == null && mLastStackFromEnd == getStackFromEnd();
+        return mCurrentPendingSavedState == null && mLastStackFromEnd == getStackFromEnd();
     }
 
     //==================================

@@ -559,7 +559,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     @Override
     public boolean supportsPredictiveItemAnimations() {
-        return mPendingSavedState == null;
+        return mCurrentPendingSavedState == null;
     }
 
 

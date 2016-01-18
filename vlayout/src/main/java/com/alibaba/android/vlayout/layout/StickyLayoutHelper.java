@@ -198,8 +198,6 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
             helper.removeChildView(mFixView);
             recycler.recycleView(mFixView);
             mFixView = null;
-        } else {
-            Log.i("Tag", "mFixView is null");
         }
 
         mDoNormalHandle = false;
