@@ -365,13 +365,13 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
     @Override
-    protected int scrollBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
+    protected int scrollInternalBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
 
         runPreLayout(recycler, state);
 
         int scrolled = 0;
         try {
-            scrolled = super.scrollBy(dy, recycler, state);
+            scrolled = super.scrollInternalBy(dy, recycler, state);
         } finally {
             runPostLayout(recycler, state, scrolled);
         }

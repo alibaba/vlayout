@@ -664,7 +664,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         int gap = mOrientationHelper.getEndAfterPadding() - endOffset;
         int fixOffset = 0;
         if (gap > 0) {
-            fixOffset = -scrollBy(-gap, recycler, state);
+            fixOffset = -scrollInternalBy(-gap, recycler, state);
         } else {
             return 0; // nothing to fix
         }
@@ -690,7 +690,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         int fixOffset = 0;
         if (gap > 0) {
             // check if we should fix this gap.
-            fixOffset = -scrollBy(gap, recycler, state);
+            fixOffset = -scrollInternalBy(gap, recycler, state);
         } else {
             return 0; // nothing to fix
         }
@@ -854,7 +854,33 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         return 0;
     }
 
-    protected int scrollBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler,
+                                    RecyclerView.State state) {
+        if (getOrientation() == VERTICAL) {
+            return 0;
+        }
+        return scrollInternalBy(dx, recycler, state);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler,
+                                  RecyclerView.State state) {
+        if (getOrientation() == HORIZONTAL) {
+            return 0;
+        }
+        return scrollInternalBy(dy, recycler, state);
+    }
+
+
+    protected int scrollInternalBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
         if (getChildCount() == 0 || dy == 0) {
             return 0;
         }
@@ -1026,7 +1052,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * @param stopOnFocusable If true, filling stops in the first focusable new child
      * @return Number of pixels that it added. Useful for scoll functions.
      */
-    int fill(RecyclerView.Recycler recycler, LayoutState layoutState,
+    protected int fill(RecyclerView.Recycler recycler, LayoutState layoutState,
              RecyclerView.State state, boolean stopOnFocusable) {
         // max offset we should set is mFastScroll + available
         final int start = layoutState.mAvailable;
