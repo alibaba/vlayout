@@ -152,12 +152,12 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             boolean didLayoutFromEnd = mLastStackFromEnd ^ mShouldReverseLayout;
             state.mAnchorLayoutFromEnd = didLayoutFromEnd;
             if (didLayoutFromEnd) {
-                final View refChild = getChildClosestToEnd();
+                final View refChild = getChildClosestToEndExpose();
                 state.mAnchorOffset = mOrientationHelper.getEndAfterPadding() -
                         mOrientationHelper.getDecoratedEnd(refChild);
                 state.mAnchorPosition = getPosition(refChild);
             } else {
-                final View refChild = getChildClosestToStart();
+                final View refChild = getChildClosestToStartExpose();
                 state.mAnchorPosition = getPosition(refChild);
                 state.mAnchorOffset = mOrientationHelper.getDecoratedStart(refChild) -
                         mOrientationHelper.getStartAfterPadding();
@@ -197,7 +197,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * RTL layout support is applied automatically. So if layout is RTL and
      * {@link #getReverseLayout()} is {@code true}, elements will be laid out starting from left.
      */
-    private void resolveShouldLayoutReverse() {
+    private void myResolveShouldLayoutReverse() {
         // A == B is the same result, but we rather keep it readable
         if (getOrientation() == VERTICAL || !isLayoutRTL()) {
             mShouldReverseLayout = getReverseLayout();
@@ -244,12 +244,12 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         ensureLayoutStateExpose();
         mLayoutState.mRecycle = false;
         // resolve layout direction
-        resolveShouldLayoutReverse();
+        myResolveShouldLayoutReverse();
 
         mAnchorInfo.reset();
         mAnchorInfo.mLayoutFromEnd = mShouldReverseLayout ^ getStackFromEnd();
         // calculate anchor position and coordinate
-        updateAnchorInfoForLayout(state, mAnchorInfo);
+        updateAnchorInfoForLayoutExpose(state, mAnchorInfo);
 
 
         if (DEBUG) {
@@ -303,7 +303,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         mLayoutState.mIsPreLayout = state.isPreLayout();
         if (mAnchorInfo.mLayoutFromEnd) {
             // fill towards start
-            updateLayoutStateToFillStart(mAnchorInfo);
+            updateLayoutStateToFillStartExpose(mAnchorInfo);
             mLayoutState.mExtra = extraForStart;
             fill(recycler, mLayoutState, state, false);
             startOffset = mLayoutState.mOffset;
@@ -311,14 +311,14 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
                 extraForEnd += mLayoutState.mAvailable;
             }
             // fill towards end
-            updateLayoutStateToFillEnd(mAnchorInfo);
+            updateLayoutStateToFillEndExpose(mAnchorInfo);
             mLayoutState.mExtra = extraForEnd;
             mLayoutState.mCurrentPosition += mLayoutState.mItemDirection;
             fill(recycler, mLayoutState, state, false);
             endOffset = mLayoutState.mOffset;
         } else {
             // fill towards end
-            updateLayoutStateToFillEnd(mAnchorInfo);
+            updateLayoutStateToFillEndExpose(mAnchorInfo);
             mLayoutState.mExtra = extraForEnd;
             fill(recycler, mLayoutState, state, false);
             endOffset = mLayoutState.mOffset;
@@ -326,7 +326,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
                 extraForStart += mLayoutState.mAvailable;
             }
             // fill towards start
-            updateLayoutStateToFillStart(mAnchorInfo);
+            updateLayoutStateToFillStartExpose(mAnchorInfo);
             mLayoutState.mExtra = extraForStart;
             mLayoutState.mCurrentPosition += mLayoutState.mItemDirection;
             fill(recycler, mLayoutState, state, false);
@@ -341,22 +341,22 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             // we re-calculate it.
             // find which side we should check for gaps.
             if (mShouldReverseLayout ^ getStackFromEnd()) {
-                int fixOffset = fixLayoutEndGap(endOffset, recycler, state, true);
+                int fixOffset = fixLayoutEndGapExpose(endOffset, recycler, state, true);
                 startOffset += fixOffset;
                 endOffset += fixOffset;
-                fixOffset = fixLayoutStartGap(startOffset, recycler, state, false);
+                fixOffset = fixLayoutStartGapExpose(startOffset, recycler, state, false);
                 startOffset += fixOffset;
                 endOffset += fixOffset;
             } else {
-                int fixOffset = fixLayoutStartGap(startOffset, recycler, state, true);
+                int fixOffset = fixLayoutStartGapExpose(startOffset, recycler, state, true);
                 startOffset += fixOffset;
                 endOffset += fixOffset;
-                fixOffset = fixLayoutEndGap(endOffset, recycler, state, false);
+                fixOffset = fixLayoutEndGapExpose(endOffset, recycler, state, false);
                 startOffset += fixOffset;
                 endOffset += fixOffset;
             }
         }
-        layoutForPredictiveAnimations(recycler, state, startOffset, endOffset);
+        layoutForPredictiveAnimationsExpose(recycler, state, startOffset, endOffset);
         if (!state.isPreLayout()) {
             mCurrentPendingScrollPosition = RecyclerView.NO_POSITION;
             mPendingScrollPositionOffset = INVALID_OFFSET;
@@ -395,25 +395,25 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     }
 
 
-    private View findReferenceChildClosestToEnd(RecyclerView.State state) {
-        return this.mShouldReverseLayout ? this.findFirstReferenceChild(state.getItemCount()) : this.findLastReferenceChild(state.getItemCount());
+    private View myFindReferenceChildClosestToEnd(RecyclerView.State state) {
+        return this.mShouldReverseLayout ? this.myFindFirstReferenceChild(state.getItemCount()) : this.myFindLastReferenceChild(state.getItemCount());
     }
 
-    private View findReferenceChildClosestToStart(RecyclerView.State state) {
-        return this.mShouldReverseLayout ? this.findLastReferenceChild(state.getItemCount()) : this.findFirstReferenceChild(state.getItemCount());
-    }
-
-
-    private View findFirstReferenceChild(int itemCount) {
-        return this.findReferenceChild(0, this.getChildCount(), itemCount);
-    }
-
-    private View findLastReferenceChild(int itemCount) {
-        return this.findReferenceChild(this.getChildCount() - 1, -1, itemCount);
+    private View myFindReferenceChildClosestToStart(RecyclerView.State state) {
+        return this.mShouldReverseLayout ? this.myFindLastReferenceChild(state.getItemCount()) : this.myFindFirstReferenceChild(state.getItemCount());
     }
 
 
-    private View findReferenceChild(int start, int end, int itemCount) {
+    private View myFindFirstReferenceChild(int itemCount) {
+        return this.findReferenceChildInternal(0, this.getChildCount(), itemCount);
+    }
+
+    private View myFindLastReferenceChild(int itemCount) {
+        return this.findReferenceChildInternal(this.getChildCount() - 1, -1, itemCount);
+    }
+
+
+    private View findReferenceChildInternal(int start, int end, int itemCount) {
         this.ensureLayoutStateExpose();
         View invalidMatch = null;
         View outOfBoundsMatch = null;
@@ -447,8 +447,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     /**
      * If necessary, layouts new items for predictive animations
      */
-    private void layoutForPredictiveAnimations(RecyclerView.Recycler recycler,
-                                               RecyclerView.State state, int startOffset, int endOffset) {
+    private void layoutForPredictiveAnimationsExpose(RecyclerView.Recycler recycler,
+                                                     RecyclerView.State state, int startOffset, int endOffset) {
         // If there are scrap children that we did not layout, we need to find where they did go
         // and layout them accordingly so that animations can work as expected.
         // This case may happen if new views are added or an existing view expands and pushes
@@ -481,8 +481,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         }
         mLayoutState.mScrapList = scrapList;
         if (scrapExtraStart > 0) {
-            View anchor = getChildClosestToStart();
-            updateLayoutStateToFillStart(getPosition(anchor), startOffset);
+            View anchor = getChildClosestToStartExpose();
+            updateLayoutStateToFillStartExpose(getPosition(anchor), startOffset);
             mLayoutState.mExtra = scrapExtraStart;
             mLayoutState.mAvailable = 0;
             mLayoutState.mCurrentPosition += mShouldReverseLayout ? 1 : -1;
@@ -490,8 +490,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         }
 
         if (scrapExtraEnd > 0) {
-            View anchor = getChildClosestToEnd();
-            updateLayoutStateToFillEnd(getPosition(anchor), endOffset);
+            View anchor = getChildClosestToEndExpose();
+            updateLayoutStateToFillEndExpose(getPosition(anchor), endOffset);
             mLayoutState.mExtra = scrapExtraEnd;
             mLayoutState.mAvailable = 0;
             mLayoutState.mCurrentPosition += mShouldReverseLayout ? -1 : 1;
@@ -500,15 +500,15 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         mLayoutState.mScrapList = null;
     }
 
-    private void updateAnchorInfoForLayout(RecyclerView.State state, AnchorInfo anchorInfo) {
-        if (updateAnchorFromPendingData(state, anchorInfo)) {
+    private void updateAnchorInfoForLayoutExpose(RecyclerView.State state, AnchorInfo anchorInfo) {
+        if (updateAnchorFromPendingDataExpose(state, anchorInfo)) {
             if (DEBUG) {
                 Log.d(TAG, "updated anchor info from pending information");
             }
             return;
         }
 
-        if (updateAnchorFromChildren(state, anchorInfo)) {
+        if (updateAnchorFromChildrenExpose(state, anchorInfo)) {
             if (DEBUG) {
                 Log.d(TAG, "updated anchor info from existing children");
             }
@@ -527,7 +527,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * <p/>
      * If a child has focus, it is given priority.
      */
-    private boolean updateAnchorFromChildren(RecyclerView.State state, AnchorInfo anchorInfo) {
+    private boolean updateAnchorFromChildrenExpose(RecyclerView.State state, AnchorInfo anchorInfo) {
         if (getChildCount() == 0) {
             return false;
         }
@@ -545,8 +545,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
 
         final View referenceChild = anchorInfo.mLayoutFromEnd ?
-                findReferenceChildClosestToEnd(state)
-                : findReferenceChildClosestToStart(state);
+                myFindReferenceChildClosestToEnd(state)
+                : myFindReferenceChildClosestToStart(state);
 
 
         if (referenceChild != null) {
@@ -575,7 +575,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * If there is a pending scroll position or saved states, updates the anchor info from that
      * data and returns true
      */
-    private boolean updateAnchorFromPendingData(RecyclerView.State state, AnchorInfo anchorInfo) {
+    private boolean updateAnchorFromPendingDataExpose(RecyclerView.State state, AnchorInfo anchorInfo) {
         if (state.isPreLayout() || mCurrentPendingScrollPosition == RecyclerView.NO_POSITION) {
             return false;
         }
@@ -659,8 +659,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     /**
      * @return The final offset amount for children
      */
-    private int fixLayoutEndGap(int endOffset, RecyclerView.Recycler recycler,
-                                RecyclerView.State state, boolean canOffsetChildren) {
+    private int fixLayoutEndGapExpose(int endOffset, RecyclerView.Recycler recycler,
+                                      RecyclerView.State state, boolean canOffsetChildren) {
         int gap = mOrientationHelper.getEndAfterPadding() - endOffset;
         int fixOffset = 0;
         if (gap > 0) {
@@ -684,8 +684,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     /**
      * @return The final offset amount for children
      */
-    private int fixLayoutStartGap(int startOffset, RecyclerView.Recycler recycler,
-                                  RecyclerView.State state, boolean canOffsetChildren) {
+    private int fixLayoutStartGapExpose(int startOffset, RecyclerView.Recycler recycler,
+                                        RecyclerView.State state, boolean canOffsetChildren) {
         int gap = startOffset - mOrientationHelper.getStartAfterPadding();
         int fixOffset = 0;
         if (gap > 0) {
@@ -706,11 +706,11 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         return fixOffset;
     }
 
-    private void updateLayoutStateToFillEnd(AnchorInfo anchorInfo) {
-        updateLayoutStateToFillEnd(anchorInfo.mPosition, anchorInfo.mCoordinate);
+    private void updateLayoutStateToFillEndExpose(AnchorInfo anchorInfo) {
+        updateLayoutStateToFillEndExpose(anchorInfo.mPosition, anchorInfo.mCoordinate);
     }
 
-    private void updateLayoutStateToFillEnd(int itemPosition, int offset) {
+    private void updateLayoutStateToFillEndExpose(int itemPosition, int offset) {
         mLayoutState.mAvailable = mOrientationHelper.getEndAfterPadding() - offset;
         mLayoutState.mItemDirection = mShouldReverseLayout ? LayoutState.ITEM_DIRECTION_HEAD :
                 LayoutState.ITEM_DIRECTION_TAIL;
@@ -720,11 +720,11 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         mLayoutState.mScrollingOffset = LayoutState.SCOLLING_OFFSET_NaN;
     }
 
-    private void updateLayoutStateToFillStart(AnchorInfo anchorInfo) {
-        updateLayoutStateToFillStart(anchorInfo.mPosition, anchorInfo.mCoordinate);
+    private void updateLayoutStateToFillStartExpose(AnchorInfo anchorInfo) {
+        updateLayoutStateToFillStartExpose(anchorInfo.mPosition, anchorInfo.mCoordinate);
     }
 
-    private void updateLayoutStateToFillStart(int itemPosition, int offset) {
+    private void updateLayoutStateToFillStartExpose(int itemPosition, int offset) {
         mLayoutState.mAvailable = offset - mOrientationHelper.getStartAfterPadding();
         mLayoutState.mCurrentPosition = itemPosition;
         mLayoutState.mItemDirection = mShouldReverseLayout ? LayoutState.ITEM_DIRECTION_TAIL :
@@ -807,15 +807,15 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         requestLayout();
     }
 
-    private void updateLayoutState(int layoutDirection, int requiredSpace,
-                                   boolean canUseExistingSpace, RecyclerView.State state) {
+    private void updateLayoutStateExpose(int layoutDirection, int requiredSpace,
+                                         boolean canUseExistingSpace, RecyclerView.State state) {
         mLayoutState.mExtra = getExtraLayoutSpace(state);
         mLayoutState.mLayoutDirection = layoutDirection;
         int fastScrollSpace;
         if (layoutDirection == LayoutState.LAYOUT_END) {
             mLayoutState.mExtra += mOrientationHelper.getEndPadding();
             // get the first child in the direction we are going
-            final View child = getChildClosestToEnd();
+            final View child = getChildClosestToEndExpose();
             // the direction in which we are traversing children
             mLayoutState.mItemDirection = mShouldReverseLayout ? LayoutState.ITEM_DIRECTION_HEAD
                     : LayoutState.ITEM_DIRECTION_TAIL;
@@ -826,7 +826,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
                     - mOrientationHelper.getEndAfterPadding();
 
         } else {
-            final View child = getChildClosestToStart();
+            final View child = getChildClosestToStartExpose();
             mLayoutState.mExtra += mOrientationHelper.getStartAfterPadding();
             mLayoutState.mItemDirection = mShouldReverseLayout ? LayoutState.ITEM_DIRECTION_TAIL
                     : LayoutState.ITEM_DIRECTION_HEAD;
@@ -890,7 +890,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         ensureLayoutStateExpose();
         final int layoutDirection = dy > 0 ? LayoutState.LAYOUT_END : LayoutState.LAYOUT_START;
         final int absDy = Math.abs(dy);
-        updateLayoutState(layoutDirection, absDy, true, state);
+        updateLayoutStateExpose(layoutDirection, absDy, true, state);
         final int freeScroll = mLayoutState.mScrollingOffset;
 
 
@@ -950,7 +950,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      *                 detect children that will go out of bounds after scrolling, without actually
      *                 moving them.
      */
-    private void recycleViewsFromStart(RecyclerView.Recycler recycler, int dt) {
+    private void recycleViewsFromStartExpose(RecyclerView.Recycler recycler, int dt) {
         if (dt < 0) {
             if (DEBUG) {
                 Log.d(TAG, "Called recycle from start with a negative value. This might happen"
@@ -989,7 +989,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      *                 to detect children that will go out of bounds after scrolling, without
      *                 actually moving them.
      */
-    private void recycleViewsFromEnd(RecyclerView.Recycler recycler, int dt) {
+    private void recycleViewsFromEndExpose(RecyclerView.Recycler recycler, int dt) {
         final int childCount = getChildCount();
         if (dt < 0) {
             if (DEBUG) {
@@ -1026,18 +1026,18 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * @param layoutState Current layout state. Right now, this object does not change but
      *                    we may consider moving it out of this view so passing around as a
      *                    parameter for now, rather than accessing {@link #mLayoutState}
-     * @see #recycleViewsFromStart(RecyclerView.Recycler, int)
-     * @see #recycleViewsFromEnd(RecyclerView.Recycler, int)
+     * @see #recycleViewsFromStartExpose(RecyclerView.Recycler, int)
+     * @see #recycleViewsFromEndExpose(RecyclerView.Recycler, int)
      * @see LinearLayoutManager.LayoutState#mLayoutDirection
      */
-    private void recycleByLayoutState(RecyclerView.Recycler recycler, LayoutState layoutState) {
+    private void recycleByLayoutStateExpose(RecyclerView.Recycler recycler, LayoutState layoutState) {
         if (!layoutState.mRecycle) {
             return;
         }
         if (layoutState.mLayoutDirection == LayoutState.LAYOUT_START) {
-            recycleViewsFromEnd(recycler, layoutState.mScrollingOffset);
+            recycleViewsFromEndExpose(recycler, layoutState.mScrollingOffset);
         } else {
-            recycleViewsFromStart(recycler, layoutState.mScrollingOffset);
+            recycleViewsFromStartExpose(recycler, layoutState.mScrollingOffset);
         }
     }
 
@@ -1061,7 +1061,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             if (layoutState.mAvailable < 0) {
                 layoutState.mScrollingOffset += layoutState.mAvailable;
             }
-            recycleByLayoutState(recycler, layoutState);
+            recycleByLayoutStateExpose(recycler, layoutState);
         }
         int remainingSpace = layoutState.mAvailable + layoutState.mExtra;
         com.alibaba.android.vlayout.layout.LayoutChunkResult layoutChunkResult = new com.alibaba.android.vlayout.layout.LayoutChunkResult();
@@ -1090,7 +1090,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
                 if (layoutState.mAvailable < 0) {
                     layoutState.mScrollingOffset += layoutState.mAvailable;
                 }
-                recycleByLayoutState(recycler, layoutState);
+                recycleByLayoutStateExpose(recycler, layoutState);
             }
             if (stopOnFocusable && layoutChunkResult.mFocusable) {
                 break;
@@ -1189,7 +1189,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * @return {@link LayoutState#LAYOUT_START} or {@link LayoutState#LAYOUT_END} if focus direction
      * is applicable to current state, {@link LayoutState#INVALID_LAYOUT} otherwise.
      */
-    private int convertFocusDirectionToLayoutDirection(int focusDirection) {
+    private int convertFocusDirectionToLayoutDirectionExpose(int focusDirection) {
         int orientation = getOrientation();
         switch (focusDirection) {
             case View.FOCUS_BACKWARD:
@@ -1223,7 +1223,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      *
      * @return The child closes to start of the layout from user's perspective.
      */
-    private View getChildClosestToStart() {
+    private View getChildClosestToStartExpose() {
         return getChildAt(mShouldReverseLayout ? getChildCount() - 1 : 0);
     }
 
@@ -1233,28 +1233,28 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      *
      * @return The child closes to end of the layout from user's perspective.
      */
-    private View getChildClosestToEnd() {
+    private View getChildClosestToEndExpose() {
         return getChildAt(mShouldReverseLayout ? 0 : getChildCount() - 1);
     }
 
     @Override
     public View onFocusSearchFailed(View focused, int focusDirection,
                                     RecyclerView.Recycler recycler, RecyclerView.State state) {
-        resolveShouldLayoutReverse();
+        myResolveShouldLayoutReverse();
         if (getChildCount() == 0) {
             return null;
         }
 
-        final int layoutDir = convertFocusDirectionToLayoutDirection(focusDirection);
+        final int layoutDir = convertFocusDirectionToLayoutDirectionExpose(focusDirection);
         if (layoutDir == LayoutState.INVALID_LAYOUT) {
             return null;
         }
 
         View referenceChild = null;
         if (layoutDir == LayoutState.LAYOUT_START) {
-            referenceChild = findReferenceChildClosestToStart(state);
+            referenceChild = myFindReferenceChildClosestToStart(state);
         } else {
-            referenceChild = findReferenceChildClosestToEnd(state);
+            referenceChild = myFindReferenceChildClosestToEnd(state);
 
         }
 
@@ -1267,15 +1267,15 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         }
         ensureLayoutStateExpose();
         final int maxScroll = (int) (MAX_SCROLL_FACTOR * mOrientationHelper.getTotalSpace());
-        updateLayoutState(layoutDir, maxScroll, false, state);
+        updateLayoutStateExpose(layoutDir, maxScroll, false, state);
         mLayoutState.mScrollingOffset = LayoutState.SCOLLING_OFFSET_NaN;
         mLayoutState.mRecycle = false;
         fill(recycler, mLayoutState, state, true);
         final View nextFocus;
         if (layoutDir == LayoutState.LAYOUT_START) {
-            nextFocus = getChildClosestToStart();
+            nextFocus = getChildClosestToStartExpose();
         } else {
-            nextFocus = getChildClosestToEnd();
+            nextFocus = getChildClosestToEndExpose();
         }
         if (nextFocus == referenceChild || !nextFocus.isFocusable()) {
             return null;
