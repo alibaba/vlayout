@@ -2,6 +2,8 @@ package com.alibaba.android.vlayout;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
+import android.os.Trace;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.OrientationHelper;
@@ -34,6 +36,9 @@ import java.util.Map;
 
 public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements LayoutManagerHelper {
     private static final String TAG = "VirtualLayoutManager";
+
+    private static final String TRACE_LAYOUT = "VLM onLayoutChildren";
+    private static final String TRACE_SCROLL = "VLM scroll";
 
     private static final boolean DEBUG = false;
 
@@ -312,6 +317,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection(TRACE_LAYOUT);
+        }
+
         if (mNoScrolling && state.didStructureChange()) {
             mSpaceMeasured = false;
             mSpaceMeasuring = true;
@@ -324,7 +333,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
         try {
             super.onLayoutChildren(recycler, state);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw e;
         } finally {
@@ -362,10 +371,16 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             }
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
+        }
     }
 
     @Override
     protected int scrollInternalBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection(TRACE_SCROLL);
+        }
 
         runPreLayout(recycler, state);
 
@@ -374,6 +389,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             scrolled = super.scrollInternalBy(dy, recycler, state);
         } finally {
             runPostLayout(recycler, state, scrolled);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
         }
 
         return scrolled;

@@ -72,7 +72,6 @@
       <sourceFolder url="file://$MODULE_DIR$/vlayout/src/androidTest/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/vlayout/src/androidTest/rs" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/vlayout/build/intermediates/annotations" />
-      <excludeFolder url="file://$MODULE_DIR$/vlayout/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/vlayout/build/intermediates/bundles" />
       <excludeFolder url="file://$MODULE_DIR$/vlayout/build/intermediates/classes" />
       <excludeFolder url="file://$MODULE_DIR$/vlayout/build/intermediates/dependency-cache" />
@@ -80,11 +79,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vlayout/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/vlayout/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/vlayout/build/intermediates/lint" />
-      <excludeFolder url="file://$MODULE_DIR$/vlayout/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/vlayout/build/intermediates/res" />
-      <excludeFolder url="file://$MODULE_DIR$/vlayout/build/intermediates/resources" />
       <excludeFolder url="file://$MODULE_DIR$/vlayout/build/intermediates/rs" />
-      <excludeFolder url="file://$MODULE_DIR$/vlayout/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/vlayout/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/vlayout/build/tmp" />
     </content>
@@ -95,12 +91,12 @@
     <orderEntry type="library" exported="" name="support-v4-21.0.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="asm-5.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="robolectric-utils-3.0" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="asm-commons-5.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="vtd-xml-2.11" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="asm-commons-5.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="asm-tree-5.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="asm-analysis-5.0.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="icu4j-53.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.0" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="icu4j-53.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="ant-1.8.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="ant-launcher-1.8.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="accessibility-test-framework-1.0" level="project" />

@@ -218,6 +218,7 @@ public class VLayoutActivity extends Activity {
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
             helper.setAspectRatio(4.0f);
             helper.setColWeights(new float[]{40f, 45f});
+            helper.setMargin(-4, -4, -4, -4);
             adapters.add(new SubAdapter(this, helper, 2));
         }
 

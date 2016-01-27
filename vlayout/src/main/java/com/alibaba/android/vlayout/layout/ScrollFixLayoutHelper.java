@@ -12,6 +12,8 @@ public class ScrollFixLayoutHelper extends FixLayoutHelper {
     private static final String TAG = "ScrollFixLayoutHelper";
 
 
+    private boolean mShowOnEnter = true;
+
     public ScrollFixLayoutHelper(int x, int y) {
         this(TOP_LEFT, x, y);
     }
@@ -20,10 +22,19 @@ public class ScrollFixLayoutHelper extends FixLayoutHelper {
         super(alignType, x, y);
     }
 
+    public void setShowOnEnter(boolean showOnEnter) {
+        this.mShowOnEnter = showOnEnter;
+    }
+
 
     @Override
     protected boolean shouldBeDraw(int startPosition, int endPosition, int scrolled) {
-        return endPosition >= getRange().getLower() - 1;
+        if (mShowOnEnter)
+            return endPosition >= getRange().getLower() - 1;
+        else {
+            // show on leave from top
+            return startPosition >= getRange().getLower() - 1;
+        }
     }
 
 }

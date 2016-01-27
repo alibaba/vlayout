@@ -81,8 +81,6 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
     private float mRowWeight = Float.NaN;
 
-    private boolean mMarginCollapse = true;
-
     public OnePlusNLayoutHelper() {
         setItemCount(0);
     }
@@ -93,13 +91,6 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
     public OnePlusNLayoutHelper(int itemCount, int leftMargin, int topMargin, int rightMargin, int bottomMargin) {
         setItemCount(itemCount);
-    }
-
-    /**
-     * @param marginCollapse tell whether collapse margins
-     */
-    public void setMarginCollapse(boolean marginCollapse) {
-        this.mMarginCollapse = marginCollapse;
     }
 
     /**
@@ -165,14 +156,6 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             View view = mChildrenViews[0];
             final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
 
-
-            if (mMarginCollapse) {
-                lp.leftMargin = mergeLayoutMargin(lp.leftMargin, mMarginLeft);
-                lp.topMargin = mergeLayoutMargin(lp.topMargin, mMarginTop);
-                lp.rightMargin = mergeLayoutMargin(lp.rightMargin, mMarginRight);
-                lp.bottomMargin = mergeLayoutMargin(lp.bottomMargin, mMarginBottom);
-            }
-
             if (!Float.isNaN(mAspectRatio)) {
                 if (layoutInVertical) {
                     lp.height = (int) ((parentWidth - parentHPadding) / mAspectRatio);
@@ -209,17 +192,6 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                 final float weight2 = getViewMainWeight(lp1, 1);
 
                 if (layoutInVertical) {
-
-                    if (mMarginCollapse) {
-                        lp1.leftMargin = mergeLayoutMargin(lp1.leftMargin, mMarginLeft);
-                        lp1.topMargin = mergeLayoutMargin(lp1.topMargin, mMarginTop);
-                        lp2.rightMargin = mergeLayoutMargin(lp2.rightMargin, mMarginRight);
-                        lp1.bottomMargin = mergeLayoutMargin(lp1.bottomMargin, mMarginBottom);
-
-                        lp1.rightMargin = Math.max(lp1.rightMargin, lp2.leftMargin);
-                        lp2.leftMargin = 0;
-                    }
-
 
                     if (!Float.isNaN(mAspectRatio)) {
                         lp1.height = lp2.height = (int) ((parentWidth - parentHPadding) / mAspectRatio);
@@ -258,16 +230,6 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                             mAreaRect.bottom, helper);
 
                 } else {
-                    if (mMarginCollapse) {
-                        lp1.leftMargin = mergeLayoutMargin(lp1.leftMargin, mMarginLeft);
-                        lp1.topMargin = mergeLayoutMargin(lp1.topMargin, mMarginTop);
-                        lp1.rightMargin = mergeLayoutMargin(lp1.rightMargin, mMarginRight);
-                        lp2.bottomMargin = mergeLayoutMargin(lp2.bottomMargin, mMarginBottom);
-
-
-                        lp1.bottomMargin = Math.max(lp1.bottomMargin, lp2.topMargin);
-                        lp2.topMargin = 0;
-                    }
 
                     if (!Float.isNaN(mAspectRatio)) {
                         lp1.width = lp2.width = (int) ((parentHeight - parentVPadding) * mAspectRatio);
@@ -321,21 +283,6 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                 final float weight3 = getViewMainWeight(lp1, 2);
 
                 if (layoutInVertical) {
-
-                    if (mMarginCollapse) {
-                        lp1.leftMargin = mergeLayoutMargin(lp1.leftMargin, mMarginLeft);
-                        lp1.topMargin = mergeLayoutMargin(lp1.topMargin, mMarginTop);
-                        lp2.rightMargin = mergeLayoutMargin(lp2.rightMargin, mMarginRight);
-                        lp1.bottomMargin = mergeLayoutMargin(lp1.bottomMargin, mMarginBottom);
-
-
-                        lp1.rightMargin = Math.max(Math.max(lp1.rightMargin, lp2.leftMargin), lp3.leftMargin);
-                        lp2.leftMargin = lp3.leftMargin = 0;
-
-                        lp2.bottomMargin = Math.max(lp2.bottomMargin, lp3.topMargin);
-                        lp3.topMargin = 0;
-                    }
-
 
                     if (!Float.isNaN(mAspectRatio)) {
                         lp1.height = (int) ((parentWidth - parentHPadding) / mAspectRatio);
@@ -416,23 +363,6 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                 final float weight4 = getViewMainWeight(lp1, 3);
 
                 if (layoutInVertical) {
-
-                    if (mMarginCollapse) {
-                        lp1.leftMargin = mergeLayoutMargin(lp1.leftMargin, mMarginLeft);
-                        lp1.topMargin = mergeLayoutMargin(lp1.topMargin, mMarginTop);
-                        lp2.rightMargin = mergeLayoutMargin(lp2.rightMargin, mMarginRight);
-                        lp1.bottomMargin = mergeLayoutMargin(lp1.bottomMargin, mMarginBottom);
-
-
-                        lp1.rightMargin = Math.max(Math.max(lp1.rightMargin, lp2.leftMargin), lp3.leftMargin);
-                        lp2.leftMargin = lp3.leftMargin = 0;
-
-                        lp2.bottomMargin = Math.max(Math.max(lp2.bottomMargin, lp3.topMargin), lp3.topMargin);
-                        lp3.topMargin = lp4.topMargin = 0;
-
-                        lp3.rightMargin = Math.max(lp3.rightMargin, lp4.leftMargin);
-                        lp4.leftMargin = 0;
-                    }
 
                     lp2.topMargin = lp1.topMargin;
                     lp3.bottomMargin = lp4.bottomMargin = lp1.bottomMargin;
@@ -526,7 +456,10 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
 
     private int mergeLayoutMargin(int viewMargin, int layoutMargin) {
-        return (viewMargin <= layoutMargin) ? 0 : viewMargin - layoutMargin;
+        // TODO: collapse has problem
+        if (layoutMargin > 0)
+            return (viewMargin <= layoutMargin) ? 0 : viewMargin - layoutMargin;
+        return viewMargin;
     }
 
 
