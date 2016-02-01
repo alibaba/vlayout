@@ -36,31 +36,41 @@ public final class InnerRecycledViewPool extends RecyclerView.RecycledViewPool {
     public void clear() {
         Set<Integer> viewTypes = mScrapLength.keySet();
         for (int viewType : viewTypes) {
-            RecyclerView.ViewHolder holder = super.getRecycledView(viewType);
+            RecyclerView.ViewHolder holder = mInnerPool.getRecycledView(viewType);
             while (holder != null) {
                 destroyViewHolder(holder);
-                holder = super.getRecycledView(viewType);
+                holder = mInnerPool.getRecycledView(viewType);
             }
         }
 
+        mScrapLength.clear();
         super.clear();
     }
 
     @Override
     public void setMaxRecycledViews(int viewType, int max) {
-        RecyclerView.ViewHolder holder = super.getRecycledView(viewType);
+        RecyclerView.ViewHolder holder = mInnerPool.getRecycledView(viewType);
         while (holder != null) {
             destroyViewHolder(holder);
-            holder = super.getRecycledView(viewType);
+            holder = mInnerPool.getRecycledView(viewType);
         }
-        
+
         this.mMaxScrap.put(viewType, max);
+        this.mScrapLength.put(viewType, 0);
         super.setMaxRecycledViews(viewType, max);
     }
 
     @Override
     public RecyclerView.ViewHolder getRecycledView(int viewType) {
-        return super.getRecycledView(viewType);
+        RecyclerView.ViewHolder holder = mInnerPool.getRecycledView(viewType);
+        if (holder != null) {
+            int scrapHeapSize = mScrapLength.containsKey(viewType) ? this.mScrapLength.get(viewType) : 0;
+            if (scrapHeapSize > 0)
+                mScrapLength.put(viewType, scrapHeapSize - 1);
+        }
+
+        return holder;
+
     }
 
     /**
@@ -73,7 +83,7 @@ public final class InnerRecycledViewPool extends RecyclerView.RecycledViewPool {
         int viewType = scrap.getItemViewType();
         if (mMaxScrap.indexOfKey(viewType) < 0) {
             mMaxScrap.put(viewType, DEFAULT_MAX_SIZE);
-            super.setMaxRecycledViews(viewType, DEFAULT_MAX_SIZE);
+            setMaxRecycledViews(viewType, DEFAULT_MAX_SIZE);
         }
 
         int scrapHeapSize = mScrapLength.containsKey(viewType) ? this.mScrapLength.get(viewType) : 0;

@@ -2,6 +2,7 @@ package com.alibaba.android.vlayout;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
@@ -69,6 +70,8 @@ public interface LayoutManagerHelper {
      */
     void removeChildView(View view);
 
+    boolean isViewHolderUpdated(View view);
+
     /**
      * Add view out of normal flow, which means it won't be ignored in getChildAt, but still be able to scrolled with content
      * But it's can be find by position via {@link #findViewByPosition(int)}
@@ -86,6 +89,14 @@ public interface LayoutManagerHelper {
      * @param view Fixed view
      */
     void addFixedView(View view);
+
+    void hideView(View view);
+
+    void showView(View view);
+
+    RecyclerView.ViewHolder getChildViewHolder(View child);
+
+    RecyclerView getRecyclerView();
 
     /**
      * Find view via item position {@param position}

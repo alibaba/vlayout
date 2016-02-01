@@ -789,6 +789,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             return mLayoutState.mScrapList != null;
         }
 
+        public void skipCurrentPosition() {
+            mLayoutState.mCurrentPosition += mLayoutState.mItemDirection;
+        }
+
         /**
          * We may not want to recycle children in some cases (e.g. layout)
          */
@@ -954,6 +958,36 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         //removeChildView(view);
         //mFixedContainer.addView(view);
         addOffFlowView(view, false);
+    }
+
+    @Override
+    public void hideView(View view) {
+        super.hideView(view);
+    }
+
+    @Override
+    public void showView(View view) {
+        super.showView(view);
+    }
+
+    @Override
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder getChildViewHolder(View view) {
+        if (mRecyclerView != null)
+            return mRecyclerView.getChildViewHolder(view);
+        return null;
+    }
+
+
+    @Override
+    public boolean isViewHolderUpdated(View view) {
+        RecyclerView.ViewHolder holder = getChildViewHolder(view);
+        return holder == null || isViewHolderUpdated(holder);
+
     }
 
     @Override

@@ -99,7 +99,13 @@ public class FixLayoutHelper extends BaseLayoutHelper {
         }
 
         // find view in currentPosition
-        final View view = layoutState.next(recycler);
+        View view = mFixView;
+        if (view == null)
+            view = layoutState.next(recycler);
+        else {
+            layoutState.skipCurrentPosition();
+        }
+
         if (view == null) {
             result.mFinished = true;
             return;
@@ -133,7 +139,7 @@ public class FixLayoutHelper extends BaseLayoutHelper {
     public void beforeLayout(RecyclerView.Recycler recycler, RecyclerView.State state, LayoutManagerHelper helper) {
         super.beforeLayout(recycler, state, helper);
 
-        if (mFixView != null) {
+        if (mFixView != null && helper.isViewHolderUpdated(mFixView)) {
             // recycle view for later usage
             helper.removeChildView(mFixView);
             recycler.recycleView(mFixView);
@@ -163,6 +169,9 @@ public class FixLayoutHelper extends BaseLayoutHelper {
                 // already capture in layoutViews phase
                 // if it's not shown on screen
                 if (mFixView.getParent() == null) {
+                    helper.addFixedView(mFixView);
+                } else {
+                    helper.removeChildView(mFixView);
                     helper.addFixedView(mFixView);
                 }
             } else {

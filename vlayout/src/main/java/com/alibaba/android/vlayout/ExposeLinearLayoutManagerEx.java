@@ -1735,9 +1735,13 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         static {
             try {
                 mShouldIgnore = RecyclerView.ViewHolder.class.getDeclaredMethod("shouldIgnore");
+                mShouldIgnore.setAccessible(true);
                 mIsInvalid = RecyclerView.ViewHolder.class.getDeclaredMethod("isInvalid");
+                mIsInvalid.setAccessible(true);
                 mIsRemoved = RecyclerView.ViewHolder.class.getDeclaredMethod("isRemoved");
+                mIsRemoved.setAccessible(true);
                 mIsChanged = RecyclerView.ViewHolder.class.getDeclaredMethod("isChanged");
+                mIsChanged.setAccessible(true);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }

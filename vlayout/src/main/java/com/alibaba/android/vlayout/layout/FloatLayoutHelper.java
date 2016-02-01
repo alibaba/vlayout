@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 
-
 import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 import static com.alibaba.android.vlayout.layout.FixLayoutHelper.BOTTOM_LEFT;
 import static com.alibaba.android.vlayout.layout.FixLayoutHelper.BOTTOM_RIGHT;
@@ -85,8 +84,14 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
             return;
         }
 
+
         // find view in currentPosition
-        final View view = layoutState.next(recycler);
+        View view = mFixView;
+        if (view == null)
+            view = layoutState.next(recycler);
+        else {
+            layoutState.skipCurrentPosition();
+        }
         if (view == null) {
             result.mFinished = true;
             return;
@@ -125,13 +130,13 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
     public void beforeLayout(RecyclerView.Recycler recycler, RecyclerView.State state, LayoutManagerHelper helper) {
         super.beforeLayout(recycler, state, helper);
 
-        if (mFixView != null) {
+        if (mFixView != null && helper.isViewHolderUpdated(mFixView)) {
             // recycle view for later usage
             helper.removeChildView(mFixView);
+            recycler.recycleView(mFixView);
             mFixView.setTranslationX(0);
             mFixView.setTranslationY(0);
             mFixView.setOnTouchListener(null);
-            recycler.recycleView(mFixView);
             mFixView = null;
         }
 
@@ -163,6 +168,10 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
                     mFixView.setOnTouchListener(touchDragListener);
                     mFixView.setTranslationX(mTransitionX);
                     mFixView.setTranslationY(mTransitionY);
+                } else {
+                    helper.showView(mFixView);
+                    // helper.removeChildView(mFixView);
+                    helper.addFixedView(mFixView);
                 }
             } else {
                 mFixView = recycler.getViewForPosition(mPos);
