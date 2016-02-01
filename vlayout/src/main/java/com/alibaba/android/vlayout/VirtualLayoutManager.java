@@ -939,17 +939,21 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     @Override
     public void addChildView(LayoutStateWrapper layoutState, View view, int index) {
+        showView(view);
+
         if (!layoutState.hasScrapList()) {
             // can not find in scrapList
-            super.addView(view, index);
+            addView(view, index);
         } else {
-            super.addDisappearingView(view, index);
+            addDisappearingView(view, index);
         }
     }
 
     @Override
     public void addOffFlowView(View view, boolean head) {
+        showView(view);
         addHiddenView(view, head);
+
     }
 
 
