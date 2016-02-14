@@ -211,9 +211,9 @@ public class FixLayoutHelper extends BaseLayoutHelper {
         final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
         final int widthSpec = helper.getChildMeasureSpec(
-                helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(), params.width, false);
+                helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(), params.width >= 0 ? params.width : ViewGroup.LayoutParams.WRAP_CONTENT, false);
         final int heightSpec = helper.getChildMeasureSpec(
-                helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(), params.height, false);
+                helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(), params.height >=0 ? params.height : ViewGroup.LayoutParams.WRAP_CONTENT, false);
 
         // do measurement
         helper.measureChild(view, widthSpec, heightSpec);

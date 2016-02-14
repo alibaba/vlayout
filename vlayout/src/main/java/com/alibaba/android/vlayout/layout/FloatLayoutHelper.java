@@ -171,6 +171,7 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
                 } else {
                     helper.showView(mFixView);
                     // helper.removeChildView(mFixView);
+                    mFixView.setOnTouchListener(touchDragListener);
                     helper.addFixedView(mFixView);
                 }
             } else {
