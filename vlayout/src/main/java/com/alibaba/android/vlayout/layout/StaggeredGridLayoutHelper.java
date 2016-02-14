@@ -118,8 +118,16 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
         mColLength = (int) ((availableWidth - mHGap * (mNumLanes - 1)) / mNumLanes + 0.5);
         int totalGaps = availableWidth - mColLength * mNumLanes;
-        mEachGap = (int) (totalGaps / (mNumLanes - 1) + 0.5);
-        mLastGap = totalGaps - (mNumLanes - 2) * mEachGap;
+
+        if (mNumLanes <= 1) {
+            mEachGap = mLastGap = 0;
+        }else if (mNumLanes == 2) {
+            mEachGap = totalGaps;
+            mLastGap = 0;
+        } else {
+            mEachGap = (int) (totalGaps / (mNumLanes - 1) + 0.5);
+            mLastGap = totalGaps - (mNumLanes - 2) * mEachGap;
+        }
 
         if (mLayoutManager == null || mLayoutManager.get() == null || mLayoutManager.get() != helper) {
             if (helper instanceof VirtualLayoutManager) {

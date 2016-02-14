@@ -154,7 +154,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
         if (count == 1) {
             View view = mChildrenViews[0];
-            final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            final ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(view.getLayoutParams());
 
             if (!Float.isNaN(mAspectRatio)) {
                 if (layoutInVertical) {
@@ -185,9 +185,9 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             if (count == 2) {
 
                 final View child1 = mChildrenViews[0];
-                final ViewGroup.MarginLayoutParams lp1 = (ViewGroup.MarginLayoutParams) child1.getLayoutParams();
+                final ViewGroup.MarginLayoutParams lp1 = new ViewGroup.MarginLayoutParams(child1.getLayoutParams());
                 final View child2 = mChildrenViews[1];
-                final ViewGroup.MarginLayoutParams lp2 = (ViewGroup.MarginLayoutParams) child2.getLayoutParams();
+                final ViewGroup.MarginLayoutParams lp2 = new ViewGroup.MarginLayoutParams(child2.getLayoutParams());
                 final float weight1 = getViewMainWeight(lp1, 0);
                 final float weight2 = getViewMainWeight(lp1, 1);
 
@@ -271,12 +271,12 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             } else if (count == 3) {
 
                 final View child1 = mChildrenViews[0];
-                final ViewGroup.MarginLayoutParams lp1 = (ViewGroup.MarginLayoutParams) child1.getLayoutParams();
+                final ViewGroup.MarginLayoutParams lp1 = new ViewGroup.MarginLayoutParams(child1.getLayoutParams());
                 final View child2 = helper.getReverseLayout() ? mChildrenViews[2] : mChildrenViews[1];
                 final View child3 = helper.getReverseLayout() ? mChildrenViews[1] : mChildrenViews[2];
 
-                final ViewGroup.MarginLayoutParams lp2 = (ViewGroup.MarginLayoutParams) child2.getLayoutParams();
-                final ViewGroup.MarginLayoutParams lp3 = (ViewGroup.MarginLayoutParams) child3.getLayoutParams();
+                final ViewGroup.MarginLayoutParams lp2 = new ViewGroup.MarginLayoutParams(child2.getLayoutParams());
+                final ViewGroup.MarginLayoutParams lp3 = new ViewGroup.MarginLayoutParams(child3.getLayoutParams());
 
                 final float weight1 = getViewMainWeight(lp1, 0);
                 final float weight2 = getViewMainWeight(lp1, 1);
@@ -349,13 +349,13 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                 handleStateOnResult(result, child1, child2, child3);
             } else if (count == 4) {
                 final View child1 = mChildrenViews[0];
-                final VirtualLayoutManager.LayoutParams lp1 = (VirtualLayoutManager.LayoutParams) child1.getLayoutParams();
+                final VirtualLayoutManager.LayoutParams lp1 = new VirtualLayoutManager.LayoutParams(child1.getLayoutParams());
                 final View child2 = helper.getReverseLayout() ? mChildrenViews[3] : mChildrenViews[1];
-                final VirtualLayoutManager.LayoutParams lp2 = (VirtualLayoutManager.LayoutParams) child2.getLayoutParams();
+                final VirtualLayoutManager.LayoutParams lp2 = new VirtualLayoutManager.LayoutParams(child2.getLayoutParams());
                 final View child3 = mChildrenViews[2];
-                final VirtualLayoutManager.LayoutParams lp3 = (VirtualLayoutManager.LayoutParams) child3.getLayoutParams();
+                final VirtualLayoutManager.LayoutParams lp3 = new VirtualLayoutManager.LayoutParams(child3.getLayoutParams());
                 final View child4 = helper.getReverseLayout() ? mChildrenViews[1] : mChildrenViews[3];
-                final VirtualLayoutManager.LayoutParams lp4 = (VirtualLayoutManager.LayoutParams) child4.getLayoutParams();
+                final VirtualLayoutManager.LayoutParams lp4 = new VirtualLayoutManager.LayoutParams(child4.getLayoutParams());
 
                 final float weight1 = getViewMainWeight(lp1, 0);
                 final float weight2 = getViewMainWeight(lp1, 1);
