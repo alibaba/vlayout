@@ -40,8 +40,11 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     private static final String TRACE_LAYOUT = "VLM onLayoutChildren";
     private static final String TRACE_SCROLL = "VLM scroll";
 
-    private static final boolean DEBUG = false;
+    private static boolean sDebuggable = false;
 
+    public static void enableDebugging(boolean isDebug) {
+        sDebuggable = isDebug;
+    }
 
     public static final int HORIZONTAL = OrientationHelper.HORIZONTAL;
 
@@ -294,7 +297,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     private void runPreLayout(RecyclerView.Recycler recycler, RecyclerView.State state) {
 
         if (mNested == 0) {
-            for (LayoutHelper layoutHelper : mHelperFinder) {
+            for (LayoutHelper layoutHelper : mHelperFinder.reverse()) {
                 layoutHelper.beforeLayout(recycler, state, this);
             }
         }
@@ -309,10 +312,18 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             final int startPosition = findFirstVisibleItemPosition();
             final int endPosition = findLastVisibleItemPosition();
             for (LayoutHelper layoutHelper : mHelperFinder) {
-                layoutHelper.afterLayout(recycler, state, startPosition, endPosition, scrolled, this);
+                try {
+                    layoutHelper.afterLayout(recycler, state, startPosition, endPosition, scrolled, this);
+                } catch (Exception e) {
+                    if (VirtualLayoutManager.sDebuggable) {
+                        throw e;
+                    }
+                }
             }
         }
     }
+
+
 
 
     @Override
@@ -1044,7 +1055,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             return;
         }
 
-        if (DEBUG) {
+        if (sDebuggable) {
             Log.d(TAG, "Recycling " + Math.abs(startIndex - endIndex) + " items");
         }
 
@@ -1148,6 +1159,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
         return null;
     }
+
 
     @Override
     public void recycleView(View view) {
