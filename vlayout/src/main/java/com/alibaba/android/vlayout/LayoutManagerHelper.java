@@ -70,6 +70,12 @@ public interface LayoutManagerHelper {
      */
     void removeChildView(View view);
 
+    /**
+     * Tell whether the data bind to the view has updated, if true means it need rebinding
+     *
+     * @param view
+     * @return
+     */
     boolean isViewHolderUpdated(View view);
 
     /**
@@ -90,12 +96,34 @@ public interface LayoutManagerHelper {
      */
     void addFixedView(View view);
 
+    /**
+     * Mark a view as hidden, it will show on the screen,
+     * but can not be access via {@link RecyclerView.LayoutManager#getChildCount()} and {@link android.support.v7.widget.RecyclerView.LayoutManager#getChildAt(int)}
+     *
+     * @param view
+     */
     void hideView(View view);
 
+    /**
+     * Mark a hidden view re-shown, so you can get it from {@link android.support.v7.widget.RecyclerView.LayoutManager#getChildAt(int)}
+     *
+     * @param view
+     */
     void showView(View view);
 
+    /**
+     * Get {@link android.support.v7.widget.RecyclerView.ViewHolder} for a view in RecyclerView
+     *
+     * @param child
+     * @return
+     */
     RecyclerView.ViewHolder getChildViewHolder(View child);
 
+    /**
+     * Get current container recyclerView
+     *
+     * @return
+     */
     RecyclerView getRecyclerView();
 
     /**
@@ -158,6 +186,13 @@ public interface LayoutManagerHelper {
 
     /*
      * Properties helpers
+     */
+
+    /**
+     * Find item position of a view, not the index of view in RecyclerView
+     *
+     * @param view
+     * @return
      */
     int getPosition(View view);
 

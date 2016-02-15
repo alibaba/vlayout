@@ -4,6 +4,7 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -12,7 +13,7 @@ import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
 /**
- *
+ * {@link com.alibaba.android.vlayout.LayoutHelper} that provides basic methods
  */
 public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
@@ -26,6 +27,8 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     int mBgColor;
 
+    String mBgImage;
+
     float mAspectRatio = Float.NaN;
 
     public BaseLayoutHelper() {
@@ -36,8 +39,25 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         return this.mBgColor;
     }
 
+    /**
+     * Set backgroundColor for LayoutView
+     *
+     * @param bgColor
+     */
     public void setBgColor(int bgColor) {
         this.mBgColor = bgColor;
+    }
+
+    /**
+     * Set backgroundImage for LayoutView
+     *
+     * @param bgImage
+     */
+    public void setBgImage(String bgImage) {
+        if (TextUtils.isEmpty(bgImage))
+            this.mBgImage = "";
+        else
+            this.mBgImage = bgImage;
     }
 
     public void setAspectRatio(float aspectRatio) {
@@ -46,6 +66,11 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     private int mItemCount = 0;
 
+    /**
+     * The number of items in current layout
+     *
+     * @return the number of child views
+     */
     @Override
     public int getItemCount() {
         return mItemCount;
@@ -74,7 +99,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
             if (DEBUG && !layoutState.hasScrapList()) {
                 throw new RuntimeException("received null view when unexpected");
             }
-
+            // if there is no more views can be retrieved, this layout process is finished
             result.mFinished = true;
             return null;
         }
@@ -94,9 +119,11 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
         if (requireLayoutView()) {
             if (mLayoutView != null) {
+                // TODO: recycle LayoutView
                 // helper.detachChildView(mLayoutView);
             }
         } else {
+            // if no layoutView is required, remove it
             if (mLayoutView != null) {
                 helper.removeChildView(mLayoutView);
                 mLayoutView = null;
@@ -104,6 +131,12 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         }
     }
 
+    /**
+     * Tell whether the scrolled value is valid, if not, means it's a layout processing without scrolling
+     *
+     * @param scrolled value of how many pixels does scrolled
+     * @return true means during a scrolling process, false means during a layout process.
+     */
     protected boolean isValidScrolled(int scrolled) {
         return scrolled != Integer.MAX_VALUE && scrolled != Integer.MIN_VALUE;
     }
@@ -159,23 +192,39 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
     }
 
 
+    /**
+     * Called when {@link com.alibaba.android.vlayout.LayoutHelper} get dropped
+     * Do default clean jobs defined by framework
+     *
+     * @param helper LayoutManagerHelper
+     */
     @Override
     public final void clear(LayoutManagerHelper helper) {
+        // remove LayoutViews if there is one
         if (mLayoutView != null) {
             helper.removeChildView(mLayoutView);
             mLayoutView = null;
         }
+
+        // call user defined
         onClear(helper);
     }
 
+    /**
+     * Called when {@link com.alibaba.android.vlayout.LayoutHelper} get dropped, do clean custom jobs
+     *
+     * @param helper
+     */
     protected void onClear(LayoutManagerHelper helper) {
 
     }
 
-
+    /**
+     * @return
+     */
     @Override
     public boolean requireLayoutView() {
-        return mBgColor != 0;
+        return mBgColor != 0 || !TextUtils.isEmpty(mBgImage);
     }
 
     public abstract void layoutViews(RecyclerView.Recycler recycler, RecyclerView.State state,
@@ -215,14 +264,17 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     }
 
+    /**
+     * Listener to handle LayoutViews, like bgImage
+     */
     public interface LayoutViewBindListener {
-        void onBind(View layoutView);
+        void onBind(View layoutView, BaseLayoutHelper baseLayoutHelper);
     }
 
-    private LayoutViewBindListener mLayoutViewBindListener;
+    private static LayoutViewBindListener sLayoutViewBindListener;
 
-    public void setLayoutViewBindListener(LayoutViewBindListener bindListener) {
-        mLayoutViewBindListener = bindListener;
+    public static void setLayoutViewBindListener(LayoutViewBindListener bindListener) {
+        sLayoutViewBindListener = bindListener;
     }
 
     @Override
@@ -232,15 +284,20 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         layoutView.layout(mLayoutRegion.left, mLayoutRegion.top, mLayoutRegion.right, mLayoutRegion.bottom);
         layoutView.setBackgroundColor(mBgColor);
 
-        if (mLayoutViewBindListener!= null) {
-            mLayoutViewBindListener.onBind(layoutView);
+        if (sLayoutViewBindListener != null) {
+            sLayoutViewBindListener.onBind(layoutView, this);
         }
 
-        // reset
+        // reset region rectangle
         mLayoutRegion.set(0, 0, 0, 0);
     }
 
-
+    /**
+     * Helper methods to handle focus states for views
+     *
+     * @param result
+     * @param views
+     */
     protected void handleStateOnResult(LayoutChunkResult result, View... views) {
         if (views == null) return;
 

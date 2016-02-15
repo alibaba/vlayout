@@ -324,8 +324,6 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
 
-
-
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -913,6 +911,11 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         }
     };
 
+    /**
+     * Set LayoutView Factory, so you can replace LayoutView for LayoutHelpers
+     *
+     * @param factory
+     */
     public void setLayoutViewFactory(@NonNull final LayoutViewFactory factory) {
         if (factory == null)
             throw new IllegalArgumentException("factory should not be null");
@@ -960,6 +963,9 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addOffFlowView(View view, boolean head) {
         showView(view);
@@ -998,6 +1004,9 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isViewHolderUpdated(View view) {
         RecyclerView.ViewHolder holder = getChildViewHolder(view);
@@ -1131,6 +1140,14 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         child.measure(widthSpec, heightSpec);
     }
 
+    /**
+     * Update measure spec with insets
+     *
+     * @param spec
+     * @param startInset
+     * @param endInset
+     * @return
+     */
     private int updateSpecWithExtra(int spec, int startInset, int endInset) {
         if (startInset == 0 && endInset == 0) {
             return spec;

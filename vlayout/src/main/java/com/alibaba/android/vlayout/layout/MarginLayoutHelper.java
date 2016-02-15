@@ -4,7 +4,7 @@ import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 
 /**
- * Created by villadora on 15/8/31.
+ * {@link LayoutHelper} provides margin supports.
  */
 public abstract class MarginLayoutHelper extends LayoutHelper {
 
@@ -15,6 +15,14 @@ public abstract class MarginLayoutHelper extends LayoutHelper {
     protected int mMarginBottom;
 
 
+    /**
+     * Set margins for this layoutHelper
+     *
+     * @param leftMargin
+     * @param topMargin
+     * @param rightMargin
+     * @param bottomMargin
+     */
     public void setMargin(int leftMargin, int topMargin, int rightMargin, int bottomMargin) {
         this.mMarginLeft = leftMargin;
         this.mMarginTop = topMargin;
@@ -22,15 +30,33 @@ public abstract class MarginLayoutHelper extends LayoutHelper {
         this.mMarginBottom = bottomMargin;
     }
 
+    /**
+     * Calculate align offset when start a new layout with anchor views
+     *
+     * @param offset      anchor child's offset in current layoutHelper, for example, 0 means first item
+     * @param isLayoutEnd is the layout process will do to end or start, true means it will lay views from start to end
+     * @param useAnchor   whether offset is computed for scrolling or for anchor reset
+     * @param helper      view layout helper
+     * @return pixel offset to start to the anchor view
+     */
     public int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
         return 0;
     }
 
-
+    /**
+     * Get total margin in horizontal dimension
+     *
+     * @return
+     */
     protected int getHorizontalMargin() {
         return mMarginLeft + mMarginRight;
     }
 
+    /**
+     * Get total margin in vertical dimension
+     *
+     * @return
+     */
     protected int getVerticalMargin() {
         return mMarginTop + mMarginBottom;
     }
