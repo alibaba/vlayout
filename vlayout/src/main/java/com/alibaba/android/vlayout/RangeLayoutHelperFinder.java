@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  *
@@ -23,6 +24,29 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
     @Override
     public Iterator<LayoutHelper> iterator() {
         return Collections.unmodifiableList(mLayoutHelpers).iterator();
+    }
+
+    @Override
+    protected Iterable<LayoutHelper> reverse() {
+        final ListIterator<LayoutHelper> i = mLayoutHelpers.listIterator(mLayoutHelpers.size());
+        return new Iterable<LayoutHelper>() {
+            @Override
+            public Iterator<LayoutHelper> iterator() {
+                return new Iterator<LayoutHelper>() {
+                    public boolean hasNext() {
+                        return i.hasPrevious();
+                    }
+
+                    public LayoutHelper next() {
+                        return i.previous();
+                    }
+
+                    public void remove() {
+                        i.remove();
+                    }
+                };
+            }
+        };
     }
 
     /**
