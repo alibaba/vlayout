@@ -187,6 +187,12 @@ public class FixLayoutHelper extends BaseLayoutHelper {
                 doMeasureAndLayout(mFixView, helper);
                 helper.addFixedView(mFixView);
             }
+        }else {
+            if (mFixView!= null) {
+                helper.removeChildView(mFixView);
+                recycler.recycleView(mFixView);
+                mFixView = null;
+            }
         }
 
     }
