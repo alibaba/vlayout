@@ -18,4 +18,7 @@ public abstract class LayoutHelperFinder implements Iterable<LayoutHelper> {
     @NonNull
     protected abstract List<LayoutHelper> getLayoutHelpers();
 
+
+    protected abstract Iterable<LayoutHelper> reverse();
+
 }
