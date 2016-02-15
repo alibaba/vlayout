@@ -362,7 +362,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         mLastStackFromEnd = getStackFromEnd();
         mCurrentPendingSavedState = null; // we don't need this anymore
         if (DEBUG) {
-            validateChildOrder();
+            validateChildOrderExpose();
         }
     }
 
@@ -401,7 +401,16 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     @Override
     public int findLastVisibleItemPosition() {
         ensureLayoutStateExpose();
-        return super.findLastVisibleItemPosition();
+        try {
+            return super.findLastVisibleItemPosition();
+        } catch (Exception e) {
+            Log.d("LastItem", "itemCount: " + getItemCount());
+            Log.d("LastItem", "childCount: " + getChildCount());
+            Log.d("LastItem", "child: " + getChildAt(getChildCount() - 1));
+            Log.d("LastItem", "RV childCount: " + mRecyclerView.getChildCount());
+            Log.d("LastItem", "RV child: " + mRecyclerView.getChildAt(mRecyclerView.getChildCount() - 1));
+            throw e;
+        }
     }
 
     private View myFindReferenceChildClosestToEnd(RecyclerView.State state) {
@@ -1106,7 +1115,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             }
         }
         if (DEBUG) {
-            validateChildOrder();
+            validateChildOrderExpose();
         }
         return start - layoutState.mAvailable;
     }
@@ -1316,7 +1325,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * In reverse layout, last child should be closes to screen position 0 and first child should
      * be closest to position WIDTH  or HEIGHT
      */
-    void validateChildOrder() {
+    private void validateChildOrderExpose() {
         Log.d(TAG, "validating child count " + getChildCount());
         if (getChildCount() < 1) {
             return;
