@@ -4,6 +4,7 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
@@ -29,6 +30,8 @@ public class FixLayoutHelper extends BaseLayoutHelper {
 
     protected int mX = 0;
     protected int mY = 0;
+
+    private boolean mSketchMeasure = false;
 
     protected View mFixView = null;
 
@@ -74,6 +77,10 @@ public class FixLayoutHelper extends BaseLayoutHelper {
         this.mAlignType = alignType;
     }
 
+
+    public void setSketchMeasure(boolean sketchMeasure) {
+        mSketchMeasure = sketchMeasure;
+    }
 
     /**
      * {@inheritDoc}
@@ -171,14 +178,14 @@ public class FixLayoutHelper extends BaseLayoutHelper {
                 if (mFixView.getParent() == null) {
                     helper.addFixedView(mFixView);
                 } else {
-                    helper.removeChildView(mFixView);
+                    helper.showView(mFixView);
+                    // helper.removeChildView(mFixView);
                     helper.addFixedView(mFixView);
                 }
             } else {
                 mFixView = recycler.getViewForPosition(mPos);
                 doMeasureAndLayout(mFixView, helper);
                 helper.addFixedView(mFixView);
-
             }
         }
 
@@ -211,9 +218,11 @@ public class FixLayoutHelper extends BaseLayoutHelper {
         final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
         final int widthSpec = helper.getChildMeasureSpec(
-                helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(), params.width >= 0 ? params.width : ViewGroup.LayoutParams.WRAP_CONTENT, false);
+                helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(),
+                params.width >= 0 ? params.width : ((mSketchMeasure && layoutInVertical) ? LayoutParams.MATCH_PARENT : LayoutParams.WRAP_CONTENT), false);
         final int heightSpec = helper.getChildMeasureSpec(
-                helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(), params.height >=0 ? params.height : ViewGroup.LayoutParams.WRAP_CONTENT, false);
+                helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
+                params.height >= 0 ? params.height : ((mSketchMeasure && !layoutInVertical) ? LayoutParams.MATCH_PARENT : LayoutParams.WRAP_CONTENT), false);
 
         // do measurement
         helper.measureChild(view, widthSpec, heightSpec);
