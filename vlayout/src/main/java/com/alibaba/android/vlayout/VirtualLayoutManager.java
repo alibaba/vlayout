@@ -396,6 +396,11 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         int scrolled = 0;
         try {
             scrolled = super.scrollInternalBy(dy, recycler, state);
+        } catch (Exception e) {
+            Log.w(TAG, Log.getStackTraceString(e), e);
+            if (sDebuggable)
+                throw e;
+
         } finally {
             runPostLayout(recycler, state, scrolled);
         }
