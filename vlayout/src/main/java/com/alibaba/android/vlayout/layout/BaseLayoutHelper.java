@@ -4,7 +4,6 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -27,8 +26,6 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     int mBgColor;
 
-    String mBgImage;
-
     float mAspectRatio = Float.NaN;
 
     public BaseLayoutHelper() {
@@ -46,18 +43,6 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
      */
     public void setBgColor(int bgColor) {
         this.mBgColor = bgColor;
-    }
-
-    /**
-     * Set backgroundImage for LayoutView
-     *
-     * @param bgImage
-     */
-    public void setBgImage(String bgImage) {
-        if (TextUtils.isEmpty(bgImage))
-            this.mBgImage = "";
-        else
-            this.mBgImage = bgImage;
     }
 
     public void setAspectRatio(float aspectRatio) {
@@ -224,7 +209,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
      */
     @Override
     public boolean requireLayoutView() {
-        return mBgColor != 0 || !TextUtils.isEmpty(mBgImage);
+        return mBgColor != 0 || mLayoutViewBindListener != null;
     }
 
     public abstract void layoutViews(RecyclerView.Recycler recycler, RecyclerView.State state,
@@ -271,10 +256,10 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         void onBind(View layoutView, BaseLayoutHelper baseLayoutHelper);
     }
 
-    private static LayoutViewBindListener sLayoutViewBindListener;
+    private LayoutViewBindListener mLayoutViewBindListener;
 
-    public static void setLayoutViewBindListener(LayoutViewBindListener bindListener) {
-        sLayoutViewBindListener = bindListener;
+    public void setLayoutViewBindListener(LayoutViewBindListener bindListener) {
+        mLayoutViewBindListener = bindListener;
     }
 
     @Override
@@ -284,8 +269,8 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         layoutView.layout(mLayoutRegion.left, mLayoutRegion.top, mLayoutRegion.right, mLayoutRegion.bottom);
         layoutView.setBackgroundColor(mBgColor);
 
-        if (sLayoutViewBindListener != null) {
-            sLayoutViewBindListener.onBind(layoutView, this);
+        if (mLayoutViewBindListener != null) {
+            mLayoutViewBindListener.onBind(layoutView, this);
         }
 
         // reset region rectangle
