@@ -1247,6 +1247,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
                     mSpaceMeasured = false;
                     mSpaceMeasuring = true;
                 }
+            }else if (getItemCount() == 0){
+                measuredSize = 0;
+                mSpaceMeasured = true;
+                mSpaceMeasuring = false;
             }
         }
 
