@@ -92,10 +92,13 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
         else {
             layoutState.skipCurrentPosition();
         }
+
         if (view == null) {
             result.mFinished = true;
             return;
         }
+
+        helper.getChildViewHolder(mFixView).setIsRecyclable(false);
 
         mDoNormalHandle = state.isPreLayout();
 
@@ -131,11 +134,8 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
         super.beforeLayout(recycler, state, helper);
 
         if (mFixView != null && helper.isViewHolderUpdated(mFixView)) {
-            // recycle view for later usage
+            // remove view, not recycle
             helper.removeChildView(mFixView);
-            recycler.recycleView(mFixView);
-            mFixView.setTranslationX(0);
-            mFixView.setTranslationY(0);
             mFixView.setOnTouchListener(null);
             mFixView = null;
         }
@@ -176,6 +176,7 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
                 }
             } else {
                 mFixView = recycler.getViewForPosition(mPos);
+                helper.getChildViewHolder(mFixView).setIsRecyclable(false);
                 doMeasureAndLayout(mFixView, helper);
                 helper.addFixedView(mFixView);
                 mFixView.setTranslationX(mTransitionX);
@@ -201,11 +202,8 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
     public void onClear(LayoutManagerHelper helper) {
         super.onClear(helper);
         if (mFixView != null) {
-            mFixView.setTranslationX(0);
-            mFixView.setTranslationY(0);
             mFixView.setOnTouchListener(null);
             helper.removeChildView(mFixView);
-            helper.recycleView(mFixView);
             mFixView = null;
         }
     }
