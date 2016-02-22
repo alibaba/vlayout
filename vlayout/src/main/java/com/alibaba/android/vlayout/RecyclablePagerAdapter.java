@@ -19,7 +19,11 @@ public abstract class RecyclablePagerAdapter<VH extends RecyclerView.ViewHolder>
 
     public RecyclablePagerAdapter(RecyclerView.Adapter<VH> adapter, RecyclerView.RecycledViewPool pool) {
         this.mAdapter = adapter;
-        this.mRecycledViewPool = new InnerRecycledViewPool(pool);
+        if (pool instanceof InnerRecycledViewPool) {
+            this.mRecycledViewPool = (InnerRecycledViewPool) pool;
+        } else {
+            this.mRecycledViewPool = new InnerRecycledViewPool(pool);
+        }
     }
 
     @Override
