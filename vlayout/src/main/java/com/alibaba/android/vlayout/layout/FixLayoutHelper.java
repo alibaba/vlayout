@@ -93,7 +93,6 @@ public class FixLayoutHelper extends BaseLayoutHelper {
     @Override
     public void onRangeChange(int start, int end) {
         this.mPos = start;
-        mFixView = null;
     }
 
     @Override
@@ -163,9 +162,16 @@ public class FixLayoutHelper extends BaseLayoutHelper {
         super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
 
         // disabled if mPos is negative number
-        if (mPos < 0) return;
+        if (mPos < 0) {
+            return;
+        }
 
         if (mDoNormalHandle && state.isPreLayout()) {
+            if (mFixView != null) {
+                helper.removeChildView(mFixView);
+                recycler.recycleView(mFixView);
+            }
+
             mFixView = null;
             return;
         }

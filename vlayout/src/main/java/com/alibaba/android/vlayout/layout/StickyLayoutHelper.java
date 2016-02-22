@@ -220,7 +220,7 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
         if (mPos < 0) return;
 
         if (!mDoNormalHandle && mPos >= startPosition && mPos <= endPosition) {
-            // Log.i("TEST", "abnormal pos: " + mPos + " start: " + startPosition + " end: " + endPosition);
+            Log.i("TEST", "abnormal pos: " + mPos + " start: " + startPosition + " end: " + endPosition);
         }
 
         if (mDoNormalHandle || state.isPreLayout()) {
@@ -240,8 +240,14 @@ public class StickyLayoutHelper extends BaseLayoutHelper {
             if (mFixView.getParent() == null) {
                 helper.addFixedView(mFixView);
             } else {
-                helper.removeChildView(mFixView);
-                helper.addFixedView(mFixView);
+                if ((mStickyStart && endPosition >= mPos) || (!mStickyStart && startPosition <= mPos)) {
+                    helper.showView(mFixView);
+                    helper.addFixedView(mFixView);
+                } else {
+                    helper.removeChildView(mFixView);
+                    helper.recycleView(mFixView);
+                    mFixView = null;
+                }
             }
         } else {
             final View eView = helper.findViewByPosition(mPos);

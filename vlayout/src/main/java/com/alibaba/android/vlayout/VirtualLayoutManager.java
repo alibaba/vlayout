@@ -336,7 +336,6 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         }
 
         mFixedContainer.layout(0, 0, mFixedContainer.getMeasuredWidth(), mFixedContainer.getMeasuredHeight());
-        // removeView(mFixedContainer);
 
         runPreLayout(recycler, state);
 
@@ -346,21 +345,26 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             e.printStackTrace();
             throw e;
         } finally {
-            // addOffFlowView(mFixedContainer, false);
+            // MaX_VALUE means invalidate scrolling offset - no scroll
             runPostLayout(recycler, state, Integer.MAX_VALUE); // hack to indicate its an initial layout
         }
 
+
         if ((mNestedScrolling || mNoScrolling) && mSpaceMeasuring) {
+            // measure required, so do measure
             mSpaceMeasured = true;
+            // get last child
             int childCount = getChildCount();
             View lastChild = getChildAt(childCount - 1);
             if (lastChild != null) {
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) lastChild.getLayoutParams();
+                // found the end of last child view
                 mMeasuredFullSpace = getDecoratedBottom(lastChild) + params.bottomMargin + computeAlignOffset(lastChild, true, false);
 
                 if (mRecyclerView != null && mNestedScrolling) {
                     ViewParent parent = mRecyclerView.getParent();
                     if (parent instanceof View) {
+                        // make sure the fullspace be the min value of measured space and parent's height
                         mMeasuredFullSpace = Math.min(mMeasuredFullSpace, ((View) parent).getMeasuredHeight());
                     }
                 }
@@ -369,6 +373,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             }
             mSpaceMeasuring = false;
             if (mRecyclerView != null && getItemCount() > 0) {
+                // relayout
                 mRecyclerView.post(new Runnable() {
                     @Override
                     public void run() {
