@@ -754,7 +754,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     }
 
 
-    void ensureLayoutStateExpose() {
+    protected void ensureLayoutStateExpose() {
         if (mLayoutState == null) {
             mLayoutState = new LayoutState();
         }

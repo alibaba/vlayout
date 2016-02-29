@@ -70,7 +70,16 @@ public final class InnerRecycledViewPool extends RecyclerView.RecycledViewPool {
         }
 
         return holder;
+    }
 
+
+    public int size() {
+        int count = 0;
+        for (int val : mScrapLength.values()) {
+            count += val;
+        }
+
+        return count;
     }
 
     /**
