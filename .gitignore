@@ -3,8 +3,8 @@ local.properties
 build/
 .idea/libraries
 .idea/workspace.xml
+.idea/gradle.xml
 vlayout.iml
 examples/examples.iml
-extension/extension.iml
 vlayout/vlayout-vlayout.iml
 vlayout/vlayout.iml
