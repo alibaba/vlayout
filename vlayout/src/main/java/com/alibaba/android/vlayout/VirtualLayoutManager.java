@@ -35,7 +35,7 @@ import java.util.Map;
  */
 
 public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements LayoutManagerHelper {
-    private static final String TAG = "VirtualLayoutManager";
+    protected static final String TAG = "VirtualLayoutManager";
 
     private static final String TRACE_LAYOUT = "VLM onLayoutChildren";
     private static final String TRACE_SCROLL = "VLM scroll";
@@ -51,14 +51,16 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     public static final int VERTICAL = OrientationHelper.VERTICAL;
 
 
-    private OrientationHelper mOrientationHelper;
-    private OrientationHelper mSecondaryOrientationHelper;
+    protected OrientationHelper mOrientationHelper;
+    protected OrientationHelper mSecondaryOrientationHelper;
 
     private RecyclerView mRecyclerView;
 
     private boolean mNoScrolling = false;
 
     private boolean mNestedScrolling = false;
+
+    private int mMaxMeasureSize = -1;
 
     public VirtualLayoutManager(@NonNull final Context context) {
         this(context, VERTICAL);
@@ -95,6 +97,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
     public void setNestedScrolling(boolean nestedScrolling) {
+        setNestedScrolling(nestedScrolling, -1);
+    }
+
+    public void setNestedScrolling(boolean nestedScrolling, int maxMeasureSize) {
         this.mNestedScrolling = nestedScrolling;
         mSpaceMeasuring = mSpaceMeasured = false;
         mMeasuredFullSpace = 0;
@@ -311,7 +317,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             mNested = 0;
             final int startPosition = findFirstVisibleItemPosition();
             final int endPosition = findLastVisibleItemPosition();
-            for (LayoutHelper layoutHelper : mHelperFinder) {
+            for (LayoutHelper layoutHelper : mHelperFinder.reverse()) {
                 try {
                     layoutHelper.afterLayout(recycler, state, startPosition, endPosition, scrolled, this);
                 } catch (Exception e) {
@@ -326,6 +332,14 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+        if (mRecycler == null) {
+            mRecycler = recycler;
+        }
+
+        if (mState == null) {
+            mState = state;
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             Trace.beginSection(TRACE_LAYOUT);
         }
@@ -390,6 +404,20 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         }
     }
 
+
+    private RecyclerView.Recycler mRecycler;
+    private RecyclerView.State mState;
+
+    public void updateScrollingOffset(int doffset) {
+        if (mRecycler == null || mState == null) {
+            return;
+        }
+
+        mLayoutState
+
+    }
+
+
     @Override
     protected int scrollInternalBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -400,7 +428,27 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
         int scrolled = 0;
         try {
-            scrolled = super.scrollInternalBy(dy, recycler, state);
+            if (!mNoScrolling) {
+                scrolled = super.scrollInternalBy(dy, recycler, state);
+            } else {
+                if (getChildCount() == 0 || dy == 0) {
+                    return 0;
+                }
+
+                mLayoutState.mRecycle = true;
+                ensureLayoutStateExpose();
+                final int layoutDirection = dy > 0 ? LayoutState.LAYOUT_END : LayoutState.LAYOUT_START;
+                final int absDy = Math.abs(dy);
+                updateLayoutStateExpose(layoutDirection, absDy, true, state);
+                final int freeScroll = mLayoutState.mScrollingOffset;
+
+                final int consumed = freeScroll + fill(recycler, mLayoutState, state, false);
+                if (consumed < 0) {
+                    return 0;
+                }
+                scrolled = absDy > consumed ? layoutDirection * consumed : dy;
+                // mOrientationHelper.offsetChildren(-scrolled);
+            }
         } catch (Exception e) {
             Log.w(TAG, Log.getStackTraceString(e), e);
             if (sDebuggable)
@@ -1227,9 +1275,13 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         int initialSize = MAX_NO_SCROLLING_SIZE;
 
         if (mRecyclerView != null && mNestedScrolling) {
-            ViewParent parent = mRecyclerView.getParent();
-            if (parent instanceof View) {
-                initialSize = ((View) parent).getMeasuredHeight();
+            if (mMaxMeasureSize > 0) {
+                initialSize = mMaxMeasureSize;
+            } else {
+                ViewParent parent = mRecyclerView.getParent();
+                if (parent instanceof View) {
+                    initialSize = ((View) parent).getMeasuredHeight();
+                }
             }
         }
 
@@ -1252,7 +1304,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
                     mSpaceMeasured = false;
                     mSpaceMeasuring = true;
                 }
-            }else if (getItemCount() == 0){
+            } else if (getItemCount() == 0) {
                 measuredSize = 0;
                 mSpaceMeasured = true;
                 mSpaceMeasuring = false;

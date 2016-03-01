@@ -56,7 +56,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * It does not keep state after layout is complete but we still keep a reference to re-use
      * the same object.
      */
-    private LayoutState mLayoutState;
+    protected LayoutState mLayoutState;
 
     /**
      * Many calculations are made depending on orientation. To keep it clean, this interface
@@ -825,8 +825,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         requestLayout();
     }
 
-    private void updateLayoutStateExpose(int layoutDirection, int requiredSpace,
-                                         boolean canUseExistingSpace, RecyclerView.State state) {
+    protected void updateLayoutStateExpose(int layoutDirection, int requiredSpace,
+                                           boolean canUseExistingSpace, RecyclerView.State state) {
         mLayoutState.mExtra = getExtraLayoutSpace(state);
         mLayoutState.mLayoutDirection = layoutDirection;
         int fastScrollSpace;
@@ -1499,6 +1499,12 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
          * {@link #mExtra} is not considered to avoid recycling visible children.
          */
         public int mExtra = 0;
+
+
+        /**
+         * Used when Layout is fixed scrolling
+         */
+        public int mFixOffset = 0;
 
         /**
          * Equal to {@link RecyclerView.State#isPreLayout()}. When consuming scrap, if this value
