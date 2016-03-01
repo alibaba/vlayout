@@ -413,11 +413,12 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             return;
         }
 
-        mLayoutState
-
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected int scrollInternalBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {

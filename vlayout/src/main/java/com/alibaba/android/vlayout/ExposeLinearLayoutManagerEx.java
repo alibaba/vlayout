@@ -897,13 +897,21 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         return scrollInternalBy(dy, recycler, state);
     }
 
-
+    /**
+     * Handle scroll event internally, cover both horizontal and vertical
+     *
+     * @param dy       Pixel that will be scrolled
+     * @param recycler Recycler hold recycled views
+     * @param state    Current {@link RecyclerView} state, hold whether in preLayout, etc.
+     * @return The actual scrolled pixel, it may not be the same as {@code dy}, like when reaching the edge of view
+     */
     protected int scrollInternalBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
         if (getChildCount() == 0 || dy == 0) {
             return 0;
         }
 
 
+        // indicate whether need recycle in this pass, true when scrolling, false when layout
         mLayoutState.mRecycle = true;
         ensureLayoutStateExpose();
         final int layoutDirection = dy > 0 ? LayoutState.LAYOUT_END : LayoutState.LAYOUT_START;
