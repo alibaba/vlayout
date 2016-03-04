@@ -12,7 +12,7 @@ import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
 
 
 /**
- * Created by villadora on 15/8/10.
+ * LayoutHelper layouts views as linear/ListView
  */
 public class LinearLayoutHelper extends BaseLayoutHelper {
 

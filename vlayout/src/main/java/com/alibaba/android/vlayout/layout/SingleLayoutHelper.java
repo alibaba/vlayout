@@ -10,7 +10,7 @@ import com.alibaba.android.vlayout.VirtualLayoutManager;
 import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 
 /**
- * Created by villadora on 15/8/31.
+ * LayoutHelper contains only one view
  */
 public class SingleLayoutHelper extends ColumnLayoutHelper {
 

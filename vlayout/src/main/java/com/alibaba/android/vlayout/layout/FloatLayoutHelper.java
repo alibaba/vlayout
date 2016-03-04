@@ -21,7 +21,7 @@ import static com.alibaba.android.vlayout.layout.FixLayoutHelper.TOP_RIGHT;
 /**
  * Created by villadora on 15/8/28.
  */
-public class FloatLayoutHelper extends BaseLayoutHelper {
+public class FloatLayoutHelper extends FixAreaLayoutHelper {
 
     private static final String TAG = "FloatLayoutHelper";
 
@@ -226,45 +226,45 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
         int left, top, right, bottom;
 
         if (mAlignType == TOP_RIGHT) {
-            top = helper.getPaddingTop() + mY;
-            right = helper.getContentWidth() - helper.getPaddingRight() - mX;
+            top = helper.getPaddingTop() + mY + mAdjuster.top;
+            right = helper.getContentWidth() - helper.getPaddingRight() - mX - mAdjuster.right;
             left = right - params.leftMargin - params.rightMargin - view.getMeasuredWidth();
             bottom = top + params.topMargin + params.bottomMargin + view.getMeasuredHeight();
         } else if (mAlignType == BOTTOM_LEFT) {
-            left = helper.getPaddingLeft() + mX;
-            bottom = helper.getContentHeight() - helper.getPaddingBottom() - mY;
+            left = helper.getPaddingLeft() + mX + mAdjuster.left;
+            bottom = helper.getContentHeight() - helper.getPaddingBottom() - mY - mAdjuster.bottom;
             right = left + params.leftMargin + params.rightMargin + view.getMeasuredWidth();
             top = bottom - view.getMeasuredHeight() - params.topMargin - params.bottomMargin;
         } else if (mAlignType == BOTTOM_RIGHT) {
-            right = helper.getContentWidth() - helper.getPaddingRight() - mX;
-            bottom = helper.getContentHeight() - helper.getPaddingBottom() - mY;
+            right = helper.getContentWidth() - helper.getPaddingRight() - mX - mAdjuster.right;
+            bottom = helper.getContentHeight() - helper.getPaddingBottom() - mY - mAdjuster.bottom;
             left = right - (layoutInVertical ? orientationHelper.getDecoratedMeasurementInOther(view) : orientationHelper.getDecoratedMeasurement(view));
             top = bottom - (layoutInVertical ? orientationHelper.getDecoratedMeasurement(view) : orientationHelper.getDecoratedMeasurementInOther(view));
         } else {
             // TOP_LEFT
-            left = helper.getPaddingLeft() + mX;
-            top = helper.getPaddingTop() + mY;
+            left = helper.getPaddingLeft() + mX + mAdjuster.left;
+            top = helper.getPaddingTop() + mY + mAdjuster.top;
             right = left + (layoutInVertical ? orientationHelper.getDecoratedMeasurementInOther(view) : orientationHelper.getDecoratedMeasurement(view));
             bottom = top + (layoutInVertical ? orientationHelper.getDecoratedMeasurement(view) : orientationHelper.getDecoratedMeasurementInOther(view));
         }
 
-        if (left < helper.getPaddingLeft()) {
-            left = helper.getPaddingLeft();
+        if (left < helper.getPaddingLeft() + mAdjuster.left) {
+            left = helper.getPaddingLeft() + mAdjuster.left;
             right = left + (layoutInVertical ? orientationHelper.getDecoratedMeasurementInOther(view) : orientationHelper.getDecoratedMeasurement(view));
         }
 
-        if (right > helper.getContentWidth() - helper.getPaddingRight()) {
-            right = helper.getContentWidth() - helper.getPaddingRight();
+        if (right > helper.getContentWidth() - helper.getPaddingRight() - mAdjuster.right) {
+            right = helper.getContentWidth() - helper.getPaddingRight() - mAdjuster.right;
             left = right - params.leftMargin - params.rightMargin - view.getMeasuredWidth();
         }
 
-        if (top < helper.getPaddingTop()) {
-            top = helper.getPaddingTop();
+        if (top < helper.getPaddingTop() + mAdjuster.top) {
+            top = helper.getPaddingTop() + mAdjuster.top;
             bottom = top + (layoutInVertical ? orientationHelper.getDecoratedMeasurement(view) : orientationHelper.getDecoratedMeasurementInOther(view));
         }
 
-        if (bottom > helper.getContentHeight() - helper.getPaddingBottom()) {
-            bottom = helper.getContentHeight() - helper.getPaddingBottom();
+        if (bottom > helper.getContentHeight() - helper.getPaddingBottom() - mAdjuster.bottom) {
+            bottom = helper.getContentHeight() - helper.getPaddingBottom() - mAdjuster.bottom;
             top = bottom - (layoutInVertical ? orientationHelper.getDecoratedMeasurement(view) : orientationHelper.getDecoratedMeasurementInOther(view));
         }
 
@@ -338,15 +338,15 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
                         int height = v.getHeight();
                         int translateY = rParentY - height / 2;
                         int translateX = rParentX - width / 2;
-                        int curTranslateX = translateX - v.getLeft() - leftMargin;
+                        int curTranslateX = translateX - v.getLeft() - leftMargin - mAdjuster.left;
                         v.setTranslationX(curTranslateX);
-                        int curTranslateY = translateY - v.getTop() - topMargin;
-                        if (curTranslateY + v.getHeight() + v.getTop() + bottomMargin > parentViewHeight) {
+                        int curTranslateY = translateY - v.getTop() - topMargin - mAdjuster.top;
+                        if (curTranslateY + v.getHeight() + v.getTop() + bottomMargin + mAdjuster.bottom > parentViewHeight) {
                             curTranslateY = parentViewHeight - v.getHeight()
-                                    - v.getTop() - bottomMargin;
+                                    - v.getTop() - bottomMargin - mAdjuster.bottom;
                         }
-                        if (curTranslateY + v.getTop() - topMargin < 0) {
-                            curTranslateY = -v.getTop() + topMargin;
+                        if (curTranslateY + v.getTop() - topMargin - mAdjuster.top < 0) {
+                            curTranslateY = -v.getTop() + topMargin + mAdjuster.top;
                         }
                         v.setTranslationY(curTranslateY);
                     }
@@ -366,12 +366,12 @@ public class FloatLayoutHelper extends BaseLayoutHelper {
             if (v.getTranslationX() + v.getWidth() / 2 + v.getLeft() > parentViewWidth / 2) {
                 animator = ObjectAnimator.ofFloat(v, "translationX",
                         v.getTranslationX(), parentViewWidth - v.getWidth()
-                                - v.getLeft() - rightMargin);
-                mTransitionX = parentViewWidth - v.getWidth() - v.getLeft() - rightMargin;
+                                - v.getLeft() - rightMargin - mAdjuster.right);
+                mTransitionX = parentViewWidth - v.getWidth() - v.getLeft() - rightMargin - mAdjuster.right;
             } else {
                 animator = ObjectAnimator.ofFloat(v, "translationX",
-                        v.getTranslationX(), -v.getLeft() + leftMargin);
-                mTransitionX = -v.getLeft() + leftMargin;
+                        v.getTranslationX(), -v.getLeft() + leftMargin + mAdjuster.left);
+                mTransitionX = -v.getLeft() + leftMargin + mAdjuster.left;
             }
 
             mTransitionY = (int) v.getTranslationY();

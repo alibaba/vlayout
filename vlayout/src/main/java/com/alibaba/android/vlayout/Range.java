@@ -1,11 +1,13 @@
 package com.alibaba.android.vlayout;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * Created by villadora on 15/8/12.
+ * Range object
  */
 public final class Range<T extends Comparable<? super T>> {
 
@@ -331,7 +333,11 @@ public final class Range<T extends Comparable<? super T>> {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(mLower, mUpper);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return Objects.hash(mLower, mUpper);
+        }
+
+        return Arrays.hashCode(new Object[]{mLower, mUpper});
     }
 
     private final T mLower;

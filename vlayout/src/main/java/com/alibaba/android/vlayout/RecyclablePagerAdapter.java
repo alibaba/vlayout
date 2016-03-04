@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.alibaba.android.vlayout.extend.InnerRecycledViewPool;
 
 /**
- * Created by villadora on 15/12/7.
+ * PagerAdapter which use RecycledPool, used for nested ViewPager.
  */
 public abstract class RecyclablePagerAdapter<VH extends RecyclerView.ViewHolder> extends PagerAdapter {
 

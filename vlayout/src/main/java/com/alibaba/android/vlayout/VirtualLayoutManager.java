@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.alibaba.android.vlayout.layout.DefaultLayoutHelper;
+import com.alibaba.android.vlayout.layout.FixAreaAdjuster;
+import com.alibaba.android.vlayout.layout.FixAreaLayoutHelper;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -66,26 +68,26 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         this(context, VERTICAL);
     }
 
+    /**
+     * @param context     Context
+     * @param orientation Layout orientation. Should be {@link #HORIZONTAL} or {@link
+     *                    #VERTICAL}.
+     */
     public VirtualLayoutManager(@NonNull final Context context, int orientation) {
         this(context, orientation, false);
     }
 
     /**
-     * @param context     Current context, will be used to access resources.
-     * @param orientation Layout orientation. Should be {@link #HORIZONTAL} or {@link
-     *                    #VERTICAL}.
+     * @param context       Current context, will be used to access resources.
+     * @param orientation   Layout orientation. Should be {@link #HORIZONTAL} or {@link
+     *                      #VERTICAL}.
+     * @param reverseLayout whether should reverse data
      */
     public VirtualLayoutManager(@NonNull final Context context, int orientation, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         this.mOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation);
         this.mSecondaryOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation == VERTICAL ? HORIZONTAL : VERTICAL);
         setHelperFinder(new RangeLayoutHelperFinder());
-
-
-        this.mFixedContainer = new FixedLayout(this, context);
-        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        attachViewHolder(params, new LayoutViewHolder(mFixedContainer));
-        this.mFixedContainer.setLayoutParams(params);
     }
 
 
@@ -129,15 +131,25 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         requestLayout();
     }
 
+    private FixAreaAdjuster mFixAreaAdjustor = FixAreaAdjuster.mDefaultAdjuster;
+
+    public void setFixOffset(int left, int top, int right, int bottom) {
+        mFixAreaAdjustor = new FixAreaAdjuster(left, top, right, bottom);
+    }
+
+
     /*
      * Temp hashMap
      */
     private HashMap<Integer, LayoutHelper> newHelpersSet = new HashMap<>();
     private HashMap<Integer, LayoutHelper> oldHelpersSet = new HashMap<>();
 
+    /**
+     * Update layoutHelpers, data changes will cause layoutHelpers change
+     *
+     * @param helpers group of layoutHelpers
+     */
     public void setLayoutHelpers(@Nullable List<LayoutHelper> helpers) {
-
-
         for (LayoutHelper helper : mHelperFinder) {
             oldHelpersSet.put(System.identityHashCode(helper), helper);
         }
@@ -147,6 +159,11 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             int start = 0;
             for (int i = 0; i < helpers.size(); i++) {
                 LayoutHelper helper = helpers.get(i);
+
+                if (helper instanceof FixAreaLayoutHelper) {
+                    ((FixAreaLayoutHelper) helper).setAdjuster(mFixAreaAdjustor);
+                }
+
                 if (helper.getItemCount() > 0) {
                     helper.setRange(start, start + helper.getItemCount() - 1);
                 } else {
@@ -297,9 +314,6 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     private int mNested = 0;
 
 
-    @NonNull
-    private ViewGroup mFixedContainer;
-
     private void runPreLayout(RecyclerView.Recycler recycler, RecyclerView.State state) {
 
         if (mNested == 0) {
@@ -349,7 +363,6 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             mSpaceMeasuring = true;
         }
 
-        mFixedContainer.layout(0, 0, mFixedContainer.getMeasuredWidth(), mFixedContainer.getMeasuredHeight());
 
         runPreLayout(recycler, state);
 
@@ -448,7 +461,6 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
                     return 0;
                 }
                 scrolled = absDy > consumed ? layoutDirection * consumed : dy;
-                // mOrientationHelper.offsetChildren(-scrolled);
             }
         } catch (Exception e) {
             Log.w(TAG, Log.getStackTraceString(e), e);
@@ -587,6 +599,11 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
 
+    /**
+     * Return current position related to the top, only works when scrolling from the top
+     *
+     * @return offset from current position to original top of RecycledView
+     */
     public int getOffsetToStart() {
         if (getChildCount() == 0) return -1;
 
@@ -868,6 +885,14 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             return mLayoutState.mRecycle;
         }
 
+
+        /**
+         * This {@link #layoutChunk(RecyclerView.Recycler, RecyclerView.State, LayoutState, com.alibaba.android.vlayout.layout.LayoutChunkResult)} pass is in layouting or scrolling
+         */
+        public boolean isRefreshLayout() {
+            return mLayoutState.mOnRefresLayout;
+        }
+
         /**
          * Number of pixels that we should fill, in the layout direction.
          */
@@ -1076,7 +1101,6 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     @Override
     public void removeChildView(View child) {
         removeView(child);
-        mFixedContainer.removeView(child);
     }
 
     @Override
@@ -1266,7 +1290,6 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     @Override
     public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
         if (!mNoScrolling && !mNestedScrolling) {
-            mFixedContainer.measure(widthSpec, heightSpec);
 
             super.onMeasure(recycler, state, widthSpec, heightSpec);
             return;
@@ -1315,10 +1338,8 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
         if (getOrientation() == VERTICAL) {
             super.onMeasure(recycler, state, widthSpec, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST));
-            mFixedContainer.measure(widthSpec, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST));
         } else {
             super.onMeasure(recycler, state, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST), heightSpec);
-            mFixedContainer.measure(View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST), heightSpec);
         }
     }
 }

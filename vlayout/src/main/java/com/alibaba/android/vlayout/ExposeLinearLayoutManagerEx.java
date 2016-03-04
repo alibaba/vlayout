@@ -298,6 +298,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         onAnchorReady(state, mAnchorInfo);
         detachAndScrapAttachedViews(recycler);
         mLayoutState.mIsPreLayout = state.isPreLayout();
+        mLayoutState.mOnRefresLayout = true;
         if (mAnchorInfo.mLayoutFromEnd) {
             // fill towards start
             updateLayoutStateToFillStartExpose(mAnchorInfo);
@@ -504,6 +505,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             mLayoutState.mExtra = scrapExtraStart;
             mLayoutState.mAvailable = 0;
             mLayoutState.mCurrentPosition += mShouldReverseLayoutExpose ? 1 : -1;
+            mLayoutState.mOnRefresLayout = true;
             fill(recycler, mLayoutState, state, false);
         }
 
@@ -513,6 +515,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             mLayoutState.mExtra = scrapExtraEnd;
             mLayoutState.mAvailable = 0;
             mLayoutState.mCurrentPosition += mShouldReverseLayoutExpose ? -1 : 1;
+            mLayoutState.mOnRefresLayout = true;
             fill(recycler, mLayoutState, state, false);
         }
         mLayoutState.mScrapList = null;
@@ -919,6 +922,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         updateLayoutStateExpose(layoutDirection, absDy, true, state);
         final int freeScroll = mLayoutState.mScrollingOffset;
 
+        mLayoutState.mOnRefresLayout = false;
 
         final int consumed = freeScroll + fill(recycler, mLayoutState, state, false);
         if (consumed < 0) {
@@ -1296,6 +1300,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         updateLayoutStateExpose(layoutDir, maxScroll, false, state);
         mLayoutState.mScrollingOffset = LayoutState.SCOLLING_OFFSET_NaN;
         mLayoutState.mRecycle = false;
+        mLayoutState.mOnRefresLayout = false;
         fill(recycler, mLayoutState, state, true);
         final View nextFocus;
         if (layoutDir == LayoutState.LAYOUT_START) {
@@ -1461,6 +1466,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         public final static int ITEM_DIRECTION_TAIL = 1;
 
         final static int SCOLLING_OFFSET_NaN = Integer.MIN_VALUE;
+
+        public boolean mOnRefresLayout = false;
 
         /**
          * We may not want to recycle children in some cases (e.g. layout)
@@ -1763,7 +1770,12 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
                 mIsInvalid.setAccessible(true);
                 mIsRemoved = RecyclerView.ViewHolder.class.getDeclaredMethod("isRemoved");
                 mIsRemoved.setAccessible(true);
-                mIsChanged = RecyclerView.ViewHolder.class.getDeclaredMethod("isChanged");
+                try {
+                    mIsChanged = RecyclerView.ViewHolder.class.getDeclaredMethod("isChanged");
+                } catch (NoSuchMethodException e) {
+                    mIsChanged = RecyclerView.ViewHolder.class.getDeclaredMethod("isUpdated");
+                }
+
                 mIsChanged.setAccessible(true);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
