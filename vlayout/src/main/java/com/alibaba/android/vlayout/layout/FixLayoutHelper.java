@@ -186,7 +186,6 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
                 if (mFixView.getParent() == null) {
                     helper.addFixedView(mFixView);
                 } else {
-                    helper.showView(mFixView);
                     // helper.removeChildView(mFixView);
                     helper.addFixedView(mFixView);
                 }

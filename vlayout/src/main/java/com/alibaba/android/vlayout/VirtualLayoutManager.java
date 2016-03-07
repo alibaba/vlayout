@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import com.alibaba.android.vlayout.layout.BaseLayoutHelper;
 import com.alibaba.android.vlayout.layout.DefaultLayoutHelper;
 import com.alibaba.android.vlayout.layout.FixAreaAdjuster;
 import com.alibaba.android.vlayout.layout.FixAreaLayoutHelper;
@@ -144,6 +145,8 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     private HashMap<Integer, LayoutHelper> newHelpersSet = new HashMap<>();
     private HashMap<Integer, LayoutHelper> oldHelpersSet = new HashMap<>();
 
+    private BaseLayoutHelper.LayoutViewBindListener mLayoutViewBindListener;
+
     /**
      * Update layoutHelpers, data changes will cause layoutHelpers change
      *
@@ -163,6 +166,11 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
                 if (helper instanceof FixAreaLayoutHelper) {
                     ((FixAreaLayoutHelper) helper).setAdjuster(mFixAreaAdjustor);
                 }
+
+                if (helper instanceof BaseLayoutHelper && mLayoutViewBindListener != null) {
+                    ((BaseLayoutHelper) helper).setLayoutViewBindListener(mLayoutViewBindListener);
+                }
+
 
                 if (helper.getItemCount() > 0) {
                     helper.setRange(start, start + helper.getItemCount() - 1);
@@ -331,7 +339,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             mNested = 0;
             final int startPosition = findFirstVisibleItemPosition();
             final int endPosition = findLastVisibleItemPosition();
-            for (LayoutHelper layoutHelper : mHelperFinder.reverse()) {
+            for (LayoutHelper layoutHelper : mHelperFinder) {
                 try {
                     layoutHelper.afterLayout(recycler, state, startPosition, endPosition, scrolled, this);
                 } catch (Exception e) {
@@ -430,6 +438,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
 
     /**
+     * Entry method for scrolling
      * {@inheritDoc}
      */
     @Override
@@ -566,6 +575,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             // break as no item consumed
             result.mFinished = true;
         } else {
+            // Update height consumed in each layoutChunck pass
             final int positionAfterLayout = layoutState.mCurrentPosition - layoutState.mItemDirection;
             final int consumed = result.mIgnoreConsumed ? 0 : result.mConsumed;
 
@@ -950,7 +960,9 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         }
 
         public View next(RecyclerView.Recycler recycler) {
-            return mLayoutState.next(recycler);
+            View next = mLayoutState.next(recycler);
+            // set recycler
+            return next;
         }
 
         public View retrieve(RecyclerView.Recycler recycler, int position) {
