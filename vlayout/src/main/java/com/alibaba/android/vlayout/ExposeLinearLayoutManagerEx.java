@@ -1537,6 +1537,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         public LayoutState() {
             try {
                 vhIsRemoved = RecyclerView.ViewHolder.class.getDeclaredMethod("isRemoved");
+                vhIsRemoved.setAccessible(true);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
