@@ -1750,11 +1750,6 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     }
 
 
-    @Override
-    public void detachAndScrapAttachedViews(RecyclerView.Recycler recycler) {
-        super.detachAndScrapAttachedViews(recycler);
-    }
-
     static class ViewHolderWrapper {
         private RecyclerView.ViewHolder mHolder;
 
@@ -1762,6 +1757,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         private static Method mIsInvalid;
         private static Method mIsRemoved;
         private static Method mIsChanged;
+        private static Method mSetFlags;
+
 
         static {
             try {
@@ -1771,6 +1768,10 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
                 mIsInvalid.setAccessible(true);
                 mIsRemoved = RecyclerView.ViewHolder.class.getDeclaredMethod("isRemoved");
                 mIsRemoved.setAccessible(true);
+
+                mSetFlags = RecyclerView.ViewHolder.class.getDeclaredMethod("setFlags", int.class, int.class);
+                mSetFlags.setAccessible(true);
+
                 try {
                     mIsChanged = RecyclerView.ViewHolder.class.getDeclaredMethod("isChanged");
                 } catch (NoSuchMethodException e) {
@@ -1779,6 +1780,17 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
                 mIsChanged.setAccessible(true);
             } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        public static void setFlags(RecyclerView.ViewHolder viewHolder, int flags, int mask) {
+            try {
+                mSetFlags.invoke(viewHolder, flags, mask);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
@@ -1824,10 +1836,22 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             return true;
         }
 
+        void setFlags(int flags, int mask) {
+            try {
+                mSetFlags.invoke(mHolder, flags, mask);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         public boolean requireUpdated() {
             return isInvalid() || isRemoved() || isChanged();
         }
+
+
 
     }
 
