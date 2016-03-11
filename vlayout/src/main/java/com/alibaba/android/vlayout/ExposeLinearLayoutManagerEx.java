@@ -56,7 +56,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * It does not keep state after layout is complete but we still keep a reference to re-use
      * the same object.
      */
-    private LayoutState mLayoutState;
+    protected LayoutState mLayoutState;
 
     /**
      * Many calculations are made depending on orientation. To keep it clean, this interface
@@ -298,6 +298,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         onAnchorReady(state, mAnchorInfo);
         detachAndScrapAttachedViews(recycler);
         mLayoutState.mIsPreLayout = state.isPreLayout();
+        mLayoutState.mOnRefresLayout = true;
         if (mAnchorInfo.mLayoutFromEnd) {
             // fill towards start
             updateLayoutStateToFillStartExpose(mAnchorInfo);
@@ -504,6 +505,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             mLayoutState.mExtra = scrapExtraStart;
             mLayoutState.mAvailable = 0;
             mLayoutState.mCurrentPosition += mShouldReverseLayoutExpose ? 1 : -1;
+            mLayoutState.mOnRefresLayout = true;
             fill(recycler, mLayoutState, state, false);
         }
 
@@ -513,6 +515,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             mLayoutState.mExtra = scrapExtraEnd;
             mLayoutState.mAvailable = 0;
             mLayoutState.mCurrentPosition += mShouldReverseLayoutExpose ? -1 : 1;
+            mLayoutState.mOnRefresLayout = true;
             fill(recycler, mLayoutState, state, false);
         }
         mLayoutState.mScrapList = null;
@@ -754,7 +757,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     }
 
 
-    void ensureLayoutStateExpose() {
+    protected void ensureLayoutStateExpose() {
         if (mLayoutState == null) {
             mLayoutState = new LayoutState();
         }
@@ -825,8 +828,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         requestLayout();
     }
 
-    private void updateLayoutStateExpose(int layoutDirection, int requiredSpace,
-                                         boolean canUseExistingSpace, RecyclerView.State state) {
+    protected void updateLayoutStateExpose(int layoutDirection, int requiredSpace,
+                                           boolean canUseExistingSpace, RecyclerView.State state) {
         mLayoutState.mExtra = getExtraLayoutSpace(state);
         mLayoutState.mLayoutDirection = layoutDirection;
         int fastScrollSpace;
@@ -897,13 +900,21 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         return scrollInternalBy(dy, recycler, state);
     }
 
-
+    /**
+     * Handle scroll event internally, cover both horizontal and vertical
+     *
+     * @param dy       Pixel that will be scrolled
+     * @param recycler Recycler hold recycled views
+     * @param state    Current {@link RecyclerView} state, hold whether in preLayout, etc.
+     * @return The actual scrolled pixel, it may not be the same as {@code dy}, like when reaching the edge of view
+     */
     protected int scrollInternalBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
         if (getChildCount() == 0 || dy == 0) {
             return 0;
         }
 
 
+        // indicate whether need recycle in this pass, true when scrolling, false when layout
         mLayoutState.mRecycle = true;
         ensureLayoutStateExpose();
         final int layoutDirection = dy > 0 ? LayoutState.LAYOUT_END : LayoutState.LAYOUT_START;
@@ -911,6 +922,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         updateLayoutStateExpose(layoutDirection, absDy, true, state);
         final int freeScroll = mLayoutState.mScrollingOffset;
 
+        mLayoutState.mOnRefresLayout = false;
 
         final int consumed = freeScroll + fill(recycler, mLayoutState, state, false);
         if (consumed < 0) {
@@ -1288,6 +1300,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         updateLayoutStateExpose(layoutDir, maxScroll, false, state);
         mLayoutState.mScrollingOffset = LayoutState.SCOLLING_OFFSET_NaN;
         mLayoutState.mRecycle = false;
+        mLayoutState.mOnRefresLayout = false;
         fill(recycler, mLayoutState, state, true);
         final View nextFocus;
         if (layoutDir == LayoutState.LAYOUT_START) {
@@ -1454,6 +1467,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
         final static int SCOLLING_OFFSET_NaN = Integer.MIN_VALUE;
 
+        public boolean mOnRefresLayout = false;
+
         /**
          * We may not want to recycle children in some cases (e.g. layout)
          */
@@ -1499,6 +1514,12 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
          * {@link #mExtra} is not considered to avoid recycling visible children.
          */
         public int mExtra = 0;
+
+
+        /**
+         * Used when Layout is fixed scrolling
+         */
+        public int mFixOffset = 0;
 
         /**
          * Equal to {@link RecyclerView.State#isPreLayout()}. When consuming scrap, if this value
@@ -1749,7 +1770,12 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
                 mIsInvalid.setAccessible(true);
                 mIsRemoved = RecyclerView.ViewHolder.class.getDeclaredMethod("isRemoved");
                 mIsRemoved.setAccessible(true);
-                mIsChanged = RecyclerView.ViewHolder.class.getDeclaredMethod("isChanged");
+                try {
+                    mIsChanged = RecyclerView.ViewHolder.class.getDeclaredMethod("isChanged");
+                } catch (NoSuchMethodException e) {
+                    mIsChanged = RecyclerView.ViewHolder.class.getDeclaredMethod("isUpdated");
+                }
+
                 mIsChanged.setAccessible(true);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();

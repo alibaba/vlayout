@@ -632,8 +632,9 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         final int adapterPosition = recycler.convertPreLayoutPositionToPostLayout(pos);
         if (adapterPosition == -1) {
-            return 1;
+            return 0;
         }
+
         return mSpanSizeLookup.getSpanSize(adapterPosition);
     }
 
@@ -658,6 +659,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             span = 0;
             spanDiff = 1;
         }
+
         for (int i = start; i != end; i += diff) {
             View view = mSet[i];
             int spanSize = getSpanSize(recycler, state, layoutManagerHelper.getPosition(view));

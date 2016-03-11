@@ -14,6 +14,8 @@ import java.util.List;
 import static com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
 /**
+ * Helper class to handle different layouts in {@link VirtualLayoutManager}
+ *
  * @author villadora
  * @date 2015-8-14
  * @since 1.0.0
@@ -24,9 +26,11 @@ public abstract class LayoutHelper {
     public static final Range<Integer> RANGE_ALL = Range.create(Integer.MIN_VALUE, Integer.MAX_VALUE);
     public static final Range<Integer> RANGE_EMPTY = Range.create(-1, -1);
 
+    /**
+     * Range for this layoutHelper, intialize with EMPTY
+     */
     @NonNull
     Range<Integer> mRange = RANGE_EMPTY;
-
 
     int mZIndex = 0;
 

@@ -15,7 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import com.alibaba.android.vlayout.layout.BaseLayoutHelper;
 import com.alibaba.android.vlayout.layout.DefaultLayoutHelper;
+import com.alibaba.android.vlayout.layout.FixAreaAdjuster;
+import com.alibaba.android.vlayout.layout.FixAreaLayoutHelper;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,7 +38,7 @@ import java.util.Map;
  */
 
 public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements LayoutManagerHelper {
-    private static final String TAG = "VirtualLayoutManager";
+    protected static final String TAG = "VirtualLayoutManager";
 
     private static final String TRACE_LAYOUT = "VLM onLayoutChildren";
     private static final String TRACE_SCROLL = "VLM scroll";
@@ -51,8 +54,8 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     public static final int VERTICAL = OrientationHelper.VERTICAL;
 
 
-    private OrientationHelper mOrientationHelper;
-    private OrientationHelper mSecondaryOrientationHelper;
+    protected OrientationHelper mOrientationHelper;
+    protected OrientationHelper mSecondaryOrientationHelper;
 
     private RecyclerView mRecyclerView;
 
@@ -60,30 +63,32 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     private boolean mNestedScrolling = false;
 
+    private int mMaxMeasureSize = -1;
+
     public VirtualLayoutManager(@NonNull final Context context) {
         this(context, VERTICAL);
     }
 
+    /**
+     * @param context     Context
+     * @param orientation Layout orientation. Should be {@link #HORIZONTAL} or {@link
+     *                    #VERTICAL}.
+     */
     public VirtualLayoutManager(@NonNull final Context context, int orientation) {
         this(context, orientation, false);
     }
 
     /**
-     * @param context     Current context, will be used to access resources.
-     * @param orientation Layout orientation. Should be {@link #HORIZONTAL} or {@link
-     *                    #VERTICAL}.
+     * @param context       Current context, will be used to access resources.
+     * @param orientation   Layout orientation. Should be {@link #HORIZONTAL} or {@link
+     *                      #VERTICAL}.
+     * @param reverseLayout whether should reverse data
      */
     public VirtualLayoutManager(@NonNull final Context context, int orientation, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         this.mOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation);
         this.mSecondaryOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation == VERTICAL ? HORIZONTAL : VERTICAL);
         setHelperFinder(new RangeLayoutHelperFinder());
-
-
-        this.mFixedContainer = new FixedLayout(this, context);
-        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        attachViewHolder(params, new LayoutViewHolder(mFixedContainer));
-        this.mFixedContainer.setLayoutParams(params);
     }
 
 
@@ -95,6 +100,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
     public void setNestedScrolling(boolean nestedScrolling) {
+        setNestedScrolling(nestedScrolling, -1);
+    }
+
+    public void setNestedScrolling(boolean nestedScrolling, int maxMeasureSize) {
         this.mNestedScrolling = nestedScrolling;
         mSpaceMeasuring = mSpaceMeasured = false;
         mMeasuredFullSpace = 0;
@@ -123,15 +132,27 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         requestLayout();
     }
 
+    private FixAreaAdjuster mFixAreaAdjustor = FixAreaAdjuster.mDefaultAdjuster;
+
+    public void setFixOffset(int left, int top, int right, int bottom) {
+        mFixAreaAdjustor = new FixAreaAdjuster(left, top, right, bottom);
+    }
+
+
     /*
      * Temp hashMap
      */
     private HashMap<Integer, LayoutHelper> newHelpersSet = new HashMap<>();
     private HashMap<Integer, LayoutHelper> oldHelpersSet = new HashMap<>();
 
+    private BaseLayoutHelper.LayoutViewBindListener mLayoutViewBindListener;
+
+    /**
+     * Update layoutHelpers, data changes will cause layoutHelpers change
+     *
+     * @param helpers group of layoutHelpers
+     */
     public void setLayoutHelpers(@Nullable List<LayoutHelper> helpers) {
-
-
         for (LayoutHelper helper : mHelperFinder) {
             oldHelpersSet.put(System.identityHashCode(helper), helper);
         }
@@ -141,6 +162,16 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             int start = 0;
             for (int i = 0; i < helpers.size(); i++) {
                 LayoutHelper helper = helpers.get(i);
+
+                if (helper instanceof FixAreaLayoutHelper) {
+                    ((FixAreaLayoutHelper) helper).setAdjuster(mFixAreaAdjustor);
+                }
+
+                if (helper instanceof BaseLayoutHelper && mLayoutViewBindListener != null) {
+                    ((BaseLayoutHelper) helper).setLayoutViewBindListener(mLayoutViewBindListener);
+                }
+
+
                 if (helper.getItemCount() > 0) {
                     helper.setRange(start, start + helper.getItemCount() - 1);
                 } else {
@@ -291,9 +322,6 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     private int mNested = 0;
 
 
-    @NonNull
-    private ViewGroup mFixedContainer;
-
     private void runPreLayout(RecyclerView.Recycler recycler, RecyclerView.State state) {
 
         if (mNested == 0) {
@@ -326,6 +354,14 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+        if (mRecycler == null) {
+            mRecycler = recycler;
+        }
+
+        if (mState == null) {
+            mState = state;
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             Trace.beginSection(TRACE_LAYOUT);
         }
@@ -335,8 +371,6 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             mSpaceMeasuring = true;
         }
 
-        mFixedContainer.layout(0, 0, mFixedContainer.getMeasuredWidth(), mFixedContainer.getMeasuredHeight());
-        // removeView(mFixedContainer);
 
         runPreLayout(recycler, state);
 
@@ -346,21 +380,26 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             e.printStackTrace();
             throw e;
         } finally {
-            // addOffFlowView(mFixedContainer, false);
+            // MaX_VALUE means invalidate scrolling offset - no scroll
             runPostLayout(recycler, state, Integer.MAX_VALUE); // hack to indicate its an initial layout
         }
 
+
         if ((mNestedScrolling || mNoScrolling) && mSpaceMeasuring) {
+            // measure required, so do measure
             mSpaceMeasured = true;
+            // get last child
             int childCount = getChildCount();
             View lastChild = getChildAt(childCount - 1);
             if (lastChild != null) {
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) lastChild.getLayoutParams();
+                // found the end of last child view
                 mMeasuredFullSpace = getDecoratedBottom(lastChild) + params.bottomMargin + computeAlignOffset(lastChild, true, false);
 
                 if (mRecyclerView != null && mNestedScrolling) {
                     ViewParent parent = mRecyclerView.getParent();
                     if (parent instanceof View) {
+                        // make sure the fullspace be the min value of measured space and parent's height
                         mMeasuredFullSpace = Math.min(mMeasuredFullSpace, ((View) parent).getMeasuredHeight());
                     }
                 }
@@ -369,6 +408,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             }
             mSpaceMeasuring = false;
             if (mRecyclerView != null && getItemCount() > 0) {
+                // relayout
                 mRecyclerView.post(new Runnable() {
                     @Override
                     public void run() {
@@ -385,6 +425,22 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         }
     }
 
+
+    private RecyclerView.Recycler mRecycler;
+    private RecyclerView.State mState;
+
+    public void updateScrollingOffset(int doffset) {
+        if (mRecycler == null || mState == null) {
+            return;
+        }
+
+    }
+
+
+    /**
+     * Entry method for scrolling
+     * {@inheritDoc}
+     */
     @Override
     protected int scrollInternalBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -395,7 +451,31 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
         int scrolled = 0;
         try {
-            scrolled = super.scrollInternalBy(dy, recycler, state);
+            if (!mNoScrolling) {
+                scrolled = super.scrollInternalBy(dy, recycler, state);
+            } else {
+                if (getChildCount() == 0 || dy == 0) {
+                    return 0;
+                }
+
+                mLayoutState.mRecycle = true;
+                ensureLayoutStateExpose();
+                final int layoutDirection = dy > 0 ? LayoutState.LAYOUT_END : LayoutState.LAYOUT_START;
+                final int absDy = Math.abs(dy);
+                updateLayoutStateExpose(layoutDirection, absDy, true, state);
+                final int freeScroll = mLayoutState.mScrollingOffset;
+
+                final int consumed = freeScroll + fill(recycler, mLayoutState, state, false);
+                if (consumed < 0) {
+                    return 0;
+                }
+                scrolled = absDy > consumed ? layoutDirection * consumed : dy;
+            }
+        } catch (Exception e) {
+            Log.w(TAG, Log.getStackTraceString(e), e);
+            if (sDebuggable)
+                throw e;
+
         } finally {
             runPostLayout(recycler, state, scrolled);
         }
@@ -495,6 +575,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             // break as no item consumed
             result.mFinished = true;
         } else {
+            // Update height consumed in each layoutChunck pass
             final int positionAfterLayout = layoutState.mCurrentPosition - layoutState.mItemDirection;
             final int consumed = result.mIgnoreConsumed ? 0 : result.mConsumed;
 
@@ -528,6 +609,11 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
 
+    /**
+     * Return current position related to the top, only works when scrolling from the top
+     *
+     * @return offset from current position to original top of RecycledView
+     */
     public int getOffsetToStart() {
         if (getChildCount() == 0) return -1;
 
@@ -809,6 +895,14 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             return mLayoutState.mRecycle;
         }
 
+
+        /**
+         * This {@link #layoutChunk(RecyclerView.Recycler, RecyclerView.State, LayoutState, com.alibaba.android.vlayout.layout.LayoutChunkResult)} pass is in layouting or scrolling
+         */
+        public boolean isRefreshLayout() {
+            return mLayoutState.mOnRefresLayout;
+        }
+
         /**
          * Number of pixels that we should fill, in the layout direction.
          */
@@ -866,7 +960,9 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         }
 
         public View next(RecyclerView.Recycler recycler) {
-            return mLayoutState.next(recycler);
+            View next = mLayoutState.next(recycler);
+            // set recycler
+            return next;
         }
 
         public View retrieve(RecyclerView.Recycler recycler, int position) {
@@ -1017,7 +1113,6 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     @Override
     public void removeChildView(View child) {
         removeView(child);
-        mFixedContainer.removeView(child);
     }
 
     @Override
@@ -1207,7 +1302,6 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     @Override
     public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
         if (!mNoScrolling && !mNestedScrolling) {
-            mFixedContainer.measure(widthSpec, heightSpec);
 
             super.onMeasure(recycler, state, widthSpec, heightSpec);
             return;
@@ -1217,9 +1311,13 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         int initialSize = MAX_NO_SCROLLING_SIZE;
 
         if (mRecyclerView != null && mNestedScrolling) {
-            ViewParent parent = mRecyclerView.getParent();
-            if (parent instanceof View) {
-                initialSize = ((View) parent).getMeasuredHeight();
+            if (mMaxMeasureSize > 0) {
+                initialSize = mMaxMeasureSize;
+            } else {
+                ViewParent parent = mRecyclerView.getParent();
+                if (parent instanceof View) {
+                    initialSize = ((View) parent).getMeasuredHeight();
+                }
             }
         }
 
@@ -1242,16 +1340,18 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
                     mSpaceMeasured = false;
                     mSpaceMeasuring = true;
                 }
+            } else if (getItemCount() == 0) {
+                measuredSize = 0;
+                mSpaceMeasured = true;
+                mSpaceMeasuring = false;
             }
         }
 
 
         if (getOrientation() == VERTICAL) {
             super.onMeasure(recycler, state, widthSpec, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST));
-            mFixedContainer.measure(widthSpec, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST));
         } else {
             super.onMeasure(recycler, state, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST), heightSpec);
-            mFixedContainer.measure(View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST), heightSpec);
         }
     }
 }

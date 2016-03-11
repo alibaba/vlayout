@@ -121,7 +121,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
         if (mNumLanes <= 1) {
             mEachGap = mLastGap = 0;
-        }else if (mNumLanes == 2) {
+        } else if (mNumLanes == 2) {
             mEachGap = totalGaps;
             mLastGap = 0;
         } else {
@@ -183,8 +183,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
         final int defaultNewViewLine = layoutState.getOffset();
 
-        boolean isStartLine = false, isEndLine = false;
         while (layoutState.hasMore(state) && !mRemainingSpans.isEmpty() && !isOutOfRange(layoutState.getCurrentPosition())) {
+            boolean isEndLine = false;
             View view = layoutState.next(recycler);
 
             if (view == null)
@@ -203,7 +203,6 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 currentSpan = mSpans[spanIndex];
             }
 
-            isStartLine = isStartLine || (position == getRange().getLower());
             isEndLine = isEndLine || (position == getRange().getUpper());
 
             helper.addChildView(layoutState, view);
@@ -225,13 +224,17 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             if (layoutState.getLayoutDirection() == LAYOUT_END) {
                 start = currentSpan.getEndLine(defaultNewViewLine, orientationHelper);
 
-                if (!isStartLine)
+                if (currentSpan.mViews.size() != 0)
                     start += (layoutInVertical ? mVGap : mHGap);
                 else
                     start += layoutInVertical ? mMarginTop : mMarginLeft;
                 end = start + orientationHelper.getDecoratedMeasurement(view);
             } else {
-                end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mVGap : mHGap);
+                if (currentSpan.mViews.size() != 0)
+                    end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mVGap : mHGap);
+                else
+                    end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mMarginBottom : mMarginRight);
+
                 start = end - orientationHelper.getDecoratedMeasurement(view);
             }
 
@@ -265,7 +268,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
         if (isOutOfRange(layoutState.getCurrentPosition())) {
             // reach the end of layout, cache the gap
-            // TODO: how to reatin gap
+            // TODO: how to retain gap
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
                 for (Span span : mSpans) {
                     if (span.mCachedStart != INVALID_LINE) {
@@ -287,7 +290,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 result.mConsumed = layoutState.getOffset() - maxStart;
             } else {
                 final int minStart = getMinStart(orientationHelper.getEndAfterPadding(), orientationHelper);
-                result.mConsumed = layoutState.getOffset() - minStart;
+                result.mConsumed = layoutState.getOffset() - minStart + (layoutInVertical ? mMarginTop : mMarginLeft);
             }
         } else {
             if (!isOutOfRange(layoutState.getCurrentPosition()) && layoutState.hasMore(state)) {
@@ -295,8 +298,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 result.mConsumed = minEnd - layoutState.getOffset();
             } else {
                 final int maxEnd = getMaxEnd(orientationHelper.getEndAfterPadding(), orientationHelper);
-                result.mConsumed = maxEnd - layoutState.getOffset();
+                result.mConsumed = maxEnd - layoutState.getOffset() + (layoutInVertical ? mMarginBottom : mMarginRight);
             }
+
         }
     }
 
@@ -320,7 +324,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
         final View child = helper.findViewByPosition(offset + getRange().getLower());
 
-        if (child == null) return 0;
+        if (child == null) {
+            return 0;
+        }
 
         if (layoutInVertical) {
             // in middle nothing need to do
@@ -339,6 +345,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                     return maxStart - orientationHelper.getDecoratedStart(child);
                 }
             }
+
         } else {
 
         }
