@@ -141,5 +141,13 @@ public final class InnerRecycledViewPool extends RecyclerView.RecycledViewPool {
                 Log.w(TAG, Log.getStackTraceString(e), e);
             }
         }
+
+        if (holder instanceof Closeable) {
+            try {
+                ((Closeable) holder).close();
+            } catch (Exception e) {
+                Log.w(TAG, Log.getStackTraceString(e), e);
+            }
+        }
     }
 }

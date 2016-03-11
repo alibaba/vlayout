@@ -62,6 +62,7 @@ afterEvaluate { project ->
             packageVersion = packageVersion + '-SNAPSHOT'
         }
 
+        println('package version: ' + packageVersion)
         pom.project {
             pom.groupId = GROUP
             pom.artifactId = ARTIFACT

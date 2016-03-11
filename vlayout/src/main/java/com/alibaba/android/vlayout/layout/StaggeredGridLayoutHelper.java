@@ -184,7 +184,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         final int defaultNewViewLine = layoutState.getOffset();
 
         while (layoutState.hasMore(state) && !mRemainingSpans.isEmpty() && !isOutOfRange(layoutState.getCurrentPosition())) {
-            boolean isEndLine = false;
+            boolean isStartLine = false, isEndLine = false;
             View view = layoutState.next(recycler);
 
             if (view == null)
@@ -203,7 +203,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 currentSpan = mSpans[spanIndex];
             }
 
-            isEndLine = isEndLine || (position == getRange().getUpper());
+
+            isStartLine = position < mNumLanes;
+            isEndLine = getRange().getUpper() - position - 1 < mNumLanes;
 
             helper.addChildView(layoutState, view);
 
@@ -224,17 +226,16 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             if (layoutState.getLayoutDirection() == LAYOUT_END) {
                 start = currentSpan.getEndLine(defaultNewViewLine, orientationHelper);
 
-                if (currentSpan.mViews.size() != 0)
-                    start += (layoutInVertical ? mVGap : mHGap);
-                else
+                if (isStartLine)
                     start += layoutInVertical ? mMarginTop : mMarginLeft;
+                else
+                    start += (layoutInVertical ? mVGap : mHGap);
                 end = start + orientationHelper.getDecoratedMeasurement(view);
             } else {
-                if (currentSpan.mViews.size() != 0)
-                    end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mVGap : mHGap);
-                else
+                if (isEndLine)
                     end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mMarginBottom : mMarginRight);
-
+                else
+                    end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mVGap : mHGap);
                 start = end - orientationHelper.getDecoratedMeasurement(view);
             }
 

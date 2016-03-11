@@ -31,7 +31,10 @@ import java.util.Map;
 
 /**
  * A {@link android.support.v7.widget.RecyclerView.LayoutManager} implementation which provides
- * a virtual layout for actual views
+ * a virtual layout for actual views.
+ *
+ * NOTE: it will change {@link android.support.v7.widget.RecyclerView.RecycledViewPool}
+ * for RecyclerView.
  *
  * @author villadora
  * @since 1.0.0
@@ -64,6 +67,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     private boolean mNestedScrolling = false;
 
     private int mMaxMeasureSize = -1;
+
 
     public VirtualLayoutManager(@NonNull final Context context) {
         this(context, VERTICAL);
@@ -354,14 +358,6 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        if (mRecycler == null) {
-            mRecycler = recycler;
-        }
-
-        if (mState == null) {
-            mState = state;
-        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             Trace.beginSection(TRACE_LAYOUT);
         }
@@ -424,18 +420,6 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             Trace.endSection();
         }
     }
-
-
-    private RecyclerView.Recycler mRecycler;
-    private RecyclerView.State mState;
-
-    public void updateScrollingOffset(int doffset) {
-        if (mRecycler == null || mState == null) {
-            return;
-        }
-
-    }
-
 
     /**
      * Entry method for scrolling
@@ -1208,6 +1192,45 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         }
     }
 
+
+    @Override
+    public void detachAndScrapAttachedViews(RecyclerView.Recycler recycler) {
+        int childCount = this.getChildCount();
+
+        for (int i = childCount - 1; i >= 0; --i) {
+            View v = this.getChildAt(i);
+            RecyclerView.ViewHolder holder = getChildViewHolder(v);
+            if (holder instanceof CacheViewHolder && ((CacheViewHolder) holder).needCached()) {
+                // mark not invalid, ignore DataSetChange(), make the ViewHolder itself to maitain the data
+                ViewHolderWrapper.setFlags(holder, 0, FLAG_INVALID);
+            }
+        }
+
+
+        super.detachAndScrapAttachedViews(recycler);
+    }
+
+    @Override
+    public void detachAndScrapViewAt(int index, RecyclerView.Recycler recycler) {
+        View child = getChildAt(index);
+        RecyclerView.ViewHolder holder = getChildViewHolder(child);
+        if (holder instanceof CacheViewHolder && ((CacheViewHolder) holder).needCached()) {
+            // mark not invalid
+            ViewHolderWrapper.setFlags(holder, 0, FLAG_INVALID);
+        }
+
+        super.detachAndScrapViewAt(index, recycler);
+    }
+
+    @Override
+    public void detachAndScrapView(View child, RecyclerView.Recycler recycler) {
+        super.detachAndScrapView(child, recycler);
+    }
+
+    public interface CacheViewHolder {
+        boolean needCached();
+    }
+
     @Override
     public int getContentWidth() {
         return super.getWidth();
@@ -1290,7 +1313,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
 
     // when set no scrolling, the max size should have limit
-    private static final int MAX_NO_SCROLLING_SIZE = Integer.MAX_VALUE >> 2;
+    private static final int MAX_NO_SCROLLING_SIZE = Integer.MAX_VALUE >> 4;
 
     private boolean mSpaceMeasured = false;
 
