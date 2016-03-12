@@ -96,7 +96,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
     /**
      * {@inheritDoc}
      * <p/>
-     * Currently, this layout supports maximum children up to 4, otherwise {@link IllegalArgumentException}
+     * Currently, this layout supports maximum children up to 5, otherwise {@link IllegalArgumentException}
      * will be thrown
      *
      * @param start start position of items handled by this layoutHelper
@@ -104,8 +104,8 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
      */
     @Override
     public void onRangeChange(int start, int end) {
-        if (end - start > 3) {
-            throw new IllegalArgumentException("OnePlusNLayoutHelper only supports maximum 4 children now");
+        if (end - start > 4) {
+            throw new IllegalArgumentException("OnePlusNLayoutHelper only supports maximum 5 children now");
         }
     }
 
@@ -438,6 +438,113 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                 }
 
                 handleStateOnResult(result, child1, child2, child3, child4);
+            } else if (count == 5) {
+                final View child1 = mChildrenViews[0];
+                final VirtualLayoutManager.LayoutParams lp1 = new VirtualLayoutManager.LayoutParams(child1.getLayoutParams());
+                final View child2 = helper.getReverseLayout() ? mChildrenViews[4] : mChildrenViews[1];
+                final VirtualLayoutManager.LayoutParams lp2 = new VirtualLayoutManager.LayoutParams(child2.getLayoutParams());
+                final View child3 = helper.getReverseLayout() ? mChildrenViews[3] : mChildrenViews[2];
+                final VirtualLayoutManager.LayoutParams lp3 = new VirtualLayoutManager.LayoutParams(child3.getLayoutParams());
+                final View child4 = helper.getReverseLayout() ? mChildrenViews[2] : mChildrenViews[3];
+                final VirtualLayoutManager.LayoutParams lp4 = new VirtualLayoutManager.LayoutParams(child4.getLayoutParams());
+                final View child5 = helper.getReverseLayout() ? mChildrenViews[1] : mChildrenViews[4];
+                final VirtualLayoutManager.LayoutParams lp5 = new VirtualLayoutManager.LayoutParams(child5.getLayoutParams());
+
+                final float weight1 = getViewMainWeight(lp1, 0);
+                final float weight2 = getViewMainWeight(lp1, 1);
+                final float weight3 = getViewMainWeight(lp1, 2);
+                final float weight4 = getViewMainWeight(lp1, 3);
+                final float weight5 = getViewMainWeight(lp1, 4);
+
+                if (layoutInVertical) {
+
+                    lp2.topMargin = lp1.topMargin;
+                    lp3.bottomMargin = lp4.bottomMargin = lp1.bottomMargin;
+                    lp3.leftMargin = lp2.leftMargin;
+                    lp4.rightMargin = lp2.rightMargin;
+                    lp5.rightMargin = lp2.rightMargin;
+
+                    if (!Float.isNaN(mAspectRatio)) {
+                        lp1.height = (int) ((parentWidth - parentHPadding) / mAspectRatio);
+                    }
+
+                    int availableSpace = parentWidth - parentHPadding - lp1.leftMargin - lp1.rightMargin - lp2.leftMargin
+                            - lp2.rightMargin;
+
+                    int width1 = Float.isNaN(weight1) ?
+                            (int) (availableSpace / 2.0f + 0.5f)
+                            : (int) (availableSpace * weight1 / 100 + 0.5f);
+                    int width2 = Float.isNaN(weight2) ? (int) (availableSpace - width1) :
+                            (int) (availableSpace * weight2 / 100 + 0.5f);
+
+                    int width3 = Float.isNaN(weight3) ? (int) ((width2 - lp3.rightMargin - lp4.leftMargin) / 3.0f + 0.5f)
+                            : (int) (availableSpace * weight3 / 100 + 0.5f);
+                    int width4 = Float.isNaN(weight4) ? (int) ((width2 - lp3.rightMargin - lp4.leftMargin) / 3.0f + 0.5f)
+                            : (int) (availableSpace * weight4 / 100 + 0.5f);
+                    int width5 = Float.isNaN(weight5) ? (int) ((width2 - lp3.rightMargin - lp4.leftMargin - width3 - width4))
+                            : (int) (availableSpace * weight5 / 100 + 0.5f);
+
+                    helper.measureChild(child1,
+                            MeasureSpec.makeMeasureSpec(width1 + lp1.leftMargin + lp1.rightMargin, MeasureSpec.EXACTLY),
+                            helper.getChildMeasureSpec(helper.getContentHeight(), lp1.height, true));
+
+                    int height1 = child1.getMeasuredHeight();
+                    int height2 = Float.isNaN(mRowWeight) ?
+                            (int) ((height1 - lp2.bottomMargin - lp3.topMargin) / 2.0f + 0.5f)
+                            : (int) ((height1 - lp2.bottomMargin - lp3.topMargin) * mRowWeight / 100 + 0.5f);
+                    int height3 = (int) ((height1 - lp2.bottomMargin - lp3.topMargin) - height2);
+
+                    helper.measureChild(child2,
+                            MeasureSpec.makeMeasureSpec(width2 + lp2.leftMargin + lp2.rightMargin, MeasureSpec.EXACTLY),
+                            MeasureSpec.makeMeasureSpec(height2 + lp2.topMargin + lp2.bottomMargin, MeasureSpec.EXACTLY));
+
+                    helper.measureChild(child3,
+                            MeasureSpec.makeMeasureSpec(width3 + lp3.leftMargin + lp3.rightMargin, MeasureSpec.EXACTLY),
+                            MeasureSpec.makeMeasureSpec(height3 + lp3.topMargin + lp3.bottomMargin, MeasureSpec.EXACTLY));
+
+                    helper.measureChild(child4,
+                            MeasureSpec.makeMeasureSpec(width4 + lp4.leftMargin + lp4.rightMargin, MeasureSpec.EXACTLY),
+                            MeasureSpec.makeMeasureSpec(height3 + lp4.topMargin + lp4.bottomMargin, MeasureSpec.EXACTLY));
+
+                    helper.measureChild(child5,
+                            MeasureSpec.makeMeasureSpec(width5 + lp5.leftMargin + lp5.rightMargin, MeasureSpec.EXACTLY),
+                            MeasureSpec.makeMeasureSpec(height3 + lp5.topMargin + lp5.bottomMargin, MeasureSpec.EXACTLY));
+
+                    mainConsumed = Math.max(height1 + lp1.topMargin + lp1.bottomMargin,
+                            height2 + lp2.topMargin + lp2.bottomMargin + Math.max(height3 + lp3.topMargin + lp3.bottomMargin,
+                                    height3 + lp4.topMargin + lp4.bottomMargin)) + getVerticalMargin();
+
+                    calculateRect(mainConsumed, mAreaRect, layoutState, helper);
+
+
+                    int right1 = mAreaRect.left + orientationHelper.getDecoratedMeasurementInOther(child1);
+                    layoutChild(child1, mAreaRect.left, mAreaRect.top,
+                            right1, mAreaRect.bottom, helper);
+
+                    int right2 = right1 + orientationHelper.getDecoratedMeasurementInOther(child2);
+                    layoutChild(child2, right1, mAreaRect.top, right2,
+                            mAreaRect.top + orientationHelper.getDecoratedMeasurement(child2),
+                            helper);
+
+                    int right3 = right1 + orientationHelper.getDecoratedMeasurementInOther(child3);
+                    layoutChild(child3, right1,
+                            mAreaRect.bottom - orientationHelper.getDecoratedMeasurement(child3),
+                            right3, mAreaRect.bottom, helper);
+
+                    int right4 = right3 + orientationHelper.getDecoratedMeasurementInOther(child4);
+                    layoutChild(child4, right3,
+                            mAreaRect.bottom - orientationHelper.getDecoratedMeasurement(child4),
+                            right3 + orientationHelper.getDecoratedMeasurementInOther(child4), mAreaRect.bottom, helper);
+
+                    layoutChild(child5, right4,
+                            mAreaRect.bottom - orientationHelper.getDecoratedMeasurement(child5),
+                            right4 + orientationHelper.getDecoratedMeasurementInOther(child5), mAreaRect.bottom, helper);
+                } else {
+                    // TODO: horizontal support
+                }
+
+                handleStateOnResult(result, child1, child2, child3, child4, child5);
+
             }
         }
 
