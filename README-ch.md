@@ -10,7 +10,9 @@ VirtualLayout是一个针对RecyclerView的LayoutManager扩展, 主要通过提�
 
 ## 使用
 
-引入aar依赖:
+
+
+版本请参考mvn repository上的最新版本，引入aar依赖:
 
 ```
 // gradle
@@ -85,15 +87,20 @@ public class MyAdapter extends VirtualLayoutManager {
 * SingleLayoutHelper: 通栏布局，只会显示一个组件View
 * OnePlusNLayoutHelper: 一拖N布局，可以配置1-5个子元素
 * StickyLayoutHelper: stikcy布局， 可以配置吸顶或者吸底
+* StaggeredGridLayoutHelper: 瀑布流布局，可配置间隔高度/宽度
 * 等待更多的布局支持
 
 #### 目前有的布局还不支持横向滑动，欢迎补充贡献。
 
 ### TODOs
 
-* 更多布局支持，瀑布流等
-* 横向滑动＋回收
-* 嵌套滑动和动画
+* 嵌套滑动
 * Horizontal Layout，目前只支持纵向布局
+
+
+### 扩展
+
+这个lib包含最基本基于RecyclerView搭建的布局和回收功能，在我们的tangram项目中还结合了动画，滑动, Banner, ViewPager等多种组合方式。
+使用和接入请联系 @灰风 THX!
 
 
