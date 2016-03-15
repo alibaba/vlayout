@@ -315,7 +315,6 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
 
             }
 
-            boolean handled = true;
             int action = event.getAction();
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
@@ -355,10 +354,9 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
                 case MotionEvent.ACTION_CANCEL:
                     doPullOverAnimation(v);
                     (v.getParent()).requestDisallowInterceptTouchEvent(false);
-                    handled = false;
                     break;
             }
-            return handled;
+            return isDrag;
         }
 
         private void doPullOverAnimation(final View v) {
