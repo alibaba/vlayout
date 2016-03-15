@@ -340,9 +340,9 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
                         int curTranslateX = translateX - v.getLeft() - leftMargin - mAdjuster.left;
                         v.setTranslationX(curTranslateX);
                         int curTranslateY = translateY - v.getTop() - topMargin/* - mAdjuster.top*/;
-                        if (curTranslateY + v.getHeight() + v.getTop() + bottomMargin + mAdjuster.bottom > parentViewHeight) {
+                        if (curTranslateY + v.getHeight() + v.getTop() + bottomMargin/* + mAdjuster.bottom */> parentViewHeight) {
                             curTranslateY = parentViewHeight - v.getHeight()
-                                    - v.getTop() - bottomMargin - mAdjuster.bottom;
+                                    - v.getTop() - bottomMargin/* - mAdjuster.bottom*/;
                         }
                         if (curTranslateY + v.getTop() - topMargin/* - mAdjuster.top*/ < 0) {
                             curTranslateY = -v.getTop() + topMargin/* + mAdjuster.top*/;
