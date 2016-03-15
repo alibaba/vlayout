@@ -1202,7 +1202,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             RecyclerView.ViewHolder holder = getChildViewHolder(v);
             if (holder instanceof CacheViewHolder && ((CacheViewHolder) holder).needCached()) {
                 // mark not invalid, ignore DataSetChange(), make the ViewHolder itself to maitain the data
-                ViewHolderWrapper.setFlags(holder, 0, FLAG_INVALID);
+                ViewHolderWrapper.setFlags(holder, 0, FLAG_INVALID |FLAG_UPDATED);
             }
         }
 
