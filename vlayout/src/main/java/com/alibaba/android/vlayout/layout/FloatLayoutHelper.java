@@ -315,7 +315,6 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
 
             }
 
-            boolean handled = true;
             int action = event.getAction();
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
@@ -340,13 +339,13 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
                         int translateX = rParentX - width / 2;
                         int curTranslateX = translateX - v.getLeft() - leftMargin - mAdjuster.left;
                         v.setTranslationX(curTranslateX);
-                        int curTranslateY = translateY - v.getTop() - topMargin - mAdjuster.top;
-                        if (curTranslateY + v.getHeight() + v.getTop() + bottomMargin + mAdjuster.bottom > parentViewHeight) {
+                        int curTranslateY = translateY - v.getTop() - topMargin/* - mAdjuster.top*/;
+                        if (curTranslateY + v.getHeight() + v.getTop() + bottomMargin/* + mAdjuster.bottom */> parentViewHeight) {
                             curTranslateY = parentViewHeight - v.getHeight()
-                                    - v.getTop() - bottomMargin - mAdjuster.bottom;
+                                    - v.getTop() - bottomMargin/* - mAdjuster.bottom*/;
                         }
-                        if (curTranslateY + v.getTop() - topMargin - mAdjuster.top < 0) {
-                            curTranslateY = -v.getTop() + topMargin + mAdjuster.top;
+                        if (curTranslateY + v.getTop() - topMargin/* - mAdjuster.top*/ < 0) {
+                            curTranslateY = -v.getTop() + topMargin/* + mAdjuster.top*/;
                         }
                         v.setTranslationY(curTranslateY);
                     }
@@ -355,10 +354,9 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
                 case MotionEvent.ACTION_CANCEL:
                     doPullOverAnimation(v);
                     (v.getParent()).requestDisallowInterceptTouchEvent(false);
-                    handled = false;
                     break;
             }
-            return handled;
+            return isDrag;
         }
 
         private void doPullOverAnimation(final View v) {
