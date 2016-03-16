@@ -1410,6 +1410,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
     static final int FLAG_INVALID = 1 << 2;
 
+    static final int FLAG_UPDATED = 1 << 1;
+
     private static Field vhField = null;
     private static Method vhSetFlags = null;
 
@@ -1850,7 +1852,6 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         public boolean requireUpdated() {
             return isInvalid() || isRemoved() || isChanged();
         }
-
 
 
     }
