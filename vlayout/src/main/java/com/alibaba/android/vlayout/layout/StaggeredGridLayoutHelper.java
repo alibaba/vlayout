@@ -207,7 +207,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
 
             // handle margin for start/end line
-            isStartLine = position < mNumLanes;
+            isStartLine = position - getRange().getLower() < mNumLanes;
             isEndLine = getRange().getUpper() - position - 1 < mNumLanes;
 
             helper.addChildView(layoutState, view);
