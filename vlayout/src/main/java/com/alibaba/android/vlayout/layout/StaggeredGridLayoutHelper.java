@@ -143,6 +143,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         if (startPosition > getRange().getUpper() || endPosition < getRange().getLower()) return;
 
         if (!state.isPreLayout() && helper.getChildCount() > 0) {
+            // call after doing layout, to check whether there is a gap between staggered layout and other layouts
             ViewCompat.postOnAnimation(helper.getChildAt(0), checkForGapsRunnable);
         }
     }
@@ -192,6 +193,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
             RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) view.getLayoutParams();
 
+            // find the span to put the view
             final int position = lp.getViewPosition();
             final int spanIndex = mLazySpanLookup.getSpan(position);
             Span currentSpan;
@@ -204,6 +206,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
 
 
+            // handle margin for start/end line
             isStartLine = position < mNumLanes;
             isEndLine = getRange().getUpper() - position - 1 < mNumLanes;
 
@@ -246,6 +249,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 currentSpan.prependToSpan(view, orientationHelper);
             }
 
+            // left, right in vertical layout
             final int otherStart =
                     ((currentSpan.mIndex == mNumLanes - 1) ?
                             currentSpan.mIndex * (mColLength + mEachGap) - mEachGap + mLastGap
@@ -273,13 +277,13 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
                 for (Span span : mSpans) {
                     if (span.mCachedStart != INVALID_LINE) {
-                        // span.mLastEdgeStart = span.mCachedStart;
+                        span.mLastEdgeStart = span.mCachedStart;
                     }
                 }
             } else {
                 for (Span span : mSpans) {
                     if (span.mCachedEnd != INVALID_LINE) {
-                        // span.mLastEdgeEnd = span.mCachedEnd;
+                        span.mLastEdgeEnd = span.mCachedEnd;
                     }
                 }
             }
@@ -383,7 +387,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         if (layoutManager.getReverseLayout()) {
             minPos = layoutManager.findLastVisibleItemPosition();
             maxPos = layoutManager.findFirstVisibleItemPosition();
-            alignPos = range.getUpper();
+            alignPos = range.getUpper() - 1;
         } else {
             minPos = layoutManager.findFirstVisibleItemPosition();
             maxPos = layoutManager.findLastCompletelyVisibleItemPosition();
