@@ -1879,27 +1879,29 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
         void ensureChildHelper() {
             try {
-                mInnerChildHelper = mChildHelperField.get(mLayoutManager);
-                if (mInnerChildHelper == null) return;
+                if (mInnerChildHelper == null) {
+                    mInnerChildHelper = mChildHelperField.get(mLayoutManager);
+                    if (mInnerChildHelper == null) return;
 
-                Class<?> helperClz = mInnerChildHelper.getClass();
-                mHideMethod = helperClz.getDeclaredMethod("hide", View.class);
-                mHideMethod.setAccessible(true);
-                mFindHiddenNonRemovedViewMethod = helperClz.getDeclaredMethod("findHiddenNonRemovedView", int.class, int.class);
-                mFindHiddenNonRemovedViewMethod.setAccessible(true);
-                mIsHideMethod = helperClz.getDeclaredMethod("isHidden", View.class);
-                mIsHideMethod.setAccessible(true);
+                    Class<?> helperClz = mInnerChildHelper.getClass();
+                    mHideMethod = helperClz.getDeclaredMethod("hide", View.class);
+                    mHideMethod.setAccessible(true);
+                    mFindHiddenNonRemovedViewMethod = helperClz.getDeclaredMethod("findHiddenNonRemovedView", int.class, int.class);
+                    mFindHiddenNonRemovedViewMethod.setAccessible(true);
+                    mIsHideMethod = helperClz.getDeclaredMethod("isHidden", View.class);
+                    mIsHideMethod.setAccessible(true);
 
-                Field bucketField = helperClz.getDeclaredField("mBucket");
-                bucketField.setAccessible(true);
+                    Field bucketField = helperClz.getDeclaredField("mBucket");
+                    bucketField.setAccessible(true);
 
-                mInnerBucket = bucketField.get(mInnerChildHelper);
-                mClearMethod = mInnerBucket.getClass().getDeclaredMethod("clear", int.class);
-                mClearMethod.setAccessible(true);
+                    mInnerBucket = bucketField.get(mInnerChildHelper);
+                    mClearMethod = mInnerBucket.getClass().getDeclaredMethod("clear", int.class);
+                    mClearMethod.setAccessible(true);
 
-                mHiddenViewField = helperClz.getDeclaredField("mHiddenViews");
-                mHiddenViewField.setAccessible(true);
-                mInnerHiddenView = (List) mHiddenViewField.get(mInnerChildHelper);
+                    mHiddenViewField = helperClz.getDeclaredField("mHiddenViews");
+                    mHiddenViewField.setAccessible(true);
+                    mInnerHiddenView = (List) mHiddenViewField.get(mInnerChildHelper);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
