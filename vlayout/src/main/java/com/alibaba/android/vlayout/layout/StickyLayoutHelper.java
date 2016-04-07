@@ -223,6 +223,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
         final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
 
+        // not normal flow,
         if (!mDoNormalHandle && mPos >= startPosition && mPos <= endPosition) {
             Log.i("TEST", "abnormal pos: " + mPos + " start: " + startPosition + " end: " + endPosition);
 
@@ -268,6 +269,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             if (mFixView != null) {
                 helper.removeChildView(mFixView);
             } else {
+                // mDoNormalHandle == true && mFixView == null
                 return;
             }
         }
@@ -289,8 +291,12 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                 }
             }
         } else {
+            // 1. normal flow to abnormal flow; 2. abnormal flow to normal flow
+
+            // (mDoNormalHandle && mFixView != null) || (!mDoNormalHandle && mFixView == null)
             View eView = mFixView;
             if (eView == null)
+                // !mDoNormalHandle && mFixView == null, find existing view
                 eView = helper.findViewByPosition(mPos);
 
             boolean normalHandle = false;
@@ -300,23 +306,29 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             if ((mStickyStart && endPosition >= mPos) || (!mStickyStart && startPosition <= mPos)) {
 
                 if (eView == null) {
+                    // TODO? why do condition here?
                     if (mOffset + (mStickyStart ? startAdjust : endAdjust) > 0)
                         normalHandle = true;
                     mFixView = recycler.getViewForPosition(mPos);
                     doMeasure(mFixView, helper);
                 } else if (mStickyStart && orientationHelper.getDecoratedStart(eView) >= orientationHelper.getStartAfterPadding() + mOffset + startAdjust) {
+                    // normal
                     normalHandle = true;
                     mFixView = eView;
                 } else if (!mStickyStart && orientationHelper.getDecoratedEnd(eView) <= orientationHelper.getEndAfterPadding() - mOffset - endAdjust) {
+                    // normal
                     normalHandle = true;
                     mFixView = eView;
                 } else {
+                    // abnormal
                     // TODO: reuse views
                     // mFixView = recycler.getViewForPosition(mPos);
                     mFixView = eView;
                 }
             }
 
+
+            // 拿到measure好的view, 同是也知道是处于normal/abnormal的状态
             if (mFixView != null) {
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) mFixView.getLayoutParams();
 
@@ -372,6 +384,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                         }
 
                         if (refer == null || index < 0) {
+                            // can not find normal view for insert
                             normalHandle = false;
                         }
 
@@ -437,6 +450,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                 layoutChild(mFixView, left, top, right, bottom, helper);
 
                 if (normalHandle) {
+                    // offset
                     if (index >= 0) {
                         helper.addChildView(mFixView, index);
                         mFixView = null;
