@@ -603,6 +603,11 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
         final View view = getChildAt(0);
 
+        if (view == null) {
+            //in some conditions, for exapmle, calling this method when outter activity destroy, may cause npe
+            return -1;
+        }
+
         int position = getPosition(view);
         final int idx = findRangeLength(Range.create(position, position));
         if (idx < 0 || idx >= mRangeLengths.size()) {
