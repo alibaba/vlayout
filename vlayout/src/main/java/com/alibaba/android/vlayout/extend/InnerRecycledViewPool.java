@@ -72,7 +72,7 @@ public final class InnerRecycledViewPool extends RecyclerView.RecycledViewPool {
         // change maxRecycledViews
         this.mMaxScrap.put(viewType, max);
         this.mScrapLength.put(viewType, 0);
-        super.setMaxRecycledViews(viewType, max);
+        mInnerPool.setMaxRecycledViews(viewType, max);
     }
 
     @Override
