@@ -123,7 +123,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             mEachGap = mLastGap = 0;
         } else if (mNumLanes == 2) {
             mEachGap = totalGaps;
-            mLastGap = 0;
+            mLastGap = totalGaps;
         } else {
             mEachGap = (int) (totalGaps / (mNumLanes - 1) + 0.5);
             mLastGap = totalGaps - (mNumLanes - 2) * mEachGap;
