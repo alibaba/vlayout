@@ -112,9 +112,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
         int availableWidth;
         if (helper.getOrientation() == VERTICAL) {
-            availableWidth = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight();
+            availableWidth = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - mMarginLeft - mMarginRight;
         } else {
-            availableWidth = helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom();
+            availableWidth = helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom() - mMarginTop - mMarginBottom;
         }
         mColLength = (int) ((availableWidth - mHGap * (mNumLanes - 1)) / mNumLanes + 0.5);
         int totalGaps = availableWidth - mColLength * mNumLanes;
@@ -250,13 +250,30 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
 
             // left, right in vertical layout
-            final int otherStart =
+            int otherStart =
                     ((currentSpan.mIndex == mNumLanes - 1) ?
                             currentSpan.mIndex * (mColLength + mEachGap) - mEachGap + mLastGap
                             : currentSpan.mIndex * (mColLength + mEachGap)) +
                             secondaryOrientationHelper.getStartAfterPadding();
 
-            final int otherEnd = otherStart + orientationHelper.getDecoratedMeasurementInOther(view);
+            if (currentSpan.mIndex == 0) {
+                if (layoutInVertical) {
+                    otherStart += mMarginLeft;
+                } else {
+                    otherStart += mMarginTop;
+                }
+            }
+
+            int otherEnd = otherStart + orientationHelper.getDecoratedMeasurementInOther(view);
+
+            if (currentSpan.mIndex == mNumLanes - 1) {
+                if (layoutInVertical) {
+                    otherEnd += mMarginRight;
+                } else {
+                    otherEnd += mMarginBottom;
+                    otherEnd += mMarginBottom;
+                }
+            }
 
             if (layoutInVertical) {
                 layoutChild(view, otherStart, start, otherEnd, end, helper);
@@ -467,7 +484,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     /**
      * Checks for gaps if we've reached to the top of the list.
-     * <p>
+     * <p/>
      * Intermediate gaps created by full span items are tracked via mLaidOutInvalidFullSpan field.
      */
     private View hasGapsToFix(VirtualLayoutManager layoutManager, final int position, final int alignLine) {
