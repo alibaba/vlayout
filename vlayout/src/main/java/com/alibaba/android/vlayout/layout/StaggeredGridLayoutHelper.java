@@ -271,7 +271,6 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                     otherEnd += mMarginRight;
                 } else {
                     otherEnd += mMarginBottom;
-                    otherEnd += mMarginBottom;
                 }
             }
 
