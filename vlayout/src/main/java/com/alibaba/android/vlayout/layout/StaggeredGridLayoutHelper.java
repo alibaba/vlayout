@@ -30,7 +30,7 @@ import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
  */
 public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
-    private static final String LOOKUP_BUNDLE_KEY = StaggeredGridLayoutHelper.class.getSimpleName() + "_LazySpanLookup";
+    private static final String LOOKUP_BUNDLE_KEY = "StaggeredGridLayoutHelper_LazySpanLookup";
 
     private static final int INVALID_SPAN_ID = Integer.MIN_VALUE;
     static final int INVALID_LINE = Integer.MIN_VALUE;

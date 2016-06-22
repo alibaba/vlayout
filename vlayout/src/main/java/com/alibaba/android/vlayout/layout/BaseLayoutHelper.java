@@ -16,7 +16,7 @@ import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
  */
 public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
-    private static final String TAG = BaseLayoutHelper.class.getSimpleName();
+    private static final String TAG = "BaseLayoutHelper";
 
     public static boolean DEBUG = false;
 

@@ -18,7 +18,7 @@ import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
  */
 public abstract class AbstractFullFillLayoutHelper extends BaseLayoutHelper {
 
-    private static final String TAG = AbstractFullFillLayoutHelper.class.getSimpleName();
+    private static final String TAG = "AbstractFullFillLayoutHelper";
 
     protected int getAllChildren(View[] toFill,
                                  RecyclerView.Recycler recycler, LayoutStateWrapper layoutState,
