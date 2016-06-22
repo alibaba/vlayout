@@ -7,11 +7,6 @@ android {
     compileSdkVersion Integer.parseInt(System.properties['compileSdkVersion'])
     buildToolsVersion System.properties['buildToolsVersion']
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
-
     defaultConfig {
         applicationId "com.tmall.wireless.tangram.example"
         minSdkVersion 14
