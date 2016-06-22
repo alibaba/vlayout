@@ -27,7 +27,7 @@ public final class InnerRecycledViewPool extends RecyclerView.RecycledViewPool {
     private RecyclerView.RecycledViewPool mInnerPool;
 
 
-    private Map<Integer, Integer> mScrapLength = new HashMap<>();
+    private SparseIntArray mScrapLength = new SparseIntArray();
     private SparseIntArray mMaxScrap = new SparseIntArray();
 
     /**
@@ -46,8 +46,8 @@ public final class InnerRecycledViewPool extends RecyclerView.RecycledViewPool {
 
     @Override
     public void clear() {
-        Set<Integer> viewTypes = mScrapLength.keySet();
-        for (int viewType : viewTypes) {
+        for (int i = 0, size = mScrapLength.size(); i < size; i++) {
+            int viewType = mScrapLength.keyAt(i);
             RecyclerView.ViewHolder holder = mInnerPool.getRecycledView(viewType);
             while (holder != null) {
                 destroyViewHolder(holder);
@@ -79,7 +79,7 @@ public final class InnerRecycledViewPool extends RecyclerView.RecycledViewPool {
     public RecyclerView.ViewHolder getRecycledView(int viewType) {
         RecyclerView.ViewHolder holder = mInnerPool.getRecycledView(viewType);
         if (holder != null) {
-            int scrapHeapSize = mScrapLength.containsKey(viewType) ? this.mScrapLength.get(viewType) : 0;
+            int scrapHeapSize = mScrapLength.indexOfKey(viewType) >= 0 ? this.mScrapLength.get(viewType) : 0;
             if (scrapHeapSize > 0)
                 mScrapLength.put(viewType, scrapHeapSize - 1);
         }
@@ -95,7 +95,9 @@ public final class InnerRecycledViewPool extends RecyclerView.RecycledViewPool {
      */
     public int size() {
         int count = 0;
-        for (int val : mScrapLength.values()) {
+
+        for (int i = 0, size = mScrapLength.size(); i < size; i++) {
+            int val = mScrapLength.valueAt(i);
             count += val;
         }
 
@@ -118,7 +120,7 @@ public final class InnerRecycledViewPool extends RecyclerView.RecycledViewPool {
         }
 
         // get current heap size
-        int scrapHeapSize = mScrapLength.containsKey(viewType) ? this.mScrapLength.get(viewType) : 0;
+        int scrapHeapSize = mScrapLength.indexOfKey(viewType) >= 0 ? this.mScrapLength.get(viewType) : 0;
 
         if (this.mMaxScrap.get(viewType) > scrapHeapSize) {
             // if exceed current heap size
