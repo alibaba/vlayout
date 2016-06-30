@@ -13,13 +13,7 @@
             <option value="$PROJECT_DIR$/vlayout" />
           </set>
         </option>
-        <option name="myModules">
-          <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/examples" />
-            <option value="$PROJECT_DIR$/vlayout" />
-          </set>
-        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

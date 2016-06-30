@@ -70,7 +70,7 @@ import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
  */
 public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
-    private static final String TAG = OnePlusNLayoutHelper.class.getSimpleName();
+    private static final String TAG = "OnePlusNLayoutHelper";
 
 
     private Rect mAreaRect = new Rect();
