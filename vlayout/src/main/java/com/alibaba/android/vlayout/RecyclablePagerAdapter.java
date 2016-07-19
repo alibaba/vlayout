@@ -53,6 +53,8 @@ public abstract class RecyclablePagerAdapter<VH extends RecyclerView.ViewHolder>
 
 
         onBindViewHolder((VH) holder, position);
+        //为了解决在轮播卡片的 item 复用过程中，itemView 的 layoutParams 复用造成 layout 错误,这里要提供一个新的 layoutParams。
+        //主要是 ViewPager.LayoutParams.widthFactor出现错乱
         container.addView(holder.itemView, new ViewPager.LayoutParams());
 
         return holder;
