@@ -1,6 +1,7 @@
 package com.alibaba.android.vlayout;
 
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,7 @@ public abstract class RecyclablePagerAdapter<VH extends RecyclerView.ViewHolder>
 
 
         onBindViewHolder((VH) holder, position);
-        container.addView(holder.itemView);
+        container.addView(holder.itemView, new ViewPager.LayoutParams());
 
         return holder;
     }
