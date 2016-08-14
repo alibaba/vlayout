@@ -1277,8 +1277,13 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         }
         final int mode = View.MeasureSpec.getMode(spec);
         if (mode == View.MeasureSpec.AT_MOST || mode == View.MeasureSpec.EXACTLY) {
-            return View.MeasureSpec.makeMeasureSpec(
-                    View.MeasureSpec.getSize(spec) - startInset - endInset, mode);
+            int size = View.MeasureSpec.getSize(spec);
+            if (size - startInset - endInset < 0) {
+                return View.MeasureSpec.makeMeasureSpec(0, mode);
+            } else {
+                return View.MeasureSpec.makeMeasureSpec(
+                        View.MeasureSpec.getSize(spec) - startInset - endInset, mode);
+            }
         }
         return spec;
     }
