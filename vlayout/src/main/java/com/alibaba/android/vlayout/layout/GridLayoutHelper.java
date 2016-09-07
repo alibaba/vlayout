@@ -499,7 +499,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
             // We calculate everything with View's bounding box (which includes decor and margins)
             // To calculate correct layout position, we subtract margins.
-            layoutChild(view, left, top, right, bottom, helper, true);
+            // modified by huifeng at 20160907, margins are already subtracted
+            layoutChild(view, left, top, right, bottom, helper);
 
             // Consume the available space if the view is not removed OR changed
             if (params.isItemRemoved() || params.isItemChanged()) {

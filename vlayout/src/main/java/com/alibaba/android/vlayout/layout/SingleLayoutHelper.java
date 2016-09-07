@@ -126,7 +126,7 @@ public class SingleLayoutHelper extends ColumnLayoutHelper {
 
         result.mConsumed += mMarginTop + mMarginBottom;
 
-        layoutChild(view, left, top, right, bottom, helper, true);
+        layoutChild(view, left, top, right, bottom, helper);
     }
 
     @Override
