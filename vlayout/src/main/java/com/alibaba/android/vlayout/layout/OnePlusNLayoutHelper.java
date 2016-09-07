@@ -147,8 +147,8 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
         final int parentWidth = helper.getContentWidth();
         final int parentHeight = helper.getContentHeight();
-        final int parentHPadding = helper.getPaddingLeft() + helper.getPaddingRight() + getHorizontalMargin();
-        final int parentVPadding = helper.getPaddingTop() + helper.getPaddingBottom() + getVerticalMargin();
+        final int parentHPadding = helper.getPaddingLeft() + helper.getPaddingRight() + getHorizontalMargin() + getHorizontalPadding();
+        final int parentVPadding = helper.getPaddingTop() + helper.getPaddingBottom() + getVerticalMargin() + getVerticalPadding();
 
         int mainConsumed = 0;
 
@@ -175,7 +175,9 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
             helper.measureChild(view, widthSpec, heightSpec);
 
-            mainConsumed = orientationHelper.getDecoratedMeasurement(view) + (layoutInVertical ? getVerticalMargin() : getHorizontalMargin());
+            mainConsumed = orientationHelper.getDecoratedMeasurement(view) + (layoutInVertical ?
+                    getVerticalMargin() + getVerticalPadding()
+                    : getHorizontalMargin() + getHorizontalPadding());
 
             calculateRect(mainConsumed, mAreaRect, layoutState, helper);
 
@@ -215,7 +217,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                             helper.getChildMeasureSpec(helper.getContentHeight(), lp2.height, true));
 
                     mainConsumed = Math.max(orientationHelper.getDecoratedMeasurement(child1),
-                            orientationHelper.getDecoratedMeasurement(child2)) + getVerticalMargin();
+                            orientationHelper.getDecoratedMeasurement(child2)) + getVerticalMargin() + getVerticalPadding();
 
                     calculateRect(mainConsumed, mAreaRect, layoutState, helper);
 
@@ -252,7 +254,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                             MeasureSpec.makeMeasureSpec(height2 + lp2.topMargin + lp2.bottomMargin, MeasureSpec.EXACTLY));
 
                     mainConsumed = Math.max(orientationHelper.getDecoratedMeasurement(child1),
-                            orientationHelper.getDecoratedMeasurement(child2)) + getHorizontalMargin();
+                            orientationHelper.getDecoratedMeasurement(child2)) + getHorizontalMargin() + getVerticalPadding();
 
                     calculateRect(mainConsumed, mAreaRect, layoutState, helper);
 
@@ -327,7 +329,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
                     mainConsumed = Math.max(height1 + lp1.topMargin + lp1.bottomMargin,
                             height2 + lp2.topMargin + lp2.bottomMargin + height3 + lp3.topMargin + lp3.bottomMargin)
-                            + getVerticalMargin();
+                            + getVerticalMargin() + getVerticalPadding();
 
                     calculateRect(mainConsumed, mAreaRect, layoutState, helper);
 
@@ -411,7 +413,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
                     mainConsumed = Math.max(height1 + lp1.topMargin + lp1.bottomMargin,
                             height2 + lp2.topMargin + lp2.bottomMargin + Math.max(height3 + lp3.topMargin + lp3.bottomMargin,
-                                    height3 + lp4.topMargin + lp4.bottomMargin)) + getVerticalMargin();
+                                    height3 + lp4.topMargin + lp4.bottomMargin)) + getVerticalMargin() + getVerticalPadding();
 
                     calculateRect(mainConsumed, mAreaRect, layoutState, helper);
 
@@ -512,7 +514,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
                     mainConsumed = Math.max(height1 + lp1.topMargin + lp1.bottomMargin,
                             height2 + lp2.topMargin + lp2.bottomMargin + Math.max(height3 + lp3.topMargin + lp3.bottomMargin,
-                                    height3 + lp4.topMargin + lp4.bottomMargin)) + getVerticalMargin();
+                                    height3 + lp4.topMargin + lp4.bottomMargin)) + getVerticalMargin() + getVerticalPadding();
 
                     calculateRect(mainConsumed, mAreaRect, layoutState, helper);
 

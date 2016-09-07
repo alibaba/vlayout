@@ -8,12 +8,30 @@ import com.alibaba.android.vlayout.LayoutManagerHelper;
  */
 public abstract class MarginLayoutHelper extends LayoutHelper {
 
+    protected int mPadddingLeft;
+    protected int mPadddingRight;
+    protected int mPadddingTop;
+    protected int mPadddingBottom;
 
     protected int mMarginLeft;
     protected int mMarginRight;
     protected int mMarginTop;
     protected int mMarginBottom;
 
+
+    /**
+     * set paddings for this layoutHelper
+     * @param leftPadding
+     * @param topPadding
+     * @param rightPadding
+     * @param bottomPadding
+     */
+    public void setPadding(int leftPadding, int topPadding, int rightPadding, int bottomPadding) {
+        mPadddingLeft = leftPadding;
+        mPadddingRight = rightPadding;
+        mPadddingTop = topPadding;
+        mPadddingBottom = bottomPadding;
+    }
 
     /**
      * Set margins for this layoutHelper
@@ -59,6 +77,22 @@ public abstract class MarginLayoutHelper extends LayoutHelper {
      */
     protected int getVerticalMargin() {
         return mMarginTop + mMarginBottom;
+    }
+
+    /**
+     * Get total padding in horizontal dimension
+     * @return
+     */
+    protected int getHorizontalPadding() {
+        return mPadddingLeft + mPadddingRight;
+    }
+
+    /**
+     * Get total padding in vertical dimension
+     * @return
+     */
+    protected int getVerticalPadding() {
+        return mPadddingTop + mPadddingBottom;
     }
 
 }
