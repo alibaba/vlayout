@@ -162,7 +162,7 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
 
                 int right = left + orientationHelper.getDecoratedMeasurementInOther(view);
 
-                layoutChild(view, left, top, right, bottom, helper, false);
+                layoutChild(view, left, top, right, bottom, helper);
 
                 left = right;
             }

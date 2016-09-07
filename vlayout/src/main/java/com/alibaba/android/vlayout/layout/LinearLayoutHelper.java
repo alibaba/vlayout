@@ -77,19 +77,21 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
         helper.measureChild(view, widthSpec, heightSpec);
 
         OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        //FIXME mConsumed should take account margin when start line or end line
         result.mConsumed = orientationHelper.getDecoratedMeasurement(view) + mDividerHeight;
 
         int left, top, right, bottom;
         if (helper.getOrientation() == VERTICAL) {
             // not support RTL now
             if (helper.isDoLayoutRTL()) {
-                right = helper.getContentWidth() - helper.getPaddingRight();
+                right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight;
                 left = right - orientationHelper.getDecoratedMeasurementInOther(view);
             } else {
-                left = helper.getPaddingLeft();
+                left = helper.getPaddingLeft() + mMarginLeft;
                 right = left + orientationHelper.getDecoratedMeasurementInOther(view);
             }
 
+            //FIXME top bottom should take account margin when start line or end line
             // whether this layout pass is layout to start or to end
             if (layoutState.getLayoutDirection() == VirtualLayoutManager.LayoutStateWrapper.LAYOUT_START) {
                 // fill start, from bottom to top

@@ -570,10 +570,10 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
     }
 
 
-    @Override
-    protected void layoutChild(View child, int left, int top, int right, int bottom, @NonNull LayoutManagerHelper helper) {
-        super.layoutChild(child, left, top, right, bottom, helper, true);
-    }
+//    @Override
+//    protected void layoutChild(View child, int left, int top, int right, int bottom, @NonNull LayoutManagerHelper helper) {
+//        super.layoutChild(child, left, top, right, bottom, helper, true);
+//    }
 
     @Override
     public int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
