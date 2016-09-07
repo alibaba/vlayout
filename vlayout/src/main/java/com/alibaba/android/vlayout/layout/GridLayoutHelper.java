@@ -195,10 +195,10 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
 
         if (layoutInVertical) {
-            mTotalSize = helper.getContentWidth() - helper.getPaddingRight() - helper.getPaddingLeft() - getHorizontalMargin();
+            mTotalSize = helper.getContentWidth() - helper.getPaddingRight() - helper.getPaddingLeft() - getHorizontalMargin() - getHorizontalPadding();
             mSizePerSpan = (mTotalSize - (mSpanCount - 1) * mHGap) / mSpanCount;
         } else {
-            mTotalSize = helper.getContentHeight() - helper.getPaddingBottom() - helper.getPaddingTop() - getVerticalMargin();
+            mTotalSize = helper.getContentHeight() - helper.getPaddingBottom() - helper.getPaddingTop() - getVerticalMargin() - getVerticalPadding();
             mSizePerSpan = (mTotalSize - (mSpanCount - 1) * mVGap) / mSpanCount;
         }
 
@@ -322,10 +322,10 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         if (remainingSpan > 0 && mIsAutoExpand) {
             if (layoutInVertical) {
-                mSizePerSpan = (helper.getContentWidth() - helper.getPaddingRight() - getHorizontalMargin() -
+                mSizePerSpan = (helper.getContentWidth() - helper.getPaddingRight() - getHorizontalMargin() - getHorizontalPadding() -
                         helper.getPaddingLeft() - (count - 1) * mHGap) / count;
             } else {
-                mSizePerSpan = (helper.getContentHeight() - helper.getPaddingBottom() - getVerticalMargin() -
+                mSizePerSpan = (helper.getContentHeight() - helper.getPaddingBottom() - getVerticalMargin() - getVerticalPadding() -
                         helper.getPaddingTop() - (count - 1) * mVGap) / count;
             }
         }
@@ -337,10 +337,10 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             int totalSpace;
             if (layoutInVertical) {
                 totalSpace = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight()
-                        - getHorizontalMargin() - (count - 1) * mHGap;
+                        - getHorizontalMargin() - getHorizontalPadding() - (count - 1) * mHGap;
             } else {
                 totalSpace = helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom()
-                        - getVerticalMargin() - (count - 1) * mVGap;
+                        - getVerticalMargin() - getVerticalPadding() - (count - 1) * mVGap;
             }
 
             // calculate width with weight in percentage
@@ -428,18 +428,18 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             }
         }
 
-        int startMargin = 0, endMargin = 0;
+        int startSpace = 0, endSpace = 0;
 
         if (isStartLine) {
-            startMargin = layoutInVertical ? mMarginTop : mMarginLeft;
+            startSpace = layoutInVertical ? mMarginTop + mPadddingTop: mMarginLeft + mPadddingLeft;
         }
 
         if (isEndLine) {
-            endMargin = layoutInVertical ? mMarginBottom : mMarginRight;
+            endSpace = layoutInVertical ? mMarginBottom + mPadddingBottom: mMarginRight + mPadddingRight;
         }
 
 
-        result.mConsumed = maxSize + startMargin + endMargin;
+        result.mConsumed = maxSize + startSpace + endSpace;
 
         final boolean layoutStart = layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START;
         if (!mLayoutWithAnchor && (!isEndLine || !layoutStart) && (!isStartLine || layoutStart)) {
@@ -450,18 +450,18 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         int left = 0, right = 0, top = 0, bottom = 0;
         if (layoutInVertical) {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                bottom = layoutState.getOffset() - endMargin - ((mLayoutWithAnchor || isEndLine) ? 0 : mVGap);
+                bottom = layoutState.getOffset() - endSpace - ((mLayoutWithAnchor || isEndLine) ? 0 : mVGap);
                 top = bottom - maxSize;
             } else {
-                top = layoutState.getOffset() + startMargin + ((mLayoutWithAnchor || isStartLine) ? 0 : mVGap);
+                top = layoutState.getOffset() + startSpace + ((mLayoutWithAnchor || isStartLine) ? 0 : mVGap);
                 bottom = top + maxSize;
             }
         } else {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                right = layoutState.getOffset() - endMargin - (mLayoutWithAnchor || isEndLine ? 0 : mHGap);
+                right = layoutState.getOffset() - endSpace - (mLayoutWithAnchor || isEndLine ? 0 : mHGap);
                 left = right - maxSize;
             } else {
-                left = layoutState.getOffset() + startMargin + (mLayoutWithAnchor || isStartLine ? 0 : mHGap);
+                left = layoutState.getOffset() + startSpace + (mLayoutWithAnchor || isStartLine ? 0 : mHGap);
                 right = left + maxSize;
             }
         }
@@ -473,21 +473,21 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             LayoutParams params = (LayoutParams) view.getLayoutParams();
             if (layoutInVertical) {
                 if (weighted) {
-                    left = helper.getPaddingLeft() + mMarginLeft;
+                    left = helper.getPaddingLeft() + mMarginLeft + mPadddingLeft;
                     for (int j = 0; j < index; j++)
                         left += mSpanCols[j] + mHGap;
                 } else
-                    left = helper.getPaddingLeft() + mMarginLeft + mSizePerSpan * index + index * mHGap;
+                    left = helper.getPaddingLeft() + mMarginLeft + mPadddingLeft + mSizePerSpan * index + index * mHGap;
 
                 right = left + orientationHelper.getDecoratedMeasurementInOther(view);
             } else {
 
                 if (weighted) {
-                    top = helper.getPaddingTop() + mMarginTop;
+                    top = helper.getPaddingTop() + mMarginTop + mPadddingTop;
                     for (int j = 0; j < index; j++)
                         top += mSpanCols[j] + mVGap;
                 } else
-                    top = helper.getPaddingTop() + mMarginTop + mSizePerSpan * index + index * mVGap;
+                    top = helper.getPaddingTop() + mMarginTop + mPadddingTop + mSizePerSpan * index + index * mVGap;
 
                 bottom = top + orientationHelper.getDecoratedMeasurementInOther(view);
             }
