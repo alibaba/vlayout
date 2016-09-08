@@ -524,11 +524,11 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         if (isLayoutEnd) {
             if (offset == getItemCount() - 1) {
-                return layoutInVertical ? mMarginBottom : mMarginRight;
+                return layoutInVertical ? mMarginBottom + mPadddingBottom : mMarginRight + mPadddingRight;
             }
         } else {
             if (offset == 0)
-                return layoutInVertical ? -mMarginTop : -mMarginLeft;
+                return layoutInVertical ? -mMarginTop - mPadddingTop : -mMarginLeft - mPadddingLeft;
         }
 
         return super.computeAlignOffset(offset, isLayoutEnd, useAnchor, helper);

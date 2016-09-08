@@ -593,15 +593,15 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
         if (helper.getOrientation() == VERTICAL) {
             if (isLayoutEnd) {
-                return mMarginBottom;
+                return mMarginBottom + mPadddingBottom;
             } else {
-                return -mMarginTop;
+                return -mMarginTop - mPadddingTop;
             }
         } else {
             if (isLayoutEnd) {
-                return mMarginRight;
+                return mMarginRight + mPadddingRight;
             } else {
-                return -mMarginLeft;
+                return -mMarginLeft - mPadddingLeft;
             }
         }
     }
