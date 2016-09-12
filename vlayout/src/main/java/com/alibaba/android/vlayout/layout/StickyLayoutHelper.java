@@ -1,13 +1,14 @@
 package com.alibaba.android.vlayout.layout;
 
+import com.alibaba.android.vlayout.LayoutHelper;
+import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
+
 import android.support.annotation.Nullable;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-
-import com.alibaba.android.vlayout.LayoutManagerHelper;
-import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
 import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
 
@@ -365,6 +366,10 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                                 int pos = helper.getPosition(refer);
                                 if (pos < mPos) { // TODO: when view size is larger than totalSpace!
                                     top = orientationHelper.getDecoratedEnd(refer);
+                                    LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(pos);
+                                    if (layoutHelper instanceof MarginLayoutHelper) {
+                                        top = top + ((MarginLayoutHelper) layoutHelper).mMarginBottom + ((MarginLayoutHelper) layoutHelper).mPaddingBottom;
+                                    }
                                     bottom = top + consumed;
                                     index = i + 1;
                                     break;
@@ -376,6 +381,10 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                                 int pos = helper.getPosition(refer);
                                 if (pos > mPos) {
                                     bottom = orientationHelper.getDecoratedStart(refer);
+                                    LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(pos);
+                                    if (layoutHelper instanceof MarginLayoutHelper) {
+                                        bottom = bottom - ((MarginLayoutHelper) layoutHelper).mMarginTop - ((MarginLayoutHelper) layoutHelper).mPaddingTop;
+                                    }
                                     top = bottom - consumed;
                                     index = i;
                                     break;

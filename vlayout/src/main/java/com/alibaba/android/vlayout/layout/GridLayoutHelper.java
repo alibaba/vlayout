@@ -431,11 +431,11 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         int startSpace = 0, endSpace = 0;
 
         if (isStartLine) {
-            startSpace = layoutInVertical ? mMarginTop + mPadddingTop: mMarginLeft + mPadddingLeft;
+            startSpace = layoutInVertical ? mMarginTop + mPaddingTop : mMarginLeft + mPaddingLeft;
         }
 
         if (isEndLine) {
-            endSpace = layoutInVertical ? mMarginBottom + mPadddingBottom: mMarginRight + mPadddingRight;
+            endSpace = layoutInVertical ? mMarginBottom + mPaddingBottom : mMarginRight + mPaddingRight;
         }
 
 
@@ -473,21 +473,22 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             LayoutParams params = (LayoutParams) view.getLayoutParams();
             if (layoutInVertical) {
                 if (weighted) {
-                    left = helper.getPaddingLeft() + mMarginLeft + mPadddingLeft;
+                    left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft;
                     for (int j = 0; j < index; j++)
                         left += mSpanCols[j] + mHGap;
                 } else
-                    left = helper.getPaddingLeft() + mMarginLeft + mPadddingLeft + mSizePerSpan * index + index * mHGap;
+                    left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft + mSizePerSpan * index + index * mHGap;
 
                 right = left + orientationHelper.getDecoratedMeasurementInOther(view);
             } else {
 
                 if (weighted) {
-                    top = helper.getPaddingTop() + mMarginTop + mPadddingTop;
+                    top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
                     for (int j = 0; j < index; j++)
                         top += mSpanCols[j] + mVGap;
                 } else
-                    top = helper.getPaddingTop() + mMarginTop + mPadddingTop + mSizePerSpan * index + index * mVGap;
+                    top = helper.getPaddingTop() + mMarginTop + mPaddingTop
+                            + mSizePerSpan * index + index * mVGap;
 
                 bottom = top + orientationHelper.getDecoratedMeasurementInOther(view);
             }
@@ -524,11 +525,11 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         if (isLayoutEnd) {
             if (offset == getItemCount() - 1) {
-                return layoutInVertical ? mMarginBottom + mPadddingBottom : mMarginRight + mPadddingRight;
+                return layoutInVertical ? mMarginBottom + mPaddingBottom : mMarginRight + mPaddingRight;
             }
         } else {
             if (offset == 0)
-                return layoutInVertical ? -mMarginTop - mPadddingTop : -mMarginLeft - mPadddingLeft;
+                return layoutInVertical ? -mMarginTop - mPaddingTop : -mMarginLeft - mPaddingLeft;
         }
 
         return super.computeAlignOffset(offset, isLayoutEnd, useAnchor, helper);

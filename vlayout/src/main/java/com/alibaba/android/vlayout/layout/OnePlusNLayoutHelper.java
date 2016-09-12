@@ -1,7 +1,6 @@
 package com.alibaba.android.vlayout.layout;
 
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -593,15 +592,15 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
         if (helper.getOrientation() == VERTICAL) {
             if (isLayoutEnd) {
-                return mMarginBottom + mPadddingBottom;
+                return mMarginBottom + mPaddingBottom;
             } else {
-                return -mMarginTop - mPadddingTop;
+                return -mMarginTop - mPaddingTop;
             }
         } else {
             if (isLayoutEnd) {
-                return mMarginRight + mPadddingRight;
+                return mMarginRight + mPaddingRight;
             } else {
-                return -mMarginLeft - mPadddingLeft;
+                return -mMarginLeft - mPaddingLeft;
             }
         }
     }

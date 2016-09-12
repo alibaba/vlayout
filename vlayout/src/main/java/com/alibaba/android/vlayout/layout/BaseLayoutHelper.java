@@ -242,11 +242,11 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         if (requireLayoutView()) {
             if (addLayoutRegionWithMargin) {
                 mLayoutRegion
-                        .union(left - mPadddingLeft - mMarginLeft, top - mPadddingTop - mMarginTop,
-                                right + mPadddingRight + mMarginRight,
-                                bottom + mPadddingBottom + mMarginBottom);
+                        .union(left - mPaddingLeft - mMarginLeft, top - mPaddingTop - mMarginTop,
+                                right + mPaddingRight + mMarginRight,
+                                bottom + mPaddingBottom + mMarginBottom);
             } else {
-                mLayoutRegion.union(left - mPadddingLeft, top - mPadddingTop, right + mPadddingRight, bottom + mPadddingBottom);
+                mLayoutRegion.union(left - mPaddingLeft, top - mPaddingTop, right + mPaddingRight, bottom + mPaddingBottom);
             }
         }
 
@@ -309,28 +309,28 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     protected void calculateRect(int mainAxisSize, Rect areaRect, LayoutStateWrapper layoutState, LayoutManagerHelper helper) {
         if (helper.getOrientation() == VirtualLayoutManager.VERTICAL) {
-            areaRect.left = helper.getPaddingLeft() + mMarginLeft + mPadddingLeft;
-            areaRect.right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight - mPadddingRight;
+            areaRect.left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft;
+            areaRect.right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight - mPaddingRight;
 
             // whether this layout pass is layout to start or to end
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
                 // fill start, from bottom to top
-                areaRect.bottom = layoutState.getOffset() - mMarginBottom - mPadddingBottom;
-                areaRect.top = layoutState.getOffset() - mainAxisSize + mMarginTop + mPadddingTop;
+                areaRect.bottom = layoutState.getOffset() - mMarginBottom - mPaddingBottom;
+                areaRect.top = layoutState.getOffset() - mainAxisSize + mMarginTop + mPaddingTop;
             } else {
-                areaRect.top = layoutState.getOffset() + mMarginTop + mPadddingTop;
-                areaRect.bottom = layoutState.getOffset() + mainAxisSize - mMarginBottom - mPadddingBottom;
+                areaRect.top = layoutState.getOffset() + mMarginTop + mPaddingTop;
+                areaRect.bottom = layoutState.getOffset() + mainAxisSize - mMarginBottom - mPaddingBottom;
             }
         } else {
-            areaRect.top = helper.getPaddingTop() + mMarginTop + mPadddingTop;
-            areaRect.bottom = helper.getContentHeight() - helper.getPaddingBottom() - mMarginBottom - mPadddingBottom;
+            areaRect.top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
+            areaRect.bottom = helper.getContentHeight() - helper.getPaddingBottom() - mMarginBottom - mPaddingBottom;
 
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                areaRect.right = layoutState.getOffset() - mMarginRight - mPadddingRight;
-                areaRect.left = layoutState.getOffset() - mainAxisSize + mMarginLeft + mPadddingLeft;
+                areaRect.right = layoutState.getOffset() - mMarginRight - mPaddingRight;
+                areaRect.left = layoutState.getOffset() - mainAxisSize + mMarginLeft + mPaddingLeft;
             } else {
-                areaRect.left = layoutState.getOffset() + mMarginLeft + mPadddingLeft;
-                areaRect.right = layoutState.getOffset() + mainAxisSize - mMarginRight - mPadddingRight;
+                areaRect.left = layoutState.getOffset() + mMarginLeft + mPaddingLeft;
+                areaRect.right = layoutState.getOffset() + mainAxisSize - mMarginRight - mPaddingRight;
             }
         }
 

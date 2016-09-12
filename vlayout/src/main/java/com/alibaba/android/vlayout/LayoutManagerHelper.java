@@ -221,5 +221,12 @@ public interface LayoutManagerHelper {
      */
     void recycleView(View child);
 
+    /**
+     * return layout helper for specific position
+     * @param position
+     * @return
+     */
+    LayoutHelper findLayoutHelperByPosition(int position);
+
 }
 

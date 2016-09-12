@@ -1314,6 +1314,11 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         }
     }
 
+    @Override
+    public LayoutHelper findLayoutHelperByPosition(int position) {
+        return mHelperFinder.getLayoutHelper(position);
+    }
+
 
 
 
