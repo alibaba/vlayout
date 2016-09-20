@@ -92,7 +92,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     private int mPendingScrollPositionOffset = INVALID_OFFSET;
 
 
-    protected SavedState mCurrentPendingSavedState = null;
+    protected Bundle mCurrentPendingSavedState = null;
 
     /**
      * Re-used variable to keep anchor information on re-layout.
@@ -142,33 +142,33 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     @Override
     public Parcelable onSaveInstanceState() {
         if (mCurrentPendingSavedState != null) {
-            return new SavedState(mCurrentPendingSavedState);
+            return new Bundle(mCurrentPendingSavedState);
         }
-        SavedState state = new SavedState();
+        Bundle state = new Bundle();
         if (getChildCount() > 0) {
             boolean didLayoutFromEnd = mLastStackFromEnd ^ mShouldReverseLayoutExpose;
-            state.mAnchorLayoutFromEnd = didLayoutFromEnd;
+            state.putBoolean("AnchorLayoutFromEnd", didLayoutFromEnd);
             if (didLayoutFromEnd) {
                 final View refChild = getChildClosestToEndExpose();
-                state.mAnchorOffset = mOrientationHelper.getEndAfterPadding() -
-                        mOrientationHelper.getDecoratedEnd(refChild);
-                state.mAnchorPosition = getPosition(refChild);
+                state.putInt("AnchorOffset", mOrientationHelper.getEndAfterPadding() -
+                        mOrientationHelper.getDecoratedEnd(refChild));
+                state.putInt("AnchorPosition", getPosition(refChild));
             } else {
                 final View refChild = getChildClosestToStartExpose();
-                state.mAnchorPosition = getPosition(refChild);
-                state.mAnchorOffset = mOrientationHelper.getDecoratedStart(refChild) -
-                        mOrientationHelper.getStartAfterPadding();
+                state.putInt("AnchorPosition", getPosition(refChild));
+                state.putInt("AnchorOffset", mOrientationHelper.getDecoratedStart(refChild) -
+                        mOrientationHelper.getStartAfterPadding());
             }
         } else {
-            state.invalidateAnchor();
+            state.putInt("AnchorPosition", RecyclerView.NO_POSITION);
         }
         return state;
     }
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        if (state instanceof SavedState) {
-            mCurrentPendingSavedState = (SavedState) state;
+        if (state instanceof Bundle) {
+            mCurrentPendingSavedState = (Bundle) state;
             requestLayout();
             if (DEBUG) {
                 Log.d(TAG, "loaded saved state");
@@ -234,8 +234,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         if (DEBUG) {
             Log.d(TAG, "is pre layout:" + state.isPreLayout());
         }
-        if (mCurrentPendingSavedState != null && mCurrentPendingSavedState.hasValidAnchor()) {
-            mCurrentPendingScrollPosition = mCurrentPendingSavedState.mAnchorPosition;
+        if (mCurrentPendingSavedState != null && mCurrentPendingSavedState.getInt("AnchorPosition") >= 0) {
+            mCurrentPendingScrollPosition = mCurrentPendingSavedState.getInt("AnchorPosition");
         }
 
         ensureLayoutStateExpose();
@@ -613,16 +613,16 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         // if child is visible, try to make it a reference child and ensure it is fully visible.
         // if child is not visible, align it depending on its virtual position.
         anchorInfo.mPosition = mCurrentPendingScrollPosition;
-        if (mCurrentPendingSavedState != null && mCurrentPendingSavedState.hasValidAnchor()) {
+        if (mCurrentPendingSavedState != null && mCurrentPendingSavedState.getInt("AnchorPosition")>=0) {
             // Anchor offset depends on how that child was laid out. Here, we update it
             // according to our current view bounds
-            anchorInfo.mLayoutFromEnd = mCurrentPendingSavedState.mAnchorLayoutFromEnd;
+            anchorInfo.mLayoutFromEnd = mCurrentPendingSavedState.getBoolean("AnchorLayoutFromEnd");
             if (anchorInfo.mLayoutFromEnd) {
                 anchorInfo.mCoordinate = mOrientationHelper.getEndAfterPadding() -
-                        mCurrentPendingSavedState.mAnchorOffset;
+                        mCurrentPendingSavedState.getInt("AnchorOffset");
             } else {
                 anchorInfo.mCoordinate = mOrientationHelper.getStartAfterPadding() +
-                        mCurrentPendingSavedState.mAnchorOffset;
+                        mCurrentPendingSavedState.getInt("AnchorOffset");
             }
             return true;
         }
@@ -794,7 +794,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         mCurrentPendingScrollPosition = position;
         mPendingScrollPositionOffset = INVALID_OFFSET;
         if (mCurrentPendingSavedState != null) {
-            mCurrentPendingSavedState.invalidateAnchor();
+            mCurrentPendingSavedState.putInt("AnchorPosition", RecyclerView.NO_POSITION);
         }
         requestLayout();
     }
@@ -823,7 +823,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         mCurrentPendingScrollPosition = position;
         mPendingScrollPositionOffset = offset;
         if (mCurrentPendingSavedState != null) {
-            mCurrentPendingSavedState.invalidateAnchor();
+            mCurrentPendingSavedState.putInt("AnchorPosition", RecyclerView.NO_POSITION);
         }
         requestLayout();
     }
@@ -1624,72 +1624,6 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             Log.d(TAG, "avail:" + mAvailable + ", ind:" + mCurrentPosition + ", dir:" +
                     mItemDirection + ", offset:" + mOffset + ", layoutDir:" + mLayoutDirection);
         }
-    }
-
-    static class SavedState implements Parcelable {
-
-        int mAnchorPosition;
-
-        int mAnchorOffset;
-
-        boolean mAnchorLayoutFromEnd;
-
-        Bundle extras;
-
-        public SavedState() {
-            extras = new Bundle();
-        }
-
-        SavedState(Parcel in) {
-            mAnchorPosition = in.readInt();
-            mAnchorOffset = in.readInt();
-            mAnchorLayoutFromEnd = in.readInt() == 1;
-            extras = in.readBundle();
-            if (extras == null) {
-                extras = new Bundle();
-            }
-        }
-
-        public SavedState(SavedState other) {
-            mAnchorPosition = other.mAnchorPosition;
-            mAnchorOffset = other.mAnchorOffset;
-            mAnchorLayoutFromEnd = other.mAnchorLayoutFromEnd;
-            extras = other.extras;
-        }
-
-        boolean hasValidAnchor() {
-            return mAnchorPosition >= 0;
-        }
-
-        void invalidateAnchor() {
-            mAnchorPosition = RecyclerView.NO_POSITION;
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(mAnchorPosition);
-            dest.writeInt(mAnchorOffset);
-            dest.writeInt(mAnchorLayoutFromEnd ? 1 : 0);
-            dest.writeBundle(extras);
-        }
-
-        public static final Creator<SavedState> CREATOR
-                = new Creator<SavedState>() {
-            @Override
-            public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in);
-            }
-
-            @Override
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
     }
 
     /**
