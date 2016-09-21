@@ -196,10 +196,10 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         if (layoutInVertical) {
             mTotalSize = helper.getContentWidth() - helper.getPaddingRight() - helper.getPaddingLeft() - getHorizontalMargin() - getHorizontalPadding();
-            mSizePerSpan = (mTotalSize - (mSpanCount - 1) * mHGap) / mSpanCount;
+            mSizePerSpan = (int) ((mTotalSize - (mSpanCount - 1) * mHGap) * 1.0f / mSpanCount + 0.5f);
         } else {
             mTotalSize = helper.getContentHeight() - helper.getPaddingBottom() - helper.getPaddingTop() - getVerticalMargin() - getVerticalPadding();
-            mSizePerSpan = (mTotalSize - (mSpanCount - 1) * mVGap) / mSpanCount;
+            mSizePerSpan = (int) ((mTotalSize - (mSpanCount - 1) * mVGap) * 1.0f / mSpanCount + 0.5f);
         }
 
 
