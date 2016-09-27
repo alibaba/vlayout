@@ -151,8 +151,11 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
                         mLayoutRegion.offset(-scrolled, 0);
                     }
                 }
-
-                if (mLayoutRegion.intersects(0, 0, helper.getContentWidth(), helper.getContentHeight())) {
+                int contentWidth = helper.getContentWidth();
+                int contentHeight = helper.getContentHeight();
+                if (helper.getOrientation() == VirtualLayoutManager.VERTICAL ?
+                        mLayoutRegion.intersects(0, -contentHeight / 2, contentWidth, contentHeight + contentHeight / 2) :
+                        mLayoutRegion.intersects(-contentWidth / 2, 0, contentWidth + contentWidth / 2, contentHeight)) {
 
                     if (mLayoutView == null) {
                         mLayoutView = helper.generateLayoutView();
