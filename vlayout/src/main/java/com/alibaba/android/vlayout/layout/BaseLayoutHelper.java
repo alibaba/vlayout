@@ -173,6 +173,9 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         }
 
         if (mLayoutView != null) {
+            if (mLayoutViewUnBindListener != null) {
+                mLayoutViewUnBindListener.onUnbind(mLayoutView, this);
+            }
             helper.removeChildView(mLayoutView);
             mLayoutView = null;
         }
@@ -262,10 +265,24 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         void onBind(View layoutView, BaseLayoutHelper baseLayoutHelper);
     }
 
+    /**
+     * Listener to handle LayoutViews, like bgImage
+     */
+    public interface LayoutViewUnBindListener {
+        void onUnbind(View layoutView, BaseLayoutHelper baseLayoutHelper);
+    }
+
+    private LayoutViewUnBindListener mLayoutViewUnBindListener;
+
     private LayoutViewBindListener mLayoutViewBindListener;
 
     public void setLayoutViewBindListener(LayoutViewBindListener bindListener) {
         mLayoutViewBindListener = bindListener;
+    }
+
+    public void setLayoutViewUnBindListener(
+            LayoutViewUnBindListener layoutViewUnBindListener) {
+        mLayoutViewUnBindListener = layoutViewUnBindListener;
     }
 
     @Override
