@@ -164,6 +164,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
                         mLayoutView = helper.generateLayoutView();
                         helper.addOffFlowView(mLayoutView, true);
                     }
+                    //为了防止卡片背景有留白的适配问题（Nexus 6P）,在这里修正一下宽或高
                     if (helper.getOrientation() == VirtualLayoutManager.VERTICAL) {
                         mLayoutRegion.left = helper.getPaddingLeft() + mMarginLeft;
                         mLayoutRegion.right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight;
