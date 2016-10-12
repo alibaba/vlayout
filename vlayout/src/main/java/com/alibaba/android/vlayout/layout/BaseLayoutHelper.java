@@ -3,6 +3,7 @@ package com.alibaba.android.vlayout.layout;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.view.View;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
+
+import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
 
 /**
  * {@link com.alibaba.android.vlayout.LayoutHelper} that provides basic methods
@@ -160,6 +163,13 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
                     if (mLayoutView == null) {
                         mLayoutView = helper.generateLayoutView();
                         helper.addOffFlowView(mLayoutView, true);
+                    }
+                    if (helper.getOrientation() == VirtualLayoutManager.VERTICAL) {
+                        mLayoutRegion.left = helper.getPaddingLeft() + mMarginLeft;
+                        mLayoutRegion.right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight;
+                    } else {
+                        mLayoutRegion.top = helper.getPaddingTop() + mMarginTop;
+                        mLayoutRegion.bottom = helper.getContentWidth() - helper.getPaddingBottom() - mMarginBottom;
                     }
 
                     bindLayoutView(mLayoutView);
