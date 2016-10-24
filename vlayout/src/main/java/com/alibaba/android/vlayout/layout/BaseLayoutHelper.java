@@ -311,9 +311,24 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         mLayoutRegion.set(0, 0, 0, 0);
     }
 
+    protected void handleStateOnResult(LayoutChunkResult result, View view) {
+        if (view == null) return;
+
+        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
+
+        // Consume the available space if the view is not removed OR changed
+        if (params.isItemRemoved() || params.isItemChanged()) {
+            result.mIgnoreConsumed = true;
+        }
+
+        // used when search a focusable view
+        result.mFocusable = result.mFocusable || view.isFocusable();
+
+    }
+
     /**
      * Helper methods to handle focus states for views
-     *
+     * FIXME 可变参数性能不好,会引起一次潜在的数组对象创建,在频繁滑动过程中,容易引起GC,如果只有一个View,建议调用上述方法
      * @param result
      * @param views
      */

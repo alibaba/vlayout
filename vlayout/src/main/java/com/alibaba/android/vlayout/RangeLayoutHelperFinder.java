@@ -21,6 +21,21 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
     @NonNull
     private List<LayoutHelper> mLayoutHelpers = new LinkedList<>();
 
+    @NonNull
+    private Comparator<LayoutHelperItem> mLayoutHelperItemComparator = new Comparator<LayoutHelperItem>() {
+        @Override
+        public int compare(LayoutHelperItem lhs, LayoutHelperItem rhs) {
+            return lhs.getStartPosition() - rhs.getStartPosition();
+        }
+    };
+
+    private Comparator<LayoutHelper> mLayoutHelperComparator = new Comparator<LayoutHelper>() {
+        @Override
+        public int compare(LayoutHelper lhs, LayoutHelper rhs) {
+            return lhs.getZIndex() - rhs.getZIndex();
+        }
+    };
+
     @Override
     public Iterator<LayoutHelper> iterator() {
         return Collections.unmodifiableList(mLayoutHelpers).iterator();
@@ -63,19 +78,9 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
                 mLayoutHelperItems.add(new LayoutHelperItem(acceptRange, helper));
             }
 
-            Collections.sort(mLayoutHelperItems, new Comparator<LayoutHelperItem>() {
-                @Override
-                public int compare(LayoutHelperItem lhs, LayoutHelperItem rhs) {
-                    return lhs.getStartPosition() - rhs.getStartPosition();
-                }
-            });
+            Collections.sort(mLayoutHelperItems, mLayoutHelperItemComparator);
 
-            Collections.sort(mLayoutHelpers, new Comparator<LayoutHelper>() {
-                @Override
-                public int compare(LayoutHelper lhs, LayoutHelper rhs) {
-                    return lhs.getZIndex() - rhs.getZIndex();
-                }
-            });
+            Collections.sort(mLayoutHelpers, mLayoutHelperComparator);
         }
     }
 

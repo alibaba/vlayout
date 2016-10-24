@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -223,7 +222,6 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
 
-        RecyclerView.State tState = new RecyclerView.State();
         // layout algorithm:
         // 1) by checking children and other variables, find an anchor coordinate and an anchor
         //  item position.
@@ -1071,6 +1069,9 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         }
     }
 
+    private com.alibaba.android.vlayout.layout.LayoutChunkResult layoutChunkResultCache
+            = new com.alibaba.android.vlayout.layout.LayoutChunkResult();
+
     /**
      * The magic functions :). Fills the given layout, defined by the layoutState. This is fairly
      * independent from the rest of the {@link LinearLayoutManager}
@@ -1094,35 +1095,34 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             recycleByLayoutStateExpose(recycler, layoutState);
         }
         int remainingSpace = layoutState.mAvailable + layoutState.mExtra;
-        com.alibaba.android.vlayout.layout.LayoutChunkResult layoutChunkResult = new com.alibaba.android.vlayout.layout.LayoutChunkResult();
         while (remainingSpace > 0 && layoutState.hasMore(state)) {
-            layoutChunkResult.resetInternal();
-            layoutChunk(recycler, state, layoutState, layoutChunkResult);
-            if (layoutChunkResult.mFinished) {
+            layoutChunkResultCache.resetInternal();
+            layoutChunk(recycler, state, layoutState, layoutChunkResultCache);
+            if (layoutChunkResultCache.mFinished) {
                 break;
             }
-            layoutState.mOffset += layoutChunkResult.mConsumed * layoutState.mLayoutDirection;
+            layoutState.mOffset += layoutChunkResultCache.mConsumed * layoutState.mLayoutDirection;
             /**
              * Consume the available space if:
              * * layoutChunk did not request to be ignored
              * * OR we are laying out scrap children
              * * OR we are not doing pre-layout
              */
-            if (!layoutChunkResult.mIgnoreConsumed || mLayoutState.mScrapList != null
+            if (!layoutChunkResultCache.mIgnoreConsumed || mLayoutState.mScrapList != null
                     || !state.isPreLayout()) {
-                layoutState.mAvailable -= layoutChunkResult.mConsumed;
+                layoutState.mAvailable -= layoutChunkResultCache.mConsumed;
                 // we keep a separate remaining space because mAvailable is important for recycling
-                remainingSpace -= layoutChunkResult.mConsumed;
+                remainingSpace -= layoutChunkResultCache.mConsumed;
             }
 
             if (layoutState.mScrollingOffset != LayoutState.SCOLLING_OFFSET_NaN) {
-                layoutState.mScrollingOffset += layoutChunkResult.mConsumed;
+                layoutState.mScrollingOffset += layoutChunkResultCache.mConsumed;
                 if (layoutState.mAvailable < 0) {
                     layoutState.mScrollingOffset += layoutState.mAvailable;
                 }
                 recycleByLayoutStateExpose(recycler, layoutState);
             }
-            if (stopOnFocusable && layoutChunkResult.mFocusable) {
+            if (stopOnFocusable && layoutChunkResultCache.mFocusable) {
                 break;
             }
         }
