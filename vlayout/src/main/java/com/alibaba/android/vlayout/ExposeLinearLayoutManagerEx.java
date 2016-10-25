@@ -754,6 +754,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
     }
 
+    private Object[] emptyArgs = new Object[0];
 
     protected void ensureLayoutStateExpose() {
         if (mLayoutState == null) {
@@ -765,7 +766,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         }
 
         try {
-            mEnsureLayoutStateMethod.invoke(this);
+            mEnsureLayoutStateMethod.invoke(this, emptyArgs);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
