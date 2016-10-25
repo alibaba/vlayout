@@ -1812,6 +1812,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
         private RecyclerView.LayoutManager mLayoutManager;
 
+        private Object[] args = new Object[1];
+
         void ensureChildHelper() {
             try {
                 if (mInnerChildHelper == null) {
@@ -1857,7 +1859,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         void hide(View view) {
             try {
                 ensureChildHelper();
-                mHideMethod.invoke(mInnerChildHelper, view);
+                args[0] = view;
+                mHideMethod.invoke(mInnerChildHelper, args);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1867,7 +1870,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             try {
                 ensureChildHelper();
                 int index = mRecyclerView.indexOfChild(view);
-                mClearMethod.invoke(mInnerBucket, index);
+                args[0] = Integer.valueOf(index);
+                mClearMethod.invoke(mInnerBucket, args);
                 if (mInnerHiddenView != null)
                     mInnerHiddenView.remove(view);
             } catch (Exception e) {
@@ -1893,7 +1897,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         boolean isHidden(View view) {
             try {
                 ensureChildHelper();
-                return (boolean) mIsHideMethod.invoke(mInnerChildHelper, view);
+                args[0] = view;
+                return (boolean) mIsHideMethod.invoke(mInnerChildHelper, args);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
