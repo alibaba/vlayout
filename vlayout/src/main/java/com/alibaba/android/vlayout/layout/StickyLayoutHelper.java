@@ -115,8 +115,13 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                 top = layoutState.getOffset() - result.mConsumed;
             } else {
                 // fill end, from top to bottom
-                top = layoutState.getOffset() + mMarginTop;
-                bottom = layoutState.getOffset() + result.mConsumed;
+                if (mStickyStart) {
+                    top = layoutState.getOffset() + mMarginTop;
+                    bottom = layoutState.getOffset() + result.mConsumed;
+                } else {
+                    bottom = orientationHelper.getEndAfterPadding() - mMarginBottom - mOffset - mAdjuster.bottom;
+                    top = bottom - result.mConsumed;
+                }
             }
 
 
