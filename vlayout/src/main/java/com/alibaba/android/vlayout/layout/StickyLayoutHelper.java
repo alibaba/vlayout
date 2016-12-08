@@ -1,14 +1,14 @@
 package com.alibaba.android.vlayout.layout;
 
-import com.alibaba.android.vlayout.LayoutHelper;
-import com.alibaba.android.vlayout.LayoutManagerHelper;
-import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
-
 import android.support.annotation.Nullable;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+
+import com.alibaba.android.vlayout.LayoutHelper;
+import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
 import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
 
@@ -127,7 +127,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
             if (helper.getReverseLayout() || !mStickyStart) {
                 if ((remainingSpace < (mOffset + mAdjuster.bottom) && layoutState.getItemDirection() == LayoutStateWrapper.ITEM_DIRECTION_TAIL)
-                        || (layoutState.isRefreshLayout() && bottom > mMarginBottom + mOffset + mAdjuster.bottom)) {
+                        || (bottom > mMarginBottom + mOffset + mAdjuster.bottom)) {
                     mDoNormalHandle = false;
                     mFixView = view;
 
@@ -137,7 +137,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             } else {
                 // should not use 0
                 if ((remainingSpace < (mOffset + mAdjuster.top) && layoutState.getItemDirection() == LayoutStateWrapper.ITEM_DIRECTION_HEAD)
-                        || (layoutState.isRefreshLayout() && top < mMarginTop + mOffset + mAdjuster.top)) {
+                        || (top < mMarginTop + mOffset + mAdjuster.top)) {
                     mDoNormalHandle = false;
                     mFixView = view;
                     top = orientationHelper.getStartAfterPadding() + mMarginTop + mOffset + mAdjuster.top;
