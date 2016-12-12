@@ -228,5 +228,18 @@ public interface LayoutManagerHelper {
      */
     LayoutHelper findLayoutHelperByPosition(int position);
 
+    /**
+     * return first visibile item position in layoutManager
+     * @return
+     */
+    int findFirstVisibleItemPosition();
+
+    /**
+     *
+     * return last visibile item position in layoutManager
+     * @return
+     */
+    int findLastVisibleItemPosition();
+
 }
 
