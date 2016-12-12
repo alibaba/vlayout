@@ -1,10 +1,13 @@
 package com.alibaba.android.vlayout.layout;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewPropertyAnimator;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
@@ -37,7 +40,9 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
 
     protected boolean mDoNormalHandle = false;
 
+    private boolean isAddFixViewImmediately = false;
 
+    private FixViewAnimatorListener mFixViewAnimatorListener = new FixViewAnimatorListener();
 
     public FixLayoutHelper(int x, int y) {
         this(TOP_LEFT, x, y);
@@ -48,6 +53,14 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
         this.mX = x;
         this.mY = y;
         setItemCount(1);
+        setFixViewAnimatorHelper(new FixViewAnimatorHelper() {
+            @Override
+            public ViewPropertyAnimator onGetFixViewAppearAnimator(View fixView) {
+                int height = fixView.getMeasuredHeight();
+                fixView.setTranslationY(-height);
+                return fixView.animate().translationYBy(height).setDuration(500);
+            }
+        });
     }
 
     @Override
@@ -152,6 +165,7 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
             helper.removeChildView(mFixView);
             recycler.recycleView(mFixView);
             mFixView = null;
+            isAddFixViewImmediately = true;
         }
 
         mDoNormalHandle = false;
@@ -160,7 +174,7 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
     @Override
     public void afterLayout(RecyclerView.Recycler recycler, RecyclerView.State state,
                             int startPosition, int endPosition, int scrolled,
-                            LayoutManagerHelper helper) {
+                            final LayoutManagerHelper helper) {
         super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
 
         // disabled if mPos is negative number
@@ -172,6 +186,7 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
             if (mFixView != null) {
                 helper.removeChildView(mFixView);
                 recycler.recycleView(mFixView);
+                isAddFixViewImmediately = false;
             }
 
             mFixView = null;
@@ -184,7 +199,7 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
                 // already capture in layoutViews phase
                 // if it's not shown on screen
                 if (mFixView.getParent() == null) {
-                    helper.addFixedView(mFixView);
+                    addFixViewWithAnimator(helper, mFixView);
                 } else {
                     // helper.removeChildView(mFixView);
                     helper.addFixedView(mFixView);
@@ -192,14 +207,34 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
             } else {
                 mFixView = recycler.getViewForPosition(mPos);
                 doMeasureAndLayout(mFixView, helper);
-                helper.addFixedView(mFixView);
+                if (isAddFixViewImmediately) {
+                    helper.addFixedView(mFixView);
+                } else {
+                    addFixViewWithAnimator(helper, mFixView);
+                }
             }
         } else {
             if (mFixView != null) {
                 helper.removeChildView(mFixView);
                 recycler.recycleView(mFixView);
+                isAddFixViewImmediately = false;
                 mFixView = null;
             }
+        }
+
+    }
+
+    private void addFixViewWithAnimator(LayoutManagerHelper layoutManagerHelper, View fixView) {
+        if (mFixViewAnimatorHelper != null) {
+            ViewPropertyAnimator animator = mFixViewAnimatorHelper.onGetFixViewAppearAnimator(fixView);
+            if (animator != null) {
+                mFixViewAnimatorListener.bindAction(layoutManagerHelper, fixView);
+                animator.setListener(mFixViewAnimatorListener).start();
+            } else {
+                layoutManagerHelper.addFixedView(fixView);
+            }
+        } else {
+            layoutManagerHelper.addFixedView(fixView);
         }
 
     }
@@ -227,7 +262,9 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
         if (mFixView != null) {
             helper.removeChildView(mFixView);
             helper.recycleView(mFixView);
+            mFixView.animate().cancel();
             mFixView = null;
+            isAddFixViewImmediately = false;
         }
     }
 
@@ -276,5 +313,23 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
         layoutChild(view, left, top, right, bottom, helper);
     }
 
+    private static class FixViewAnimatorListener extends AnimatorListenerAdapter {
+
+        private LayoutManagerHelper mLayoutManagerHelper;
+
+        private View mFixView;
+
+        public void bindAction(LayoutManagerHelper layoutManagerHelper, View fixView) {
+            mLayoutManagerHelper = layoutManagerHelper;
+            mFixView = fixView;
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            if (mLayoutManagerHelper != null && mFixView != null) {
+                mLayoutManagerHelper.addFixedView(mFixView);
+            }
+        }
+    }
 
 }
