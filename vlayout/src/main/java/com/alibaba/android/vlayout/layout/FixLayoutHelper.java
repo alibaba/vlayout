@@ -53,6 +53,14 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
         this.mX = x;
         this.mY = y;
         setItemCount(1);
+//        setFixViewAnimatorHelper(new FixViewAnimatorHelper() {
+//            @Override
+//            public ViewPropertyAnimator onGetFixViewAppearAnimator(View fixView) {
+//                int height = fixView.getMeasuredHeight();
+//                fixView.setTranslationY(-height);
+//                return fixView.animate().translationYBy(height).setDuration(500);
+//            }
+//        });
     }
 
     @Override
@@ -220,6 +228,8 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
         if (mFixViewAnimatorHelper != null) {
             ViewPropertyAnimator animator = mFixViewAnimatorHelper.onGetFixViewAppearAnimator(fixView);
             if (animator != null) {
+                fixView.setVisibility(View.INVISIBLE);
+                layoutManagerHelper.addFixedView(fixView);
                 mFixViewAnimatorListener.bindAction(layoutManagerHelper, fixView);
                 animator.setListener(mFixViewAnimatorListener).start();
             } else {
@@ -317,10 +327,12 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
         }
 
         @Override
+        public void onAnimationStart(Animator animation) {
+            mFixView.setVisibility(View.VISIBLE);
+        }
+
+        @Override
         public void onAnimationEnd(Animator animation) {
-            if (mLayoutManagerHelper != null && mFixView != null) {
-                mLayoutManagerHelper.addFixedView(mFixView);
-            }
         }
     }
 
