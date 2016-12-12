@@ -53,14 +53,6 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
         this.mX = x;
         this.mY = y;
         setItemCount(1);
-        setFixViewAnimatorHelper(new FixViewAnimatorHelper() {
-            @Override
-            public ViewPropertyAnimator onGetFixViewAppearAnimator(View fixView) {
-                int height = fixView.getMeasuredHeight();
-                fixView.setTranslationY(-height);
-                return fixView.animate().translationYBy(height).setDuration(500);
-            }
-        });
     }
 
     @Override
