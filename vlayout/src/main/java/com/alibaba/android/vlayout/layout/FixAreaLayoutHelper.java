@@ -24,5 +24,7 @@ public abstract class FixAreaLayoutHelper extends BaseLayoutHelper {
 
         ViewPropertyAnimator onGetFixViewAppearAnimator(View fixView);
 
+        ViewPropertyAnimator onGetFixViewDisappearAnimator(View fixView);
+
     }
 }
