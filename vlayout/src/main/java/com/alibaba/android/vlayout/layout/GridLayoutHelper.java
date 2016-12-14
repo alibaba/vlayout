@@ -555,9 +555,9 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
     private int getMainDirSpec(int dim, int otherSize, int viewSize, float viewAspectRatio) {
         if (!Float.isNaN(viewAspectRatio) && viewAspectRatio > 0 && viewSize > 0) {
-            return View.MeasureSpec.makeMeasureSpec((int) (viewSize / viewAspectRatio), View.MeasureSpec.EXACTLY);
+            return View.MeasureSpec.makeMeasureSpec((int) (viewSize / viewAspectRatio + 0.5f), View.MeasureSpec.EXACTLY);
         } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
-            return View.MeasureSpec.makeMeasureSpec((int) (otherSize / mAspectRatio), View.MeasureSpec.EXACTLY);
+            return View.MeasureSpec.makeMeasureSpec((int) (otherSize / mAspectRatio + 0.5f), View.MeasureSpec.EXACTLY);
         } else if (dim < 0) {
             return MAIN_DIR_SPEC;
         } else {

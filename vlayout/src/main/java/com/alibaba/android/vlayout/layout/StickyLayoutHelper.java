@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
 import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
@@ -494,16 +495,19 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
     }
 
     private void doMeasure(View view, LayoutManagerHelper helper) {
-        final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
+        final VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
 
         int widthSize = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - getHorizontalMargin();
         int heightSize = helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom() - getVerticalMargin();
+        float viewAspectRatio = params.mAspectRatio;
 
         if (layoutInVertical) {
             final int widthSpec = helper.getChildMeasureSpec(widthSize, params.width, false);
             int heightSpec;
-            if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
+            if (!Float.isNaN(viewAspectRatio) && viewAspectRatio > 0) {
+                heightSpec = View.MeasureSpec.makeMeasureSpec((int) (widthSize / viewAspectRatio + 0.5f), View.MeasureSpec.EXACTLY);
+            } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
                 heightSpec = View.MeasureSpec.makeMeasureSpec((int) (widthSize / mAspectRatio + 0.5), View.MeasureSpec.EXACTLY);
             } else
                 heightSpec = helper.getChildMeasureSpec(heightSize, params.height, true);
@@ -512,7 +516,9 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         } else {
             final int heightSpec = helper.getChildMeasureSpec(heightSize, params.height, false);
             int widthSpec;
-            if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
+            if (!Float.isNaN(viewAspectRatio) && viewAspectRatio > 0) {
+                widthSpec = View.MeasureSpec.makeMeasureSpec((int) (heightSize * viewAspectRatio + 0.5), View.MeasureSpec.EXACTLY);
+            } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
                 widthSpec = View.MeasureSpec.makeMeasureSpec((int) (heightSize * mAspectRatio + 0.5), View.MeasureSpec.EXACTLY);
             } else
                 widthSpec = helper.getChildMeasureSpec(widthSize, params.width, true);

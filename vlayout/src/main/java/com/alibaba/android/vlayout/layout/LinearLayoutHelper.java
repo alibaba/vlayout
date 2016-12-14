@@ -62,14 +62,18 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
             return;
         }
 
-        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
+        VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
 
 
         final int widthSize = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - getHorizontalMargin();
         int widthSpec = helper.getChildMeasureSpec(widthSize, params.width, !layoutInVertical);
         int heightSpec;
-        if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
+        float viewAspectRatio = params.mAspectRatio;
+        if (!Float.isNaN(viewAspectRatio) && viewAspectRatio > 0) {
+            heightSpec = View.MeasureSpec.makeMeasureSpec((int) (widthSize / viewAspectRatio + 0.5f),
+                    View.MeasureSpec.EXACTLY);
+        } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
             heightSpec = View.MeasureSpec.makeMeasureSpec((int) (widthSize / mAspectRatio + 0.5), View.MeasureSpec.EXACTLY);
         } else
             heightSpec = helper.getChildMeasureSpec(helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom() - getVerticalMargin(), params.height, layoutInVertical);
