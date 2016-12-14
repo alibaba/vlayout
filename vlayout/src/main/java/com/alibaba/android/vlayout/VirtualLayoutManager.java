@@ -763,14 +763,16 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
         public int zIndex = 0;
 
+        public float mAspectRatio = Float.NaN;
+
         private int mOriginWidth = INVALIDE_SIZE;
         private int mOriginHeight = INVALIDE_SIZE;
+
 
         public void storeOriginWidth() {
             if (mOriginWidth == INVALIDE_SIZE) {
                 mOriginWidth = width;
             }
-
         }
 
         public void storeOriginHeight() {

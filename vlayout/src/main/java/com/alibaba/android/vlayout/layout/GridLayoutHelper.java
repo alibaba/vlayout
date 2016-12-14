@@ -387,12 +387,15 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                                 Math.max(0, spanSize - 1) * (layoutInVertical ? mHGap : mVGap),
                         View.MeasureSpec.EXACTLY);
             }
-            final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            final VirtualLayoutManager.LayoutParams lp = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
 
             if (helper.getOrientation() == VERTICAL) {
-                helper.measureChild(view, spec, getMainDirSpec(lp.height, mTotalSize));
+                helper.measureChild(view, spec, getMainDirSpec(lp.height, mTotalSize,
+                        View.MeasureSpec.getSize(spec), lp.mAspectRatio));
             } else {
-                helper.measureChild(view, getMainDirSpec(lp.width, mTotalSize), spec);
+                helper.measureChild(view,
+                        getMainDirSpec(lp.width, mTotalSize, View.MeasureSpec.getSize(spec),
+                                lp.mAspectRatio), View.MeasureSpec.getSize(spec));
             }
             final int size = orientationHelper.getDecoratedMeasurement(view);
             if (size > maxSize) {
@@ -401,7 +404,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         }
 
         // views that did not measure the maxSize has to be re-measured
-        final int maxMeasureSpec = getMainDirSpec(maxSize, mTotalSize);
+        final int maxMeasureSpec = getMainDirSpec(maxSize, mTotalSize, 0, Float.NaN);
         for (int i = 0; i < count; i++) {
             final View view = mSet[i];
             if (orientationHelper.getDecoratedMeasurement(view) != maxSize) {
@@ -550,8 +553,10 @@ public class GridLayoutHelper extends BaseLayoutHelper {
     private static final int MAIN_DIR_SPEC =
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 
-    private int getMainDirSpec(int dim, int otherSize) {
-        if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
+    private int getMainDirSpec(int dim, int otherSize, int viewSize, float viewAspectRatio) {
+        if (!Float.isNaN(viewAspectRatio) && viewAspectRatio > 0 && viewSize > 0) {
+            return View.MeasureSpec.makeMeasureSpec((int) (viewSize / viewAspectRatio), View.MeasureSpec.EXACTLY);
+        } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
             return View.MeasureSpec.makeMeasureSpec((int) (otherSize / mAspectRatio), View.MeasureSpec.EXACTLY);
         } else if (dim < 0) {
             return MAIN_DIR_SPEC;
