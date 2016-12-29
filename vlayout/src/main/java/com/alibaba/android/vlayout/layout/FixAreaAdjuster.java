@@ -25,7 +25,7 @@
 package com.alibaba.android.vlayout.layout;
 
 /**
- *
+ * Used to give an offset for four edges
  */
 public class FixAreaAdjuster {
 

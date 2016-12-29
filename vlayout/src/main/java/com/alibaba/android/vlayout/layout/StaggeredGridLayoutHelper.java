@@ -49,6 +49,8 @@ import static com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrappe
 import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 
 /**
+ * LayoutHelper provides waterfall.
+ *
  * @author villadora
  * @since 1.1.0
  */

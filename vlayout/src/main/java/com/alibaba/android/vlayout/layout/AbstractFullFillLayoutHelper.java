@@ -38,11 +38,12 @@ import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 
 
 /**
- *
+ * 'FullFill' means that all child views it is responsible for should be layout or recycler at once.
+ * Otherwise the inner layout state will enter into chaos.
  */
 public abstract class AbstractFullFillLayoutHelper extends BaseLayoutHelper {
 
-    private static final String TAG = "AbstractFullFillLayoutHelper";
+    private static final String TAG = "FullFillLayoutHelper";
 
     protected int getAllChildren(View[] toFill,
                                  RecyclerView.Recycler recycler, LayoutStateWrapper layoutState,

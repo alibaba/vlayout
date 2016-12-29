@@ -77,8 +77,10 @@ public abstract class RecyclablePagerAdapter<VH extends RecyclerView.ViewHolder>
 
 
         onBindViewHolder((VH) holder, position);
-        //为了解决在轮播卡片的 item 复用过程中，itemView 的 layoutParams 复用造成 layout 错误,这里要提供一个新的 layoutParams。
-        //主要是 ViewPager.LayoutParams.widthFactor出现错乱
+        //itemViews' layoutParam will be reused when there are more than one nested ViewPager in one page,
+        //so the attributes of layoutParam such as widthFactor and position will also be reused,
+        //while these attributes should be reset to default value during reused.
+        //Considering ViewPager.LayoutParams has a few inner attributes which could not be modify outside, we provide a new instance here
         container.addView(holder.itemView, new ViewPager.LayoutParams());
 
         return holder;

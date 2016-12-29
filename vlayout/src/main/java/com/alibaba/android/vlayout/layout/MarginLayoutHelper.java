@@ -28,7 +28,7 @@ import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 
 /**
- * {@link LayoutHelper} provides margin supports.
+ * {@link LayoutHelper} provides margin and padding supports.
  */
 public abstract class MarginLayoutHelper extends LayoutHelper {
 
@@ -45,10 +45,10 @@ public abstract class MarginLayoutHelper extends LayoutHelper {
 
     /**
      * set paddings for this layoutHelper
-     * @param leftPadding
-     * @param topPadding
-     * @param rightPadding
-     * @param bottomPadding
+     * @param leftPadding left padding
+     * @param topPadding top padding
+     * @param rightPadding right padding
+     * @param bottomPadding bottom padding
      */
     public void setPadding(int leftPadding, int topPadding, int rightPadding, int bottomPadding) {
         mPaddingLeft = leftPadding;
@@ -60,10 +60,10 @@ public abstract class MarginLayoutHelper extends LayoutHelper {
     /**
      * Set margins for this layoutHelper
      *
-     * @param leftMargin
-     * @param topMargin
-     * @param rightMargin
-     * @param bottomMargin
+     * @param leftMargin left margin
+     * @param topMargin top margin
+     * @param rightMargin right margin
+     * @param bottomMargin bottom margin
      */
     public void setMargin(int leftMargin, int topMargin, int rightMargin, int bottomMargin) {
         this.mMarginLeft = leftMargin;

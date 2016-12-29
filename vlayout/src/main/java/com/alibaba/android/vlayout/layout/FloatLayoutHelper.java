@@ -43,6 +43,8 @@ import static com.alibaba.android.vlayout.layout.FixLayoutHelper.BOTTOM_RIGHT;
 import static com.alibaba.android.vlayout.layout.FixLayoutHelper.TOP_RIGHT;
 
 /**
+ * LayoutHelper that will be located as fix position at first layout, but its position could be changed by dragingg and dropping
+ *
  * Created by villadora on 15/8/28.
  */
 public class FloatLayoutHelper extends FixAreaLayoutHelper {

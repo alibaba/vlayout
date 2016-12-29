@@ -44,7 +44,6 @@ import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
  * @author villadora
  * @since 1.0.0
  */
-// TODO: make stack animation
 public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
     private static final String TAG = "StickyStartLayoutHelper";

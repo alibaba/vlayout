@@ -41,6 +41,30 @@ import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 
 
 /**
+ * LayoutHelper that will be located as fix position. The appearance and disappearance are able to
+ * transit with animation.<br />
+ * Animation sample: <br />
+ *<blockquote>
+ * <pre>
+ *     {@code
+ * setFixViewAnimatorHelper(new FixViewAnimatorHelper() {
+ * @Override
+ * public ViewPropertyAnimator onGetFixViewAppearAnimator(View fixView) {
+ * int height = fixView.getMeasuredHeight();
+ * fixView.setTranslationY(-height);
+ * return fixView.animate().translationYBy(height).alpha(1.0f).setDuration(500);
+ * }
+ *
+ * @Override
+ * public ViewPropertyAnimator onGetFixViewDisappearAnimator(View fixView) {
+ * int height = fixView.getMeasuredHeight();
+ * return fixView.animate().translationYBy(-height).alpha(0.0f).setDuration(500);
+ * }
+ * });
+ *     }
+ * </pre>
+ *</blockquote>
+ *
  * Created by villadora on 15/8/18.
  */
 public class FixLayoutHelper extends FixAreaLayoutHelper {
@@ -48,8 +72,11 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
     private static final String TAG = "FixLayoutHelper";
 
     public static final int TOP_LEFT = 0;
+
     public static final int TOP_RIGHT = 1;
+
     public static final int BOTTOM_LEFT = 2;
+
     public static final int BOTTOM_RIGHT = 3;
 
     private int mPos = -1;
@@ -57,6 +84,7 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
     private int mAlignType = TOP_LEFT;
 
     protected int mX = 0;
+
     protected int mY = 0;
 
     private boolean mSketchMeasure = false;
@@ -86,28 +114,15 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
         this.mX = x;
         this.mY = y;
         setItemCount(1);
-//        setFixViewAnimatorHelper(new FixViewAnimatorHelper() {
-//            @Override
-//            public ViewPropertyAnimator onGetFixViewAppearAnimator(View fixView) {
-//                int height = fixView.getMeasuredHeight();
-//                fixView.setTranslationY(-height);
-//                return fixView.animate().translationYBy(height).alpha(1.0f).setDuration(500);
-//            }
-//
-//            @Override
-//            public ViewPropertyAnimator onGetFixViewDisappearAnimator(View fixView) {
-//                int height = fixView.getMeasuredHeight();
-//                return fixView.animate().translationYBy(-height).alpha(0.0f).setDuration(500);
-//            }
-//        });
     }
 
     @Override
     public void setItemCount(int itemCount) {
-        if (itemCount > 0)
+        if (itemCount > 0) {
             super.setItemCount(1);
-        else
+        } else {
             super.setItemCount(0);
+        }
     }
 
 
@@ -151,8 +166,8 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
 
     @Override
     public void layoutViews(RecyclerView.Recycler recycler, RecyclerView.State state,
-                            VirtualLayoutManager.LayoutStateWrapper layoutState, LayoutChunkResult result,
-                            final LayoutManagerHelper helper) {
+            VirtualLayoutManager.LayoutStateWrapper layoutState, LayoutChunkResult result,
+            final LayoutManagerHelper helper) {
         // reach the end of this layout
         if (isOutOfRange(layoutState.getCurrentPosition())) {
             return;
@@ -165,9 +180,9 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
 
         // find view in currentPosition
         View view = mFixView;
-        if (view == null)
+        if (view == null) {
             view = layoutState.next(recycler);
-        else {
+        } else {
             layoutState.skipCurrentPosition();
         }
 
@@ -181,13 +196,11 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
         if (mDoNormalHandle) {
             // in PreLayout do normal layout
             helper.addChildView(layoutState, view);
-//            Log.d(TAG, "layoutView doNormal, addView");
         }
 
         mFixView = view;
 
         doMeasureAndLayout(view, helper);
-
 
         result.mConsumed = 0;
         result.mIgnoreConsumed = true;
@@ -202,11 +215,11 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
     }
 
     @Override
-    public void beforeLayout(RecyclerView.Recycler recycler, RecyclerView.State state, LayoutManagerHelper helper) {
+    public void beforeLayout(RecyclerView.Recycler recycler, RecyclerView.State state,
+            LayoutManagerHelper helper) {
         super.beforeLayout(recycler, state, helper);
 
         if (mFixView != null && helper.isViewHolderUpdated(mFixView)) {
-//            Log.d(TAG, "beforeLayout viewHolder updated removeView");
             // recycle view for later usage
             helper.removeChildView(mFixView);
             recycler.recycleView(mFixView);
@@ -219,8 +232,8 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
 
     @Override
     public void afterLayout(final RecyclerView.Recycler recycler, RecyclerView.State state,
-                            int startPosition, int endPosition, int scrolled,
-                            final LayoutManagerHelper helper) {
+            int startPosition, int endPosition, int scrolled,
+            final LayoutManagerHelper helper) {
         super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
 
         // disabled if mPos is negative number
@@ -247,27 +260,22 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
                 // already capture in layoutViews phase
                 // if it's not shown on screen
                 if (mFixView.getParent() == null) {
-//                    Log.d(TAG, "after layout exist view add with animator " + mFixView.hashCode());
                     addFixViewWithAnimator(helper, mFixView);
                 } else {
                     // helper.removeChildView(mFixView);
                     helper.addFixedView(mFixView);
                     isRemoveFixViewImmediately = false;
-//                    Log.d(TAG, "after layout exist view add immediately " + mFixView.hashCode());
                 }
             } else {
                 Runnable action = new Runnable() {
                     @Override
                     public void run() {
-//                        Log.d(TAG, "after layout wait for removal animator ");
                         mFixView = recycler.getViewForPosition(mPos);
                         doMeasureAndLayout(mFixView, helper);
                         if (isAddFixViewImmediately) {
                             helper.addFixedView(mFixView);
                             isRemoveFixViewImmediately = false;
-//                            Log.d(TAG, "after layout new view add immediately " + mFixView.hashCode());
                         } else {
-//                            Log.d(TAG, "after layout new view add with animator " + mFixView.hashCode());
                             addFixViewWithAnimator(helper, mFixView);
                         }
                     }
@@ -281,7 +289,6 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
         } else {
             mShouldDrawn = false;
             if (mFixView != null) {
-//                Log.d(TAG, "after layout remove view " + mFixView.hashCode());
                 removeFixViewWithAnimator(recycler, helper, mFixView);
                 mFixView = null;
             }
@@ -291,7 +298,8 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
 
     private void addFixViewWithAnimator(LayoutManagerHelper layoutManagerHelper, View fixView) {
         if (mFixViewAnimatorHelper != null) {
-            ViewPropertyAnimator animator = mFixViewAnimatorHelper.onGetFixViewAppearAnimator(fixView);
+            ViewPropertyAnimator animator = mFixViewAnimatorHelper
+                    .onGetFixViewAppearAnimator(fixView);
             if (animator != null) {
                 fixView.setVisibility(View.INVISIBLE);
                 layoutManagerHelper.addFixedView(fixView);
@@ -306,22 +314,22 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
         isRemoveFixViewImmediately = false;
     }
 
-    private void removeFixViewWithAnimator(RecyclerView.Recycler recycler, LayoutManagerHelper layoutManagerHelper, View fixView) {
+    private void removeFixViewWithAnimator(RecyclerView.Recycler recycler,
+            LayoutManagerHelper layoutManagerHelper, View fixView) {
         if (!isRemoveFixViewImmediately && mFixViewAnimatorHelper != null) {
-            ViewPropertyAnimator animator = mFixViewAnimatorHelper.onGetFixViewDisappearAnimator(fixView);
+            ViewPropertyAnimator animator = mFixViewAnimatorHelper
+                    .onGetFixViewDisappearAnimator(fixView);
             if (animator != null) {
-//                Log.d(TAG, "remove view with animator " + fixView.hashCode());
-                mFixViewDisappearAnimatorListener.bindAction(recycler, layoutManagerHelper, fixView);
+                mFixViewDisappearAnimatorListener
+                        .bindAction(recycler, layoutManagerHelper, fixView);
                 animator.setListener(mFixViewDisappearAnimatorListener).start();
                 isAddFixViewImmediately = false;
             } else {
-//                Log.d(TAG, "remove view with immediately " + fixView.hashCode());
                 layoutManagerHelper.removeChildView(fixView);
                 recycler.recycleView(fixView);
                 isAddFixViewImmediately = false;
             }
         } else {
-//            Log.d(TAG, "remove view with immediately " + fixView.hashCode());
             layoutManagerHelper.removeChildView(fixView);
             recycler.recycleView(fixView);
             isAddFixViewImmediately = false;
@@ -334,7 +342,8 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
      *
      * @param startPosition the first visible position in RecyclerView
      * @param endPosition   the last visible position in RecyclerView
-     * @param scrolled      how many pixels will be scrolled during this scrolling, 0 during layouting
+     * @param scrolled      how many pixels will be scrolled during this scrolling, 0 during
+     *                      layouting
      * @return Whether the view in current layoutHelper should be shown
      */
     protected boolean shouldBeDraw(int startPosition, int endPosition, int scrolled) {
@@ -359,18 +368,25 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
     }
 
     private void doMeasureAndLayout(View view, LayoutManagerHelper helper) {
-        if (view == null || helper == null) return;
+        if (view == null || helper == null) {
+            return;
+        }
 
-        final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+        final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view
+                .getLayoutParams();
 
         final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
         final int widthSpec = helper.getChildMeasureSpec(
                 helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(),
-                params.width >= 0 ? params.width : ((mSketchMeasure && layoutInVertical) ? LayoutParams.MATCH_PARENT : LayoutParams.WRAP_CONTENT), false);
+                params.width >= 0 ? params.width
+                        : ((mSketchMeasure && layoutInVertical) ? LayoutParams.MATCH_PARENT
+                                : LayoutParams.WRAP_CONTENT), false);
         final int heightSpec = helper.getChildMeasureSpec(
                 helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
-                params.height >= 0 ? params.height : ((mSketchMeasure && !layoutInVertical) ? LayoutParams.MATCH_PARENT : LayoutParams.WRAP_CONTENT), false);
+                params.height >= 0 ? params.height
+                        : ((mSketchMeasure && !layoutInVertical) ? LayoutParams.MATCH_PARENT
+                                : LayoutParams.WRAP_CONTENT), false);
 
         // do measurement
         helper.measureChild(view, widthSpec, heightSpec);
@@ -395,10 +411,12 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
             // TOP_LEFT
             left = helper.getPaddingLeft() + mX + mAdjuster.left;
             top = helper.getPaddingTop() + mY + mAdjuster.top;
-            right = left + (layoutInVertical ? orientationHelper.getDecoratedMeasurementInOther(view) : orientationHelper.getDecoratedMeasurement(view));
-            bottom = top + (layoutInVertical ? orientationHelper.getDecoratedMeasurement(view) : orientationHelper.getDecoratedMeasurementInOther(view));
+            right = left + (layoutInVertical ? orientationHelper
+                    .getDecoratedMeasurementInOther(view)
+                    : orientationHelper.getDecoratedMeasurement(view));
+            bottom = top + (layoutInVertical ? orientationHelper.getDecoratedMeasurement(view)
+                    : orientationHelper.getDecoratedMeasurementInOther(view));
         }
-
 
         layoutChild(view, left, top, right, bottom, helper);
     }
@@ -436,7 +454,8 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
 
         private Runnable mEndAction;
 
-        public void bindAction(RecyclerView.Recycler recycler, LayoutManagerHelper layoutManagerHelper, View fixView) {
+        public void bindAction(RecyclerView.Recycler recycler,
+                LayoutManagerHelper layoutManagerHelper, View fixView) {
             isAnimating = true;
             mRecycler = recycler;
             mLayoutManagerHelper = layoutManagerHelper;

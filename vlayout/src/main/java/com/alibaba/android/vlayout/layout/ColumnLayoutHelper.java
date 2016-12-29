@@ -37,7 +37,44 @@ import java.util.Arrays;
 
 import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 
-
+/**
+ * Layout view at once in grid, support multi columns with different column width
+ * <pre>
+ * 1 column
+ * -------------------------
+ * |                       |
+ * |                       |
+ * |                       |
+ * -------------------------
+ * |                       |
+ * |                       |
+ * |                       |
+ * -------------------------
+ *
+ * 2 columns with same column width for each one
+ * -------------------------
+ * |           |           |
+ * |           |           |
+ * |           |           |
+ * |           |           |
+ * |           |           |
+ * |           |           |
+ * |           |           |
+ * -------------------------
+ *
+ * 3 columns with different column widh for each one
+ * -------------------------
+ * |     |         |       |
+ * |     |         |       |
+ * |     |         |       |
+ * |     |         |       |
+ * |     |         |       |
+ * |     |         |       |
+ * |     |         |       |
+ * -------------------------
+ *
+ * </pre>
+ */
 public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
 
     private View[] mEqViews;
@@ -154,7 +191,7 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
                 final int heightSpec = helper.getChildMeasureSpec(
                         helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
                         uniformHeight > 0 ? uniformHeight : params.height, true);
-                //cols只配置了部分，那么剩下的组件平分剩下的区域
+                //if cols' length is less than view's count, then remainder views share the rest space
                 helper.measureChild(view,
                         View.MeasureSpec.makeMeasureSpec(
                                 (int) ((availableWidth - usedWidth) * 1.0f / eqSize + 0.5f), View.MeasureSpec.EXACTLY),

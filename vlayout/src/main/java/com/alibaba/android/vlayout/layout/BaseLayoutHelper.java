@@ -24,19 +24,16 @@
 
 package com.alibaba.android.vlayout.layout;
 
-import android.graphics.Rect;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
-import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
+import android.graphics.Rect;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 
 /**
  * {@link com.alibaba.android.vlayout.LayoutHelper} that provides basic methods
@@ -188,7 +185,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
                         mLayoutView = helper.generateLayoutView();
                         helper.addOffFlowView(mLayoutView, true);
                     }
-                    //为了防止卡片背景有留白的适配问题（Nexus 6P）,在这里修正一下宽或高
+                    //finally fix layoutRegion's height and with here to avoid visual blank
                     if (helper.getOrientation() == VirtualLayoutManager.VERTICAL) {
                         mLayoutRegion.left = helper.getPaddingLeft() + mMarginLeft;
                         mLayoutRegion.right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight;

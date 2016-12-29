@@ -36,8 +36,9 @@ import java.util.Set;
 
 /**
  * Wrapping original RecycledViewPool to provides destroy callback on Views
- * and also provides wrapping another ViewPool
- * This ViewPool doesn't support multi thread
+ * and also provides wrapping another ViewPool.
+ * This ViewPool doesn't support multi thread.
+ * The default max size of recycler is 5 as the original one, you can also modify to a larger one to satisfy your need.
  */
 public final class InnerRecycledViewPool extends RecyclerView.RecycledViewPool {
 
