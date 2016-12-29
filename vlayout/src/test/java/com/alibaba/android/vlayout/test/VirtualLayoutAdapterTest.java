@@ -24,7 +24,7 @@
 
 package com.alibaba.android.vlayout.test;
 
-import com.tmall.wireless.tangram.vlayout.BuildConfig;
+import com.alibab.android.vlayout.vlayout.BuildConfig;
 
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;

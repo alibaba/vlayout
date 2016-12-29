@@ -16,7 +16,7 @@ VirtualLayout是一个针对RecyclerView的LayoutManager扩展, 主要通过提�
 
 ```
 // gradle
-compile 'com.tmall.android:vlayout:1.2.0@aar'
+compile 'com.alibaba.android:vlayout:1.2.0@aar'
 ```
 
 或者maven
@@ -24,7 +24,7 @@ compile 'com.tmall.android:vlayout:1.2.0@aar'
 ```
 // pom.xml in maven
 <dependency>
-  <groupId>com.tmall.android</groupId>
+  <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
   <version>1.2.0</version>
   <type>aar</type>

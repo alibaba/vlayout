@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.tmall.wireless.tangram.example;
+package com.alibab.android.vlayout.example;
 
 import android.app.Activity;
 import android.graphics.Rect;

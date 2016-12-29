@@ -32,7 +32,7 @@ android {
     buildToolsVersion System.properties['buildToolsVersion']
 
     defaultConfig {
-        applicationId "com.tmall.wireless.tangram.example"
+        applicationId "com.alibab.android.vlayout.example"
         minSdkVersion 14
         targetSdkVersion Integer.parseInt(System.properties['targetSdkVersion'])
         versionCode 1
@@ -51,7 +51,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':vlayout')
     compile 'com.crittercism.dexmaker:dexmaker:1.4'
-    compile 'com.alibaba.android:imagecompat_interface:1.1.0@jar'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:appcompat-v7:21.0.0'
     compile 'com.android.support:support-annotations:21.0.0'
