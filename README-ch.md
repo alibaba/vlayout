@@ -2,21 +2,34 @@
 
 VirtualLayout是一个针对RecyclerView的LayoutManager扩展, 主要通过提供一整套布局方案和布局间的组件复用的问题。
 
-## 主要提供:
+## 设计思路
 
- * 默认通用布局实现，解耦所有的View和布局之间的关系: Linear, Grid, 吸顶, 浮动, 固定位置等.
- * 所有除布局外的组件复用，VirtualLayout将用来管理大的模块布局组合, 扩展了RecyclerView，使得同一RecyclerView内的组件可以复用，减少View的创建和销毁过程.
+通过定制化的LayoutManager，接管整个RecyclerView的布局逻辑；LayoutManager管理了一系列LayoutHelper，LayoutHelper负责具体布局逻辑实现的地方；每一个LayoutHelper负责页面某一个范围内的组件布局；不同的LayoutHelper可以做不同的布局逻辑，因此可以在一个RecyclerView页面里提供异构的布局结构，这就能比系统自带的LinearLayoutManager、GridLayoutManager等提供更加丰富的能力。同时支持扩展LayoutHelper来提供更多的布局能力。
+
+## 主要功能
+
+ * 默认通用布局实现，解耦所有的View和布局之间的关系: Linear, Grid, 吸顶, 浮动, 固定位置等。
+	* LinearLayoutHelper: 线性布局
+	* GridLayoutHelper:  Grid布局， 支持横向的colspan
+	* FixLayoutHelper: 固定布局，始终在屏幕固定位置显示
+	* ScrollFixLayoutHelper: 固定布局，但之后当页面滑动到该图片区域才显示, 可以用来做返回顶部或其他书签等
+	* FloatLayoutHelper: 浮动布局，可以固定显示在屏幕上，但用户可以拖拽其位置
+	* ColumnLayoutHelper: 栏格布局，都布局在一排，可以配置不同列之间的宽度比值
+	* SingleLayoutHelper: 通栏布局，只会显示一个组件View
+	* OnePlusNLayoutHelper: 一拖N布局，可以配置1-5个子元素
+	* StickyLayoutHelper: stikcy布局， 可以配置吸顶或者吸底
+	* StaggeredGridLayoutHelper: 瀑布流布局，可配置间隔高度/宽度
+
+ * 所有除布局外的组件复用，VirtualLayout将用来管理大的模块布局组合，扩展了RecyclerView，使得同一RecyclerView内的组件可以复用，减少View的创建和销毁过程。
 
 
 ## 使用
-
-
 
 版本请参考mvn repository上的最新版本，引入aar依赖:
 
 ```
 // gradle
-compile 'com.alibaba.android:vlayout:1.2.0@aar'
+compile 'com.alibaba.android:vlayout:1.0.0@aar'
 ```
 
 或者maven
@@ -26,7 +39,7 @@ compile 'com.alibaba.android:vlayout:1.2.0@aar'
 <dependency>
   <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
-  <version>1.2.0</version>
+  <version>1.0.0</version>
   <type>aar</type>
 </dependency>
 ```
@@ -64,7 +77,7 @@ delegateAdapter.addAdapter(adapter);
 * 另一种是当业务有自定义的复杂需求的时候, 可以继承自```VirtualLayoutAdapter```, 实现自己的Adapter
 
 ```java
-public class MyAdapter extends VirtualLayoutManager {
+public class MyAdapter extends VirtualLayoutAdapter {
    ....
 }
 
@@ -74,33 +87,5 @@ public class MyAdapter extends VirtualLayoutManager {
 
 
 推荐使用第一种方式，简单方便，开发者也很熟悉。
-
-
-### 目前支持的布局类型
-
-* LinearLayoutHelper: 线性布局
-* GridLayoutHelper:  Grid布局， 支持横向的colspan
-* FixLayoutHelper: 固定布局，始终在屏幕固定位置显示
-* ScrollFixLayoutHelper: 固定布局，但之后当页面滑动到该图片区域才显示, 可以用来做返回顶部或其他书签等
-* FloatLayoutHelper: 浮动布局，可以固定显示在屏幕上，但用户可以拖拽其位置
-* ColumnLayoutHelper: 栏格布局，都布局在一排，可以配置不同列之间的宽度比值
-* SingleLayoutHelper: 通栏布局，只会显示一个组件View
-* OnePlusNLayoutHelper: 一拖N布局，可以配置1-5个子元素
-* StickyLayoutHelper: stikcy布局， 可以配置吸顶或者吸底
-* StaggeredGridLayoutHelper: 瀑布流布局，可配置间隔高度/宽度
-* 等待更多的布局支持
-
-#### 目前有的布局还不支持横向滑动，欢迎补充贡献。
-
-### TODOs
-
-* 嵌套滑动
-* Horizontal Layout，目前只支持纵向布局
-
-
-### 扩展
-
-这个lib包含最基本基于RecyclerView搭建的布局和回收功能，在我们的tangram项目中还结合了动画，滑动, Banner, ViewPager等多种组合方式。
-使用和接入请联系 @灰风 THX!
 
 

@@ -1,8 +1,27 @@
-# VirtualLayoutManager
+# VirtualLayout
 
 [中文文档](README-ch.md)
 
 Project `vlayout` is a powerfull LayoutManager extension for RecyclerView, it provides a group of layouts for RecyclerView. Make it able to handle a complicate situation when grid, list and other layouts in the same recyclerview.
+
+## Design
+
+By providing a custom LayoutManager to RecyclerView, VirtualLayout is able to layout child views with different style at single view elegantly. The custom LayoutManager manages a serial of layoutHelpers where each one implements the specific layout logic for a certain position range items. By the way, implementing your custom layoutHelper and provding it to the framework is also supported.
+
+## Main Feature
+* Provide default common layout implements, decouple the View and Layout. Default layout implements are:
+	* LinearLayoutHelper: provide linear layout as LinearLayoutManager.
+	* GridLayoutHelper: privide grid layout as GridLayoutManager, but with more feature.
+	* FixLayoutHelper: fix the view at certain position of screen, the view does not scroll with whole page.
+	* ScrollFixLayoutHelper: fix the view at certain position of screen, but the view does not show until it scrolls to it position.
+	* FloatLayoutHelper: float the view on top of page, user can drag and drop it.
+	* ColumnLayoutHelper: perform like GridLayoutHelper but layouts all child views at once.
+	* SingleLayoutHelper: contain only one child view.
+	* OnePlusNLayoutHelper: a custom layout with one child view layouted at left and the others at right, you may not need this.
+	* StickyLayoutHelper: scroll the view when its position is inside the screen, but fix the view at start or end when its position is outside the screen.
+	* StaggeredGridLayoutHelper: provide waterfall like layout as StaggeredGridLayoutManager.
+
+
 
 ## Usage
 
@@ -15,7 +34,7 @@ For gradle:
 
 ```
 // gradle
-compile 'com.alibaba.android:vlayout:1.2.0@aar'
+compile 'com.alibaba.android:vlayout:1.0.0@aar'
 ```
 
 Or in maven:
@@ -25,7 +44,7 @@ Or in maven:
 <dependency>
   <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
-  <version>1.2.0</version>
+  <version>1.0.0</version>
   <type>aar</type>
 </dependency>
 ```
@@ -57,3 +76,14 @@ CustomAdapter adapter = new CustomAdapter(data, new GridLayoutHelper());
 delegateAdapter.addAdapter(adapter);
 
 ```
+
+* The other way to set adapter is extending ```VirtualLayoutAdapter``` and implementing it to make deep combination to your business code.
+
+```java
+public class MyAdapter extends VirtualLayoutAdapter {
+   ....
+}
+
+```
+
+In this way, one thing you should note is that you should call ```setLayoutHelpers``` when the data of Adapter changes.
