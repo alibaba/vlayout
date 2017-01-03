@@ -1,4 +1,4 @@
-# VirtualLayout
+# vlayout
 
 [中文文档](README-ch.md)
 
@@ -94,4 +94,4 @@ In this way, one thing you should note is that you should call ```setLayoutHelpe
 
 # Layout Attributes
 
-Each layoutHelper has a few attributes to control its layout style. See [this](ATTRIBUTES.md) to read more.
+Each layoutHelper has a few attributes to control its layout style. See [this](docs/ATTRIBUTES.md) to read more.
