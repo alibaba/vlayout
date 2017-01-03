@@ -157,3 +157,61 @@ StaggeredGridLayoutHelper中有这个属性，与GridLayoutHelper里的spanCount
 调用
 
 ```public void setLane(int lane)```
+
+# fixAreaAdjuster
+
+fix类型的LayoutHelper，在可能需要设置一个相对父容器四个边的偏移量，比如整个页面里有一个固定的标题栏添加在vlayout容器上，vlayout内部的fix类型View不希望与外部的标题有所重叠，那么就可以设置一个fixAreaAdjuster来做偏移。
+
+![TODO]()
+
+### 接口
+
+调用
+
+```public void setAdjuster(FixAreaAdjuster adjuster)```
+
+# alignType, x, y
+
+FixLayoutHelper, ScrollFixLayoutHelper, FloatLayoutHelper的属性，表示吸边时的基准位置，有四个取值，分别是TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT。x和y是相对这四个位置的偏移量，最终的偏移量还要受上述的fixAreaAdjuster影响。
+
++ TOP_LEFT：基准位置是左上角，x是View左边相对父容器的左边距偏移量，y是View顶边相对父容器的上边距偏移量；
++ TOP_RIGHT：基准位置是右上角，x是View右边相对父容器的右边距偏移量，y是View顶边相对父容器的上边距偏移量；
++ BOTTOM_LEFT：基准位置是左下角，x是View左边相对父容器的左边距偏移量，y是View底边相对父容器的上边距偏移量；
++ BOTTOM_RIGHT：基准位置是右下角，x是View右边相对父容器的右边距偏移量，y是View底边相对父容器的下边距偏移量；
+
+![TODO]()
+
+### 接口
+
+设置基准调用
+
+```public void setAlignType(int alignType)```
+
+设置偏移量调用
+```public void setX(int x)```
+```public void setY(int y)```
+
+# showType
+
+ScrollFixLayoutHelper的属性，取值有SHOW_ALWAYS, SHOW_ON_ENTER, SHOW_ON_LEAVE。
+
++ SHOW_ALWAYS：与FixLayoutHelper的行为一致，固定在某个位置；
++ SHOW_ON_ENTER：默认不显示View，当页面滚动到这个View的位置的时候，才显示；
++ SHOW_ON_LEAVE：默认不显示View，当页面滚出这个View的位置的时候显示；
+
+![TODO]()
+
+调用
+
+```public void setShowType(int showType)```
+
+# stickyStart, offset
+
+StickyLayoutHelper的属性，当View的位置在屏幕范围内时，View会随页面滚动而滚动；当View的位置滑出屏幕时，StickyLayoutHelper会将View固定在顶部（stickyStart=true）或者底部（stickyStart=false），固定的位置支持设置偏移量offset。
+
+![TODO]()
+
+调用
+
+```public void setStickyStart(boolean stickyStart)```
+```public void setOffset(int offset)```

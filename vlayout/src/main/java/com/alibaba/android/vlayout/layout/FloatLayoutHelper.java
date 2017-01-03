@@ -75,6 +75,14 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
         this.mY = y;
     }
 
+    public void setX(int x) {
+        this.mX = x;
+    }
+
+    public void setY(int y) {
+        this.mY = y;
+    }
+
     public void setAlignType(int alignType) {
         this.mAlignType = alignType;
     }
