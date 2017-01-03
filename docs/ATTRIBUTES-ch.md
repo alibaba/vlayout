@@ -109,7 +109,7 @@ LinearLayoutHelper的属性，LinearLayoutHelper是像ListView一样的线性布
 
 # weights
 
-ColumnLayoutHelper, GridLayoutHelper的属性，它们都是提供网格状的布局能力，**建议使用GridLayoutHelper**，它的能力更加强大，参考下文介绍。默认情况下，每个网格中每一列的宽度是一样的，通过weights属性，可以指定让每一列的宽度成比例分配，就行LinearLayout的weight属性一样。
+ColumnLayoutHelper, GridLayoutHelper的属性，它们都是提供网格状的布局能力，**建议使用GridLayoutHelper**，它的能力更加强大，参考下文介绍。默认情况下，每个网格中每一列的宽度是一样的，通过weights属性，可以指定让每一列的宽度成比例分配，就像LinearLayout的weight属性一样。
 weights属性是一个float数组，每一项代表某一列占父容器宽度的百分比，总和建议是100，否则布局会超出容器宽度；如果布局中有4列，那么weights的长度也应该是4；长度大于4，多出的部分不参与宽度计算；如果小于4，不足的部分默认平分剩余的空间。
 
 ![TODO]()
@@ -135,7 +135,7 @@ GridLayoutHelper与StaggeredGridLayoutHelper都有这两个属性，分别控制
 
 # spanCount, spanSizeLookup
 
-参考于系统的GridLayoutManager，spanCount表示网格的列数，默认情况下每一个View都占用一个网格区域，但通过提供自定义的spanSizeLookUp，可以指定某个位置的View占用多个网格区域。
+GridLayoutHelper的属性，参考于系统的GridLayoutManager，spanCount表示网格的列数，默认情况下每一个View都占用一个网格区域，但通过提供自定义的spanSizeLookUp，可以指定某个位置的View占用多个网格区域。
 
 ![TODO]()
 
@@ -178,7 +178,7 @@ FixLayoutHelper, ScrollFixLayoutHelper, FloatLayoutHelper的属性，表示吸�
 
 + TOP_LEFT：基准位置是左上角，x是View左边相对父容器的左边距偏移量，y是View顶边相对父容器的上边距偏移量；
 + TOP_RIGHT：基准位置是右上角，x是View右边相对父容器的右边距偏移量，y是View顶边相对父容器的上边距偏移量；
-+ BOTTOM_LEFT：基准位置是左下角，x是View左边相对父容器的左边距偏移量，y是View底边相对父容器的上边距偏移量；
++ BOTTOM_LEFT：基准位置是左下角，x是View左边相对父容器的左边距偏移量，y是View底边相对父容器的下边距偏移量；
 + BOTTOM_RIGHT：基准位置是右下角，x是View右边相对父容器的右边距偏移量，y是View底边相对父容器的下边距偏移量；
 
 ![TODO]()
@@ -190,6 +190,7 @@ FixLayoutHelper, ScrollFixLayoutHelper, FloatLayoutHelper的属性，表示吸�
 ```public void setAlignType(int alignType)```
 
 设置偏移量调用
+
 ```public void setX(int x)```
 ```public void setY(int y)```
 
