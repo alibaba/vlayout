@@ -1,5 +1,7 @@
 为了提供丰富的布局能力，我们为LayoutHelper设计了一系列布局属性，用来控制布局逻辑和样式。这里介绍这些属性的概念和用法。
 
+[Englist Document](ATTRIBUTES.md)
+
 # Margin, Padding
 
 Margin, Padding就是外边距、内边距，概念与Android系统的Margin, Padding一样，但也有不同的地方：
