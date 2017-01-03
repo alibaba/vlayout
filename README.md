@@ -87,3 +87,11 @@ public class MyAdapter extends VirtualLayoutAdapter {
 ```
 
 In this way, one thing you should note is that you should call ```setLayoutHelpers``` when the data of Adapter changes.
+
+# Demo
+
+[Demo Project]()
+
+# Layout Attributes
+
+Each layoutHelper has a few attributes to control its layout style. See [this](ATTRIBUTES.md) to read more.

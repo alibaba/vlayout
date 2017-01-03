@@ -86,6 +86,16 @@ import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
  * |           |  3  |  4  |
  * |           |     |     |
  * -------------------------
+ *  1 + 4
+ * -------------------------
+ * |           |           |
+ * |           |     2     |
+ * |           |           |
+ * |     1     |-----------|
+ * |           |   |   |   |
+ * |           | 3 | 4 | 5 |
+ * |           |   |   |   |
+ * -------------------------
  * </pre>
  *
  * @author villadora

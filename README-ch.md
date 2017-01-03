@@ -1,5 +1,7 @@
 # VirtualLayout
 
+[English Document](README.md)
+
 VirtualLayout是一个针对RecyclerView的LayoutManager扩展, 主要通过提供一整套布局方案和布局间的组件复用的问题。
 
 ## 设计思路
@@ -88,4 +90,10 @@ public class MyAdapter extends VirtualLayoutAdapter {
 
 推荐使用第一种方式，简单方便，开发者也很熟悉。
 
+# Demo
 
+[Demo工程]()
+
+# 布局属性
+
+每一种layoutHelper都有自己的布局属性来控制布局样式，详情请参考[文档](ATTRIBUTES-ch.md)。
