@@ -100,7 +100,7 @@ private static class BindListener implements BaseLayoutHelper.LayoutViewBindList
 
 # dividerHeight
 
-```LinearLayoutHelper```的属性，```LinearLayoutHelper```是像```List```一样的线性布局，dividerHeight就是每个组件之间的间距。
+```LinearLayoutHelper```的属性，```LinearLayoutHelper```是像```ListView```一样的线性布局，dividerHeight就是每个组件之间的间距。
 
 ![dividerHeight](images/DividerHeight.png)
 
