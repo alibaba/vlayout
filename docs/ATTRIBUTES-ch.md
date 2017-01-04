@@ -10,7 +10,7 @@ Margin, padding就是外边距、内边距，概念与Android系统的margin, pa
 + 一个页面里可以有多个```LayoutHelper```，意味着不同```LayoutHelper```可以设置不同的margin和padding。
 + ```LayoutHelper```的margin和padding与页面```RecyclerView```的margin和padding可以共存。
 
-![TODO]()
+![margin-padding](images/MarginPadding.png)
 
 ### 接口
 
@@ -23,6 +23,8 @@ Margin, padding就是外边距、内边距，概念与Android系统的margin, pa
 # bgColor, bgImg
 
 背景颜色或者背景图，这其实不是布局属性，但是由于在vlayout对视图进行了直接布局，不同区域的视图的父节点都是```RecyclerView```，如果想要针对某一块区域单独绘制背景，就很难做到了。vlayout框架对此做了特殊处理，对于非fix、非float类型的```LayoutHelper```，支持配置背景色或背景图。
+
+![background](images/Background.png)
 
 ### 接口
 
@@ -84,7 +86,7 @@ private static class BindListener implements BaseLayoutHelper.LayoutViewBindList
 + ```LayoutHelper```定义的aspectRatio，指的是一行视图整体的宽度与高度之比，当然整体的宽度是减去了```RecyclerView和```对应的```LayoutHelper```的margin, padding。
 + 视图的```LayoutParams```定义的aspectRatio，指的是在```LayoutHelper```计算出视图宽度之后，用来确定视图高度时使用的，它会覆盖通过```LayoutHelper```的aspectRatio计算出来的视图高度，因此具备更高优先级。
 
-![TODO]()
+![aspectRatio](images/AspectRatio.png)
 
 ### 接口
 
@@ -100,7 +102,7 @@ private static class BindListener implements BaseLayoutHelper.LayoutViewBindList
 
 ```LinearLayoutHelper```的属性，```LinearLayoutHelper```是像```List```一样的线性布局，dividerHeight就是每个组件之间的间距。
 
-![TODO]()
+![dividerHeight](images/DividerHeight.png)
 
 ### 接口
 
