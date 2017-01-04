@@ -115,7 +115,7 @@ private static class BindListener implements BaseLayoutHelper.LayoutViewBindList
 ```ColumnLayoutHelper```, ```GridLayoutHelper```的属性，它们都是提供网格状的布局能力，**建议使用```GridLayoutHelper```**，它的能力更加强大，参考下文介绍。默认情况下，每个网格中每一列的宽度是一样的，通过weights属性，可以指定让每一列的宽度成比例分配，就像```LinearLayout```的weight属性一样。
 weights属性是一个float数组，每一项代表某一列占父容器宽度的百分比，总和建议是100，否则布局会超出容器宽度；如果布局中有4列，那么weights的长度也应该是4；长度大于4，多出的部分不参与宽度计算；如果小于4，不足的部分默认平分剩余的空间。
 
-![TODO]()
+![weights](images/Weights.png)
 
 ### 接口
 
@@ -127,7 +127,7 @@ weights属性是一个float数组，每一项代表某一列占父容器宽度�
 
 ```GridLayoutHelper```与```StaggeredGridLayoutHelper```都有这两个属性，分别控制视图之间的垂直间距和水平间距。
 
-![TODO]()
+![vgap-hgap](images/HGapVGap.png)
 
 ### 接口
 
@@ -141,7 +141,7 @@ weights属性是一个float数组，每一项代表某一列占父容器宽度�
 
 ```GridLayoutHelper```的属性，参考于系统的```GridLayoutManager```，spanCount表示网格的列数，默认情况下每一个视图都占用一个网格区域，但通过提供自定义的spanSizeLookUp，可以指定某个位置的视图占用多个网格区域。
 
-![TODO]()
+![spanCount-spanSize](images/SpanCountSpanSize.png)
 
 ### 接口
 
@@ -157,7 +157,7 @@ weights属性是一个float数组，每一项代表某一列占父容器宽度�
 
 ```GridLayoutHelper```的属性，当一行里视图的个数少于spanCount值的时候，如果autoExpand为true，视图的总宽度会填满可用区域；否则会在屏幕上留空白区域。
 
-![TODO]()
+![autoExpand](images/AutoExpand.png)
 
 ### 接口
 
@@ -179,7 +179,7 @@ weights属性是一个float数组，每一项代表某一列占父容器宽度�
 
 fix类型的```LayoutHelper```，在可能需要设置一个相对父容器四个边的偏移量，比如整个页面里有一个固定的标题栏添加在vlayout容器上，vlayout内部的fix类型视图不希望与外部的标题有所重叠，那么就可以设置一个fixAreaAdjuster来做偏移。
 
-![TODO]()
+![fixAreaAdjuster](images/FixAreaAdjuster.png)
 
 ### 接口
 
@@ -196,7 +196,7 @@ fix类型的```LayoutHelper```，在可能需要设置一个相对父容器四�
 + ```BOTTOM_LEFT```：基准位置是左下角，```x```是视图左边相对父容器的左边距偏移量，```y```是视图底边相对父容器的下边距偏移量；
 + ```BOTTOM_RIGHT```：基准位置是右下角，```x```是视图右边相对父容器的右边距偏移量，```y```是视图底边相对父容器的下边距偏移量；
 
-![TODO]()
+![alignTypeXY](images/AlignTypeXY.png)
 
 ### 接口
 
@@ -218,7 +218,7 @@ fix类型的```LayoutHelper```，在可能需要设置一个相对父容器四�
 + ```SHOW_ON_ENTER```：默认不显示视图，当页面滚动到这个视图的位置的时候，才显示；
 + ```HOW_ON_LEAVE```：默认不显示视图，当页面滚出这个视图的位置的时候显示；
 
-![TODO]()
+![showType](images/ShowType.png)
 
 调用
 
@@ -228,7 +228,7 @@ fix类型的```LayoutHelper```，在可能需要设置一个相对父容器四�
 
 ```StickyLayoutHelper```的属性，当视图的位置在屏幕范围内时，视图会随页面滚动而滚动；当视图的位置滑出屏幕时，```StickyLayoutHelper```会将视图固定在顶部（```stickyStart = true```）或者底部（```stickyStart = false```），固定的位置支持设置偏移量offset。
 
-![TODO]()
+![stickyStart](images/StickyStart.png)
 
 调用
 
