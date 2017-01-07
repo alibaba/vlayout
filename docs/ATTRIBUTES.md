@@ -9,6 +9,7 @@ Margin, padding have the similar concepts as normal Android system's margin and 
 + Here we say margin and padding, specificly mean ```LayoutHelper```'s margin and padding, not the ```RecyclerView```'s.
 + A ```RecyclerView``` could contains more than one layoutHelpers, which means each ```LayoutHelper``` is able to host its own margin and padding value.
 + ```LayoutHelper```'s margin and padding can coexist with ```RecylerView```'s margin and padding.
++ Margin and padding is mainly supported by non-fix LayoutHelper.
 
 ![margin-padding](images/MarginPadding.png)
 
@@ -22,7 +23,7 @@ For ```LayoutHelper```，call
 
 # bgColor, bgImg
 
-Actually, background color or background image has nothing to do with layout logic. But in our framework, all child views has the same parent which is ```RecyclerView```. If you want to fill background to a certain area with a color or image, it's a hard job. Vlayout has done some effort to make it possible for non-fix or non-float ```LayoutHelper```, so it's explained here.
+Actually, background color or background image has nothing to do with layout logic. But in our framework, all child views has the same parent which is ```RecyclerView```. If you want to fill background to a certain area with a color or image, it's a hard job. Vlayout has done some effort to make it possible for non-fix ```LayoutHelper```, so it's explained here.
 
 ![background](images/Background.png)
 

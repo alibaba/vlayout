@@ -21,7 +21,7 @@ VirtualLayout是一个针对RecyclerView的LayoutManager扩展, 主要通过提�
 	* OnePlusNLayoutHelper: 一拖N布局，可以配置1-5个子元素
 	* StickyLayoutHelper: stikcy布局， 可以配置吸顶或者吸底
 	* StaggeredGridLayoutHelper: 瀑布流布局，可配置间隔高度/宽度
-
+ * 上述默认实现里可以大致分为两类：一是非fix类型布局，像线性、Grid、栏格等，它们的特点是布局在整个页面流里，随页面滚动而滚动；另一类就是fix类型的布局，它们的子节点往往不随页面滚动而滚动。
  * 所有除布局外的组件复用，VirtualLayout将用来管理大的模块布局组合，扩展了RecyclerView，使得同一RecyclerView内的组件可以复用，减少View的创建和销毁过程。
 
 

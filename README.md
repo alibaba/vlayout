@@ -20,7 +20,7 @@ By providing a custom LayoutManager to RecyclerView, VirtualLayout is able to la
 	* OnePlusNLayoutHelper: a custom layout with one child view layouted at left and the others at right, you may not need this.
 	* StickyLayoutHelper: scroll the view when its position is inside the screen, but fix the view at start or end when its position is outside the screen.
 	* StaggeredGridLayoutHelper: provide waterfall like layout as StaggeredGridLayoutManager.
-
+* LayoutHelpers provided by default can be generally divided into two categories. One is non-fix LayoutHelper such as LinearLayoutHelper, GridLayoutHelper, etc which means the children of these LayoutHelper will be layouted in the flow of parent container and will be scrolled with the container scrolling. While the other is fix LayoutHelper which means the child of these is always fix in parent container.
 
 
 ## Usage

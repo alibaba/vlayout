@@ -9,6 +9,7 @@ Margin, padding就是外边距、内边距，概念与Android系统的margin, pa
 + 它不是整个```RecyclerView```页面的margin和padding，它是每一块```LayoutHelper```所负责的区域的margin和padding。
 + 一个页面里可以有多个```LayoutHelper```，意味着不同```LayoutHelper```可以设置不同的margin和padding。
 + ```LayoutHelper```的margin和padding与页面```RecyclerView```的margin和padding可以共存。
++ 目前主要针对非fix类型的```LayoutHelper```实现了margin和padding，fix类型```LayoutHelper```内部没有相对位置关系，不处理边距。
 
 ![margin-padding](images/MarginPadding.png)
 
@@ -22,7 +23,7 @@ Margin, padding就是外边距、内边距，概念与Android系统的margin, pa
 
 # bgColor, bgImg
 
-背景颜色或者背景图，这其实不是布局属性，但是由于在vlayout对视图进行了直接布局，不同区域的视图的父节点都是```RecyclerView```，如果想要针对某一块区域单独绘制背景，就很难做到了。vlayout框架对此做了特殊处理，对于非fix、非float类型的```LayoutHelper```，支持配置背景色或背景图。
+背景颜色或者背景图，这其实不是布局属性，但是由于在vlayout对视图进行了直接布局，不同区域的视图的父节点都是```RecyclerView```，如果想要针对某一块区域单独绘制背景，就很难做到了。vlayout框架对此做了特殊处理，对于非fix、非float类型的```LayoutHelper```，支持配置背景色或背景图。同样目前主要针对非fix类型的```LayoutHelper```实现这个特性。
 
 ![background](images/Background.png)
 
