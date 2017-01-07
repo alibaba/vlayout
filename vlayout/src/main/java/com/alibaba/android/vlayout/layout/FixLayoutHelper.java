@@ -383,13 +383,28 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
                     params.width >= 0 ? params.width
                             : ((mSketchMeasure && layoutInVertical) ? LayoutParams.MATCH_PARENT
                                     : LayoutParams.WRAP_CONTENT), false);
-            final int heightSpec = helper.getChildMeasureSpec(
-                    helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
-                    Float.isNaN(params.mAspectRatio)
-                            ? (params.height >= 0 ? params.height
+            int heightSpec;
+            if (!Float.isNaN(params.mAspectRatio) && params.mAspectRatio > 0) {
+                heightSpec = helper.getChildMeasureSpec(
+                        helper.getContentHeight() - helper.getPaddingTop() - helper
+                                .getPaddingBottom(),
+                        (int) (View.MeasureSpec.getSize(widthSpec) / params.mAspectRatio + 0.5f),
+                        false);
+            } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
+                heightSpec = helper.getChildMeasureSpec(
+                        helper.getContentHeight() - helper.getPaddingTop() - helper
+                                .getPaddingBottom(),
+                        (int) (View.MeasureSpec.getSize(widthSpec) / mAspectRatio + 0.5f),
+                        false);
+            } else {
+                heightSpec = helper.getChildMeasureSpec(
+                        helper.getContentHeight() - helper.getPaddingTop() - helper
+                                .getPaddingBottom(),
+                        params.height >= 0 ? params.height
                                 : ((mSketchMeasure && !layoutInVertical) ? LayoutParams.MATCH_PARENT
-                                        : LayoutParams.WRAP_CONTENT))
-                            : (int) (View.MeasureSpec.getSize(widthSpec) / params.mAspectRatio + 0.5f), false);
+                                        : LayoutParams.WRAP_CONTENT),
+                        false);
+            }
 
             // do measurement
             helper.measureChild(view, widthSpec, heightSpec);
@@ -399,14 +414,30 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
                             params.height >= 0 ? params.height
                             : ((mSketchMeasure && !layoutInVertical) ? LayoutParams.MATCH_PARENT
                                     : LayoutParams.WRAP_CONTENT), false);
+            int widthSpec;
 
-            final int widthSpec = helper.getChildMeasureSpec(
-                    helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(),
-                    Float.isNaN(params.mAspectRatio)
-                            ? (params.width >= 0 ? params.width
-                            : ((mSketchMeasure && layoutInVertical) ? LayoutParams.MATCH_PARENT
-                                    : LayoutParams.WRAP_CONTENT))
-                            : (int) (View.MeasureSpec.getSize(heightSpec) * params.mAspectRatio + 0.5f), false);
+            if (!Float.isNaN(params.mAspectRatio) && params.mAspectRatio > 0) {
+                widthSpec = helper.getChildMeasureSpec(
+                        helper.getContentWidth() - helper.getPaddingLeft() - helper
+                                .getPaddingRight(),
+                        (int) (View.MeasureSpec.getSize(heightSpec) * params.mAspectRatio + 0.5f),
+                        false);
+            } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
+                widthSpec = helper.getChildMeasureSpec(
+                        helper.getContentWidth() - helper.getPaddingLeft() - helper
+                                .getPaddingRight(),
+                        (int) (View.MeasureSpec.getSize(heightSpec) * mAspectRatio + 0.5f),
+                        false);
+            } else {
+                widthSpec = helper.getChildMeasureSpec(
+                        helper.getContentWidth() - helper.getPaddingLeft() - helper
+                                .getPaddingRight(),
+                        params.width >= 0 ? params.width
+                                : ((mSketchMeasure && layoutInVertical) ? LayoutParams.MATCH_PARENT
+                                        : LayoutParams.WRAP_CONTENT),
+                        false);
+            }
+
 
             // do measurement
             helper.measureChild(view, widthSpec, heightSpec);
