@@ -218,7 +218,8 @@ public class VLayoutActivity extends Activity {
             FloatLayoutHelper layoutHelper = new FloatLayoutHelper();
             layoutHelper.setAlignType(FixLayoutHelper.BOTTOM_RIGHT);
             layoutHelper.setDefaultLocation(100, 400);
-            adapters.add(new SubAdapter(this, layoutHelper, 1, new LayoutParams(100, 100)));
+            LayoutParams layoutParams = new LayoutParams(150, 150);
+            adapters.add(new SubAdapter(this, layoutHelper, 1, layoutParams));
         }
 
         if (LINEAR_LAYOUT) {

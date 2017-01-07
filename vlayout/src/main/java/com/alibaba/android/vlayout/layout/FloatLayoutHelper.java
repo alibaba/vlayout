@@ -245,15 +245,47 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
     private void doMeasureAndLayout(View view, LayoutManagerHelper helper) {
         if (view == null || helper == null) return;
 
-        final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+        final VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-        final int widthSpec = helper.getChildMeasureSpec(
-                helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(), params.width, !layoutInVertical);
-        final int heightSpec = helper.getChildMeasureSpec(
-                helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(), params.height, layoutInVertical);
-
-        // do measurement
-        helper.measureChild(view, widthSpec, heightSpec);
+        if (layoutInVertical) {
+            final int widthSpec = helper.getChildMeasureSpec(
+                    helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(), params.width, !layoutInVertical);
+            int heightSpec;
+            if (!Float.isNaN(params.mAspectRatio) && params.mAspectRatio > 0) {
+                heightSpec = helper.getChildMeasureSpec(
+                        helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
+                        (int) (View.MeasureSpec.getSize(widthSpec) / params.mAspectRatio + 0.5f), layoutInVertical);
+            } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
+                heightSpec = helper.getChildMeasureSpec(
+                        helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
+                        (int) (View.MeasureSpec.getSize(widthSpec) / mAspectRatio + 0.5f), layoutInVertical);
+            } else {
+                heightSpec = helper.getChildMeasureSpec(
+                        helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
+                        params.height, layoutInVertical);
+            }
+            // do measurement
+            helper.measureChild(view, widthSpec, heightSpec);
+        } else {
+            int widthSpec;
+            final int heightSpec = helper.getChildMeasureSpec(
+                    helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(), params.height, layoutInVertical);
+            if (!Float.isNaN(params.mAspectRatio) && params.mAspectRatio > 0) {
+                widthSpec = helper.getChildMeasureSpec(
+                    helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(),
+                     (int) (View.MeasureSpec.getSize(heightSpec) * params.mAspectRatio + 0.5f), !layoutInVertical);
+            } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
+                widthSpec = helper.getChildMeasureSpec(
+                        helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(),
+                        (int) (View.MeasureSpec.getSize(heightSpec) * mAspectRatio + 0.5f), !layoutInVertical);
+            } else {
+                widthSpec = helper.getChildMeasureSpec(
+                        helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(),
+                        params.width, !layoutInVertical);
+            }
+            // do measurement
+            helper.measureChild(view, widthSpec, heightSpec);
+        }
 
 
         final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
