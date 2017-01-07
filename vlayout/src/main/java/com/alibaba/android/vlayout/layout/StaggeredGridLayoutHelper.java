@@ -217,7 +217,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             if (view == null)
                 break;
 
-            RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) view.getLayoutParams();
+            VirtualLayoutManager.LayoutParams lp = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
 
             // find the span to put the view
             final int position = lp.getViewPosition();
@@ -240,11 +240,15 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
             if (layoutInVertical) {
                 int widthSpec = helper.getChildMeasureSpec(mColLength, lp.width, false);
-                int heightSpec = helper.getChildMeasureSpec(orientationHelper.getTotalSpace(), lp.height, true);
+                int heightSpec = helper.getChildMeasureSpec(orientationHelper.getTotalSpace(),
+                        Float.isNaN(lp.mAspectRatio) ? lp.height : (int) (
+                                View.MeasureSpec.getSize(widthSpec) / lp.mAspectRatio + 0.5f), true);
                 helper.measureChild(view, widthSpec, heightSpec);
             } else {
                 int heightSpec = helper.getChildMeasureSpec(mColLength, lp.height, false);
-                int widthSpec = helper.getChildMeasureSpec(orientationHelper.getTotalSpace(), lp.width, true);
+                int widthSpec = helper.getChildMeasureSpec(orientationHelper.getTotalSpace(),
+                        Float.isNaN(lp.mAspectRatio) ? lp.width : (int) (
+                                View.MeasureSpec.getSize(heightSpec) * lp.mAspectRatio + 0.5f), true);
                 helper.measureChild(view, widthSpec, heightSpec);
             }
 

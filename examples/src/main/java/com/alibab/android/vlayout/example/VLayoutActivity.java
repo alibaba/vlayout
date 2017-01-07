@@ -412,7 +412,11 @@ public class VLayoutActivity extends Activity {
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
                     LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
-                    layoutParams.height = 340 + position % 7 * 20;
+                    if (position % 2 == 0) {
+                        layoutParams.mAspectRatio = 1.0f;
+                    } else {
+                        layoutParams.height = 340 + position % 7 * 20;
+                    }
                     holder.itemView.setLayoutParams(layoutParams);
                 }
             });
