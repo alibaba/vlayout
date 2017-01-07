@@ -86,8 +86,10 @@ public class SingleLayoutHelper extends ColumnLayoutHelper {
         helper.addChildView(layoutState, view);
         final VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-        int parentWidth = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - mMarginLeft - mMarginRight;
-        int parentHeight = helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom() - mMarginTop - mMarginBottom;
+        int parentWidth = helper.getContentWidth() - helper.getPaddingLeft() - helper
+                .getPaddingRight() - getHorizontalMargin() - getHorizontalPadding();
+        int parentHeight = helper.getContentHeight() - helper.getPaddingTop() - helper
+                .getPaddingBottom() - getVerticalMargin() - getVerticalPadding();
 
         if (!Float.isNaN(mAspectRatio)) {
             if (layoutInVertical) {
@@ -125,42 +127,46 @@ public class SingleLayoutHelper extends ColumnLayoutHelper {
         int left, top, right, bottom;
         if (layoutInVertical) {
             int viewWidth = orientationHelper.getDecoratedMeasurementInOther(view);
-            int available = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - viewWidth;
+            int available = parentWidth - viewWidth;
             if (available < 0) {
                 available = 0;
             }
 
-            left = mMarginLeft + helper.getPaddingLeft() + available / 2;
-            right = helper.getContentWidth() - mMarginRight - helper.getPaddingRight() - available / 2;
+            left = mMarginLeft + mPaddingLeft + helper.getPaddingLeft() + available / 2;
+            right = helper.getContentWidth() - mMarginRight - mPaddingRight - helper.getPaddingRight() - available / 2;
 
 
             if (layoutState.getLayoutDirection() == VirtualLayoutManager.LayoutStateWrapper.LAYOUT_START) {
-                bottom = layoutState.getOffset() - mMarginBottom;
+                bottom = layoutState.getOffset() - mMarginBottom - mPaddingBottom;
                 top = bottom - result.mConsumed;
             } else {
-                top = layoutState.getOffset() + mMarginTop;
+                top = layoutState.getOffset() + mMarginTop + mPaddingTop;
                 bottom = top + result.mConsumed;
             }
         } else {
             int viewHeight = orientationHelper.getDecoratedMeasurementInOther(view);
-            int available = helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom() - viewHeight;
+            int available = parentHeight - viewHeight;
             if (available < 0) {
                 available = 0;
             }
 
-            top = helper.getPaddingTop() + mMarginTop + available / 2;
-            bottom = helper.getContentHeight() - -mMarginBottom - helper.getPaddingBottom() - available / 2;
+            top = helper.getPaddingTop() + mMarginTop + mPaddingTop + available / 2;
+            bottom = helper.getContentHeight() - -mMarginBottom - mPaddingBottom - helper.getPaddingBottom() - available / 2;
 
             if (layoutState.getLayoutDirection() == VirtualLayoutManager.LayoutStateWrapper.LAYOUT_START) {
-                right = layoutState.getOffset() - mMarginRight;
+                right = layoutState.getOffset() - mMarginRight - mPaddingRight;
                 left = right - result.mConsumed;
             } else {
-                left = layoutState.getOffset() + mMarginLeft;
+                left = layoutState.getOffset() + mMarginLeft + mPaddingLeft;
                 right = left + result.mConsumed;
             }
         }
 
-        result.mConsumed += mMarginTop + mMarginBottom;
+        if (layoutInVertical) {
+            result.mConsumed += getVerticalMargin() + getVerticalPadding();
+        } else {
+            result.mConsumed += getHorizontalMargin() + getHorizontalPadding();
+        }
 
         layoutChild(view, left, top, right, bottom, helper);
     }

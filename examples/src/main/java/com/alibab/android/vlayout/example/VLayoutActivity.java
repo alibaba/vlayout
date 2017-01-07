@@ -252,6 +252,8 @@ public class VLayoutActivity extends Activity {
             SingleLayoutHelper layoutHelper = new SingleLayoutHelper();
             layoutHelper.setBgColor(Color.rgb(135, 225, 90));
             layoutHelper.setAspectRatio(4);
+            layoutHelper.setMargin(10, 20, 10, 20);
+            layoutHelper.setPadding(10, 10, 10, 10);
             adapters.add(new SubAdapter(this, layoutHelper, 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
         }
 
@@ -259,8 +261,6 @@ public class VLayoutActivity extends Activity {
             ColumnLayoutHelper layoutHelper = new ColumnLayoutHelper();
             layoutHelper.setBgColor(0xff00f0f0);
             layoutHelper.setWeights(new float[]{40.0f, Float.NaN, 40});
-            layoutHelper.setMargin(10, 20, 10, 20);
-            layoutHelper.setPadding(10, 10, 10, 10);
             adapters.add(new SubAdapter(this, layoutHelper, 5) {
 
                 @Override
