@@ -383,10 +383,10 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
                 // fill start, from bottom to top
                 areaRect.bottom = layoutState.getOffset() - mMarginBottom - mPaddingBottom;
-                areaRect.top = layoutState.getOffset() - mainAxisSize + mMarginTop + mPaddingTop;
+                areaRect.top = areaRect.bottom - mainAxisSize;
             } else {
                 areaRect.top = layoutState.getOffset() + mMarginTop + mPaddingTop;
-                areaRect.bottom = layoutState.getOffset() + mainAxisSize - mMarginBottom - mPaddingBottom;
+                areaRect.bottom = areaRect.top + mainAxisSize;
             }
         } else {
             areaRect.top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
@@ -394,14 +394,12 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
                 areaRect.right = layoutState.getOffset() - mMarginRight - mPaddingRight;
-                areaRect.left = layoutState.getOffset() - mainAxisSize + mMarginLeft + mPaddingLeft;
+                areaRect.left = areaRect.right - mainAxisSize;
             } else {
                 areaRect.left = layoutState.getOffset() + mMarginLeft + mPaddingLeft;
-                areaRect.right = layoutState.getOffset() + mainAxisSize - mMarginRight - mPaddingRight;
+                areaRect.right = areaRect.left + mainAxisSize;
             }
         }
-
-        mLayoutRegion.set(areaRect);
     }
 
 }

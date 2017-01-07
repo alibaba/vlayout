@@ -165,21 +165,4 @@ public class SingleLayoutHelper extends ColumnLayoutHelper {
         layoutChild(view, left, top, right, bottom, helper);
     }
 
-    @Override
-    public int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
-        final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-        if (layoutInVertical) {
-            if (isLayoutEnd) {
-                return mMarginBottom;
-            } else {
-                return -mMarginTop;
-            }
-        } else {
-            if (isLayoutEnd) {
-                return mMarginRight;
-            } else {
-                return -mMarginLeft;
-            }
-        }
-    }
 }

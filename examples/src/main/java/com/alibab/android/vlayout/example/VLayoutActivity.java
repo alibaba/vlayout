@@ -257,8 +257,10 @@ public class VLayoutActivity extends Activity {
 
         if (COLUMN_LAYOUT) {
             ColumnLayoutHelper layoutHelper = new ColumnLayoutHelper();
-            // layoutHelper.setBgColor(0xff00f0f0);
+            layoutHelper.setBgColor(0xff00f0f0);
             layoutHelper.setWeights(new float[]{40.0f, Float.NaN, 40});
+            layoutHelper.setMargin(10, 20, 10, 20);
+            layoutHelper.setPadding(10, 10, 10, 10);
             adapters.add(new SubAdapter(this, layoutHelper, 5) {
 
                 @Override
@@ -275,6 +277,7 @@ public class VLayoutActivity extends Activity {
 
         if (ONEN_LAYOUT) {
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
+            helper.setBgColor(0xff876384);
             helper.setAspectRatio(4.0f);
             helper.setColWeights(new float[]{40f, 45f});
             helper.setMargin(-4, -4, -4, -4);
@@ -283,6 +286,7 @@ public class VLayoutActivity extends Activity {
 
         if (ONEN_LAYOUT) {
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
+            helper.setBgColor(0xffef8ba3);
             helper.setAspectRatio(2.0f);
             helper.setColWeights(new float[]{40f});
             helper.setRowWeight(30f);
@@ -306,6 +310,7 @@ public class VLayoutActivity extends Activity {
         if (ONEN_LAYOUT) {
             adapters.add(new SubAdapter(this, new OnePlusNLayoutHelper(), 0));
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
+            helper.setBgColor(0xff87e543);
             helper.setAspectRatio(1.8f);
             helper.setColWeights(new float[]{33.33f, 50f, 40f});
             LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

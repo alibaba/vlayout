@@ -140,15 +140,15 @@ public abstract class AbstractFullFillLayoutHelper extends BaseLayoutHelper {
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
         if (layoutInVertical) {
             if (isLayoutEnd) {
-                return mMarginBottom;
+                return mMarginBottom + mPaddingBottom;
             } else {
-                return -mMarginTop;
+                return -mMarginTop - mPaddingTop;
             }
         } else {
             if (isLayoutEnd) {
-                return mMarginRight;
+                return mMarginRight + mPaddingRight;
             } else {
-                return -mMarginLeft;
+                return -mMarginLeft - mPaddingLeft;
             }
         }
     }

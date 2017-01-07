@@ -137,13 +137,12 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
                     } else {
                         totalMargin += params.rightMargin;
                     }
-
                     maxVMargin = Math.max(maxVMargin, params.topMargin + params.bottomMargin);
                 }
             }
 
-
-            final int totalWidth = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - getHorizontalMargin();
+            final int totalWidth = helper.getContentWidth() - helper.getPaddingLeft() - helper
+                    .getPaddingRight() - getHorizontalMargin() - getHorizontalPadding();
             final int availableWidth = totalWidth - totalMargin;
 
             int usedWidth = 0;
@@ -221,9 +220,9 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
                 }
             }
 
-            result.mConsumed = minHeight + maxVMargin + getVerticalMargin();
+            result.mConsumed = minHeight + maxVMargin + getVerticalMargin() + getVerticalPadding();
 
-            calculateRect(result.mConsumed, mTempArea, layoutState, helper);
+            calculateRect(minHeight + maxVMargin, mTempArea, layoutState, helper);
 
             // do layout
             int left = mTempArea.left;
