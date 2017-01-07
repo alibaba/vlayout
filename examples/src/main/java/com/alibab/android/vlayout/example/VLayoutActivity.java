@@ -280,7 +280,8 @@ public class VLayoutActivity extends Activity {
             helper.setBgColor(0xff876384);
             helper.setAspectRatio(4.0f);
             helper.setColWeights(new float[]{40f, 45f});
-            helper.setMargin(-4, -4, -4, -4);
+            helper.setMargin(10, 20, 10, 20);
+            helper.setPadding(10, 10, 10, 10);
             adapters.add(new SubAdapter(this, helper, 2));
         }
 
@@ -290,6 +291,8 @@ public class VLayoutActivity extends Activity {
             helper.setAspectRatio(2.0f);
             helper.setColWeights(new float[]{40f});
             helper.setRowWeight(30f);
+            helper.setMargin(10, 20, 10, 20);
+            helper.setPadding(10, 10, 10, 10);
             adapters.add(new SubAdapter(this, helper, 4) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
@@ -313,6 +316,8 @@ public class VLayoutActivity extends Activity {
             helper.setBgColor(0xff87e543);
             helper.setAspectRatio(1.8f);
             helper.setColWeights(new float[]{33.33f, 50f, 40f});
+            helper.setMargin(10, 20, 10, 20);
+            helper.setPadding(10, 10, 10, 10);
             LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             adapters.add(new SubAdapter(this, helper, 3, lp) {
                 @Override

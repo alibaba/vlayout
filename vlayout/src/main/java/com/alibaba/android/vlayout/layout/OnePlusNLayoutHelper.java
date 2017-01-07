@@ -267,7 +267,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                         orientationHelper.getDecoratedMeasurement(child2)) + getVerticalMargin()
                         + getVerticalPadding();
 
-                calculateRect(mainConsumed, mAreaRect, layoutState, helper);
+                calculateRect(mainConsumed - getVerticalMargin() - getVerticalPadding(), mAreaRect, layoutState, helper);
 
                 int right1 = mAreaRect.left + orientationHelper
                         .getDecoratedMeasurementInOther(child1);
@@ -308,9 +308,9 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
                 mainConsumed = Math.max(orientationHelper.getDecoratedMeasurement(child1),
                         orientationHelper.getDecoratedMeasurement(child2)) + getHorizontalMargin()
-                        + getVerticalPadding();
+                        + getHorizontalPadding();
 
-                calculateRect(mainConsumed, mAreaRect, layoutState, helper);
+                calculateRect(mainConsumed - getHorizontalPadding() - getHorizontalMargin(), mAreaRect, layoutState, helper);
 
                 int bottom1 = mAreaRect.top + orientationHelper
                         .getDecoratedMeasurementInOther(child1);
@@ -393,7 +393,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                                 + lp3.bottomMargin)
                         + getVerticalMargin() + getVerticalPadding();
 
-                calculateRect(mainConsumed, mAreaRect, layoutState, helper);
+                calculateRect(mainConsumed - getVerticalMargin() - getVerticalPadding(), mAreaRect, layoutState, helper);
 
                 int right1 = mAreaRect.left + orientationHelper
                         .getDecoratedMeasurementInOther(child1);
@@ -499,7 +499,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                                         height3 + lp4.topMargin + lp4.bottomMargin))
                         + getVerticalMargin() + getVerticalPadding();
 
-                calculateRect(mainConsumed, mAreaRect, layoutState, helper);
+                calculateRect(mainConsumed - getVerticalMargin() - getVerticalPadding(), mAreaRect, layoutState, helper);
 
                 int right1 = mAreaRect.left + orientationHelper
                         .getDecoratedMeasurementInOther(child1);
@@ -622,7 +622,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                                         height3 + lp4.topMargin + lp4.bottomMargin))
                         + getVerticalMargin() + getVerticalPadding();
 
-                calculateRect(mainConsumed, mAreaRect, layoutState, helper);
+                calculateRect(mainConsumed - getVerticalMargin() - getVerticalPadding(), mAreaRect, layoutState, helper);
 
                 int right1 = mAreaRect.left + orientationHelper
                         .getDecoratedMeasurementInOther(child1);
