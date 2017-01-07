@@ -26,6 +26,7 @@ package com.alibab.android.vlayout.example;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -53,6 +54,7 @@ import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
 import com.alibaba.android.vlayout.layout.ScrollFixLayoutHelper;
+import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.alibaba.android.vlayout.layout.StickyLayoutHelper;
 
@@ -69,6 +71,8 @@ public class VLayoutActivity extends Activity {
     private static final boolean FIX_LAYOUT = true;
 
     private static final boolean LINEAR_LAYOUT = true;
+
+    private static final boolean SINGLE_LAYOUT = true;
 
     private static final boolean FLOAT_LAYOUT = true;
 
@@ -239,6 +243,13 @@ public class VLayoutActivity extends Activity {
         if (STICKY_LAYOUT) {
             StickyLayoutHelper layoutHelper = new StickyLayoutHelper();
             layoutHelper.setOffset(100);
+            layoutHelper.setAspectRatio(4);
+            adapters.add(new SubAdapter(this, layoutHelper, 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
+        }
+
+        if (SINGLE_LAYOUT) {
+            SingleLayoutHelper layoutHelper = new SingleLayoutHelper();
+            layoutHelper.setBgColor(Color.rgb(135, 225, 90));
             layoutHelper.setAspectRatio(4);
             adapters.add(new SubAdapter(this, layoutHelper, 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
         }

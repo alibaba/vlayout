@@ -151,7 +151,7 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
 
             int uniformHeight = -1;
             if (!Float.isNaN(mAspectRatio)) {
-                uniformHeight = (int) (totalWidth / mAspectRatio);
+                uniformHeight = (int) (totalWidth / mAspectRatio + 0.5f);
             }
 
 

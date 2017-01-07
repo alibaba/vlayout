@@ -84,26 +84,38 @@ public class SingleLayoutHelper extends ColumnLayoutHelper {
 
 
         helper.addChildView(layoutState, view);
-        final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
+        final VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
         int parentWidth = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - mMarginLeft - mMarginRight;
         int parentHeight = helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom() - mMarginTop - mMarginBottom;
 
         if (!Float.isNaN(mAspectRatio)) {
             if (layoutInVertical) {
-                parentHeight = (int) (parentWidth * mAspectRatio);
+                parentHeight = (int) (parentWidth / mAspectRatio + 0.5f);
             } else {
-                parentWidth = (int) (parentHeight * mAspectRatio);
+                parentWidth = (int) (parentHeight * mAspectRatio + 0.5f);
             }
         }
 
-        final int widthSpec = helper.getChildMeasureSpec(parentWidth,
-                Float.isNaN(mAspectRatio) ? params.width : parentWidth, !layoutInVertical && Float.isNaN(mAspectRatio));
-        final int heightSpec = helper.getChildMeasureSpec(parentHeight,
-                Float.isNaN(mAspectRatio) ? params.height : parentHeight, layoutInVertical && Float.isNaN(mAspectRatio));
+        if (layoutInVertical) {
+            final int widthSpec = helper.getChildMeasureSpec(parentWidth,
+                     Float.isNaN(mAspectRatio) ? params.width : parentWidth, !layoutInVertical && Float.isNaN(mAspectRatio));
+            final int heightSpec = helper.getChildMeasureSpec(parentHeight,
+                    Float.isNaN(params.mAspectRatio) ? (Float.isNaN(mAspectRatio) ? params.height : parentHeight) : (int) (
+                            parentWidth / params.mAspectRatio + 0.5f), layoutInVertical && Float.isNaN(mAspectRatio));
 
-        // do measurement
-        helper.measureChild(view, widthSpec, heightSpec);
+            // do measurement
+            helper.measureChild(view, widthSpec, heightSpec);
+        } else {
+            final int widthSpec = helper.getChildMeasureSpec(parentWidth,
+                    Float.isNaN(params.mAspectRatio) ? (Float.isNaN(mAspectRatio) ? params.width : parentWidth) : (int) (
+                            parentHeight * params.mAspectRatio + 0.5f), !layoutInVertical && Float.isNaN(mAspectRatio));
+            final int heightSpec = helper.getChildMeasureSpec(parentHeight,
+                     Float.isNaN(mAspectRatio) ? params.height : parentHeight, layoutInVertical && Float.isNaN(mAspectRatio));
+
+            // do measurement
+            helper.measureChild(view, widthSpec, heightSpec);
+        }
 
         OrientationHelper orientationHelper = helper.getMainOrientationHelper();
 
