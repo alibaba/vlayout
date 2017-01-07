@@ -38,13 +38,9 @@ import java.util.Arrays;
 import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 
 /**
- * Layout view at once in grid, support multi columns with different column width
+ * Layout view in one line with the same of different cloumn width
  * <pre>
  * 1 column
- * -------------------------
- * |                       |
- * |                       |
- * |                       |
  * -------------------------
  * |                       |
  * |                       |
@@ -163,14 +159,20 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
 
             for (int i = 0; i < count; i++) {
                 View view = mViews[i];
-                ViewGroup.LayoutParams params = view.getLayoutParams();
-                final int heightSpec = helper.getChildMeasureSpec(
+                VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
+                int heightSpec = helper.getChildMeasureSpec(
                         helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
                         uniformHeight > 0 ? uniformHeight : params.height, true);
                 if (mWeights != null && i < mWeights.length && !Float.isNaN(mWeights[i]) && mWeights[i] >= 0) {
 
                     // calculate width with weight in percentage
                     int resizeWidth = (int) (mWeights[i] * 1.0f / 100 * availableWidth + 0.5f);
+
+                    if (!Float.isNaN(params.mAspectRatio)) {
+                        int specialHeight = (int) (resizeWidth / params.mAspectRatio + 0.5f);
+                        heightSpec = View.MeasureSpec
+                                .makeMeasureSpec(specialHeight, View.MeasureSpec.EXACTLY);
+                    }
 
                     helper.measureChild(view, View.MeasureSpec.makeMeasureSpec(resizeWidth, View.MeasureSpec.EXACTLY), heightSpec);
 
@@ -187,14 +189,22 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
 
             for (int i = 0; i < eqSize; i++) {
                 View view = mEqViews[i];
-                ViewGroup.LayoutParams params = view.getLayoutParams();
-                final int heightSpec = helper.getChildMeasureSpec(
-                        helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
-                        uniformHeight > 0 ? uniformHeight : params.height, true);
+                VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
+                int heightSpec;
+                int resizeWidth = (int) ((availableWidth - usedWidth) * 1.0f / eqSize + 0.5f);
+                if (!Float.isNaN(params.mAspectRatio)) {
+                    int specialHeight = (int) (resizeWidth / params.mAspectRatio + 0.5f);
+                    heightSpec = View.MeasureSpec
+                            .makeMeasureSpec(specialHeight, View.MeasureSpec.EXACTLY);
+                } else {
+                    heightSpec = helper.getChildMeasureSpec(
+                            helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
+                            uniformHeight > 0 ? uniformHeight : params.height, true);
+                }
+
                 //if cols' length is less than view's count, then remainder views share the rest space
                 helper.measureChild(view,
-                        View.MeasureSpec.makeMeasureSpec(
-                                (int) ((availableWidth - usedWidth) * 1.0f / eqSize + 0.5f), View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.makeMeasureSpec(resizeWidth, View.MeasureSpec.EXACTLY),
                         heightSpec);
 
                 // find minHeight

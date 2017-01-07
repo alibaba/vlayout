@@ -213,15 +213,27 @@ public class VLayoutActivity extends Activity {
         if (FLOAT_LAYOUT) {
             FloatLayoutHelper layoutHelper = new FloatLayoutHelper();
             layoutHelper.setAlignType(FixLayoutHelper.BOTTOM_RIGHT);
-            layoutHelper.setDefaultLocation(100, 200);
+            layoutHelper.setDefaultLocation(100, 400);
             adapters.add(new SubAdapter(this, layoutHelper, 1, new LayoutParams(100, 100)));
         }
 
         if (LINEAR_LAYOUT) {
-            LinearLayoutHelper layoutHelper = new LinearLayoutHelper();
-            layoutHelper.setAspectRatio(3.4f);
-            adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 1));
-            adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 6));
+            LinearLayoutHelper layoutHelper1 = new LinearLayoutHelper();
+            layoutHelper1.setAspectRatio(2.0f);
+            LinearLayoutHelper layoutHelper2 = new LinearLayoutHelper();
+            layoutHelper2.setAspectRatio(4.0f);
+            adapters.add(new SubAdapter(this, layoutHelper1, 1));
+            adapters.add(new SubAdapter(this, layoutHelper2, 6) {
+
+                @Override
+                public void onBindViewHolder(MainViewHolder holder, int position) {
+                    if (position % 2 == 0) {
+                        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
+                        layoutParams.mAspectRatio = 5;
+                        holder.itemView.setLayoutParams(layoutParams);
+                    }
+                }
+            });
         }
 
         if (STICKY_LAYOUT) {
@@ -235,7 +247,18 @@ public class VLayoutActivity extends Activity {
             ColumnLayoutHelper layoutHelper = new ColumnLayoutHelper();
             // layoutHelper.setBgColor(0xff00f0f0);
             layoutHelper.setWeights(new float[]{40.0f, Float.NaN, 40});
-            adapters.add(new SubAdapter(this, layoutHelper, 3));
+            adapters.add(new SubAdapter(this, layoutHelper, 5) {
+
+                @Override
+                public void onBindViewHolder(MainViewHolder holder, int position) {
+                    if (position == 0) {
+                        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
+                        layoutParams.mAspectRatio = 4;
+                        holder.itemView.setLayoutParams(layoutParams);
+                    }
+                }
+
+            });
         }
 
         if (ONEN_LAYOUT) {

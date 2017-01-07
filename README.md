@@ -15,7 +15,7 @@ By providing a custom LayoutManager to RecyclerView, VirtualLayout is able to la
 	* FixLayoutHelper: fix the view at certain position of screen, the view does not scroll with whole page.
 	* ScrollFixLayoutHelper: fix the view at certain position of screen, but the view does not show until it scrolls to it position.
 	* FloatLayoutHelper: float the view on top of page, user can drag and drop it.
-	* ColumnLayoutHelper: perform like GridLayoutHelper but layouts all child views at once.
+	* ColumnLayoutHelper: perform like GridLayoutHelper but layouts all child views in one line.
 	* SingleLayoutHelper: contain only one child view.
 	* OnePlusNLayoutHelper: a custom layout with one child view layouted at left and the others at right, you may not need this.
 	* StickyLayoutHelper: scroll the view when its position is inside the screen, but fix the view at start or end when its position is outside the screen.
