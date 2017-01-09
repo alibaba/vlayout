@@ -421,7 +421,9 @@ public class VLayoutActivity extends Activity {
         if (STAGGER_LAYOUT) {
             // adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 0), 0));
             final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(2, 10);
-            helper.setMargin(0, 10, 0, 10);
+            helper.setMargin(10, 10, 10, 10);
+            helper.setPadding(10, 10, 10, 10);
+            helper.setBgColor(0xFF86345A);
             adapters.add(new SubAdapter(this, helper, 27) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {

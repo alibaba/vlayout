@@ -138,9 +138,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
         int availableWidth;
         if (helper.getOrientation() == VERTICAL) {
-            availableWidth = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - mMarginLeft - mMarginRight;
+            availableWidth = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - getHorizontalMargin() - getHorizontalPadding();
         } else {
-            availableWidth = helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom() - mMarginTop - mMarginBottom;
+            availableWidth = helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom() - getVerticalMargin() - getVerticalPadding();
         }
         mColLength = (int) ((availableWidth - mHGap * (mNumLanes - 1)) / mNumLanes + 0.5);
         int totalGaps = availableWidth - mColLength * mNumLanes;
@@ -260,13 +260,13 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 start = currentSpan.getEndLine(defaultNewViewLine, orientationHelper);
 
                 if (isStartLine)
-                    start += layoutInVertical ? mMarginTop : mMarginLeft;
+                    start += layoutInVertical ? mMarginTop + mPaddingTop : mMarginLeft + mPaddingLeft;
                 else
                     start += (layoutInVertical ? mVGap : mHGap);
                 end = start + orientationHelper.getDecoratedMeasurement(view);
             } else {
                 if (isEndLine)
-                    end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mMarginBottom : mMarginRight);
+                    end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mMarginBottom + mPaddingRight : mMarginRight + mPaddingRight);
                 else
                     end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mVGap : mHGap);
                 start = end - orientationHelper.getDecoratedMeasurement(view);
@@ -288,9 +288,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
             if (currentSpan.mIndex == 0) {
                 if (layoutInVertical) {
-                    otherStart += mMarginLeft;
+                    otherStart += mMarginLeft + mPaddingLeft;
                 } else {
-                    otherStart += mMarginTop;
+                    otherStart += mMarginTop + mPaddingTop;
                 }
             }
 
@@ -298,11 +298,11 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
             if (currentSpan.mIndex == mNumLanes - 1) {
                 if (layoutInVertical) {
-                    otherStart += mMarginRight;
-                    otherEnd += mMarginRight;
+                    otherStart += mMarginRight + mPaddingRight;
+                    otherEnd += mMarginRight + mPaddingRight;
                 } else {
-                    otherStart += mMarginBottom;
-                    otherEnd += mMarginBottom;
+                    otherStart += mMarginBottom + mPaddingTop;
+                    otherEnd += mMarginBottom + mPaddingTop;
                 }
             }
 
@@ -343,7 +343,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 result.mConsumed = layoutState.getOffset() - maxStart;
             } else {
                 final int minStart = getMinStart(orientationHelper.getEndAfterPadding(), orientationHelper);
-                result.mConsumed = layoutState.getOffset() - minStart + (layoutInVertical ? mMarginTop : mMarginLeft);
+                result.mConsumed = layoutState.getOffset() - minStart + (layoutInVertical ? mMarginTop + mPaddingTop : mMarginLeft + mPaddingLeft);
             }
         } else {
             if (!isOutOfRange(layoutState.getCurrentPosition()) && layoutState.hasMore(state)) {
@@ -351,7 +351,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 result.mConsumed = minEnd - layoutState.getOffset();
             } else {
                 final int maxEnd = getMaxEnd(orientationHelper.getEndAfterPadding(), orientationHelper);
-                result.mConsumed = maxEnd - layoutState.getOffset() + (layoutInVertical ? mMarginBottom : mMarginRight);
+                result.mConsumed = maxEnd - layoutState.getOffset() + (layoutInVertical ? mMarginBottom + mPaddingBottom : mMarginRight + mPaddingRight);
             }
 
         }
@@ -385,14 +385,14 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             // in middle nothing need to do
             if (isLayoutEnd) {
                 if (offset == getItemCount() - 1) {
-                    return mMarginBottom;
+                    return mMarginBottom + mPaddingBottom;
                 } else if (!useAnchor) {
                     final int minEnd = getMinEnd(orientationHelper.getDecoratedStart(child), orientationHelper);
                     return minEnd - orientationHelper.getDecoratedEnd(child);
                 }
             } else {
                 if (offset == 0) {
-                    return -mMarginTop;
+                    return -mMarginTop - mPaddingTop;
                 } else if (!useAnchor) {
                     final int maxStart = getMaxStart(orientationHelper.getDecoratedEnd(child), orientationHelper);
                     return maxStart - orientationHelper.getDecoratedStart(child);
