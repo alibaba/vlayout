@@ -320,11 +320,11 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             }
 
             if (!isStartLine) {
-                isStartLine = helper.getReverseLayout() ? pos == getRange().getUpper() : pos == getRange().getLower();
+                isStartLine = helper.getReverseLayout() ? pos == getRange().getUpper().intValue() : pos == getRange().getLower().intValue();
             }
 
             if (!isEndLine) {
-                isEndLine = helper.getReverseLayout() ? pos == getRange().getLower() : pos == getRange().getUpper();
+                isEndLine = helper.getReverseLayout() ? pos == getRange().getLower().intValue() : pos == getRange().getUpper().intValue();
             }
 
             consumedSpanCount += spanSize;
