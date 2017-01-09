@@ -217,7 +217,7 @@ fix类型的```LayoutHelper```，在可能需要设置一个相对父容器四�
 
 + ```SHOW_ALWAYS```：与```FixLayoutHelper```的行为一致，固定在某个位置；
 + ```SHOW_ON_ENTER```：默认不显示视图，当页面滚动到这个视图的位置的时候，才显示；
-+ ```HOW_ON_LEAVE```：默认不显示视图，当页面滚出这个视图的位置的时候显示；
++ ```SHOW_ON_LEAVE```：默认不显示视图，当页面滚出这个视图的位置的时候显示；
 
 ![showType](images/ShowType.png)
 
