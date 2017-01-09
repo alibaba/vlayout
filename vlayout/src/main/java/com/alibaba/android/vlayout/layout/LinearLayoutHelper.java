@@ -159,15 +159,17 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
                 bottom = top + orientationHelper.getDecoratedMeasurement(view);
             }
         } else {
-            top = helper.getPaddingTop();
+            top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
             bottom = top + orientationHelper.getDecoratedMeasurementInOther(view);
 
             if (layoutState.getLayoutDirection() == VirtualLayoutManager.LayoutStateWrapper.LAYOUT_START) {
-                right = layoutState.getOffset() - mDividerHeight;
-                left = layoutState.getOffset() - result.mConsumed;
+                // fill left, from right to left
+                right = layoutState.getOffset() - startSpace - (isStartLine ? 0 : mDividerHeight);
+                left = right - orientationHelper.getDecoratedMeasurement(view);
             } else {
-                left = layoutState.getOffset() + mDividerHeight;
-                right = layoutState.getOffset() + result.mConsumed;
+                // fill right, from left to right
+                left = layoutState.getOffset() + startSpace + (isStartLine ? 0 : mDividerHeight);
+                right = left + orientationHelper.getDecoratedMeasurement(view);
             }
         }
         // We calculate everything with View's bounding box (which includes decor and margins)
