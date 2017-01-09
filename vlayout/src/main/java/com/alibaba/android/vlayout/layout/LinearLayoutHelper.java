@@ -79,6 +79,7 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
         if (isOutOfRange(layoutState.getCurrentPosition())) {
             return;
         }
+        int currentPosition = layoutState.getCurrentPosition();
 
         // find corresponding layout container
         View view = nextView(recycler, layoutState, helper, result);
@@ -89,8 +90,33 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
         VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
 
+        int startSpace = 0, endSpace = 0, gap = 0;
+        boolean isLayoutEnd = layoutState.getLayoutDirection() == VirtualLayoutManager.LayoutStateWrapper.LAYOUT_END;
+        boolean isStartLine = isLayoutEnd
+                ? currentPosition == getRange().getLower().intValue()
+                : currentPosition == getRange().getUpper().intValue();
+        boolean isEndLine = isLayoutEnd
+                ? currentPosition == getRange().getUpper().intValue()
+                : currentPosition == getRange().getLower().intValue();
 
-        final int widthSize = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight() - getHorizontalMargin();
+        if (isStartLine) {
+            startSpace = layoutInVertical
+                    ? (isLayoutEnd ? mMarginTop + mPaddingTop : mMarginBottom + mPaddingBottom)
+                    : (isLayoutEnd ? mMarginLeft + mPaddingLeft : mMarginRight + mPaddingRight);
+        }
+
+        if (isEndLine) {
+            endSpace = layoutInVertical
+                    ? (isLayoutEnd ? mMarginBottom + mPaddingBottom : mMarginTop + mPaddingTop)
+                    : (isLayoutEnd ? mMarginRight + mPaddingRight : mMarginLeft + mPaddingLeft);
+        }
+
+        if (!isStartLine) {
+            gap = mDividerHeight;
+        }
+
+        final int widthSize = helper.getContentWidth() - helper.getPaddingLeft() - helper
+                .getPaddingRight() - getHorizontalMargin() - getHorizontalPadding();
         int widthSpec = helper.getChildMeasureSpec(widthSize, params.width, !layoutInVertical);
         int heightSpec;
         float viewAspectRatio = params.mAspectRatio;
@@ -98,37 +124,39 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
             heightSpec = View.MeasureSpec.makeMeasureSpec((int) (widthSize / viewAspectRatio + 0.5f),
                     View.MeasureSpec.EXACTLY);
         } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
-            heightSpec = View.MeasureSpec.makeMeasureSpec((int) (widthSize / mAspectRatio + 0.5), View.MeasureSpec.EXACTLY);
-        } else
-            heightSpec = helper.getChildMeasureSpec(helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom() - getVerticalMargin(), params.height, layoutInVertical);
+            heightSpec = View.MeasureSpec.makeMeasureSpec((int) (widthSize / mAspectRatio + 0.5),
+                    View.MeasureSpec.EXACTLY);
+        } else {
+            heightSpec = helper.getChildMeasureSpec(
+                    helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom()
+                            - getVerticalMargin() - getVerticalPadding(), params.height,
+                    layoutInVertical);
+        }
 
         helper.measureChild(view, widthSpec, heightSpec);
 
         OrientationHelper orientationHelper = helper.getMainOrientationHelper();
-        //FIXME mConsumed should take account margin when start line or end line
-        result.mConsumed = orientationHelper.getDecoratedMeasurement(view) + mDividerHeight;
-
+        result.mConsumed = orientationHelper.getDecoratedMeasurement(view) + startSpace + endSpace + gap;
         int left, top, right, bottom;
         if (helper.getOrientation() == VERTICAL) {
             // not support RTL now
             if (helper.isDoLayoutRTL()) {
-                right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight;
+                right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight - mPaddingRight;
                 left = right - orientationHelper.getDecoratedMeasurementInOther(view);
             } else {
-                left = helper.getPaddingLeft() + mMarginLeft;
+                left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft;
                 right = left + orientationHelper.getDecoratedMeasurementInOther(view);
             }
 
-            //FIXME top bottom should take account margin when start line or end line
             // whether this layout pass is layout to start or to end
             if (layoutState.getLayoutDirection() == VirtualLayoutManager.LayoutStateWrapper.LAYOUT_START) {
                 // fill start, from bottom to top
-                bottom = layoutState.getOffset() - mDividerHeight;
-                top = layoutState.getOffset() - result.mConsumed;
+                bottom = layoutState.getOffset() - startSpace - (isStartLine ? 0 : mDividerHeight);
+                top = bottom - orientationHelper.getDecoratedMeasurement(view);
             } else {
                 // fill end, from top to bottom
-                top = layoutState.getOffset() + mDividerHeight;
-                bottom = layoutState.getOffset() + result.mConsumed;
+                top = layoutState.getOffset() + startSpace + (isStartLine ? 0 : mDividerHeight);
+                bottom = top + orientationHelper.getDecoratedMeasurement(view);
             }
         } else {
             top = helper.getPaddingTop();
@@ -144,9 +172,7 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
         }
         // We calculate everything with View's bounding box (which includes decor and margins)
         // To calculate correct layout position, we subtract margins.
-        helper.layoutChild(view, left, top, right, bottom);
-
-        mLayoutRegion.union(left, top, right, bottom);
+        layoutChild(view, left, top, right, bottom, helper);
 
         if (DEBUG) {
             Log.d(TAG, "laid out child at position " + helper.getPosition(view) + ", with l:"
@@ -156,5 +182,22 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
 
         handleStateOnResult(result, view);
     }
+
+    @Override
+    public int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
+        final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
+
+        if (isLayoutEnd) {
+            if (offset == getItemCount() - 1) {
+                return layoutInVertical ? mMarginBottom + mPaddingBottom : mMarginRight + mPaddingRight;
+            }
+        } else {
+            if (offset == 0)
+                return layoutInVertical ? -mMarginTop - mPaddingTop : -mMarginLeft - mPaddingLeft;
+        }
+
+        return super.computeAlignOffset(offset, isLayoutEnd, useAnchor, helper);
+    }
+
 
 }

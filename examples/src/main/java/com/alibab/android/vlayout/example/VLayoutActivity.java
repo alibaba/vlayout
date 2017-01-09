@@ -227,7 +227,10 @@ public class VLayoutActivity extends Activity {
             layoutHelper1.setAspectRatio(2.0f);
             LinearLayoutHelper layoutHelper2 = new LinearLayoutHelper();
             layoutHelper2.setAspectRatio(4.0f);
-            layoutHelper2.setDividerHeight(20);
+            layoutHelper2.setDividerHeight(10);
+            layoutHelper2.setMargin(10, 30, 10, 10);
+            layoutHelper2.setPadding(10, 30, 10, 10);
+            layoutHelper2.setBgColor(0xFFF5A623);
             adapters.add(new SubAdapter(this, layoutHelper1, 1));
             adapters.add(new SubAdapter(this, layoutHelper2, 6) {
 
