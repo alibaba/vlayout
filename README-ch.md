@@ -97,3 +97,7 @@ public class MyAdapter extends VirtualLayoutAdapter {
 # 布局属性
 
 每一种layoutHelper都有自己的布局属性来控制布局样式，详情请参考[文档](docs/ATTRIBUTES-ch.md)。
+
+# 开源许可证
+
+vlayout遵循MIT开源许可证协议。

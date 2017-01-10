@@ -95,3 +95,7 @@ In this way, one thing you should note is that you should call ```setLayoutHelpe
 # Layout Attributes
 
 Each layoutHelper has a few attributes to control its layout style. See [this](docs/ATTRIBUTES.md) to read more.
+
+# LICENSE
+
+Vlayout is available under the MIT license.
