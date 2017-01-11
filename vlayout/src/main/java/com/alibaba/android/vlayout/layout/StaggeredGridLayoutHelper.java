@@ -298,11 +298,11 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
             if (currentSpan.mIndex == mNumLanes - 1) {
                 if (layoutInVertical) {
-                    otherStart += mMarginRight + mPaddingRight;
-                    otherEnd += mMarginRight + mPaddingRight;
+                    otherStart += mMarginLeft + mPaddingLeft;
+                    otherEnd += mMarginLeft + mPaddingLeft;
                 } else {
-                    otherStart += mMarginBottom + mPaddingTop;
-                    otherEnd += mMarginBottom + mPaddingTop;
+                    otherStart += mMarginTop + mPaddingTop;
+                    otherEnd += mMarginTop + mPaddingTop;
                 }
             }
 
