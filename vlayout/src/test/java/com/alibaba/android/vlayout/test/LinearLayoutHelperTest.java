@@ -28,7 +28,7 @@ import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 
 import com.alibaba.android.vlayout.VirtualLayoutManager;
-import com.alibab.android.vlayout.vlayout.BuildConfig;
+import com.alibaba.android.vlayout.vlayout.BuildConfig;
 
 import org.junit.Assert;
 import org.junit.Before;

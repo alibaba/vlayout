@@ -23,7 +23,7 @@
   -->
 
 <manifest
-    package="com.alibab.android.vlayout.example"
+    package="com.alibaba.android.vlayout.example"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
@@ -33,11 +33,11 @@
         android:theme="@style/AppTheme">
 
 
-        <activity android:name="com.alibab.android.vlayout.example.TestActivity">
+        <activity android:name="com.alibaba.android.vlayout.example.TestActivity">
 
         </activity>
 
-        <activity android:name="com.alibab.android.vlayout.example.VLayoutActivity">
+        <activity android:name="com.alibaba.android.vlayout.example.VLayoutActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.alibab.android.vlayout;
+package com.alibaba.android.vlayout;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
