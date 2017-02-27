@@ -1,0 +1,242 @@
+[
+  {
+    "type": 1,
+    "style": {
+      "aspectRatio": 0.334
+    },
+    "items": [
+      {
+        "type": 1,
+        "style" : {
+          "bgColor": "#0f0ffa"
+        },
+        "imgUrl": "https://img.alicdn.com/tps/i4/TB19g4EJFXXXXcQXXXXeRTP_XXX-1125-543.jpg_q30.jpg",
+        "action": "http://www.tmall.com"
+      }
+    ]
+  },
+
+  {
+    "type": 1,
+    "items": [
+      {
+        "type": 1025,
+        "imgUrl": "https://img.alicdn.com/tps/TB1n9VFJFXXXXbWXVXXXXXXXXXX-1125-543.jpg_q30.jpg",
+        "style": {
+          "height": 300
+        }
+      }
+    ]
+  },
+  {
+    "type": "1032",
+    "left": 10,
+    "top": 200,
+    "items": [
+      {
+        "type": 2
+      }
+    ]
+  },
+  {
+    "type": "1033",
+    "column": 4,
+    "style": {
+      "cols": [
+        35.5
+      ]
+    },
+    "items": [
+      {
+        "type": 1,
+        "style": {
+          "height": 100
+        }
+      },
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      }
+    ]
+  },
+  {
+    "type": "1027",
+    "items": [
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      }
+    ]
+  },
+  {
+    "type": 1030,
+    "items": [
+      {
+        "type": 1,
+        "style": {
+          "bgColor": "#a033aa"
+        }
+      }
+    ]
+  },
+  {
+    "type": 5,
+    "style": {
+      "bgColor": "#e3e3e3",
+      "cols": [
+        "46.667"
+      ]
+    },
+    "items": [
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      }
+    ]
+  },
+  {
+    "type": 1,
+    "items": [
+      {
+        "type": 1
+      }
+    ]
+  },
+  {
+    "type": 5,
+    "style": {
+      "cols": [
+        40
+      ]
+    },
+    "items": [
+      {
+        "type": 1,
+        "style": {
+          "margin": [
+            4,
+            4,
+            2,
+            0
+          ]
+        }
+      },
+      {
+        "type": 1,
+        "style": {
+          "margin": [
+            0,
+            0,
+            4,
+            0
+          ]
+        }
+      },
+      {
+        "type": 1
+      }
+    ]
+  },
+  {
+    "type": 5,
+    "style": {
+    },
+    "items": [
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      }
+    ]
+  },
+  {
+    "type": "1029",
+    "align": "bottom_left",
+    "items": [
+      {
+        "type": 2
+      }
+    ]
+  },
+  {
+    "type": "1031",
+    "items": [
+      {
+        "type": 1,
+        "style": {
+          "bgColor": "#f0a0a0"
+        }
+      }
+    ]
+  },
+  {
+    "type": "1026",
+    "column": 4,
+    "colspan": true,
+    "style": {
+      "autoExpand": true,
+      "vGap": "2",
+      "hGap": 2
+    },
+    "items": [
+      {
+        "type": 1,
+        "style": {
+          "colspan": 2
+        }
+      },
+      {
+        "type": 1,
+        "style": {
+          "colspan": 2
+        }
+      },
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      },
+      {
+        "type": 1
+      }
+    ]
+  }
+]
