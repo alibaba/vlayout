@@ -2,7 +2,7 @@
 
 [English Document](README.md)
 
-VirtualLayout是一个针对RecyclerView的LayoutManager扩展, 主要通过提供一整套布局方案和布局间的组件复用的问题。
+VirtualLayout是一个针对RecyclerView的LayoutManager扩展, 主要提供一整套布局方案和布局间的组件复用的问题。
 
 ## 设计思路
 
