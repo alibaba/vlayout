@@ -1,0 +1,18 @@
+[
+  {
+    "type": 1,
+    "style": {
+      "aspectRatio": 0.334
+    },
+    "items": [
+      {
+        "type": 1,
+        "style": {
+          "bgColor": "#0f0ffa"
+        },
+        "imgUrl": "https://img.alicdn.com/tps/i4/TB19g4EJFXXXXcQXXXXeRTP_XXX-1125-543.jpg_q30.jpg",
+        "action": "http://www.tmall.com"
+      }
+    ]
+  }
+]

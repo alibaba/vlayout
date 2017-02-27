@@ -1,0 +1,886 @@
+[
+  {
+    "type": "1",
+    "id": "banner",
+    "items": [
+      {
+        "data": [
+          {
+            "imgUrl": "http://img.alicdn.com/tps/i3/TB1urIUJXXXXXa8XpXXgoUDMFXX-1680-400.jpg",
+            "pageParam": "scm=1003.2.201501051336-1.OTHER_1441530241779_395596",
+            "img2Url": "http://img.alicdn.com/tps/i4/TB1XicHJXXXXXabXVXXeRTP_XXX-1125-543.jpg",
+            "action": "http://www.tmall.hk/wow/import/act/zqybj?acm=201501051336-1.1003.2.395596&aldid=aqXKNGQS&scm=1003.2.201501051336-1.OTHER_1441530241779_395596&pos=1",
+            "bizId": "JDT1"
+          },
+          {
+            "imgUrl": "http://i.mmcdn.cn/simba/img/TB1FyZYIVXXXXaRXVXXSutbFXXX.jpg",
+            "isAd": "true",
+            "img2Url": "http://i.mmcdn.cn/simba/img/TB1FyZYIVXXXXaRXVXXSutbFXXX.jpg",
+            "isAD": "true",
+            "tmpl": "",
+            "action": "http://shop.m.taobao.com/shop/shop_index.htm?shop_id=60628842",
+            "eurl": "http://click.mz.simba.taobao.com/ecpm?e=QAaoWiRWV6smgME64bmjnBsQmLP5zomMgqnDjJTUPtrG8q5sgZ0L3TcgGQEBBYnMocuO%2FhAeBozFR1peKyBXxMdaaCPmez40UK7RDtIZydUyXElRAMLwo%2B119VNc%2B2dtQssqKi3HctgIVHQ0ppRIhFM7CN8EHWSVcQ5nB6u0K7j1BYsxKBRtbkEDwKJqMTeLrnw26zQhzEp5DC980adTt6dJfcuxGPiUHVROEA%2BhW5Z%2B6LJDG3JbHWYSnGS1oA3L&u=http%3A%2F%2Fshop.m.taobao.com%2Fshop%2Fshop_index.htm%3Fshop_id%3D60628842&k=257",
+            "bizId": "TM_AD"
+          },
+          {
+            "imgUrl": "http://img.alicdn.com/tps/i1/TB1PRgKJXXXXXcSXFXXgoUDMFXX-1680-400.jpg",
+            "pageParam": "scm=1003.2.201501051336-3.OTHER_1442184896549_395576",
+            "img2Url": "http://img.alicdn.com/tps/i4/TB1m774JXXXXXaaXpXXeRTP_XXX-1125-543.jpg",
+            "action": "http://www.tmall.com/wow/act/14771/new?acm=201501051336-3.1003.2.395576&aldid=aqXKNGQS&scm=1003.2.201501051336-3.OTHER_1442184896549_395576&pos=3",
+            "bizId": "JDT3"
+          },
+          {
+            "imgUrl": "http://img.alicdn.com/tps/i2/TB1CeQRJXXXXXcbXpXXgoUDMFXX-1680-400.jpg",
+            "pageParam": "scm=1003.2.201501051336-4.OTHER_1438884241363_395557",
+            "img2Url": "http://img.alicdn.com/tps/i3/TB1PcsDJXXXXXcLXVXXeRTP_XXX-1125-543.jpg",
+            "action": "http://www.tmall.com/wow/brand/act/nbhd?acm=201501051336-4.1003.2.395557&aldid=aqXKNGQS&scm=1003.2.201501051336-4.OTHER_1438884241363_395557&pos=4",
+            "bizId": "JDT4"
+          },
+          {
+            "imgUrl": "http://img.alicdn.com/tps/i3/TB1ws32JXXXXXXgXXXXgoUDMFXX-1680-400.jpg",
+            "pageParam": "scm=1003.2.201501051336-5.OTHER_1440934500025_394896",
+            "img2Url": "http://img.alicdn.com/tps/i4/TB1pdZzJXXXXXXuaXXXeRTP_XXX-1125-543.jpg",
+            "action": "http://gongniu.m.tmall.com/?acm=201501051336-5.1003.2.394896&aldid=aqXKNGQS&scm=1003.2.201501051336-5.OTHER_1440934500025_394896&pos=5",
+            "bizId": "JDT5"
+          },
+          {
+            "imgUrl": "http://img.alicdn.com/tps/i2/TB1SNQFJXXXXXbjXpXXl_Xx2XXX-1680-400.jpeg",
+            "pageParam": "scm=1003.2.201501051336-6.OTHER_1442097750330_395417",
+            "img2Url": "http://img.alicdn.com/tps/i1/TB1Sb7JJXXXXXc2XFXXeRTP_XXX-1125-543.jpg",
+            "action": "http://www.tmall.com/wh/tmall/chaoshi/act/kaixue-hd?acm=201501051336-6.1003.2.395417&aldid=aqXKNGQS&scm=1003.2.201501051336-6.OTHER_1442097750330_395417&pos=6",
+            "bizId": "JDT6"
+          },
+          {
+            "imgUrl": "http://img.alicdn.com/tps/i3/TB1IAsHJXXXXXaqXVXXgoUDMFXX-1680-400.jpg",
+            "pageParam": "scm=1003.2.201501051336-7.OTHER_1441440230484_395369",
+            "img2Url": "http://img.alicdn.com/tps/i4/TB10Kc4JXXXXXanXXXXeRTP_XXX-1125-543.jpg",
+            "action": "http://www.tmall.com/wh/tmall/jz/act/zongdongyuan?acm=201501051336-7.1003.2.395369&aldid=aqXKNGQS&scm=1003.2.201501051336-7.OTHER_1441440230484_395369&pos=7",
+            "bizId": "JDT7"
+          }
+        ],
+        "type": "2"
+      }
+    ]
+  },
+  {
+    "type": "9",
+    "id": "topNav520",
+    "style": {
+      "bgColor": "#ffffff"
+    },
+    "items": [
+      {
+        "type": "3",
+        "imgUrl": "http://img.alicdn.com/tps/TB1TmkDJXXXXXa6XVXXXXXXXXXX-160-160.png_200x200.jpg",
+        "title": "积分刮券",
+        "pageParam": "scm=1003.2.201506140121-1.OTHER_1442055707363_397121",
+        "action": "//www.tmall.com/wow/jifen/act/index?acm=201506140121-1.1003.2.397121&aldid=aqXKNGQS&scm=1003.2.201506140121-1.OTHER_1442055707363_397121&pos=1",
+        "bizId": "LJF"
+      },
+      {
+        "type": "3",
+        "imgUrl": "http://img.alicdn.com/tps/i4/TB16VxHHVXXXXasXFXXtz80OVXX-160-160.png_200x200.jpg",
+        "title": "充值",
+        "pageParam": "scm=1003.64.201506140121-2.OTHER_1441040931937_351384",
+        "action": "http://h5.m.taobao.com/app/cz/cost.html?acm=201506140121-2.1003.64.351384&aldid=aqXKNGQS&scm=1003.64.201506140121-2.OTHER_1441040931937_351384&pos=2",
+        "bizId": "CZ"
+      },
+      {
+        "type": "3",
+        "imgUrl": "http://img.alicdn.com/tps/i3/TB1Dps4JXXXXXblXXXXtz80OVXX-160-160.png_200x200.jpg",
+        "title": "天猫国际",
+        "pageParam": "scm=1003.2.201506140121-3.OTHER_1440961845899_397122",
+        "action": "http://www.tmall.hk/wow/import/act/zqybj?acm=201506140121-3.1003.2.397122&aldid=aqXKNGQS&scm=1003.2.201506140121-3.OTHER_1440961845899_397122&pos=3",
+        "bizId": "ICON5"
+      },
+      {
+        "type": "3",
+        "imgUrl": "http://img.alicdn.com/tps/i3/TB10qtAHVXXXXaiXVXXtz80OVXX-160-160.png_200x200.jpg",
+        "title": "聚划算",
+        "pageParam": "scm=1003.64.201506140121-4.OTHER_1441333855546_384796",
+        "action": "tmall://mobile.tmall.com/page/juhuasuan",
+        "bizId": "JFS"
+      }
+    ]
+  },
+  {
+    "type": "1",
+    "id": "tmallHotPoint",
+    "style": {
+      "bgColor": "#ffffff",
+      "margin": [
+        "1",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "items": [
+      {
+        "imgUrl": "http://gtms02.alicdn.com/tps/i2/TB1FEnkIpXXXXbkaXXXVQpuFVXX-136-100.png",
+        "data": [
+          {
+            "subTitle": "送NB惊喜大礼包",
+            "pageParam": "scm=1003.2.201506291339-1.OTHER_1439624865687_397131",
+            "title": "NB潮鞋酷玩！坚决不甘平庸范儿",
+            "syncIds": "activityId=831075",
+            "action": "http://www.tmall.com/wh/tmall/portal/act/hotspot?activityId=831075&ttid=@tmall_phone&acm=201506291339-1.1003.2.397131&aldid=aqXKNGQS&scm=1003.2.201506291339-1.OTHER_1439624865687_397131&pos=1",
+            "bizId": "TMRD1"
+          },
+          {
+            "subTitle": "权志龙同款",
+            "pageParam": "scm=1003.2.201506291339-2.OTHER_1439684002628_397132",
+            "title": "G-Dragon权志龙玩潮牌！出街利器",
+            "syncIds": "activityId=831001",
+            "action": "http://www.tmall.com/wh/tmall/portal/act/hotspot?activityId=831001&ttid=@tmall_phone&acm=201506291339-2.1003.2.397132&aldid=aqXKNGQS&scm=1003.2.201506291339-2.OTHER_1439684002628_397132&pos=2",
+            "bizId": "TMRD2"
+          },
+          {
+            "subTitle": "200万红包！速抢",
+            "pageParam": "scm=1003.2.201506291339-3.OTHER_1442303774377_397134",
+            "title": "她来陪你睡！悄悄恋上你的床",
+            "syncIds": "activityId=831004",
+            "action": "http://www.tmall.com/wh/tmall/portal/act/hotspot?activityId=831004&ttid=@tmall_phone&acm=201506291339-3.1003.2.397134&aldid=aqXKNGQS&scm=1003.2.201506291339-3.OTHER_1442303774377_397134&pos=3",
+            "bizId": "TMRD3"
+          },
+          {
+            "subTitle": "29元抢名鞋",
+            "pageParam": "scm=1003.2.201506291339-4.OTHER_1441404916575_397275",
+            "title": "大牌男女鞋5折疯抢！就这么任性",
+            "syncIds": "activityId=831003",
+            "action": "http://www.tmall.com/wh/tmall/portal/act/hotspot?activityId=831003&ttid=@tmall_phone&acm=201506291339-4.1003.2.397275&aldid=aqXKNGQS&scm=1003.2.201506291339-4.OTHER_1441404916575_397275&pos=4",
+            "bizId": "TMRD4"
+          }
+        ],
+        "logoUrl": "http://gtms01.alicdn.com/tps/i1/TB1O72lIpXXXXX5XVXXmqjTHFXX-60-60.png",
+        "type": "33",
+        "bizId": "tmallHotPoint"
+      }
+    ]
+  },
+  {
+    "type": "1",
+    "id": "atmosphere520Title",
+    "items": []
+  },
+  {
+    "type": "4",
+    "id": "atmosphere520",
+    "style": {
+      "cols": [
+        25.6,
+        24.444,
+        24.444,
+        25.512
+      ]
+    },
+    "items": []
+  },
+  {
+    "type": "1",
+    "id": "news",
+    "style": {
+      "bgColor": "#ffffff",
+      "margin": [
+        "1",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "items": []
+  },
+  {
+    "type": "5",
+    "id": "marketingAreaLine1",
+    "style": {
+      "bgColor": "#e3e3e3",
+      "cols": [
+        46.667
+      ]
+    },
+    "items": [
+      {
+        "itemId": "40829547671",
+        "type": "1",
+        "imgUrl": "https://img.alicdn.com/tps/TB12fdkJpXXXXXUXFXXXXXXXXXX-525-630.jpg",
+        "pageParam": "scm=1003.2.201505251206-1.OTHER_1439138193350_397206",
+        "style": {
+          "margin": "[0.5,0.5,0,0]"
+        },
+        "activeId": "8865445",
+        "syncIds": "80538",
+        "action": "http://www.tmall.com/wh/tpl/brandshinegowh/index?acm=201505251206-1.1003.2.397206&aldid=aqXKNGQS&scm=1003.2.201505251206-1.OTHER_1439138193350_397206&pos=1",
+        "bizId": "PPTM5"
+      },
+      {
+        "type": "1",
+        "imgUrl": "http://gw.alicdn.com/tps/TB1irwYJXXXXXczXpXXXXXXXXXX-600-315.jpg",
+        "pageParam": "scm=1003.2.201505251206-2.OTHER_1440351249520_396479",
+        "style": {
+          "margin": "[0.5,0,0,0.5]"
+        },
+        "syncIds": "521024387024,597752493",
+        "action": "http://www.tmall.com/wh/tpl/refreshmentwh/index.htm?acm=201505251206-2.1003.2.396479&aldid=aqXKNGQS&scm=1003.2.201505251206-2.OTHER_1440351249520_396479&pos=2",
+        "bizId": "HX5"
+      },
+      {
+        "type": "1",
+        "imgUrl": "https://img.alicdn.com/tps/TB1OepaJpXXXXbRXVXXXXXXXXXX-600-315.jpg",
+        "pageParam": "scm=1003.2.201505251206-3.OTHER_1441604883857_397224",
+        "style": {
+          "margin": "[0.5,0,0,0.5]"
+        },
+        "syncIds": "339834236",
+        "action": "http://www.tmall.com/wh/tmall/portal/act/wpzb?acm=201505251206-3.1003.2.397224&aldid=aqXKNGQS&scm=1003.2.201505251206-3.OTHER_1441604883857_397224&pos=3",
+        "bizId": "WPZB3"
+      }
+    ]
+  },
+  {
+    "type": "5",
+    "id": "marketingAreaLine2",
+    "style": {
+      "bgColor": "#e3e3e3",
+      "cols": [
+        46.667
+      ]
+    },
+    "items": [
+      {
+        "type": "1",
+        "imgUrl": "http://img.alicdn.com/tps/i2/TB1h5kiJXXXXXapaXXXWeYjWVXX-525-630.jpg",
+        "pageParam": "scm=1003.2.201506031959-1.OTHER_1440456638507_393846",
+        "style": {
+          "margin": "[0.5,0.5,0,0]"
+        },
+        "syncIds": "0",
+        "action": "http://chaoshi.m.tmall.com?acm=201506031959-1.1003.2.393846&aldid=aqXKNGQS&hybrid=1&scm=1003.2.201506031959-1.OTHER_1440456638507_393846&pos=1",
+        "bizId": "TMCS"
+      },
+      {
+        "type": "1",
+        "imgUrl": "http://img.alicdn.com/tps/i1/TB11vQ2JXXXXXaGXXXXtRvjIVXX-600-315.jpg",
+        "pageParam": "scm=1003.2.201506031959-2.OTHER_1441883624793_395869",
+        "style": {
+          "margin": "[0.5,0,0,0.5]"
+        },
+        "syncIds": "0",
+        "action": "http://www.tmall.hk/wh/tmall/import/act/mp-pc-2015?sj-tmall-sy=&acm=201506031959-2.1003.2.395869&aldid=aqXKNGQS&scm=1003.2.201506031959-2.OTHER_1441883624793_395869&pos=2",
+        "bizId": "TMGJ"
+      },
+      {
+        "type": "1",
+        "imgUrl": "http://img.alicdn.com/tps/i4/TB1dMMuJXXXXXakXVXXtRvjIVXX-600-315.jpg",
+        "pageParam": "scm=1003.2.201506031959-3.OTHER_1441180576717_394471",
+        "style": {
+          "margin": "[0.5,0,0,0.5]"
+        },
+        "syncIds": "1",
+        "action": "http://shiyong.tmall.com/wh/index?acm=201506031959-3.1003.2.394471&aldid=aqXKNGQS&scm=1003.2.201506031959-3.OTHER_1441180576717_394471&pos=3",
+        "bizId": "SY"
+      }
+    ]
+  },
+  {
+    "type": "1",
+    "id": "superBrandDayTitle",
+    "style": {
+      "bgColor": "#ffffff",
+      "margin": [
+        "9",
+        "0",
+        0.5,
+        "0"
+      ]
+    },
+    "items": [
+      {
+        "subTitleIcon": "http://img.alicdn.com/tps/i3/TB16PMUHFXXXXX0XXXXrCWQFFXX-24-42.png",
+        "type": "20",
+        "titleIcon": "http://img.alicdn.com/tps/i1/TB11nZCHFXXXXasXFXXgMi7FVXX-27-84.png",
+        "subTitle": "更多",
+        "pageParam": "scm=1003.2.201505051515.OTHER_1431443306742_265764",
+        "title": "超级品牌日",
+        "action": "http://brand.tmall.com/mobilestreet/wall.htm?acm=201505051515.1003.2.265764&aldid=aqXKNGQS&spm=a3200.7700810.1001.1.JLIziR&scm=1003.2.201505051515.OTHER_1431443306742_265764&pos=1",
+        "bizId": "CJPPRBT"
+      }
+    ]
+  },
+  {
+    "type": "1",
+    "id": "newRelease",
+    "items": []
+  },
+  {
+    "type": "3",
+    "id": "superBrandDay",
+    "style": {
+      "cols": [
+        46.667
+      ],
+      "margin": [
+        "0",
+        "0",
+        "9",
+        "0"
+      ]
+    },
+    "items": [
+      {
+        "imgUrl": "http://img.alicdn.com/bao/uploaded/TB1qXwiJXXXXXbHXFXXSutbFXXX.jpg",
+        "pageParam": "scm=1003.1.05011.123_19345612_273020",
+        "maskUrl": "http://img.alicdn.com/bao/uploaded/TB1e5NdJXXXXXcfXVXXwu0bFXXX.png",
+        "action": "http://brand.tmall.com/brandstreet-m/station?abbucket=&acm=05011.1003.1.273020&aldid=aqXKNGQS&abtest=&scm=1003.1.05011.123_19345612_273020&pos=1#shop19345612",
+        "type": "21",
+        "brandId": "19345612",
+        "bizId": "CJPPR"
+      },
+      {
+        "imgUrl": "http://img.alicdn.com/bao/uploaded/TB1NxaOJXXXXXcBXpXXSutbFXXX.jpg",
+        "pageParam": "scm=1003.1.05012.123_665420038_333246",
+        "celeBrandId": "665420038",
+        "style": {
+          "margin": "[0,0.5,0,0.5]"
+        },
+        "action": "http://brand.tmall.com/brandstreet-m/shopsell?abbucket=&acm=05012.1003.1.333246&aldid=aqXKNGQS&abtest=&brandId=665420038&scm=1003.1.05012.123_665420038_333246&pos=1",
+        "type": "1",
+        "bizId": "DQ"
+      },
+      {
+        "imgUrl": "http://img.alicdn.com/bao/uploaded/TB1QsISJXXXXXXKXFXXSutbFXXX.jpg",
+        "pageParam": "scm=1003.2.201505051520.OTHER_1442168056156_396380",
+        "action": "http://www.tmall.com/wh/tmall/brand/act/index?acm=201505051520.1003.2.396380&aldid=aqXKNGQS&scm=1003.2.201505051520.OTHER_1442168056156_396380&pos=1",
+        "type": "1",
+        "bizId": "PPJ"
+      }
+    ]
+  },
+  {
+    "type": "1",
+    "id": "midInsertBanner1",
+    "style": {
+      "margin": [
+        "0",
+        "0",
+        "9",
+        "0"
+      ]
+    },
+    "items": [
+      {
+        "imgUrl": "http://img.alicdn.com/imgextra/i4/719969485/TB2jNZ9eFXXXXbdXpXXXXXXXXXX_!!719969485.jpg",
+        "pageParam": "scm=1003.2.201505051549.OTHER_1439890891832_394619",
+        "action": "http://hipanda.tmall.com/?acm=201505051549.1003.2.394619&aldid=aqXKNGQS&spm=a1z10.1-b.1997427721.d4918089.6QHfa7&scm=1003.2.201505051549.OTHER_1439890891832_394619&pos=1",
+        "type": "1",
+        "bizId": "ZCB1"
+      }
+    ]
+  },
+  {
+    "type": "1",
+    "id": "choiceMarketTitle",
+    "style": {
+      "bgColor": "#ffffff",
+      "margin": [
+        0.5,
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "items": [
+      {
+        "type": "20",
+        "titleIcon": "http://img.alicdn.com/tps/i1/TB11nZCHFXXXXasXFXXgMi7FVXX-27-84.png",
+        "pageParam": "scm=1003.2.201505051703.OTHER_1432926265273_265778",
+        "title": "精选市场",
+        "action": "http://www.tmall.com/wh/tmall/act/chn/13814/brand?acm=201505051703.1003.2.265778&aldid=aqXKNGQS&scm=1003.2.201505051703.OTHER_1432926265273_265778&pos=1",
+        "bizId": "JXSCBT"
+      }
+    ]
+  },
+  {
+    "type": "5",
+    "id": "choiceMarketLine1",
+    "style": {
+      "bgColor": "#e3e3e3",
+      "cols": [
+        46.667
+      ],
+      "margin": [
+        "0",
+        "-1",
+        "0",
+        "-1"
+      ]
+    },
+    "items": [
+      {
+        "salePoint": "乐视超级机",
+        "itemId": "45441387755",
+        "type": "23",
+        "imgUrl": "http://img.alicdn.com/tps/i3/TB1nUiJJXXXXXcyXpXXWeYjWVXX-525-627.jpg",
+        "subTitle": "每日一秒",
+        "pageParam": "scm=1003.2.201505052055-1.12_1440166451547_394768",
+        "title": "天天搞机",
+        "price": "1528.0",
+        "style": {
+          "bgColor": "#ffffff"
+        },
+        "action": "http://www.tmall.com/wh/tmall/tmall-3c/act/rn-phone?abbucket=&acm=201505052055-1.1003.2.394768&aldid=aqXKNGQS&abtest=&rct_n=http://h5.m.taobao.com/rct/3cphone/App.js&scm=1003.2.201505052055-1.12_1440166451547_394768&pos=1",
+        "bizId": "TTGJ"
+      },
+      {
+        "salePoint": "一茶一味",
+        "itemId": "0",
+        "type": "24",
+        "imgUrl": "http://img.alicdn.com/tps/i4/TB1GQQUJXXXXXXJXpXX4GXi0FXX-288-300.jpg",
+        "subTitle": "每日惊喜主题",
+        "pageParam": "scm=1003.2.201505052055-2.12_1442058871138_395152",
+        "title": "物色",
+        "style": {
+          "bgColor": "#ffffff"
+        },
+        "action": "internal:url=tmall://page.tm/wuseMain?albumIndex=0",
+        "bizId": "WS"
+      },
+      {
+        "salePoint": "切成块来吃",
+        "itemId": "520800304503",
+        "type": "24",
+        "imgUrl": "http://img.alicdn.com/tps/i3/TB1lugMJXXXXXXIXXXX4GXi0FXX-288-300.jpg",
+        "subTitle": "巨无霸月饼",
+        "pageParam": "scm=1003.2.201505052055-3.12_1440058099464_395422",
+        "title": "囤啦",
+        "price": "58.0",
+        "style": {
+          "bgColor": "#ffffff"
+        },
+        "action": "http://tun.tmall.com/?abbucket=&acm=201505052055-3.1003.2.395422&aldid=aqXKNGQS&hybrid=1&abtest=&scm=1003.2.201505052055-3.12_1440058099464_395422&pos=3",
+        "bizId": "TL"
+      }
+    ]
+  },
+  {
+    "type": "5",
+    "id": "choiceMarketLine2",
+    "style": {
+      "bgColor": "#e3e3e3",
+      "cols": [
+        46.667
+      ]
+    },
+    "items": [
+      {
+        "type": "23",
+        "itemId": "520850182072",
+        "salePoint": "香肩小雏菊",
+        "imgUrl": "http://gw.alicdn.com/tps/TB15JoTJXXXXXaUXFXXXXXXXXXX-525-627.jpg",
+        "subTitle": "平价买大牌",
+        "pageParam": "scm=1003.2.201505052109-1.14_1439175138250_396450",
+        "title": "全球快时尚",
+        "price": "810.0",
+        "style": {
+          "bgColor": "#ffffff"
+        },
+        "syncIds": "520850182072",
+        "action": "http://www.tmall.com/wow/if/act/index?abbucket=&acm=201505052109-1.1003.2.396450&aldid=aqXKNGQS&abtest=&scm=1003.2.201505052109-1.14_1439175138250_396450&pos=1",
+        "bizId": "KSS3"
+      },
+      {
+        "type": "24",
+        "itemId": "0",
+        "salePoint": "十点抢免单",
+        "imgUrl": "http://img.alicdn.com/tps/i3/TB1GN.ZJXXXXXcbXXXX4GXi0FXX-288-300.jpg",
+        "subTitle": "越南大青芒",
+        "pageParam": "scm=1003.2.201505052109-2.14_1441450912355_395356",
+        "title": "喵鲜生",
+        "style": {
+          "bgColor": "#ffffff"
+        },
+        "action": "http://miao.m.tmall.com/?abbucket=&acm=201505052109-2.1003.2.395356&aldid=aqXKNGQS&hybrid=1&abtest=&scm=1003.2.201505052109-2.14_1441450912355_395356&pos=2",
+        "bizId": "MXS"
+      },
+      {
+        "type": "24",
+        "itemId": "41787011171",
+        "salePoint": "兔耳朵发圈",
+        "imgUrl": "http://img.alicdn.com/tps/i3/TB1LaQJJXXXXXcjXFXX4GXi0FXX-288-300.jpg",
+        "subTitle": "好生活并不贵",
+        "pageParam": "scm=1003.2.201505052109-3.14_1440511382338_395260",
+        "title": "生活家",
+        "price": "9.9",
+        "style": {
+          "bgColor": "#ffffff"
+        },
+        "syncIds": "41787011171",
+        "action": "http://www.tmall.com/wh/tpl/shenghuojia/index.htm?abbucket=&acm=201505052109-3.1003.2.395260&aldid=aqXKNGQS&abtest=&scm=1003.2.201505052109-3.14_1440511382338_395260&pos=3",
+        "bizId": "SHJ"
+      }
+    ]
+  },
+  {
+    "type": "5",
+    "id": "choiceMarketLine3",
+    "style": {
+      "bgColor": "#e3e3e3",
+      "cols": [
+        46.667
+      ],
+      "margin": [
+        "0",
+        "0",
+        "9",
+        "0"
+      ]
+    },
+    "items": [
+      {
+        "salePoint": "太阳能手表",
+        "type": "23",
+        "itemId": "41943617557",
+        "imgUrl": "http://img.alicdn.com/tps/i1/TB1fsUHJXXXXXayXVXXAfrjWVXX-525-627.png",
+        "subTitle": "原产地进口",
+        "pageParam": "scm=1003.2.201508051145-1.14_1439729785510_396108",
+        "title": "西诱",
+        "price": "272.0",
+        "style": {
+          "bgColor": "#ffffff"
+        },
+        "syncIds": "41943617557",
+        "action": "http://www.tmall.com/wh/tmall/mit/act/import?abbucket=&acm=201508051145-1.1003.2.396108&aldid=aqXKNGQS&abtest=&scm=1003.2.201508051145-1.14_1439729785510_396108&pos=1",
+        "bizId": "XXYY"
+      },
+      {
+        "salePoint": "给宝宝最好",
+        "type": "24",
+        "itemId": "0",
+        "imgUrl": "http://img.alicdn.com/tps/i2/TB1WToIJXXXXXXaXVXX4GXi0FXX-288-300.jpg",
+        "subTitle": "膳魔师开学惠",
+        "pageParam": "scm=1003.2.201508051145-2.14_1442205447516_395888",
+        "title": "全球家居",
+        "style": {
+          "bgColor": "#ffffff"
+        },
+        "syncIds": "0",
+        "action": "http://uhome.tmall.com?abbucket=&acm=201508051145-2.1003.2.395888&aldid=aqXKNGQS&abtest=&scm=1003.2.201508051145-2.14_1442205447516_395888&pos=2",
+        "bizId": "QQJJ"
+      },
+      {
+        "salePoint": "beats耳机",
+        "type": "24",
+        "itemId": "41298970877",
+        "imgUrl": "http://img.alicdn.com/tps/i3/TB1U1wgJXXXXXcLaXXX4GXi0FXX-288-300.jpg",
+        "subTitle": "9期0利息",
+        "pageParam": "scm=1003.2.201508051145-3.14_1438872408653_395326",
+        "title": "智娱智乐",
+        "price": "1598.0",
+        "style": {
+          "bgColor": "#ffffff"
+        },
+        "syncIds": "41298970877",
+        "action": "http://www.tmall.com/wh/tmall/tmall-3c/act/zhineng?wh_hideheader=1&abbucket=&acm=201508051145-3.1003.2.395326&aldid=aqXKNGQS&abtest=&scm=1003.2.201508051145-3.14_1438872408653_395326&pos=3",
+        "bizId": "ZYZL"
+      }
+    ]
+  },
+  {
+    "type": "1",
+    "id": "midInsertBanner2",
+    "style": {
+      "margin": [
+        "0",
+        "0",
+        "9",
+        "0"
+      ]
+    },
+    "items": [
+      {
+        "imgUrl": "https://img.alicdn.com/imgextra/i3/2203256980/TB2.DE1eFXXXXbFXpXXXXXXXXXX_!!2203256980.jpg",
+        "pageParam": "scm=1003.2.201505051714.OTHER_1440097944957_394443",
+        "action": "http://shiyong.tmall.com/wh/index?acm=201505051714.1003.2.394443&aldid=aqXKNGQS&scm=1003.2.201505051714.OTHER_1440097944957_394443&pos=1",
+        "type": "1",
+        "bizId": "ZCB2"
+      }
+    ]
+  },
+  {
+    "type": "1",
+    "id": "hotMarketTitle",
+    "style": {
+      "bgColor": "#ffffff",
+      "margin": [
+        "0",
+        "0",
+        0.5,
+        "0"
+      ]
+    },
+    "items": [
+      {
+        "subTitleIcon": "http://img.alicdn.com/tps/i3/TB16PMUHFXXXXX0XXXXrCWQFFXX-24-42.png",
+        "type": "20",
+        "titleIcon": "http://img.alicdn.com/tps/i1/TB11nZCHFXXXXasXFXXgMi7FVXX-27-84.png",
+        "subTitle": "更多",
+        "pageParam": "scm=1003.2.201505051728.OTHER_1441867222623_371323",
+        "title": "热门市场",
+        "action": "http://www.tmall.com/wh/tpl/tmpagewh/industry2.htm?acm=201505051728.1003.2.371323&aldid=aqXKNGQS&scm=1003.2.201505051728.OTHER_1441867222623_371323&pos=1",
+        "bizId": "RMSCBT"
+      }
+    ]
+  },
+  {
+    "type": "11",
+    "id": "hotMarketPersonal",
+    "style": {
+      "mixedLayouts": [
+        {
+          "count": "2",
+          "type": "2"
+        },
+        {
+          "count": "8",
+          "type": "4"
+        }
+      ]
+    },
+    "items": [
+      {
+        "type": "25",
+        "imgUrl": "http://img.alicdn.com/tps/i2/TB1_..LJXXXXXcyXFXX5HOY_VXX-240-270.jpg",
+        "subTitle": "0首付0利息",
+        "pageParam": "scm=1003.1.201507301048.OTHER_1_388674",
+        "title": "数码电器",
+        "style": {
+          "bgColor": "#ffffff",
+          "margin": "[0,0.5,0.5,0.5]"
+        },
+        "action": "http://3c.m.tmall.com/?abbucket=&acm=201507301048.1003.1.388674&aldid=aqXKNGQS&abtest=&scm=1003.1.201507301048.OTHER_1_388674&pos=1",
+        "industryId": "4",
+        "bizId": "DQC"
+      },
+      {
+        "type": "25",
+        "imgUrl": "http://img.alicdn.com/tps/i3/TB1X6gRJXXXXXaaXXXX5HOY_VXX-240-270.jpg",
+        "subTitle": "海量新品上新",
+        "pageParam": "scm=1003.1.201507301048.OTHER_2_388674",
+        "title": "天猫女装",
+        "style": {
+          "bgColor": "#ffffff",
+          "margin": "[0,0.5,0.5,0.5]"
+        },
+        "action": "http://www.tmall.com/wh/tmall/fushi/act/nvzhuang?abbucket=&acm=201507301048.1003.1.388674&aldid=aqXKNGQS&spm=0.0.0.0.es6hPq&abtest=&scm=1003.1.201507301048.OTHER_2_388674&pos=2",
+        "industryId": "5",
+        "bizId": "NVZ"
+      },
+      {
+        "type": "25",
+        "imgUrl": "http://gw.alicdn.com/tps/TB1kmaMJXXXXXbGaXXXXXXXXXXX-240-270.jpg",
+        "subTitle": "限时疯抢",
+        "pageParam": "scm=1003.1.201507301048.OTHER_3_388674",
+        "title": "男女鞋",
+        "style": {
+          "bgColor": "#ffffff",
+          "margin": "[0,0.5,0.5,0.5]"
+        },
+        "action": "http://www.tmall.com/wh/tmall/baihuo/act/shoes?abbucket=&acm=201507301048.1003.1.388674&aldid=aqXKNGQS&abtest=&scm=1003.1.201507301048.OTHER_3_388674&pos=3",
+        "industryId": "6",
+        "bizId": "NNX"
+      },
+      {
+        "type": "25",
+        "imgUrl": "http://img.alicdn.com/tps/TB1xgkHJXXXXXafXVXXXXXXXXXX-240-270.jpg",
+        "subTitle": "签到送礼",
+        "pageParam": "scm=1003.1.201507301048.OTHER_4_388674",
+        "title": "美妆",
+        "style": {
+          "bgColor": "#ffffff",
+          "margin": "[0,0.5,0.5,0.5]"
+        },
+        "action": "http://www.tmall.com/wh/tmall/baihuo/act/meizhuang?abbucket=&acm=201507301048.1003.1.388674&aldid=aqXKNGQS&abtest=&scm=1003.1.201507301048.OTHER_4_388674&pos=4",
+        "industryId": "7",
+        "bizId": "MZ"
+      },
+      {
+        "type": "25",
+        "imgUrl": "http://img.alicdn.com/tps/i2/TB1hE.mJXXXXXX6XpXX5HOY_VXX-240-270.jpg",
+        "subTitle": "9元包邮",
+        "pageParam": "scm=1003.1.201507301048.OTHER_5_388674",
+        "title": "天猫母婴",
+        "style": {
+          "bgColor": "#ffffff",
+          "margin": "[0,0.5,0.5,0.5]"
+        },
+        "action": "http://www.tmall.com/wh/tpl/baby-mobile-wormhole/index?abbucket=&acm=201507301048.1003.1.388674&aldid=aqXKNGQS&abtest=&scm=1003.1.201507301048.OTHER_5_388674&pos=5",
+        "industryId": "2",
+        "bizId": "MY"
+      },
+      {
+        "type": "25",
+        "imgUrl": "http://img.alicdn.com/tps/i1/TB1rSkFJXXXXXaBXVXX5HOY_VXX-240-270.jpg",
+        "subTitle": "商场同款",
+        "pageParam": "scm=1003.1.201507301048.OTHER_6_388674",
+        "title": "大牌男装",
+        "style": {
+          "bgColor": "#ffffff",
+          "margin": "[0,0.5,0.5,0.5]"
+        },
+        "action": "http://www.tmall.com/wh/tmall/fushi/act/nanzhuang?abbucket=&acm=201507301048.1003.1.388674&aldid=aqXKNGQS&abtest=&scm=1003.1.201507301048.OTHER_6_388674&pos=6",
+        "industryId": "8",
+        "bizId": "NANZ"
+      },
+      {
+        "type": "25",
+        "imgUrl": "http://img.alicdn.com/imgextra/i3/1796103968/TB2IYsyeFXXXXXQXXXXXXXXXXXX_!!1796103968.jpg",
+        "subTitle": "狂享家",
+        "pageParam": "scm=1003.1.201507301048.OTHER_7_388674",
+        "title": "天猫家装",
+        "style": {
+          "bgColor": "#ffffff",
+          "margin": "[0,0.5,0.5,0.5]"
+        },
+        "action": "http://portal-jia.tmall.com/tm-jia/kx/index?abbucket=&acm=201507301048.1003.1.388674&aldid=aqXKNGQS&abtest=&scm=1003.1.201507301048.OTHER_7_388674&pos=7",
+        "industryId": "9",
+        "bizId": "JZG"
+      },
+      {
+        "type": "25",
+        "imgUrl": "http://img.alicdn.com/tps/i1/TB1Y2oLJXXXXXbdXFXX5HOY_VXX-240-270.jpg",
+        "subTitle": "轮毂半价",
+        "pageParam": "scm=1003.1.201507301048.OTHER_8_388674",
+        "title": "阿里汽车",
+        "style": {
+          "bgColor": "#ffffff",
+          "margin": "[0,0.5,0.5,0.5]"
+        },
+        "action": "http://car.m.tmall.com/tm-car/fp/index?abbucket=&acm=201507301048.1003.1.388674&aldid=aqXKNGQS&abtest=&scm=1003.1.201507301048.OTHER_8_388674&pos=8",
+        "industryId": "10",
+        "bizId": "CP"
+      },
+      {
+        "type": "25",
+        "imgUrl": "http://img.alicdn.com/tps/i2/TB1N_nqJXXXXXaAapXX5HOY_VXX-240-270.jpg",
+        "subTitle": "新品特惠",
+        "pageParam": "scm=1003.1.201507301048.OTHER_9_388674",
+        "title": "运动户外",
+        "style": {
+          "bgColor": "#ffffff",
+          "margin": "[0,0.5,0.5,0.5]"
+        },
+        "action": "http://www.tmall.com/wh/tmall/fushi/act/sports?abbucket=&acm=201507301048.1003.1.388674&aldid=aqXKNGQS&abtest=&scm=1003.1.201507301048.OTHER_9_388674&pos=9",
+        "industryId": "11",
+        "bizId": "HWYD"
+      },
+      {
+        "type": "25",
+        "imgUrl": "http://img.alicdn.com/tps/i1/TB14q3ZIVXXXXXaXVXX5HOY_VXX-240-270.jpg",
+        "subTitle": "一定要抢！",
+        "pageParam": "scm=1003.1.201507301048.OTHER_10_388674",
+        "title": "家居家纺",
+        "style": {
+          "bgColor": "#ffffff",
+          "margin": "[0,0.5,0.5,0.5]"
+        },
+        "action": "http://www.tmall.com/wh/tmall/baihuo/act/jiajujiafang?abbucket=&acm=201507301048.1003.1.388674&aldid=aqXKNGQS&abtest=&scm=1003.1.201507301048.OTHER_10_388674&pos=10",
+        "industryId": "1",
+        "bizId": "JFJS"
+      }
+    ]
+  },
+  {
+    "type": "1",
+    "id": "midInsertBanner3",
+    "style": {
+      "margin": [
+        "0",
+        "0",
+        "9",
+        "0"
+      ]
+    },
+    "items": [
+      {
+        "imgUrl": "http://img.alicdn.com/tps/i3/TB1Vc.3JXXXXXalXXXXFhfk_XXX-1125-280.jpg",
+        "pageParam": "scm=1003.2.201505051748.OTHER_1439876904234_395443",
+        "action": "http://www.tmall.com/go/market/promotion-act/kaicangri.php?acm=201505051748.1003.2.395443&aldid=aqXKNGQS&scm=1003.2.201505051748.OTHER_1439876904234_395443&pos=1",
+        "type": "1",
+        "bizId": "ZCB3"
+      }
+    ]
+  },
+  {
+    "type": "1",
+    "id": "goodShopTitle",
+    "style": {
+      "bgColor": "#ffffff",
+      "margin": [
+        0.5,
+        "0",
+        0.5,
+        "0"
+      ]
+    },
+    "items": [
+      {
+        "subTitleIcon": "http://img.alicdn.com/tps/i3/TB16PMUHFXXXXX0XXXXrCWQFFXX-24-42.png",
+        "type": "20",
+        "titleIcon": "http://img.alicdn.com/tps/i1/TB11nZCHFXXXXasXFXXgMi7FVXX-27-84.png",
+        "subTitle": "每日专属你的30家店",
+        "pageParam": "scm=1003.2.201505051754.OTHER_1437661747720_269821",
+        "title": "品牌旗舰",
+        "action": "tmall://page.tm/brandshop",
+        "bizId": "GFQJBT"
+      }
+    ]
+  },
+  {
+    "type": "10",
+    "id": "goodShopForSlip",
+    "style": {
+      "bgColor": "#ffffff"
+    },
+    "load": "com.tmall.yosemite.home.queryGoodShop"
+  },
+  {
+    "type": "1",
+    "id": "recommendsNewTitle",
+    "items": [
+      {
+        "pageParam": "scm=1003.2.201505051831.OTHER_1431591674219_265075",
+        "title": "猜你喜欢",
+        "type": "29",
+        "bizId": "GDJXBT"
+      }
+    ]
+  },
+  {
+    "type": "2",
+    "id": "recommendsNew",
+    "style": {
+      "margin": [
+        "0",
+        "-3",
+        "0",
+        "-3"
+      ]
+    },
+    "load": "com.tmall.yosemite.home.recommend"
+  },
+  {
+    "type": "7",
+    "id": "floater",
+    "items": []
+  },
+  {
+    "type": "8",
+    "id": "footBar",
+    "items": []
+  },
+  {
+    "type": "1",
+    "id": "bottomBanner",
+    "items": []
+  }
+]
