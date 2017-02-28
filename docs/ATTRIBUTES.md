@@ -1,4 +1,4 @@
-Vlayout provides rich layout features, which are presented in the form of a serial of layout attributes technically. Here we introduce these attributes.
+Vlayout provides rich layout features, which are presented in the form of a serial of layout attributes technically. Here we introduce these attributes.
 
 [中文文档](ATTRIBUTES-ch.md)
 
