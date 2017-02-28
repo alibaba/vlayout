@@ -27,7 +27,6 @@
 buildscript {
     repositories {
         maven { url 'http://mvnrepo.alibaba-inc.com/mvn/repository' }
-        maven { url 'http://maven.oschina.net/content/groups/public/' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
         mavenCentral()
         jcenter()
