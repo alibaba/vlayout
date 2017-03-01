@@ -25,6 +25,31 @@ By providing a custom LayoutManager to RecyclerView, VirtualLayout is able to la
 
 ## Usage
 
+### Import Library
+
+Please find the latest version in maven repository.
+
+For gradle:
+
+```
+// gradle
+compile ('com.alibaba.android:vlayout:1.0.0@aar') {
+	transitive = true
+}
+```
+
+Or in maven:
+
+```
+// pom.xml 
+<dependency>
+  <groupId>com.alibaba.android</groupId>
+  <artifactId>vlayout</artifactId>
+  <version>1.0.0</version>
+  <type>aar</type>
+</dependency>
+```
+
 ### Initialize LayoutManager
 
 ```java
