@@ -27,13 +27,13 @@ By providing a custom LayoutManager to RecyclerView, VirtualLayout is able to la
 
 ### Import Library
 
-Please find the latest version in maven repository.
+Please find the latest version(1.0.1 so far) in maven repository. The newest version has been upload to jcenter and MavenCantral, make sure you have added at least one of these repositories.
 
 For gradle:
 
 ```
 // gradle
-compile ('com.alibaba.android:vlayout:1.0.0@aar') {
+compile ('com.alibaba.android:vlayout:1.0.1@aar') {
 	transitive = true
 }
 ```
@@ -45,26 +45,34 @@ Or in maven:
 <dependency>
   <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <type>aar</type>
 </dependency>
 ```
 
 ### Initialize LayoutManager
 
-```java
+```
 final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
 
 recyclerView.setLayoutManager(layoutManager);
 ```
 
+### Initialize recycled pool's size
+Provide a reasonable recycled pool's size to your recyclerView, since the default value may not meet your situation and cause re-create views when scolling.
+
+```
+RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
+recyclerView.setRecycledViewPool(viewPool);
+viewPool.setMaxRecycledViews(0, 10);
+```
+
 ### Set Adapters
 
 * You can use `DelegateAdapter` for as a root adapter to make combination of your own adapters. Just make it extend ```DelegateAdapter.Adapter``` and overrides ```onCreateLayoutHelper``` method.
 
-
-```java
+```
 DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, hasStableItemType);
 recycler.setAdapter(delegateAdapter);
 
@@ -80,10 +88,28 @@ delegateAdapter.addAdapter(adapter);
 
 * The other way to set adapter is extending ```VirtualLayoutAdapter``` and implementing it to make deep combination to your business code.
 
-```java
+```
 public class MyAdapter extends VirtualLayoutAdapter {
-   ....
+   ......
 }
+
+MyAdapter myAdapter = new MyAdapter(layoutManager);
+
+//create layoutHelper list
+List<LayoutHelper> helpers = new LinkedList<>();
+GridLayoutHelper gridLayoutHelper = new GridLayoutHelper(4);
+gridLayoutHelper.setItemCount(25);
+helpers.add(gridLayoutHelper);
+
+GridLayoutHelper gridLayoutHelper2 = new GridLayoutHelper(2);
+gridLayoutHelper2.setItemCount(25);
+helpers.add(gridLayoutHelper2);
+
+//set layoutHelper list to adapter
+myAdapter.setLayoutHelpers(helpers);
+
+//set adapter to recyclerView
+recycler.setAdapter(myAdapter);
 
 ```
 
