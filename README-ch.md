@@ -58,17 +58,24 @@ final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
 recyclerView.setLayoutManager(layoutManager);
 ```
 
+设置回收复用池大小，（如果一屏内相同类型的 View 个数比较多，需要设置一个合适的大小，防止来回滚动时重新创建 View）：
+
+```
+RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
+recyclerView.setRecycledViewPool(viewPool);
+viewPool.setMaxRecycledViews(0, 10);
+```
 
 加载数据时有两种方式:
 
-* 一种是使用 ```DelegateAdapter```, 可以想平常一样写继承自```DelegateAdapter.Adapter```的Adapter, 只比之前的Adapter需要多重载```onCreateLayoutHelper```方法。
+* 一种是使用 ```DelegateAdapter```, 可以像平常一样写继承自```DelegateAdapter.Adapter```的Adapter, 只比之前的Adapter需要多重载```onCreateLayoutHelper```方法。
 其他的和默认Adapter一样。
 
-```java
+```
 DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, hasStableItemType);
 recycler.setAdapter(delegateAdapter);
 
-// 之后可以通过 setAdapters 或 addAdapter方法添加Adapter
+// 之后可以通过 setAdapters 或 addAdapter方法添加DelegateAdapter.Adapter
 
 delegateAdapter.setAdapters(adapters);
 
@@ -80,17 +87,33 @@ delegateAdapter.addAdapter(adapter);
 
 * 另一种是当业务有自定义的复杂需求的时候, 可以继承自```VirtualLayoutAdapter```, 实现自己的Adapter
 
-```java
+```
 public class MyAdapter extends VirtualLayoutAdapter {
-   ....
+   ......
 }
+
+MyAdapter myAdapter = new MyAdapter(layoutManager);
+
+//构造 layoutHelper 列表
+List<LayoutHelper> helpers = new LinkedList<>();
+GridLayoutHelper gridLayoutHelper = new GridLayoutHelper(4);
+gridLayoutHelper.setItemCount(25);
+helpers.add(gridLayoutHelper);
+
+GridLayoutHelper gridLayoutHelper2 = new GridLayoutHelper(2);
+gridLayoutHelper2.setItemCount(25);
+helpers.add(gridLayoutHelper2);
+
+//将 layoutHelper 列表传递给 adapter
+myAdapter.setLayoutHelpers(helpers);
+
+//将 adapter 设置给 recyclerView
+recycler.setAdapter(myAdapter);
 
 ```
 
 在这种情况下，需要使用者注意在当```LayoutHelpers```的结构或者数据数量等会影响到布局的元素变化时，需要主动调用```setLayoutHepers```去更新布局模式。
 
-
-推荐使用第一种方式，简单方便，开发者也很熟悉。
 
 # Demo
 
