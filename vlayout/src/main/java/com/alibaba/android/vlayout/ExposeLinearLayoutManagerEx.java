@@ -1822,6 +1822,9 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
         private Method mFindHiddenNonRemovedViewMethod;
 
+        /** start from 25.2.0, maybe earlier, this method reduce parameters from two to one */
+        private Method mFindHiddenNonRemovedViewMethod25;
+
         private Method mIsHideMethod;
 
         private Field mHiddenViewField;
@@ -1847,8 +1850,13 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
                     Class<?> helperClz = mInnerChildHelper.getClass();
                     mHideMethod = helperClz.getDeclaredMethod("hide", View.class);
                     mHideMethod.setAccessible(true);
-                    mFindHiddenNonRemovedViewMethod = helperClz.getDeclaredMethod("findHiddenNonRemovedView", int.class, int.class);
-                    mFindHiddenNonRemovedViewMethod.setAccessible(true);
+                    try {
+                        mFindHiddenNonRemovedViewMethod = helperClz.getDeclaredMethod("findHiddenNonRemovedView", int.class, int.class);
+                        mFindHiddenNonRemovedViewMethod.setAccessible(true);
+                    } catch (NoSuchMethodException nsme) {
+                        mFindHiddenNonRemovedViewMethod25 = helperClz.getDeclaredMethod("findHiddenNonRemovedView", int.class);
+                        mFindHiddenNonRemovedViewMethod25.setAccessible(true);
+                    }
                     mIsHideMethod = helperClz.getDeclaredMethod("isHidden", View.class);
                     mIsHideMethod.setAccessible(true);
 
@@ -1906,7 +1914,11 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         View findHiddenNonRemovedView(int position, int type) {
             try {
                 ensureChildHelper();
-                return (View) mFindHiddenNonRemovedViewMethod.invoke(mInnerChildHelper, position, RecyclerView.INVALID_TYPE);
+                if (mFindHiddenNonRemovedViewMethod != null) {
+                    return (View) mFindHiddenNonRemovedViewMethod.invoke(mInnerChildHelper, position, RecyclerView.INVALID_TYPE);
+                } else if (mFindHiddenNonRemovedViewMethod25 != null) {
+                    return (View) mFindHiddenNonRemovedViewMethod25.invoke(mInnerChildHelper, position);
+                }
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
