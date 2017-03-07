@@ -51,7 +51,7 @@ compile ('com.alibaba.android:vlayout:1.0.1@aar') {
 
 初始化```LayoutManager```
 
-```java
+```
 final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
 
@@ -113,6 +113,7 @@ recycler.setAdapter(myAdapter);
 ```
 
 在这种情况下，需要使用者注意在当```LayoutHelpers```的结构或者数据数量等会影响到布局的元素变化时，需要主动调用```setLayoutHepers```去更新布局模式。
+
 
 
 # Demo

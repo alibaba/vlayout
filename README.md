@@ -52,7 +52,7 @@ Or in maven:
 
 ### Initialize LayoutManager
 
-```java
+```
 final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
 
