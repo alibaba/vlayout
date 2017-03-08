@@ -266,6 +266,10 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                         int pos = helper.getPosition(refer);
                         if (pos < mPos) { // TODO: when view size is larger than totalSpace!
                             top = orientationHelper.getDecoratedEnd(refer);
+                            LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(pos);
+                            if (layoutHelper instanceof MarginLayoutHelper) {
+                                top = top + ((MarginLayoutHelper) layoutHelper).mMarginBottom + ((MarginLayoutHelper) layoutHelper).mPaddingBottom;
+                            }
                             if (top >= mOffset + mAdjuster.top) {
                                 mDoNormalHandle = true;
                             }
@@ -281,6 +285,10 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                         int pos = helper.getPosition(refer);
                         if (pos > mPos) {
                             bottom = orientationHelper.getDecoratedStart(refer);
+                            LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(pos);
+                            if (layoutHelper instanceof MarginLayoutHelper) {
+                                bottom = bottom - ((MarginLayoutHelper) layoutHelper).mMarginTop - ((MarginLayoutHelper) layoutHelper).mPaddingTop;
+                            }
                             if (bottom >= mOffset + mAdjuster.bottom) {
                                 mDoNormalHandle = true;
                             }
