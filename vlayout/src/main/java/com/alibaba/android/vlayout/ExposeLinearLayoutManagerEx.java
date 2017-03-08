@@ -159,6 +159,21 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+        try {
+            // FIXME in the future
+            Method setItemPrefetchEnabledMethod = RecyclerView.LayoutManager.class
+                    .getDeclaredMethod("setItemPrefetchEnabled", boolean.class);
+            if (setItemPrefetchEnabledMethod != null) {
+                setItemPrefetchEnabledMethod.invoke(this, false);
+            }
+        } catch (NoSuchMethodException e) {
+            /* this method is added in 25.1.0, official release still has bug, see
+             * https://code.google.com/p/android/issues/detail?can=2&start=0&num=100&q=&colspec=ID%20Status%20Priority%20Owner%20Summary%20Stars%20Reporter%20Opened&groupby=&sort=&id=230295
+             **/
+        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException e) {
+        }
+//        setItemPrefetchEnabled(false);
     }
 
 
