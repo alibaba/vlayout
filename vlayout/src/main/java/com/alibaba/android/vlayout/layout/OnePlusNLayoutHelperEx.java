@@ -294,7 +294,7 @@ public class OnePlusNLayoutHelperEx extends AbstractFullFillLayoutHelper {
 
             handleStateOnResult(result, child1, child2, child3, child4, child5);
 
-        } else if (count == 6) { // added at 2017/3/7 这里可以考虑抽取方法
+        } else if (count == 6) { // added at 2017/3/7 can extract method
             final View child1 = mChildrenViews[0];
             final VirtualLayoutManager.LayoutParams lp1 = new VirtualLayoutManager.LayoutParams(
                     child1.getLayoutParams());
@@ -333,16 +333,16 @@ public class OnePlusNLayoutHelperEx extends AbstractFullFillLayoutHelper {
                     lp1.height = (int) ((parentWidth - parentHPadding) / mAspectRatio);
                 }
 
-                int availableSpace = parentWidth - parentHPadding - lp1.leftMargin - lp1.rightMargin // 上部分可用空间
+                int availableSpace = parentWidth - parentHPadding - lp1.leftMargin - lp1.rightMargin
                         - lp2.leftMargin
                         - lp2.rightMargin;
 
                 int width1 = Float.isNaN(weight1) ?
                         (int) (availableSpace / 2.0f + 0.5f)
-                        : (int) (availableSpace * weight1 / 100 + 0.5f); // 第一部分宽度
-                int width2 = Float.isNaN(weight2) ? availableSpace - width1 : // 第二部分宽度
+                        : (int) (availableSpace * weight1 / 100 + 0.5f);
+                int width2 = Float.isNaN(weight2) ? availableSpace - width1 :
                         (int) (availableSpace * weight2 / 100 + 0.5f);
-                int width3 = Float.isNaN(weight3) ? width2 // 第三部分宽度 = 第二部分宽度
+                int width3 = Float.isNaN(weight3) ? width2
                         : (int) (availableSpace * weight3 / 100 + 0.5);
 
                 int bottomavailableSpace = parentWidth - parentHPadding - lp4.leftMargin - lp4.rightMargin
@@ -399,12 +399,12 @@ public class OnePlusNLayoutHelperEx extends AbstractFullFillLayoutHelper {
                                 MeasureSpec.EXACTLY));
 
 
-                int maxTopHeight = Math.max(/*第一个高度*/height1 + lp1.topMargin + lp1.bottomMargin,
-                        /*第二个第三个高度之和*/(height2 + lp2.topMargin + lp2.bottomMargin) * 2);
+                int maxTopHeight = Math.max(height1 + lp1.topMargin + lp1.bottomMargin,
+                        (height2 + lp2.topMargin + lp2.bottomMargin) * 2);
 
-                int maxBottomHeight = Math.max(/*第四个高度*/height3 + lp4.topMargin + lp4.bottomMargin,
-                        Math.max(/*第五个高度*/height3 + lp5.topMargin + lp5.bottomMargin,
-                                /*第六个高度*/height3 + lp6.topMargin + lp6.bottomMargin));
+                int maxBottomHeight = Math.max(height3 + lp4.topMargin + lp4.bottomMargin,
+                        Math.max(height3 + lp5.topMargin + lp5.bottomMargin,
+                                height3 + lp6.topMargin + lp6.bottomMargin));
 
                 mainConsumed = maxTopHeight + maxBottomHeight
                         + getVerticalMargin() + getVerticalPadding();
@@ -485,16 +485,16 @@ public class OnePlusNLayoutHelperEx extends AbstractFullFillLayoutHelper {
                     lp1.height = (int) ((parentWidth - parentHPadding) / mAspectRatio);
                 }
 
-                int availableSpace = parentWidth - parentHPadding - lp1.leftMargin - lp1.rightMargin // 上部分可用空间
+                int availableSpace = parentWidth - parentHPadding - lp1.leftMargin - lp1.rightMargin
                         - lp2.leftMargin - lp2.rightMargin
                         - lp3.leftMargin - lp3.rightMargin;
 
                 int width1 = Float.isNaN(weight1) ?
                         (int) (availableSpace / 3.0f + 0.5f)
-                        : (int) (availableSpace * weight1 / 100 + 0.5f); // 第一部分宽度
-                int width2 = Float.isNaN(weight2) ? (availableSpace - width1) / 2 : // 第二部分宽度
+                        : (int) (availableSpace * weight1 / 100 + 0.5f);
+                int width2 = Float.isNaN(weight2) ? (availableSpace - width1) / 2 :
                         (int) (availableSpace * weight2 / 100 + 0.5f);
-                int width3 = Float.isNaN(weight3) ? width2 // 第三部分宽度 = 第二部分宽度
+                int width3 = Float.isNaN(weight3) ? width2
                         : (int) (availableSpace * weight3 / 100 + 0.5);
 
                 int width4 = Float.isNaN(weight4) ? width2
@@ -555,12 +555,11 @@ public class OnePlusNLayoutHelperEx extends AbstractFullFillLayoutHelper {
 
 
                 int maxRightHeight =
-                        /*第一行最大高度*/Math.max(height2 + lp2.topMargin + lp2.bottomMargin, height2 + lp3.topMargin + lp3.bottomMargin) +
-                        /*第一行最大高度*/Math.max(height2 + lp4.topMargin + lp4.bottomMargin, height2 + lp5.topMargin + lp5.bottomMargin) +
-                        /*第一行最大高度*/Math.max(height2 + lp6.topMargin + lp6.bottomMargin, height2 + lp7.topMargin + lp7.bottomMargin);
+                        Math.max(height2 + lp2.topMargin + lp2.bottomMargin, height2 + lp3.topMargin + lp3.bottomMargin) +
+                        Math.max(height2 + lp4.topMargin + lp4.bottomMargin, height2 + lp5.topMargin + lp5.bottomMargin) +
+                        Math.max(height2 + lp6.topMargin + lp6.bottomMargin, height2 + lp7.topMargin + lp7.bottomMargin);
 
-                int maxHeight = Math.max(/*第一个高度*/height1 + lp1.topMargin + lp1.bottomMargin,
-                        /*右边高度之和*/maxRightHeight);
+                int maxHeight = Math.max(height1 + lp1.topMargin + lp1.bottomMargin, maxRightHeight);
 
                 mainConsumed = maxHeight
                         + getVerticalMargin() + getVerticalPadding();
