@@ -366,7 +366,6 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             }
 
 
-            // 拿到measure好的view, 同是也知道是处于normal/abnormal的状态
             if (mFixView != null) {
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) mFixView.getLayoutParams();
 
