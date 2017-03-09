@@ -81,9 +81,10 @@ public class TestActivity extends Activity {
                 new RecyclerView.Adapter() {
                     @Override
                     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        TextView view = (TextView) LayoutInflater.from(TestActivity.this).inflate(R.layout.item, parent, false);
-                        FrameLayout frameLayout = new FrameLayout(TestActivity.this);
-                        frameLayout.addView(view);
+//                        TextView view = (TextView) LayoutInflater.from(TestActivity.this).inflate(R.layout.item, parent, false);
+//                        FrameLayout frameLayout = new FrameLayout(TestActivity.this);
+                        FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(TestActivity.this).inflate(R.layout.item, parent, false);;
+//                        frameLayout.addView(view);
                         return new MainViewHolder(frameLayout);
                     }
 
