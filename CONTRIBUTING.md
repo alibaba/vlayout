@@ -74,15 +74,6 @@ For CLA assistant service works properly, please make sure you have added email 
 
 ## Code Style Guide
 
-### Objective-C
-
-* Tabs for indentation(not spaces)
-* `*` operator goes with the variable name (e.g. Type *variable;)
-* Function definitions: place each brace on its own line.
-* Other braces: place the open brace on the line preceding the code block; place the close brace on its own line.
-* Use `#pragma marks` to categorize methods into functional groupings and protocol implementations
-* Follow other guidelines on [GitHub Objective-C Style Guide](https://github.com/github/objective-c-style-guide)
-
 ### Java & Android 
 
 * Use [Google Java Style](https://google.github.io/styleguide/javaguide.html) as basic guidelines of java code.
