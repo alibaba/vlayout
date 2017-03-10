@@ -125,6 +125,10 @@ In this way, one thing you should note is that you should call ```setLayoutHelpe
 
 Each layoutHelper has a few attributes to control its layout style. See [this](docs/ATTRIBUTES.md) to read more.
 
+# Contributing
+
+Before you open an issue of create a pull request, please read [Contributing Guide](CONTRIBUTING.md) first.
+
 # LICENSE
 
 Vlayout is available under the MIT license.

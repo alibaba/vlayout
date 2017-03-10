@@ -126,6 +126,10 @@ recycler.setAdapter(myAdapter);
 
 每一种layoutHelper都有自己的布局属性来控制布局样式，详情请参考[文档](docs/ATTRIBUTES-ch.md)。
 
+# 贡献代码
+
+在提 Issue 或者 PR 之前，建议先阅读[Contributing Guide](CONTRIBUTING.md)。按照规范提建议。
+
 # 开源许可证
 
 vlayout遵循MIT开源许可证协议。
