@@ -24,6 +24,29 @@
 
 apply plugin: 'com.android.library'
 
+ext {
+    bintrayRepo = 'Tangram'
+    bintrayName = 'vlayout'
+
+    publishedGroupId = GROUP
+    libraryName = ARTIFACT
+    artifact = ARTIFACT
+
+    libraryDescription = 'Project vlayout is a powerfull LayoutManager extension for RecyclerView, it provides a group of layouts for RecyclerView. Make it able to handle a complicate situation when grid, list and other layouts in the same recyclerview.'
+
+    siteUrl = 'https://github.com/alibaba/vlayout'
+    gitUrl = 'https://github.com/alibaba/vlayout.git'
+
+    libraryVersion = VERSION_NAME
+
+    developerId = 'huifeng.hxl'
+    developerName = 'huifeng.hxl'
+    developerEmail = 'huifeng.hxl@alibaba-inc.com'
+
+    licenseName = 'MIT'
+    licenseUrl = 'https://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
 
 def VERSION = System.properties['version'] ?: '10'
 def VERSION_NAME = System.properties['versionName'] ?: '0.1.0'
@@ -67,4 +90,14 @@ dependencies {
 File deployConfig = rootProject.file('deploy.gradle')
 if (deployConfig.exists()) {
     apply from: rootProject.file('deploy.gradle')
+}
+
+deployConfig = rootProject.file('jcenterInstall.gradle')
+if (deployConfig.exists()) {
+    apply from: rootProject.file('jcenterInstall.gradle')
+}
+
+deployConfig = rootProject.file('jcenterDeploy.gradle')
+if (deployConfig.exists()) {
+    apply from: rootProject.file('jcenterDeploy.gradle')
 }
