@@ -151,8 +151,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             mEachGap = totalGaps;
             mLastGap = totalGaps;
         } else {
-            mEachGap = (int) (totalGaps / (mNumLanes - 1) + 0.5);
-            mLastGap = totalGaps - (mNumLanes - 2) * mEachGap;
+            mEachGap = mLastGap = helper.getOrientation() == VERTICAL ? mHGap : mVGap;
+//            mEachGap = (int) (totalGaps / (mNumLanes - 1) + 0.5);
+//            mLastGap = totalGaps - (mNumLanes - 2) * mEachGap;
         }
 
         if (mLayoutManager == null || mLayoutManager.get() == null || mLayoutManager.get() != helper) {
@@ -286,25 +287,13 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                             : currentSpan.mIndex * (mColLength + mEachGap)) +
                             secondaryOrientationHelper.getStartAfterPadding();
 
-            if (currentSpan.mIndex == 0) {
-                if (layoutInVertical) {
-                    otherStart += mMarginLeft + mPaddingLeft;
-                } else {
-                    otherStart += mMarginTop + mPaddingTop;
-                }
+            if (layoutInVertical) {
+                otherStart += mMarginLeft + mPaddingLeft;
+            } else {
+                otherStart += mMarginTop + mPaddingTop;
             }
 
             int otherEnd = otherStart + orientationHelper.getDecoratedMeasurementInOther(view);
-
-            if (currentSpan.mIndex == mNumLanes - 1) {
-                if (layoutInVertical) {
-                    otherStart += mMarginLeft + mPaddingLeft;
-                    otherEnd += mMarginLeft + mPaddingLeft;
-                } else {
-                    otherStart += mMarginTop + mPaddingTop;
-                    otherEnd += mMarginTop + mPaddingTop;
-                }
-            }
 
             if (layoutInVertical) {
                 layoutChild(view, otherStart, start, otherEnd, end, helper);

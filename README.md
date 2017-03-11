@@ -27,13 +27,13 @@ By providing a custom LayoutManager to RecyclerView, VirtualLayout is able to la
 
 ### Import Library
 
-Please find the latest version(1.0.1 so far) in maven repository. The newest version has been upload to jcenter and MavenCantral, make sure you have added at least one of these repositories.
+Please find the latest version(1.0.2 so far) in maven repository. The newest version has been upload to jcenter and MavenCantral, make sure you have added at least one of these repositories.
 
 For gradle:
 
 ```
 // gradle
-compile ('com.alibaba.android:vlayout:1.0.1@aar') {
+compile ('com.alibaba.android:vlayout:1.0.2@aar') {
 	transitive = true
 }
 ```
@@ -45,7 +45,7 @@ Or in maven:
 <dependency>
   <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <type>aar</type>
 </dependency>
 ```
@@ -83,6 +83,9 @@ delegateAdapter.setAdapters(adapters);
 // or
 CustomAdapter adapter = new CustomAdapter(data, new GridLayoutHelper());
 delegateAdapter.addAdapter(adapter);
+
+// call notify change when data changes
+adapter.notifyDataSetChanged();
 
 ```
 
@@ -124,6 +127,10 @@ In this way, one thing you should note is that you should call ```setLayoutHelpe
 # Layout Attributes
 
 Each layoutHelper has a few attributes to control its layout style. See [this](docs/ATTRIBUTES.md) to read more.
+
+# Contributing
+
+Before you open an issue of create a pull request, please read [Contributing Guide](CONTRIBUTING.md) first.
 
 # LICENSE
 

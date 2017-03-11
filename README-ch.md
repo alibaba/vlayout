@@ -27,11 +27,11 @@ VirtualLayout是一个针对RecyclerView的LayoutManager扩展, 主要提供一�
 
 ## 使用
 
-版本请参考mvn repository上的最新版本（目前最新版本是1.0.1），最新的 aar 都会发布到 jcenter 和 MavenCentral 上，确保配置了这两个仓库源，然后引入aar依赖：
+版本请参考mvn repository上的最新版本（目前最新版本是1.0.2），最新的 aar 都会发布到 jcenter 和 MavenCentral 上，确保配置了这两个仓库源，然后引入aar依赖：
 
 ```
 // gradle
-compile ('com.alibaba.android:vlayout:1.0.1@aar') {
+compile ('com.alibaba.android:vlayout:1.0.2@aar') {
 	transitive = true
 }
 ```
@@ -43,7 +43,7 @@ compile ('com.alibaba.android:vlayout:1.0.1@aar') {
 <dependency>
   <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <type>aar</type>
 </dependency>
 ```
@@ -83,6 +83,8 @@ delegateAdapter.setAdapters(adapters);
 CustomAdapter adapter = new CustomAdapter(data, new GridLayoutHelper());
 delegateAdapter.addAdapter(adapter);
 
+// 如果数据有变化，调用自定义 adapter 的 notifyDataSetChanged()
+adapter.notifyDataSetChanged();
 ```
 
 * 另一种是当业务有自定义的复杂需求的时候, 可以继承自```VirtualLayoutAdapter```, 实现自己的Adapter
@@ -125,6 +127,10 @@ recycler.setAdapter(myAdapter);
 # 布局属性
 
 每一种layoutHelper都有自己的布局属性来控制布局样式，详情请参考[文档](docs/ATTRIBUTES-ch.md)。
+
+# 贡献代码
+
+在提 Issue 或者 PR 之前，建议先阅读[Contributing Guide](CONTRIBUTING.md)。按照规范提建议。
 
 # 开源许可证
 

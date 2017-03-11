@@ -420,7 +420,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             if (idx < 0) return;
 
             Pair<AdapterDataObserver, Adapter> p = mAdapters.get(idx);
-            List<LayoutHelper> helpers = getLayoutHelpers();
+            List<LayoutHelper> helpers = new LinkedList<>(getLayoutHelpers());
             LayoutHelper helper = helpers.get(idx);
 
             if (helper.getItemCount() != p.second.getItemCount()) {

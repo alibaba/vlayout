@@ -32,16 +32,27 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
+        <activity android:name=".RootActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.alibaba.android.vlayout.example.OnePlusNLayoutActivity">
+
+        </activity>
+
+        <activity android:name="com.alibaba.android.vlayout.example.MainActivity">
+
+        </activity>
 
         <activity android:name="com.alibaba.android.vlayout.example.TestActivity">
 
         </activity>
 
         <activity android:name="com.alibaba.android.vlayout.example.VLayoutActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
 
     </application>
