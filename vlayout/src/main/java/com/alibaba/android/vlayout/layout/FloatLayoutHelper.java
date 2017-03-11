@@ -142,6 +142,7 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
         }
 
         mFixView = view;
+        mFixView.setClickable(true);
 
         doMeasureAndLayout(view, helper);
 
@@ -420,6 +421,7 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
                 case MotionEvent.ACTION_CANCEL:
                     doPullOverAnimation(v);
                     (v.getParent()).requestDisallowInterceptTouchEvent(false);
+                    v.setPressed(false);
                     break;
             }
             return isDrag;
