@@ -83,6 +83,8 @@ delegateAdapter.setAdapters(adapters);
 CustomAdapter adapter = new CustomAdapter(data, new GridLayoutHelper());
 delegateAdapter.addAdapter(adapter);
 
+// 如果数据有变化，调用自定义 adapter 的 notifyDataSetChanged()
+adapter.notifyDataSetChanged();
 ```
 
 * 另一种是当业务有自定义的复杂需求的时候, 可以继承自```VirtualLayoutAdapter```, 实现自己的Adapter
@@ -125,6 +127,10 @@ recycler.setAdapter(myAdapter);
 # 布局属性
 
 每一种layoutHelper都有自己的布局属性来控制布局样式，详情请参考[文档](docs/ATTRIBUTES-ch.md)。
+
+# 贡献代码
+
+在提 Issue 或者 PR 之前，建议先阅读[Contributing Guide](CONTRIBUTING.md)。按照规范提建议。
 
 # 开源许可证
 

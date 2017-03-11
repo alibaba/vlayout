@@ -24,6 +24,22 @@
 
 package com.alibaba.android.vlayout.example;
 
+import com.alibaba.android.vlayout.DelegateAdapter;
+import com.alibaba.android.vlayout.LayoutHelper;
+import com.alibaba.android.vlayout.RecyclablePagerAdapter;
+import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
+import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
+import com.alibaba.android.vlayout.layout.FixLayoutHelper;
+import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
+import com.alibaba.android.vlayout.layout.GridLayoutHelper;
+import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
+import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
+import com.alibaba.android.vlayout.layout.ScrollFixLayoutHelper;
+import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
+import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
+import com.alibaba.android.vlayout.layout.StickyLayoutHelper;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -41,22 +57,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.alibaba.android.vlayout.DelegateAdapter;
-import com.alibaba.android.vlayout.LayoutHelper;
-import com.alibaba.android.vlayout.RecyclablePagerAdapter;
-import com.alibaba.android.vlayout.VirtualLayoutManager;
-import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
-import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
-import com.alibaba.android.vlayout.layout.FixLayoutHelper;
-import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
-import com.alibaba.android.vlayout.layout.GridLayoutHelper;
-import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
-import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
-import com.alibaba.android.vlayout.layout.ScrollFixLayoutHelper;
-import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
-import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
-import com.alibaba.android.vlayout.layout.StickyLayoutHelper;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -127,7 +127,7 @@ public class VLayoutActivity extends Activity {
 
         final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
 
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
 
@@ -213,6 +213,12 @@ public class VLayoutActivity extends Activity {
             });
         }
 
+//        {
+//            GridLayoutHelper helper = new GridLayoutHelper(10);
+//            helper.setAspectRatio(4f);
+//            helper.setGap(10);
+//            adapters.add(new SubAdapter(this, helper, 80));
+//        }
 
         if (FLOAT_LAYOUT) {
             FloatLayoutHelper layoutHelper = new FloatLayoutHelper();
@@ -361,7 +367,7 @@ public class VLayoutActivity extends Activity {
             adapters.add(new SubAdapter(this, layoutHelper, 0));
             layoutHelper = new StickyLayoutHelper(false);
             layoutHelper.setOffset(100);
-            adapters.add(new SubAdapter(this, layoutHelper, 3, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
+            adapters.add(new SubAdapter(this, layoutHelper, 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
         }
 
         if (GRID_LAYOUT) {

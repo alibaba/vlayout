@@ -46,3 +46,5 @@ out/
 # MAVEN COMPILE Files
 target/
 lint.xml
+
+deploy.gradle

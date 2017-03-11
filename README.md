@@ -84,6 +84,9 @@ delegateAdapter.setAdapters(adapters);
 CustomAdapter adapter = new CustomAdapter(data, new GridLayoutHelper());
 delegateAdapter.addAdapter(adapter);
 
+// call notify change when data changes
+adapter.notifyDataSetChanged();
+
 ```
 
 * The other way to set adapter is extending ```VirtualLayoutAdapter``` and implementing it to make deep combination to your business code.
@@ -124,6 +127,10 @@ In this way, one thing you should note is that you should call ```setLayoutHelpe
 # Layout Attributes
 
 Each layoutHelper has a few attributes to control its layout style. See [this](docs/ATTRIBUTES.md) to read more.
+
+# Contributing
+
+Before you open an issue of create a pull request, please read [Contributing Guide](CONTRIBUTING.md) first.
 
 # LICENSE
 
