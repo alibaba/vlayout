@@ -37,23 +37,22 @@ Weex Branches
 
 
 ```
-{action} [{module}] {description}
+{action} {description}
 ```
 
 * `{action}`
     * `add`
     * `update` or `bugfix`
     * `remove`
-* `{module}`
-    * Including: layouthelper, layoutmanager, doc, example, test, all... 
+    * ...
 * `{description}`
-    * It's ***RECOMMENDED*** to close issue with syntax `close #123` or `fix #123`, see [the doc](https://help.github.com/articles/closing-issues-via-commit-messages/) for more detail. It's useful for responding issues and release flow.
+    * It's ***RECOMMENDED*** to close issue with syntax `#123`, see [the doc](https://help.github.com/articles/closing-issues-via-commit-messages/) for more detail. It's useful for responding issues and release flow.
 
 for example:
 
-* `add [layouthelper] add new layout helper`
-* `bugfix [sdk] fix #123, make compatible to recyclervew 25.2.0`
-* `remove [example] remove abc`
+* `add new layout helper`
+* `fix #123, make compatible to recyclervew 25.2.0`
+* `remove abc`
 
 ## Issue
 
