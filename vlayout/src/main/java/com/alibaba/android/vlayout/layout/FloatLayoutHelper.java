@@ -24,6 +24,9 @@
 
 package com.alibaba.android.vlayout.layout;
 
+import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.VirtualLayoutManager;
+
 import android.animation.ObjectAnimator;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
@@ -33,9 +36,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-
-import com.alibaba.android.vlayout.LayoutManagerHelper;
-import com.alibaba.android.vlayout.VirtualLayoutManager;
 
 import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 import static com.alibaba.android.vlayout.layout.FixLayoutHelper.BOTTOM_LEFT;
@@ -171,6 +171,7 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
         if (mFixView != null && helper.isViewHolderUpdated(mFixView)) {
             // remove view, not recycle
             helper.removeChildView(mFixView);
+            helper.recycleView(mFixView);
             mFixView.setOnTouchListener(null);
             mFixView = null;
         }
@@ -239,6 +240,7 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
         if (mFixView != null) {
             mFixView.setOnTouchListener(null);
             helper.removeChildView(mFixView);
+            helper.recycleView(mFixView);
             mFixView = null;
         }
     }
