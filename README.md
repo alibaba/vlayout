@@ -84,6 +84,9 @@ delegateAdapter.setAdapters(adapters);
 CustomAdapter adapter = new CustomAdapter(data, new GridLayoutHelper());
 delegateAdapter.addAdapter(adapter);
 
+// call notify change when data changes
+adapter.notifyDataSetChanged();
+
 ```
 
 * The other way to set adapter is extending ```VirtualLayoutAdapter``` and implementing it to make deep combination to your business code.
