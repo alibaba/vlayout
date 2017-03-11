@@ -130,7 +130,7 @@ Each layoutHelper has a few attributes to control its layout style. See [this](d
 
 # Contributing
 
-Before you open an issue of create a pull request, please read [Contributing Guide](CONTRIBUTING.md) first.
+Before you open an issue or create a pull request, please read [Contributing Guide](CONTRIBUTING.md) first.
 
 # LICENSE
 
