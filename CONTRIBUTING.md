@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thank you for your attention to this project and any bug, doc, examples and suggestion is appriciated. Here are some suggestions for you to create Pull Requests or open Issues.
+Thank you for your attention to this project. Any bug, doc, examples and suggestion is appriciated. Here are some suggestions for you to create Pull Requests or open Issues.
 
 ## Branch Management
 
@@ -11,7 +11,7 @@ develop         <--- PR(bugfix/typo/3rd-PR)
  ↑ PR
 {type}/{description}
 ```  
-Weex Branches
+Branches
 
 0. `master` branch
     0. `master` is the latest (pre-)release branch.
