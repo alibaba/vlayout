@@ -310,7 +310,9 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             mAdapters.add(position, Pair.create(observer, adapter));
         }
 
-        super.setHasStableIds(hasStableIds);
+        if (!hasObservers()) {
+            super.setHasStableIds(hasStableIds);
+        }
         super.setLayoutHelpers(helpers);
     }
 
