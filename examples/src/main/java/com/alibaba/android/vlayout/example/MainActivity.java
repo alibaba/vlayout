@@ -117,7 +117,15 @@ public class MainActivity extends Activity {
 
                     @Override
                     public int getItemCount() {
-                        return 40;
+                        List<LayoutHelper> helpers = getLayoutHelpers();
+                        if (helpers == null) {
+                            return 0;
+                        }
+                        int count = 0;
+                        for (int i = 0, size = helpers.size(); i < size; i++) {
+                            count += helpers.get(i).getItemCount();
+                        }
+                        return count;
                     }
                 });
 
