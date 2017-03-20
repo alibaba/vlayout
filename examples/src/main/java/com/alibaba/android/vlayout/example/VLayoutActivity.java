@@ -466,10 +466,10 @@ public class VLayoutActivity extends Activity {
                 // recyclerView.scrollToPosition(22);
                 // recyclerView.getAdapter().notifyDataSetChanged();
                 // mainHandler.postDelayed(trigger, 1000);
-                List<DelegateAdapter.Adapter> newAdapters = new ArrayList<>();
-                newAdapters.add((new SubAdapter(VLayoutActivity.this, new ColumnLayoutHelper(), 3)));
-                newAdapters.add((new SubAdapter(VLayoutActivity.this, new GridLayoutHelper(4), 24)));
-                delegateAdapter.addAdapters(newAdapters);
+                //List<DelegateAdapter.Adapter> newAdapters = new ArrayList<>();
+                //newAdapters.add((new SubAdapter(VLayoutActivity.this, new ColumnLayoutHelper(), 3)));
+                //newAdapters.add((new SubAdapter(VLayoutActivity.this, new GridLayoutHelper(4), 24)));
+                //delegateAdapter.addAdapters(newAdapters);
                 recyclerView.requestLayout();
             }
         };
