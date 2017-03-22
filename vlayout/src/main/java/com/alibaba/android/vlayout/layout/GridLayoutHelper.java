@@ -669,7 +669,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
     }
 
     private void assignSpans(RecyclerView.Recycler recycler, RecyclerView.State state, int count,
-                             int consumedSpanCount, boolean layingOutInPrimaryDirection, LayoutManagerHelper layoutManagerHelper) {
+                             int consumedSpanCount, boolean layingOutInPrimaryDirection, LayoutManagerHelper helper) {
         int span, spanDiff, start, end, diff;
         // make sure we traverse from min position to max position
         if (layingOutInPrimaryDirection) {
@@ -682,7 +682,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             diff = -1;
         }
 
-        if (layoutManagerHelper.getOrientation() == VERTICAL && layoutManagerHelper.isDoLayoutRTL()) { // start from last span
+        if (helper.getOrientation() == VERTICAL && helper.isDoLayoutRTL()) { // start from last span
             span = consumedSpanCount - 1;
             spanDiff = -1;
         } else {
@@ -692,7 +692,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         for (int i = start; i != end; i += diff) {
             View view = mSet[i];
-            int spanSize = getSpanSize(recycler, state, layoutManagerHelper.getPosition(view));
+            int spanSize = getSpanSize(recycler, state, helper.getPosition(view));
             if (spanDiff == -1 && spanSize > 1) {
                 mSpanIndices[i] = span - (spanSize - 1);
             } else {
@@ -711,8 +711,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         }
 
         @Override
-        public int getSpanIndex(int position, int spanCount) {
-            return (position - mStartPosition) % spanCount;
+        public int getSpanIndex(int span, int spanCount) {
+            return (span - mStartPosition) % spanCount;
         }
     }
 
