@@ -30,8 +30,10 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutParams;
+import android.util.Log;
 import android.view.View;
 
+import com.alibaba.android.vlayout.BuildConfig;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.Range;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
@@ -55,6 +57,8 @@ import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
  * @since 1.1.0
  */
 public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
+
+    private static final String TAG = "Staggered";
 
     private static final String LOOKUP_BUNDLE_KEY = "StaggeredGridLayoutHelper_LazySpanLookup";
 
@@ -112,8 +116,16 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         this.mHGap = hGap;
     }
 
+    public int getHGap() {
+        return this.mHGap;
+    }
+
     public void setVGap(int vGap) {
         this.mVGap = vGap;
+    }
+
+    public int getVGap() {
+        return this.mVGap;
     }
 
     public void setLane(int lane) {
@@ -121,6 +133,16 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         ensureLanes();
     }
 
+    public int getLane() {
+        return this.mNumLanes;
+    }
+
+    /**
+     * @return the width of the lane
+     */
+    public int getColLength() {
+        return this.mColLength;
+    }
 
     private void ensureLanes() {
         if (mSpans == null || mSpans.length != mNumLanes || mRemainingSpans == null) {
@@ -152,8 +174,6 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             mLastGap = totalGaps;
         } else {
             mEachGap = mLastGap = helper.getOrientation() == VERTICAL ? mHGap : mVGap;
-//            mEachGap = (int) (totalGaps / (mNumLanes - 1) + 0.5);
-//            mLastGap = totalGaps - (mNumLanes - 2) * mEachGap;
         }
 
         if (mLayoutManager == null || mLayoutManager.get() == null || mLayoutManager.get() != helper) {
@@ -167,7 +187,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     public void afterLayout(RecyclerView.Recycler recycler, RecyclerView.State state, int startPosition, int endPosition, int scrolled, LayoutManagerHelper helper) {
         super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
 
-        if (startPosition > getRange().getUpper() || endPosition < getRange().getLower()) return;
+        if (startPosition > getRange().getUpper() || endPosition < getRange().getLower()) {
+            return;
+        }
 
         if (!state.isPreLayout() && helper.getChildCount() > 0) {
             // call after doing layout, to check whether there is a gap between staggered layout and other layouts
@@ -215,8 +237,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             boolean isStartLine = false, isEndLine = false;
             View view = layoutState.next(recycler);
 
-            if (view == null)
+            if (view == null) {
                 break;
+            }
 
             VirtualLayoutManager.LayoutParams lp = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
 
@@ -231,8 +254,6 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             } else {
                 currentSpan = mSpans[spanIndex];
             }
-
-
             // handle margin for start/end line
             isStartLine = position - getRange().getLower() < mNumLanes;
             isEndLine = getRange().getUpper() - position - 1 < mNumLanes;
@@ -260,16 +281,22 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             if (layoutState.getLayoutDirection() == LAYOUT_END) {
                 start = currentSpan.getEndLine(defaultNewViewLine, orientationHelper);
 
-                if (isStartLine)
+                if (isStartLine) {
                     start += layoutInVertical ? mMarginTop + mPaddingTop : mMarginLeft + mPaddingLeft;
-                else
+                    //Log.d(TAG", "startLine " + position + " " + start);
+                } else {
                     start += (layoutInVertical ? mVGap : mHGap);
+                    //Log.d(TAG", "normalStartLine " + position + " " + start);
+                }
                 end = start + orientationHelper.getDecoratedMeasurement(view);
             } else {
-                if (isEndLine)
+                if (isEndLine) {
                     end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mMarginBottom + mPaddingRight : mMarginRight + mPaddingRight);
-                else
+                    //Log.d(TAG", "endLine " + position + " " + end);
+                } else {
                     end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mVGap : mHGap);
+                    //Log.d(TAG", "normalEndLine " + position + " " + end);
+                }
                 start = end - orientationHelper.getDecoratedMeasurement(view);
             }
 
@@ -350,8 +377,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     @Override
     public void onScrollStateChanged(int state, int startPosition,
                                      int endPosition, LayoutManagerHelper helper) {
-        if (startPosition > getRange().getUpper() || endPosition < getRange().getLower())
+        if (startPosition > getRange().getUpper() || endPosition < getRange().getLower()) {
             return;
+        }
 
         if (state == RecyclerView.SCROLL_STATE_IDLE) {
             checkForGaps();
@@ -409,7 +437,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
      */
 
     private void checkForGaps() {
-        if (mLayoutManager == null) return;
+        if (mLayoutManager == null) {
+            return;
+        }
 
         final VirtualLayoutManager layoutManager = mLayoutManager.get();
 
@@ -491,7 +521,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
         View gapView = hasGapsToFix(layoutManager, viewAnchor, alignLine);
         if (gapView != null) {
-            mLazySpanLookup.clear();
+            //FIXME do not clear loopup, may cause lane error while scroll
+            //mLazySpanLookup.clear();
 
             for (Span span : mSpans) {
                 span.setLine(alignLine);
@@ -510,7 +541,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     private View hasGapsToFix(VirtualLayoutManager layoutManager, final int position, final int alignLine) {
         View view = layoutManager.findViewByPosition(position);
 
-        if (view == null) return null;
+        if (view == null) {
+            return null;
+        }
 
 
         BitSet mSpansToCheck = new BitSet(mNumLanes);
@@ -612,7 +645,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         for (int i = 0; i < mSpans.length; i++) {
-            if (i == span) continue;
+            if (i == span) {
+                continue;
+            }
 
             Span sp = mSpans[i];
             if (isStart && sp.findStart(child)) {
@@ -639,24 +674,28 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 int position = lp.getViewPosition();
 
                 if (helper.getReverseLayout()) {
-                    if (fromStart) { // recycle from end
+                    if (fromStart) {
+                        // recycle from end
                         Span span = findSpan(position, child, true);
                         if (span != null) {
                             span.popEnd(orientationHelper);
                         }
-                    } else { // recycle from start
+                    } else {
+                        // recycle from start
                         Span span = findSpan(position, child, false);
                         if (span != null) {
                             span.popStart(orientationHelper);
                         }
                     }
                 } else {
-                    if (fromStart) { // recycle from start
+                    if (fromStart) {
+                        // recycle from start
                         Span span = findSpan(position, child, true);
                         if (span != null) {
                             span.popStart(orientationHelper);
                         }
-                    } else { // recycle from end
+                    } else {
+                        // recycle from end
                         Span span = findSpan(position, child, false);
                         if (span != null) {
                             span.popEnd(orientationHelper);
@@ -723,10 +762,19 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             for (int i = startIndex; i != endIndex; i += diff) {
                 final Span other = mSpans[i];
                 int otherLine = other.getEndLine(defaultLine, orientationHelper);
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "end starIndex " + i + " end otherLine " + otherLine);
+                }
                 if (otherLine < minLine) {
                     min = other;
                     minLine = otherLine;
                 }
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "end min " + min + " end minLine " + minLine);
+                }
+            }
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "final end min " + min + " final end minLine " + minLine);
             }
             return min;
         } else {
@@ -735,10 +783,19 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             for (int i = startIndex; i != endIndex; i += diff) {
                 final Span other = mSpans[i];
                 int otherLine = other.getStartLine(defaultLine, orientationHelper);
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "start starIndex " + i + " start otherLine " + otherLine);
+                }
                 if (otherLine > maxLine) {
                     max = other;
                     maxLine = otherLine;
                 }
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "start max " + max + " start maxLine " + maxLine);
+                }
+            }
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "final start max " + max + " final start maxLine " + maxLine);
             }
             return max;
         }
@@ -796,6 +853,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         ensureLanes();
 
         if (isOutOfRange(anchorInfo.position)) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "onRefreshLayout span.clear()");
+            }
             for (Span span : mSpans) {
                 span.clear();
             }
@@ -826,6 +886,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
 
         if (reference == null) {
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "checkAnchorInfo span.clear()");
+            }
             for (Span span : mSpans) {
                 span.clear();
                 span.setLine(anchorInfo.coordinate);
@@ -878,7 +941,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 }
             }
 
-
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "checkAnchorInfo span.cacheReferenceLineAndClear()");
+            }
             for (Span span : mSpans) {
                 span.cacheReferenceLineAndClear(helper.getReverseLayout() ^ anchorInfo.layoutFromEnd, offset, orientationHelper);
             }
@@ -962,8 +1027,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
 
             if (def != INVALID_LINE && mViews.size() == 0) {
-                if (mLastEdgeEnd != INVALID_LINE)
+                if (mLastEdgeEnd != INVALID_LINE) {
                     return mLastEdgeEnd;
+                }
                 return def;
             }
 
@@ -991,8 +1057,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
 
             if (def != INVALID_LINE && mViews.size() == 0) {
-                if (mLastEdgeStart != INVALID_LINE)
+                if (mLastEdgeStart != INVALID_LINE) {
                     return mLastEdgeStart;
+                }
                 return def;
             }
 
@@ -1126,8 +1193,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 mCachedStart += dt;
             }
 
-            if (mLastEdgeEnd != INVALID_LINE)
+            if (mLastEdgeEnd != INVALID_LINE) {
                 mLastEdgeEnd += dt;
+            }
 
             if (mCachedEnd != INVALID_LINE) {
                 mCachedEnd += dt;
