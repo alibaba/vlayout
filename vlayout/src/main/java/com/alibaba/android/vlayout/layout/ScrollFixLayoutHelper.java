@@ -55,6 +55,9 @@ public class ScrollFixLayoutHelper extends FixLayoutHelper {
         this.mShowType = showType;
     }
 
+    public int getShowType() {
+        return mShowType;
+    }
 
     @Override
     protected boolean shouldBeDraw(int startPosition, int endPosition, int scrolled) {
