@@ -13,14 +13,14 @@ develop         <--- PR(bugfix/typo/3rd-PR)
 ```  
 Branches
 
-0. `master` branch
-    0. `master` is the latest (pre-)release branch.
-0. `develop` branch
-    0. `develop` is the stable developing branch. [Github Release](https://help.github.com/articles/creating-releases/) is used to publish a (pre-)release version to `master` branch.
-    0. ***It's RECOMMENDED to commit bugfix or feature PR to `develop`***.
-0. `{action}/{description}` branch
-    0. The branch for a developing or bugfix
-    0. **DO NOT commit any PR to such a branch**.
+* `master` branch
+    * `master` is the latest (pre-)release branch.
+* `develop` branch
+    * `develop` is the stable developing branch. [Github Release](https://help.github.com/articles/creating-releases/) is used to publish a (pre-)release version to `master` branch.
+    * ***It's RECOMMENDED to commit bugfix or feature PR to `develop`***.
+* `{action}/{description}` branch
+    * The branch for a developing or bugfix
+    *. **DO NOT commit any PR to such a branch**.
 
 ## Branch Name
 
@@ -28,10 +28,10 @@ Branches
 {action}/{description}
 ```
 
-0. `{action}`:
-	0. `feature`: used for developing a new feature.
-	0. `bugfix`: used for fixing bugs.
-0. for example: `feature/add_flex_layouthelper`
+* `{action}`:
+	* `feature`: used for developing a new feature.
+	* `bugfix`: used for fixing bugs.
+* for example: `feature/add_flex_layouthelper`
 
 ## Commit Log
 
