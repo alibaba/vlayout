@@ -119,6 +119,68 @@ public abstract class MarginLayoutHelper extends LayoutHelper {
         return mPaddingTop + mPaddingBottom;
     }
 
+    public int getPaddingLeft() {
+        return mPaddingLeft;
+    }
 
+    public int getPaddingRight() {
+        return mPaddingRight;
+    }
+
+    public int getPaddingTop() {
+        return mPaddingTop;
+    }
+
+    public int getPaddingBottom() {
+        return mPaddingBottom;
+    }
+
+    public int getMarginLeft() {
+        return mMarginLeft;
+    }
+
+    public int getMarginRight() {
+        return mMarginRight;
+    }
+
+    public int getMarginTop() {
+        return mMarginTop;
+    }
+
+    public int getMarginBottom() {
+        return mMarginBottom;
+    }
+
+    public void setPaddingLeft(int paddingLeft) {
+        mPaddingLeft = paddingLeft;
+    }
+
+    public void setPaddingRight(int paddingRight) {
+        mPaddingRight = paddingRight;
+    }
+
+    public void setPaddingTop(int paddingTop) {
+        mPaddingTop = paddingTop;
+    }
+
+    public void setPaddingBottom(int paddingBottom) {
+        mPaddingBottom = paddingBottom;
+    }
+
+    public void setMarginLeft(int marginLeft) {
+        mMarginLeft = marginLeft;
+    }
+
+    public void setMarginRight(int marginRight) {
+        mMarginRight = marginRight;
+    }
+
+    public void setMarginTop(int marginTop) {
+        mMarginTop = marginTop;
+    }
+
+    public void setMarginBottom(int marginBottom) {
+        mMarginBottom = marginBottom;
+    }
 }
 
