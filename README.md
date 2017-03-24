@@ -27,13 +27,13 @@ By providing a custom LayoutManager to RecyclerView, VirtualLayout is able to la
 
 ### Import Library
 
-Please find the latest version(1.0.2 so far) in maven repository. The newest version has been upload to jcenter and MavenCantral, make sure you have added at least one of these repositories.
+Please find the latest version(1.0.3 so far) in maven repository. The newest version has been upload to jcenter and MavenCantral, make sure you have added at least one of these repositories.
 
 For gradle:
 
 ```
 // gradle
-compile ('com.alibaba.android:vlayout:1.0.2@aar') {
+compile ('com.alibaba.android:vlayout:1.0.3@aar') {
 	transitive = true
 }
 ```
@@ -45,7 +45,7 @@ Or in maven:
 <dependency>
   <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <type>aar</type>
 </dependency>
 ```
