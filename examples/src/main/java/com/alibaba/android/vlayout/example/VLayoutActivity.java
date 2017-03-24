@@ -25,6 +25,7 @@
 package com.alibaba.android.vlayout.example;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
+import com.alibaba.android.vlayout.DelegateAdapter.Adapter;
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.RecyclablePagerAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
@@ -58,6 +59,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -167,7 +169,7 @@ public class VLayoutActivity extends Activity {
 
         recyclerView.setAdapter(delegateAdapter);
 
-        List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
+        final List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
 
 
         if (BANNER_LAYOUT) {
@@ -463,8 +465,12 @@ public class VLayoutActivity extends Activity {
             public void run() {
                 // recyclerView.scrollToPosition(22);
                 // recyclerView.getAdapter().notifyDataSetChanged();
-                recyclerView.requestLayout();
                 // mainHandler.postDelayed(trigger, 1000);
+                //List<DelegateAdapter.Adapter> newAdapters = new ArrayList<>();
+                //newAdapters.add((new SubAdapter(VLayoutActivity.this, new ColumnLayoutHelper(), 3)));
+                //newAdapters.add((new SubAdapter(VLayoutActivity.this, new GridLayoutHelper(4), 24)));
+                //delegateAdapter.addAdapters(newAdapters);
+                recyclerView.requestLayout();
             }
         };
 
