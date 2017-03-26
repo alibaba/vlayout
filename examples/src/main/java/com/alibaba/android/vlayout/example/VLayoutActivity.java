@@ -117,7 +117,7 @@ public class VLayoutActivity extends Activity {
         mDelete.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((DelegateAdapter) recyclerView.getAdapter()).removeAdapter(0);
+                ((DelegateAdapter) recyclerView.getAdapter()).removeFirstAdapter();
             }
         });
 

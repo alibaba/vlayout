@@ -345,6 +345,20 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         addAdapters(Collections.singletonList(adapter));
     }
 
+    public void removeFirstAdapter() {
+        if (mAdapters != null && !mAdapters.isEmpty()) {
+            Adapter targetAdatper = mAdapters.get(0).second;
+            removeAdapter(targetAdatper);
+        }
+    }
+
+    public void removeLastAdapter() {
+        if (mAdapters != null && !mAdapters.isEmpty()) {
+            Adapter targetAdatper = mAdapters.get(mAdapters.size() - 1).second;
+            removeAdapter(targetAdatper);
+        }
+    }
+
     public void removeAdapter(int adapterIndex) {
         if (adapterIndex >= 0 && adapterIndex < mAdapters.size()) {
             Adapter targetAdatper = mAdapters.get(adapterIndex).second;
@@ -398,6 +412,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             }
         }
         super.setLayoutHelpers(helpers);
+        notifyDataSetChanged();
     }
 
     public void clear() {
