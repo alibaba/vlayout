@@ -293,6 +293,10 @@ public class VLayoutActivity extends Activity {
                         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
                         layoutParams.mAspectRatio = 4;
                         holder.itemView.setLayoutParams(layoutParams);
+                    } else {
+                        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
+                        layoutParams.mAspectRatio = Float.NaN;
+                        holder.itemView.setLayoutParams(layoutParams);
                     }
                 }
 
