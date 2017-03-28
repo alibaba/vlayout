@@ -397,22 +397,28 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         }
 
         // update startPosition and index for remain adapters
-        mTotal = 0;
-        mIndex = 0;
-        if (mIndexGen != null) {
-            mIndexGen.set(0);
-        }
+        //mTotal = 0;
+        //mIndex = 0;
+        //if (mIndexGen != null) {
+        //    mIndexGen.set(0);
+        //}
+        //Iterator<Pair<AdapterDataObserver, Adapter>> itr = mAdapters.iterator();
+        //while (itr.hasNext()) {
+        //    Pair<AdapterDataObserver, Adapter> pair = itr.next();
+        //    pair.first.updateStartPositionAndIndex(mTotal, mIndexGen == null ? mIndex++ : mIndexGen.incrementAndGet());
+        //    final int position = findAdapterPositionByIndex(pair.first.mIndex);
+        //    if (position >= 0 && position < helpers.size()) {
+        //        mTotal += helpers.get(position).getItemCount();
+        //    }
+        //}
+        //super.setLayoutHelpers(helpers);
+        //notifyDataSetChanged();
+        List<Adapter> newAdapter = new ArrayList<>();
         Iterator<Pair<AdapterDataObserver, Adapter>> itr = mAdapters.iterator();
         while (itr.hasNext()) {
-            Pair<AdapterDataObserver, Adapter> pair = itr.next();
-            pair.first.updateStartPositionAndIndex(mTotal, mIndexGen == null ? mIndex++ : mIndexGen.incrementAndGet());
-            final int position = findAdapterPositionByIndex(pair.first.mIndex);
-            if (position >= 0 && position < helpers.size()) {
-                mTotal += helpers.get(position).getItemCount();
-            }
+            newAdapter.add(itr.next().second);
         }
-        super.setLayoutHelpers(helpers);
-        notifyDataSetChanged();
+        setAdapters(newAdapter);
     }
 
     public void clear() {

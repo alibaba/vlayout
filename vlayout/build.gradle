@@ -39,9 +39,9 @@ ext {
 
     libraryVersion = VERSION_NAME
 
-    developerId = 'huifeng.hxl'
-    developerName = 'huifeng.hxl'
-    developerEmail = 'huifeng.hxl@alibaba-inc.com'
+    developerId = 'longerian'
+    developerName = 'longerian'
+    developerEmail = 'xlhongultimate@gmail.com'
 
     licenseName = 'MIT'
     licenseUrl = 'https://opensource.org/licenses/MIT'

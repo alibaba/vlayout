@@ -45,12 +45,6 @@
         android:layout_gravity="bottom|center"
         android:orientation="vertical">
 
-        <Button
-                android:id="@+id/delete_first"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="Delete First Adapter"
-        />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

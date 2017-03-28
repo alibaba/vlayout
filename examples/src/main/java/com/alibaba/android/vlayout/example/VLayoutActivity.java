@@ -90,8 +90,6 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean STAGGER_LAYOUT = true;
 
-    private Button mDelete;
-
     private TextView mFirstText;
     private TextView mLastText;
 
@@ -106,20 +104,12 @@ public class VLayoutActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        mDelete = (Button)findViewById(R.id.delete_first);
         mFirstText = (TextView) findViewById(R.id.first);
         mLastText = (TextView) findViewById(R.id.last);
         mCountText = (TextView) findViewById(R.id.count);
         mTotalOffsetText = (TextView) findViewById(R.id.total_offset);
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_view);
-
-        mDelete.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((DelegateAdapter) recyclerView.getAdapter()).removeFirstAdapter();
-            }
-        });
 
         findViewById(R.id.jump).setOnClickListener(new View.OnClickListener() {
             @Override
