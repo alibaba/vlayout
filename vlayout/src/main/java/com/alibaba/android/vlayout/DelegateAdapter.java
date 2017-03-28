@@ -36,6 +36,7 @@ import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -102,7 +103,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         if (mHasConsistItemType) {
             Adapter adapter = mItemTypeAry.get(viewType);
             if (adapter != null) {
-                return adapter.onCreateViewHolder(parent, viewType);
+                 return adapter.onCreateViewHolder(parent, viewType);
             }
 
             return null;
@@ -344,9 +345,88 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         addAdapters(Collections.singletonList(adapter));
     }
 
+    public void removeFirstAdapter() {
+        if (mAdapters != null && !mAdapters.isEmpty()) {
+            Adapter targetAdatper = mAdapters.get(0).second;
+            removeAdapter(targetAdatper);
+        }
+    }
+
+    public void removeLastAdapter() {
+        if (mAdapters != null && !mAdapters.isEmpty()) {
+            Adapter targetAdatper = mAdapters.get(mAdapters.size() - 1).second;
+            removeAdapter(targetAdatper);
+        }
+    }
+
+    public void removeAdapter(int adapterIndex) {
+        if (adapterIndex >= 0 && adapterIndex < mAdapters.size()) {
+            Adapter targetAdatper = mAdapters.get(adapterIndex).second;
+            removeAdapter(targetAdatper);
+        }
+    }
+
+    public void removeAdapter(@Nullable Adapter targetAdapter) {
+        if (targetAdapter == null) {
+            return;
+        }
+        removeAdapters(Collections.singletonList(targetAdapter));
+    }
+
+    public void removeAdapters(@Nullable List<Adapter> targetAdapters) {
+        if (targetAdapters == null || targetAdapters.isEmpty()) {
+            return;
+        }
+        List<LayoutHelper> helpers = new LinkedList<>(super.getLayoutHelpers());
+        for (int i = 0, size = targetAdapters.size(); i < size; i++) {
+            Adapter one = targetAdapters.get(i);
+            Iterator<Pair<AdapterDataObserver, Adapter>> itr = mAdapters.iterator();
+            while (itr.hasNext()) {
+                Pair<AdapterDataObserver, Adapter> pair = itr.next();
+                Adapter theOther = pair.second;
+                if (theOther.equals(one)) {
+                    theOther.unregisterAdapterDataObserver(pair.first);
+                    final int position = findAdapterPositionByIndex(pair.first.mIndex);
+                    if (position >= 0 && position < helpers.size()) {
+                        helpers.remove(position);
+                    }
+                    itr.remove();
+                    break;
+                }
+            }
+        }
+
+        // update startPosition and index for remain adapters
+        //mTotal = 0;
+        //mIndex = 0;
+        //if (mIndexGen != null) {
+        //    mIndexGen.set(0);
+        //}
+        //Iterator<Pair<AdapterDataObserver, Adapter>> itr = mAdapters.iterator();
+        //while (itr.hasNext()) {
+        //    Pair<AdapterDataObserver, Adapter> pair = itr.next();
+        //    pair.first.updateStartPositionAndIndex(mTotal, mIndexGen == null ? mIndex++ : mIndexGen.incrementAndGet());
+        //    final int position = findAdapterPositionByIndex(pair.first.mIndex);
+        //    if (position >= 0 && position < helpers.size()) {
+        //        mTotal += helpers.get(position).getItemCount();
+        //    }
+        //}
+        //super.setLayoutHelpers(helpers);
+        //notifyDataSetChanged();
+        List<Adapter> newAdapter = new ArrayList<>();
+        Iterator<Pair<AdapterDataObserver, Adapter>> itr = mAdapters.iterator();
+        while (itr.hasNext()) {
+            newAdapter.add(itr.next().second);
+        }
+        setAdapters(newAdapter);
+    }
 
     public void clear() {
         mTotal = 0;
+        mIndex = 0;
+        if (mIndexGen != null) {
+            mIndexGen.set(0);
+        }
         mLayoutManager.setLayoutHelpers(null);
 
         for (Pair<AdapterDataObserver, Adapter> p : mAdapters) {
@@ -422,6 +502,11 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         int mIndex = -1;
 
         public AdapterDataObserver(int startPosition, int index) {
+            this.mStartPosition = startPosition;
+            this.mIndex = index;
+        }
+
+        public void updateStartPositionAndIndex(int startPosition, int index) {
             this.mStartPosition = startPosition;
             this.mIndex = index;
         }
