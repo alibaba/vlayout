@@ -55,7 +55,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -280,6 +282,10 @@ public class VLayoutActivity extends Activity {
                     if (position == 0) {
                         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
                         layoutParams.mAspectRatio = 4;
+                        holder.itemView.setLayoutParams(layoutParams);
+                    } else {
+                        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
+                        layoutParams.mAspectRatio = Float.NaN;
                         holder.itemView.setLayoutParams(layoutParams);
                     }
                 }
