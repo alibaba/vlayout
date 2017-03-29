@@ -1229,12 +1229,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
          * @param end   The end line
          * @return true if a new child can be added between start and end
          */
-        boolean isEmpty(int start, int end, OrientationHelper helper) {
+        boolean isEmpty(int start, int end, OrientationHelper orientationHelper) {
             final int count = mViews.size();
             for (int i = 0; i < count; i++) {
                 final View view = mViews.get(i);
-                if (helper.getDecoratedStart(view) < end &&
-                        helper.getDecoratedEnd(view) > start) {
+                if (orientationHelper.getDecoratedStart(view) < end &&
+                        orientationHelper.getDecoratedEnd(view) > start) {
                     return false;
                 }
             }
