@@ -73,6 +73,10 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         this.mAspectRatio = aspectRatio;
     }
 
+    public float getAspectRatio() {
+        return mAspectRatio;
+    }
+
     private int mItemCount = 0;
 
     /**
