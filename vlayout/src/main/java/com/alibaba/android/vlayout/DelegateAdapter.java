@@ -546,31 +546,41 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
         @Override
         public void onChanged() {
-            if(!updateLayoutHelper()) return;
+            if (!updateLayoutHelper()) {
+                return;
+            }
             notifyDataSetChanged();
         }
 
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
-            if(!updateLayoutHelper()) return;
+            if (!updateLayoutHelper()) {
+                return;
+            }
             notifyItemRangeRemoved(mStartPosition + positionStart, itemCount);
         }
 
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
-            if(!updateLayoutHelper()) return;
+            if (!updateLayoutHelper()) {
+                return;
+            }
             notifyItemRangeInserted(mStartPosition + positionStart, itemCount);
         }
 
         @Override
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-            if(!updateLayoutHelper()) return;
+            if (!updateLayoutHelper()) {
+                return;
+            }
             notifyItemMoved(mStartPosition + fromPosition, mStartPosition + toPosition);
         }
 
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount) {
-            if(!updateLayoutHelper()) return;
+            if (!updateLayoutHelper()) {
+                return;
+            }
             notifyItemRangeChanged(mStartPosition + positionStart, itemCount);
         }
     }
