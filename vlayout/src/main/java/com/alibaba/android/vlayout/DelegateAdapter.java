@@ -511,15 +511,14 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             this.mIndex = index;
         }
 
-        @Override
-        public void onChanged() {
+        private boolean updateLayoutHelper(){
             if (mIndex < 0) {
-                return;
+                return false;
             }
 
             final int idx = findAdapterPositionByIndex(mIndex);
             if (idx < 0) {
-                return;
+                return false;
             }
 
             Pair<AdapterDataObserver, Adapter> p = mAdapters.get(idx);
@@ -542,28 +541,47 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
                 // set helpers to refresh range
                 DelegateAdapter.super.setLayoutHelpers(helpers);
             }
+            return true;
+        }
 
+        @Override
+        public void onChanged() {
+            if (!updateLayoutHelper()) {
+                return;
+            }
             notifyDataSetChanged();
         }
 
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
-            onChanged();
+            if (!updateLayoutHelper()) {
+                return;
+            }
+            notifyItemRangeRemoved(mStartPosition + positionStart, itemCount);
         }
 
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
-            onChanged();
+            if (!updateLayoutHelper()) {
+                return;
+            }
+            notifyItemRangeInserted(mStartPosition + positionStart, itemCount);
         }
 
         @Override
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-            onChanged();
+            if (!updateLayoutHelper()) {
+                return;
+            }
+            notifyItemMoved(mStartPosition + fromPosition, mStartPosition + toPosition);
         }
 
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount) {
-            onChanged();
+            if (!updateLayoutHelper()) {
+                return;
+            }
+            notifyItemRangeChanged(mStartPosition + positionStart, itemCount);
         }
     }
 
