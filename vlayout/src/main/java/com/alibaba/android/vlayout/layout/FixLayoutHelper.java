@@ -254,7 +254,7 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
         }
 
         // Not in normal flow
-        if (shouldBeDraw(startPosition, endPosition, scrolled)) {
+        if (shouldBeDraw(helper, startPosition, endPosition, scrolled)) {
             mShouldDrawn = true;
             if (mFixView != null) {
                 // already capture in layoutViews phase
@@ -340,13 +340,14 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
     /**
      * Decide whether the view should be shown
      *
+     * @param helper layoutManagerHelper
      * @param startPosition the first visible position in RecyclerView
      * @param endPosition   the last visible position in RecyclerView
      * @param scrolled      how many pixels will be scrolled during this scrolling, 0 during
      *                      layouting
      * @return Whether the view in current layoutHelper should be shown
      */
-    protected boolean shouldBeDraw(int startPosition, int endPosition, int scrolled) {
+    protected boolean shouldBeDraw(LayoutManagerHelper helper, int startPosition, int endPosition, int scrolled) {
         return true;
     }
 

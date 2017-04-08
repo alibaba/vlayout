@@ -263,10 +263,10 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                 if (mStickyStart) {
                     for (int i = helper.getChildCount() - 1; i >= 0; i--) {
                         refer = helper.getChildAt(i);
-                        int pos = helper.getPosition(refer);
-                        if (pos < mPos) { // TODO: when view size is larger than totalSpace!
+                        int anchorPos = helper.getPosition(refer);
+                        if (anchorPos < mPos) { // TODO: when view size is larger than totalSpace!
                             top = orientationHelper.getDecoratedEnd(refer);
-                            LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(pos);
+                            LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
                             if (layoutHelper instanceof MarginLayoutHelper) {
                                 top = top + ((MarginLayoutHelper) layoutHelper).mMarginBottom + ((MarginLayoutHelper) layoutHelper).mPaddingBottom;
                             }
@@ -282,10 +282,10 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                 } else {
                     for (int i = 0; i < helper.getChildCount(); i++) {
                         refer = helper.getChildAt(i);
-                        int pos = helper.getPosition(refer);
-                        if (pos > mPos) {
+                        int anchorPos = helper.getPosition(refer);
+                        if (anchorPos > mPos) {
                             bottom = orientationHelper.getDecoratedStart(refer);
-                            LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(pos);
+                            LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
                             if (layoutHelper instanceof MarginLayoutHelper) {
                                 bottom = bottom - ((MarginLayoutHelper) layoutHelper).mMarginTop - ((MarginLayoutHelper) layoutHelper).mPaddingTop;
                             }
@@ -399,10 +399,10 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                         if (mStickyStart) {
                             for (int i = helper.getChildCount() - 1; i >= 0; i--) {
                                 refer = helper.getChildAt(i);
-                                int pos = helper.getPosition(refer);
-                                if (pos < mPos) { // TODO: when view size is larger than totalSpace!
+                                int anchorPos = helper.getPosition(refer);
+                                if (anchorPos < mPos) { // TODO: when view size is larger than totalSpace!
                                     top = orientationHelper.getDecoratedEnd(refer);
-                                    LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(pos);
+                                    LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
                                     if (layoutHelper instanceof MarginLayoutHelper) {
                                         top = top + ((MarginLayoutHelper) layoutHelper).mMarginBottom + ((MarginLayoutHelper) layoutHelper).mPaddingBottom;
                                     }
@@ -414,10 +414,10 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                         } else {
                             for (int i = 0; i < helper.getChildCount(); i++) {
                                 refer = helper.getChildAt(i);
-                                int pos = helper.getPosition(refer);
-                                if (pos > mPos) {
+                                int anchorPos = helper.getPosition(refer);
+                                if (anchorPos > mPos) {
                                     bottom = orientationHelper.getDecoratedStart(refer);
-                                    LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(pos);
+                                    LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
                                     if (layoutHelper instanceof MarginLayoutHelper) {
                                         bottom = bottom - ((MarginLayoutHelper) layoutHelper).mMarginTop - ((MarginLayoutHelper) layoutHelper).mPaddingTop;
                                     }
@@ -464,8 +464,8 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                         if (mStickyStart) {
                             for (int i = helper.getChildCount() - 1; i >= 0; i--) {
                                 refer = helper.getChildAt(i);
-                                int pos = helper.getPosition(refer);
-                                if (pos < mPos) { // TODO: when view size is larger than totalSpace!
+                                int anchorPos = helper.getPosition(refer);
+                                if (anchorPos < mPos) { // TODO: when view size is larger than totalSpace!
                                     left = orientationHelper.getDecoratedEnd(refer);
                                     right = left + consumed;
                                     break;
@@ -474,8 +474,8 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                         } else {
                             for (int i = 0; i < helper.getChildCount(); i++) {
                                 refer = helper.getChildAt(i);
-                                int pos = helper.getPosition(refer);
-                                if (pos > mPos) {
+                                int anchorPos = helper.getPosition(refer);
+                                if (anchorPos > mPos) {
                                     right = orientationHelper.getDecoratedStart(refer);
                                     left = right - consumed;
                                     break;

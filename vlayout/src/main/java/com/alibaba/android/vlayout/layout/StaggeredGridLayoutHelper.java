@@ -363,11 +363,14 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
         } else {
             if (!isOutOfRange(layoutState.getCurrentPosition()) && layoutState.hasMore(state)) {
+                Log.d("Longer", "in range ");
                 final int minEnd = getMinEnd(orientationHelper.getEndAfterPadding(), orientationHelper);
                 result.mConsumed = minEnd - layoutState.getOffset();
             } else {
+                Log.d("Longer", "out range ");
                 final int maxEnd = getMaxEnd(orientationHelper.getEndAfterPadding(), orientationHelper);
                 result.mConsumed = maxEnd - layoutState.getOffset() + (layoutInVertical ? mMarginBottom + mPaddingBottom : mMarginRight + mPaddingRight);
+                Log.d("Longer", "consumed " + result.mConsumed);
             }
 
         }
@@ -402,14 +405,18 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             // in middle nothing need to do
             if (isLayoutEnd) {
                 if (offset == getItemCount() - 1) {
-                    return mMarginBottom + mPaddingBottom;
+                    //the last item may not have the largest bottom, so calculate gaps between last items in every lane
+                    return mMarginBottom + mPaddingBottom + (getMaxEnd(orientationHelper.getDecoratedEnd(child),
+                        orientationHelper) - orientationHelper.getDecoratedEnd(child));
                 } else if (!useAnchor) {
                     final int minEnd = getMinEnd(orientationHelper.getDecoratedStart(child), orientationHelper);
                     return minEnd - orientationHelper.getDecoratedEnd(child);
                 }
             } else {
                 if (offset == 0) {
-                    return -mMarginTop - mPaddingTop;
+                    //the first item may not have the smallest top, so calculate gaps between first items in every lane
+                    return -mMarginTop - mPaddingTop - (orientationHelper.getDecoratedStart(child) - getMinStart(
+                        orientationHelper.getDecoratedStart(child), orientationHelper));
                 } else if (!useAnchor) {
                     final int maxStart = getMaxStart(orientationHelper.getDecoratedEnd(child), orientationHelper);
                     return maxStart - orientationHelper.getDecoratedStart(child);
@@ -826,10 +833,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     private int getMaxEnd(int def, OrientationHelper helper) {
         int maxEnd = mSpans[0].getEndLine(def, helper);
+        Log.d("Longer", "maxEnd " + maxEnd);
         for (int i = 1; i < mNumLanes; i++) {
             final int spanEnd = mSpans[i].getEndLine(def, helper);
             if (spanEnd > maxEnd) {
                 maxEnd = spanEnd;
+                Log.d("Longer", "new maxEnd " + maxEnd + " i " + i);
             }
         }
         return maxEnd;
@@ -837,10 +846,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     private int getMinEnd(int def, OrientationHelper helper) {
         int minEnd = mSpans[0].getEndLine(def, helper);
+        Log.d("Longer", "minEnd " + minEnd);
         for (int i = 1; i < mNumLanes; i++) {
             final int spanEnd = mSpans[i].getEndLine(def, helper);
             if (spanEnd < minEnd) {
                 minEnd = spanEnd;
+                Log.d("Longer", "new minEnd " + minEnd + " i " + i);
             }
         }
         return minEnd;
@@ -1229,12 +1240,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
          * @param end   The end line
          * @return true if a new child can be added between start and end
          */
-        boolean isEmpty(int start, int end, OrientationHelper helper) {
+        boolean isEmpty(int start, int end, OrientationHelper orientationHelper) {
             final int count = mViews.size();
             for (int i = 0; i < count; i++) {
                 final View view = mViews.get(i);
-                if (helper.getDecoratedStart(view) < end &&
-                        helper.getDecoratedEnd(view) > start) {
+                if (orientationHelper.getDecoratedStart(view) < end &&
+                        orientationHelper.getDecoratedEnd(view) > start) {
                     return false;
                 }
             }
