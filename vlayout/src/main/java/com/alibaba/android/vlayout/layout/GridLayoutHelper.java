@@ -78,8 +78,14 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
     private View[] mSet;
 
+    /**
+     * store index of each span
+     */
     private int[] mSpanIndices;
 
+    /**
+     * store size of each span when {@link #mWeights} is not empty
+     */
     private int[] mSpanCols;
 
 
