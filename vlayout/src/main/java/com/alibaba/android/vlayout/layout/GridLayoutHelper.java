@@ -24,6 +24,7 @@
 
 package com.alibaba.android.vlayout.layout;
 
+import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
@@ -87,7 +88,6 @@ public class GridLayoutHelper extends BaseLayoutHelper {
      * store size of each span when {@link #mWeights} is not empty
      */
     private int[] mSpanCols;
-
 
     /**
      * @param spanCount number of columns/rows in grid, must be greater than 0
@@ -211,7 +211,6 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         this.mHGap = hGap;
     }
 
-
     @Override
     public void layoutViews(RecyclerView.Recycler recycler, RecyclerView.State state, LayoutStateWrapper layoutState, LayoutChunkResult result, LayoutManagerHelper helper) {
         // reach the end of this layout
@@ -232,9 +231,15 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         if (layoutInVertical) {
             mTotalSize = helper.getContentWidth() - helper.getPaddingRight() - helper.getPaddingLeft() - getHorizontalMargin() - getHorizontalPadding();
+            if (mParentLayoutHelper != null) {
+                mTotalSize -= (((BaseLayoutHelper) mParentLayoutHelper).getHorizontalMargin() + ((BaseLayoutHelper) mParentLayoutHelper).getHorizontalPadding());
+            }
             mSizePerSpan = (int) ((mTotalSize - (mSpanCount - 1) * mHGap) * 1.0f / mSpanCount + 0.5f);
         } else {
             mTotalSize = helper.getContentHeight() - helper.getPaddingBottom() - helper.getPaddingTop() - getVerticalMargin() - getVerticalPadding();
+            if (mParentLayoutHelper != null) {
+                mTotalSize -= (((BaseLayoutHelper) mParentLayoutHelper).getVerticalMargin() + ((BaseLayoutHelper) mParentLayoutHelper).getVerticalPadding());
+            }
             mSizePerSpan = (int) ((mTotalSize - (mSpanCount - 1) * mVGap) * 1.0f / mSpanCount + 0.5f);
         }
 
@@ -359,11 +364,9 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         if (remainingSpan > 0 && (count == consumedSpanCount) && mIsAutoExpand) {
             //autoExpand only support when each cell occupy one span.
             if (layoutInVertical) {
-                mSizePerSpan = (helper.getContentWidth() - helper.getPaddingRight() - getHorizontalMargin() - getHorizontalPadding() -
-                        helper.getPaddingLeft() - (count - 1) * mHGap) / count;
+                mSizePerSpan = (mTotalSize - (count - 1) * mHGap) / count;
             } else {
-                mSizePerSpan = (helper.getContentHeight() - helper.getPaddingBottom() - getVerticalMargin() - getVerticalPadding() -
-                        helper.getPaddingTop() - (count - 1) * mVGap) / count;
+                mSizePerSpan = (mTotalSize - (count - 1) * mVGap) / count;
             }
         }
 
@@ -373,11 +376,9 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             weighted = true;
             int totalSpace;
             if (layoutInVertical) {
-                totalSpace = helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight()
-                        - getHorizontalMargin() - getHorizontalPadding() - (count - 1) * mHGap;
+                totalSpace = mTotalSize - (count - 1) * mHGap;
             } else {
-                totalSpace = helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom()
-                        - getVerticalMargin() - getVerticalPadding() - (count - 1) * mVGap;
+                totalSpace = mTotalSize - (count - 1) * mVGap;
             }
 
             // calculate width with weight in percentage
@@ -514,21 +515,37 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             if (layoutInVertical) {
                 if (weighted) {
                     left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft;
-                    for (int j = 0; j < index; j++)
+                    if (mParentLayoutHelper != null) {
+                        left += ((BaseLayoutHelper) mParentLayoutHelper).getMarginLeft() + ((BaseLayoutHelper) mParentLayoutHelper).getPaddingLeft();
+                    }
+                    for (int j = 0; j < index; j++) {
                         left += mSpanCols[j] + mHGap;
-                } else
+                    }
+                } else {
                     left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft + mSizePerSpan * index + index * mHGap;
+                    if (mParentLayoutHelper != null) {
+                        left += ((BaseLayoutHelper) mParentLayoutHelper).getMarginLeft() + ((BaseLayoutHelper) mParentLayoutHelper).getPaddingLeft();
+                    }
+                }
 
                 right = left + orientationHelper.getDecoratedMeasurementInOther(view);
             } else {
 
                 if (weighted) {
                     top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
-                    for (int j = 0; j < index; j++)
+                    if (mParentLayoutHelper != null) {
+                        top += ((BaseLayoutHelper) mParentLayoutHelper).getMarginTop() + ((BaseLayoutHelper) mParentLayoutHelper).getPaddingTop();
+                    }
+                    for (int j = 0; j < index; j++) {
                         top += mSpanCols[j] + mVGap;
-                } else
+                    }
+                } else {
                     top = helper.getPaddingTop() + mMarginTop + mPaddingTop
                             + mSizePerSpan * index + index * mVGap;
+                    if (mParentLayoutHelper != null) {
+                        top += ((BaseLayoutHelper) mParentLayoutHelper).getMarginTop() + ((BaseLayoutHelper) mParentLayoutHelper).getPaddingTop();
+                    }
+                }
 
                 bottom = top + orientationHelper.getDecoratedMeasurementInOther(view);
             }

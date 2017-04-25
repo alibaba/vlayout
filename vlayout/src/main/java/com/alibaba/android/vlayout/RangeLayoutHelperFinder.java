@@ -115,7 +115,7 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
 
     @Nullable
     @Override
-    protected LayoutHelper getLayoutHelper(int position) {
+    public LayoutHelper getLayoutHelper(int position) {
         final int count = mLayoutHelperItems.size();
         if (count == 0) {
             return null;

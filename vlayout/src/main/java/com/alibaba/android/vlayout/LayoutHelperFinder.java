@@ -46,7 +46,7 @@ public abstract class LayoutHelperFinder implements Iterable<LayoutHelper> {
      * @return
      */
     @Nullable
-    protected abstract LayoutHelper getLayoutHelper(int position);
+    public abstract LayoutHelper getLayoutHelper(int position);
 
     /**
      * Get all layoutHelpers
