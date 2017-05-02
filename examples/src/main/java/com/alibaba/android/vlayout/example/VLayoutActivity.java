@@ -173,20 +173,6 @@ public class VLayoutActivity extends Activity {
 
         final List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
 
-        GridLayoutHelper gridLayoutHelper = new GridLayoutHelper(4);
-        gridLayoutHelper.setAutoExpand(true);
-        gridLayoutHelper.setSpanSizeLookup(new GridLayoutHelper.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                if (position > 13) {
-                    return 2;
-                }else {
-                    return 1;
-                }
-            }
-        });
-        adapters.add(new SubAdapter(this, gridLayoutHelper, 22));
-
         if (BANNER_LAYOUT) {
             adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 1) {
 
