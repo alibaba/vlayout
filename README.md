@@ -118,6 +118,16 @@ recycler.setAdapter(myAdapter);
 
 In this way, one thing you should note is that you should call ```setLayoutHelpers``` when the data of Adapter changes.
 
+### Config proguard
+
+Add following configs in your proguard file if your app is released with proguard.
+
+```
+-keepattributes InnerClasses
+-keep class com.alibaba.android.vlayout.ExposeLinearLayoutManagerEx {
+    *;
+```
+
 # Demo
 
 ![](http://img3.tbcdn.cn/L1/461/1/1b9bfb42009047f75cee08ae741505de2c74ac0a)

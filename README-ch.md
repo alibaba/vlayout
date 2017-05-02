@@ -116,7 +116,13 @@ recycler.setAdapter(myAdapter);
 
 在这种情况下，需要使用者注意在当```LayoutHelpers```的结构或者数据数量等会影响到布局的元素变化时，需要主动调用```setLayoutHepers```去更新布局模式。
 
+另外如果你的应用有混淆配置，请为vlayout添加一下防混淆配置：
 
+```
+-keepattributes InnerClasses
+-keep class com.alibaba.android.vlayout.ExposeLinearLayoutManagerEx {
+    *;
+```
 
 # Demo
 
