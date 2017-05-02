@@ -264,6 +264,8 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
     private int handleOne(LayoutStateWrapper layoutState, LayoutChunkResult result, LayoutManagerHelper helper,
         boolean layoutInVertical, int parentWidth, int parentHeight, int parentHPadding, int parentVPadding) {
         int mainConsumed = 0;
+        OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+
         View view = mChildrenViews[0];
         final ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(
             view.getLayoutParams());
@@ -288,7 +290,6 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
         helper.measureChild(view, widthSpec, heightSpec);
 
-        OrientationHelper orientationHelper = helper.getMainOrientationHelper();
         mainConsumed = orientationHelper.getDecoratedMeasurement(view) + (layoutInVertical ?
             getVerticalMargin() + getVerticalPadding()
             : getHorizontalMargin() + getHorizontalPadding());
