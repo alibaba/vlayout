@@ -65,7 +65,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
     private int mTotal = 0;
 
-    private SparseArray<Pair<AdapterDataObserver, Adapter>> mIndexAry = new SparseArray<>();
+    private final SparseArray<Pair<AdapterDataObserver, Adapter>> mIndexAry = new SparseArray<>();
 
     /**
      * Delegate Adapter merge multi sub adapters, default is thread-unsafe
