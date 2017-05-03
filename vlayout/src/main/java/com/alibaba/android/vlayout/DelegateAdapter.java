@@ -65,7 +65,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
     private int mTotal = 0;
 
-    private SparseArray<Adapter> mIndexAry = new SparseArray<>();
+    private SparseArray<Pair<AdapterDataObserver, Adapter>> mIndexAry = new SparseArray<>();
 
     /**
      * Delegate Adapter merge multi sub adapters, default is thread-unsafe
@@ -265,6 +265,8 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
         boolean hasStableIds = true;
         mTotal = 0;
+
+        Pair<AdapterDataObserver, Adapter> pair;
         for (Adapter adapter : adapters) {
             // every adapter has an unique index id
             AdapterDataObserver observer = new AdapterDataObserver(mTotal, mIndexGen == null ? mIndex++ : mIndexGen.incrementAndGet());
@@ -275,8 +277,9 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             helper.setItemCount(adapter.getItemCount());
             mTotal += helper.getItemCount();
             helpers.add(helper);
-            mIndexAry.put(observer.mIndex, adapter);
-            mAdapters.add(Pair.create(observer, adapter));
+            pair = Pair.create(observer, adapter);
+            mIndexAry.put(observer.mIndex, pair);
+            mAdapters.add(pair);
         }
 
         if (!hasObservers()) {
@@ -308,6 +311,8 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
         List<LayoutHelper> helpers = new LinkedList<>(super.getLayoutHelpers());
 
+        Pair<AdapterDataObserver, Adapter> pair;
+
         for (Adapter adapter : adapters) {
             // every adapter has an unique index id
             AdapterDataObserver observer = new AdapterDataObserver(mTotal, mIndexGen == null ? mIndex++ : mIndexGen.incrementAndGet());
@@ -319,8 +324,11 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             mTotal += helper.getItemCount();
 
             helpers.add(position, helper);
-            mIndexAry.put(observer.mIndex, adapter);
-            mAdapters.add(position, Pair.create(observer, adapter));
+
+            pair = Pair.create(observer, adapter);
+
+            mIndexAry.put(observer.mIndex, pair);
+            mAdapters.add(position, pair);
             position++;
         }
 
@@ -474,13 +482,14 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
 
     public int findAdapterPositionByIndex(int index) {
-        Adapter adapter = mIndexAry.get(index);
+        Pair<AdapterDataObserver, Adapter> rs = mIndexAry.get(index);
 
-        return adapter == null ? -1 : mAdapters.indexOf(adapter);
+        return rs == null ? -1 : mAdapters.indexOf(rs);
     }
 
     public Adapter findAdapterByIndex(int index) {
-        return mIndexAry.get(index);
+        Pair<AdapterDataObserver, Adapter> rs = mIndexAry.get(index);
+        return rs.second;
     }
 
     protected class AdapterDataObserver extends RecyclerView.AdapterDataObserver {
