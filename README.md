@@ -68,12 +68,14 @@ recyclerView.setRecycledViewPool(viewPool);
 viewPool.setMaxRecycledViews(0, 10);
 ```
 
+**Attention: the demo code above only modify the recycle pool size of item with type = 0, it you has more than one type in your adapter, you should update recycle pool size for each type.**
+
 ### Set Adapters
 
 * You can use `DelegateAdapter` for as a root adapter to make combination of your own adapters. Just make it extend ```DelegateAdapter.Adapter``` and overrides ```onCreateLayoutHelper``` method.
 
 ```
-DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, hasStableItemType);
+DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, hasConsistItemType);
 recycler.setAdapter(delegateAdapter);
 
 // Then you can set sub- adapters
@@ -88,6 +90,8 @@ delegateAdapter.addAdapter(adapter);
 adapter.notifyDataSetChanged();
 
 ```
+
+**Attention: When `hasConsistItemType = true`, items with same type value in different sub-adapters share the same type, their view would be reused during scroll. When `hasConsistItemType = false`, items with same type value in different sub-adapters do not share the same type internally.**
 
 * The other way to set adapter is extending ```VirtualLayoutAdapter``` and implementing it to make deep combination to your business code.
 
