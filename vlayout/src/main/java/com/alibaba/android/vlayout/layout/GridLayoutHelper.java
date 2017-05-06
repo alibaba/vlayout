@@ -78,8 +78,14 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
     private View[] mSet;
 
+    /**
+     * store index of each span
+     */
     private int[] mSpanIndices;
 
+    /**
+     * store size of each span when {@link #mWeights} is not empty
+     */
     private int[] mSpanCols;
 
 
@@ -125,7 +131,6 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             this.mWeights = new float[0];
         }
     }
-
 
     public void setSpanSizeLookup(SpanSizeLookup spanSizeLookup) {
         if (spanSizeLookup != null) {
@@ -343,7 +348,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         // we should assign spans before item decor offsets are calculated
         assignSpans(recycler, state, count, consumedSpanCount, layingOutInPrimaryDirection, helper);
 
-        if (remainingSpan > 0 && mIsAutoExpand) {
+        if (remainingSpan > 0 && (count == consumedSpanCount) && mIsAutoExpand) {
+            //autoExpand only support when each cell occupy one span.
             if (layoutInVertical) {
                 mSizePerSpan = (helper.getContentWidth() - helper.getPaddingRight() - getHorizontalMargin() - getHorizontalPadding() -
                         helper.getPaddingLeft() - (count - 1) * mHGap) / count;

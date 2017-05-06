@@ -32,7 +32,7 @@ android {
     buildToolsVersion System.properties['buildToolsVersion']
 
     defaultConfig {
-        applicationId "com.alibab.android.vlayout.example"
+        applicationId "com.alibaba.android.vlayout.example"
         minSdkVersion 14
         targetSdkVersion Integer.parseInt(System.properties['targetSdkVersion'])
         versionCode 1

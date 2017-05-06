@@ -53,13 +53,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -172,7 +175,6 @@ public class VLayoutActivity extends Activity {
         recyclerView.setAdapter(delegateAdapter);
 
         final List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
-
 
         if (BANNER_LAYOUT) {
             adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 1) {
@@ -482,6 +484,30 @@ public class VLayoutActivity extends Activity {
 
 
         mainHandler.postDelayed(trigger, 1000);
+        setListenerToRootView();
+    }
+
+    boolean isOpened = false;
+
+    public void setListenerToRootView() {
+        final View activityRootView = getWindow().getDecorView().findViewById(android.R.id.content);
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
+                int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+                if (heightDiff > 100) { // 99% of the time the height diff will be due to a keyboard.
+                    if (isOpened == false) {
+                        //Do two things, make the view top visible and the editText smaller
+                    }
+                    isOpened = true;
+                } else if (isOpened == true) {
+                    isOpened = false;
+                    final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_view);
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     // RecyclableViewPager

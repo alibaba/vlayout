@@ -24,6 +24,17 @@
 
 package com.alibaba.android.vlayout.layout;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+
+import com.alibaba.android.vlayout.BuildConfig;
+import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.Range;
+import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
@@ -32,17 +43,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.util.Log;
 import android.view.View;
-
-import com.alibaba.android.vlayout.BuildConfig;
-import com.alibaba.android.vlayout.LayoutManagerHelper;
-import com.alibaba.android.vlayout.Range;
-import com.alibaba.android.vlayout.VirtualLayoutManager;
-import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
 
 import static android.support.v7.widget.LinearLayoutManager.INVALID_OFFSET;
 import static com.alibaba.android.vlayout.VirtualLayoutManager.HORIZONTAL;
@@ -363,14 +363,11 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
         } else {
             if (!isOutOfRange(layoutState.getCurrentPosition()) && layoutState.hasMore(state)) {
-                Log.d("Longer", "in range ");
                 final int minEnd = getMinEnd(orientationHelper.getEndAfterPadding(), orientationHelper);
                 result.mConsumed = minEnd - layoutState.getOffset();
             } else {
-                Log.d("Longer", "out range ");
                 final int maxEnd = getMaxEnd(orientationHelper.getEndAfterPadding(), orientationHelper);
                 result.mConsumed = maxEnd - layoutState.getOffset() + (layoutInVertical ? mMarginBottom + mPaddingBottom : mMarginRight + mPaddingRight);
-                Log.d("Longer", "consumed " + result.mConsumed);
             }
 
         }

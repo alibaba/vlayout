@@ -62,7 +62,10 @@ recyclerView.setLayoutManager(layoutManager);
 RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
 recyclerView.setRecycledViewPool(viewPool);
 viewPool.setMaxRecycledViews(0, 10);
+
 ```
+
+**注意：上述示例代码里只针对type=0的item设置了复用池的大小，如果你的页面有多种type，需要为每一种类型的分别调整复用池大小参数。**
 
 加载数据时有两种方式:
 
@@ -70,7 +73,7 @@ viewPool.setMaxRecycledViews(0, 10);
 其他的和默认Adapter一样。
 
 ``` java
-DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, hasStableItemType);
+DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, hasConsistItemType);
 recycler.setAdapter(delegateAdapter);
 
 // 之后可以通过 setAdapters 或 addAdapter方法添加DelegateAdapter.Adapter
@@ -84,6 +87,8 @@ delegateAdapter.addAdapter(adapter);
 // 如果数据有变化，调用自定义 adapter 的 notifyDataSetChanged()
 adapter.notifyDataSetChanged();
 ```
+**注意：当hasConsistItemType=true的时候，不论是不是属于同一个子adapter，相同类型的item都能复用。表示它们共享一个类型。
+当hasConsistItemType=false的时候，不同子adapter之间的类型不共享**
 
 * 另一种是当业务有自定义的复杂需求的时候, 可以继承自```VirtualLayoutAdapter```, 实现自己的Adapter
 
@@ -114,7 +119,13 @@ recycler.setAdapter(myAdapter);
 
 在这种情况下，需要使用者注意在当```LayoutHelpers```的结构或者数据数量等会影响到布局的元素变化时，需要主动调用```setLayoutHepers```去更新布局模式。
 
+另外如果你的应用有混淆配置，请为vlayout添加一下防混淆配置：
 
+```
+-keepattributes InnerClasses
+-keep class com.alibaba.android.vlayout.ExposeLinearLayoutManagerEx {
+    *;
+```
 
 # Demo
 
