@@ -89,7 +89,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
      * @param hGap      horizontal gap
      */
     public RangeGridLayoutHelper(int spanCount, int itemCount, int vGap, int hGap) {
-        mRangeStyle = new RangeStyle();
+        mRangeStyle = new RangeStyle(this);
         mRangeStyle.setSpanCount(spanCount);
         mRangeStyle.setVGap(vGap);
         mRangeStyle.setHGap(hGap);
@@ -228,12 +228,12 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
         if (layoutInVertical) {
             mTotalSize = helper.getContentWidth() - helper.getPaddingRight() - helper.getPaddingLeft() - rangeStyle
-                .getAncestorHorizontalMargin() - rangeStyle.getAncestorHorizontalPadding();
+                .getFamilyHorizontalMargin() - rangeStyle.getFamilyHorizontalPadding();
             rangeStyle.mSizePerSpan = (int) ((mTotalSize - (
                 rangeStyle.mSpanCount - 1) * rangeStyle.mHGap) * 1.0f / rangeStyle.mSpanCount + 0.5f);
         } else {
             mTotalSize = helper.getContentHeight() - helper.getPaddingBottom() - helper.getPaddingTop() - rangeStyle
-                .getAncestorVerticalMargin() - rangeStyle.getAncestorVerticalPadding();
+                .getFamilyVerticalMargin() - rangeStyle.getFamilyVerticalPadding();
             rangeStyle.mSizePerSpan = (int) ((mTotalSize - (
                 rangeStyle.mSpanCount - 1) * rangeStyle.mVGap) * 1.0f / rangeStyle.mSpanCount + 0.5f);
         }
@@ -523,7 +523,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             Log.d(TAG, "--> " + currentPosition + " add gap");
         }
 
-        Log.d(TAG, "--> " + currentPosition + " consumed " + result.mConsumed);
+        Log.d(TAG, "--> " + currentPosition + " consumed " + result.mConsumed + " startSpace " + startSpace + " endSpace " + endSpace);
 
 
         int left = 0, right = 0, top = 0, bottom = 0;
@@ -552,25 +552,25 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             LayoutParams params = (LayoutParams) view.getLayoutParams();
             if (layoutInVertical) {
                 if (weighted) {
-                    left = helper.getPaddingLeft() + rangeStyle.getAncestorMarginLeft() + rangeStyle.getAncestorPaddingLeft();
+                    left = helper.getPaddingLeft() + rangeStyle.getFamilyMarginLeft() + rangeStyle.getFamilyPaddingLeft();
                     for (int j = 0; j < index; j++) {
                         left += rangeStyle.mSpanCols[j] + rangeStyle.mHGap;
                     }
                 } else {
-                    left = helper.getPaddingLeft() + rangeStyle.getAncestorMarginLeft() + rangeStyle
-                        .getAncestorPaddingLeft() + rangeStyle.mSizePerSpan * index + index * rangeStyle.mHGap;
+                    left = helper.getPaddingLeft() + rangeStyle.getFamilyMarginLeft() + rangeStyle
+                        .getFamilyPaddingLeft() + rangeStyle.mSizePerSpan * index + index * rangeStyle.mHGap;
                 }
 
                 right = left + orientationHelper.getDecoratedMeasurementInOther(view);
             } else {
 
                 if (weighted) {
-                    top = helper.getPaddingTop() + rangeStyle.getAncestorMarginTop() + rangeStyle.getAncestorPaddingTop();
+                    top = helper.getPaddingTop() + rangeStyle.getFamilyMarginTop() + rangeStyle.getFamilyPaddingTop();
                     for (int j = 0; j < index; j++) {
                         top += rangeStyle.mSpanCols[j] + rangeStyle.mVGap;
                     }
                 } else {
-                    top = helper.getPaddingTop() + rangeStyle.getAncestorMarginTop() + rangeStyle.getAncestorPaddingTop()
+                    top = helper.getPaddingTop() + rangeStyle.getFamilyMarginTop() + rangeStyle.getFamilyPaddingTop()
                             + rangeStyle.mSizePerSpan * index + index * rangeStyle.mVGap;
                 }
 
@@ -584,7 +584,6 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
             // We calculate everything with View's bounding box (which includes decor and margins)
             // To calculate correct layout position, we subtract margins.
-            // modified by huifeng at 20160907, margins are already subtracted
             rangeStyle.layoutChild(view, left, top, right, bottom, helper, false);
 
             // Consume the available space if the view is not removed OR changed
@@ -963,11 +962,14 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                         }
                         //finally fix layoutRegion's height and with here to avoid visual blank
                         if (helper.getOrientation() == VirtualLayoutManager.VERTICAL) {
-                            mLayoutRegion.left = helper.getPaddingLeft() + mMarginLeft;
-                            mLayoutRegion.right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight;
+                            mLayoutRegion.left = helper.getPaddingLeft() + getFamilyMarginLeft()
+                                + getAncestorPaddingLeft();
+                            mLayoutRegion.right = helper.getContentWidth() - helper.getPaddingRight()
+                                - getFamilyMarginRight() - getAncestorPaddingRight();
                         } else {
-                            mLayoutRegion.top = helper.getPaddingTop() + mMarginTop;
-                            mLayoutRegion.bottom = helper.getContentWidth() - helper.getPaddingBottom() - mMarginBottom;
+                            mLayoutRegion.top = helper.getPaddingTop() + getFamilyMarginTop() + getAncestorPaddingTop();
+                            mLayoutRegion.bottom = helper.getContentWidth() - helper.getPaddingBottom()
+                                - getFamilyMarginBottom() - getAncestorPaddingBottom();
                         }
 
                         bindLayoutView(mLayoutView);
@@ -1203,52 +1205,100 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             return mParent == null;
         }
 
+        public int getFamilyHorizontalMargin() {
+            return (mParent != null ? mParent.getFamilyHorizontalMargin() : 0) + getHorizontalMargin();
+        }
+
+        public int getFamilyVerticalMargin() {
+            return (mParent != null ? mParent.getFamilyVerticalMargin() : 0) + getVerticalMargin();
+        }
+
+        public int getFamilyHorizontalPadding() {
+            return (mParent != null ? mParent.getFamilyHorizontalPadding() : 0) + getHorizontalPadding();
+        }
+
+        public int getFamilyVerticalPadding() {
+            return (mParent != null ? mParent.getFamilyVerticalPadding() : 0) + getVerticalPadding();
+        }
+
+        public int getFamilyPaddingLeft() {
+            return (mParent != null ? mParent.getFamilyPaddingLeft() : 0) + mPaddingLeft;
+        }
+
+        public int getFamilyPaddingRight() {
+            return (mParent != null ? mParent.getFamilyPaddingRight() : 0) + mPaddingRight;
+        }
+
+        public int getFamilyPaddingTop() {
+            return (mParent != null ? mParent.getFamilyPaddingTop() : 0) + mPaddingTop;
+        }
+
+        public int getFamilyPaddingBottom() {
+            return (mParent != null ? mParent.getFamilyPaddingBottom() : 0) + mPaddingBottom;
+        }
+
+        public int getFamilyMarginLeft() {
+            return (mParent != null ? mParent.getFamilyMarginLeft() : 0) + mMarginLeft;
+        }
+
+        public int getFamilyMarginRight() {
+            return (mParent != null ? mParent.getFamilyMarginRight() : 0) + mMarginRight;
+        }
+
+        public int getFamilyMarginTop() {
+            return (mParent != null ? mParent.getFamilyMarginTop() : 0) + mMarginTop;
+        }
+
+        public int getFamilyMarginBottom() {
+            return (mParent != null ? mParent.getFamilyMarginBottom() : 0) + mMarginBottom;
+        }
+
         public int getAncestorHorizontalMargin() {
-            return (mParent != null ? mParent.getAncestorHorizontalMargin() : 0) + getHorizontalMargin();
+            return (mParent != null ? mParent.getAncestorHorizontalMargin() + mParent.getHorizontalMargin() : 0);
         }
 
         public int getAncestorVerticalMargin() {
-            return (mParent != null ? mParent.getAncestorVerticalMargin() : 0) + getVerticalMargin();
+            return (mParent != null ? mParent.getAncestorVerticalMargin() + mParent.getVerticalMargin(): 0);
         }
 
         public int getAncestorHorizontalPadding() {
-            return (mParent != null ? mParent.getAncestorHorizontalPadding() : 0) + getHorizontalPadding();
+            return (mParent != null ? mParent.getAncestorHorizontalPadding() + mParent.getHorizontalPadding() : 0);
         }
 
         public int getAncestorVerticalPadding() {
-            return (mParent != null ? mParent.getAncestorVerticalPadding() : 0) + getVerticalPadding();
+            return (mParent != null ? mParent.getAncestorVerticalPadding() + mParent.getVerticalPadding() : 0);
         }
 
         public int getAncestorPaddingLeft() {
-            return (mParent != null ? mParent.getAncestorPaddingLeft() : 0) + mPaddingLeft;
+            return (mParent != null ? mParent.getAncestorPaddingLeft() + mParent.getPaddingLeft() : 0);
         }
 
         public int getAncestorPaddingRight() {
-            return (mParent != null ? mParent.getAncestorPaddingRight() : 0) + mPaddingRight;
+            return (mParent != null ? mParent.getAncestorPaddingRight() + mParent.getPaddingRight() : 0);
         }
 
         public int getAncestorPaddingTop() {
-            return (mParent != null ? mParent.getAncestorPaddingTop() : 0) + mPaddingTop;
+            return (mParent != null ? mParent.getAncestorPaddingTop() + mParent.getPaddingTop() : 0);
         }
 
         public int getAncestorPaddingBottom() {
-            return (mParent != null ? mParent.getAncestorPaddingBottom() : 0) + mPaddingBottom;
+            return (mParent != null ? mParent.getAncestorPaddingBottom() + mParent.getPaddingBottom() : 0);
         }
 
         public int getAncestorMarginLeft() {
-            return (mParent != null ? mParent.getAncestorMarginLeft() : 0) + mMarginLeft;
+            return (mParent != null ? mParent.getAncestorMarginLeft() + mParent.getMarginLeft() : 0);
         }
 
         public int getAncestorMarginRight() {
-            return (mParent != null ? mParent.getAncestorMarginRight() : 0) + mMarginRight;
+            return (mParent != null ? mParent.getAncestorMarginRight() + mParent.getMarginRight() : 0);
         }
 
         public int getAncestorMarginTop() {
-            return (mParent != null ? mParent.getAncestorMarginTop() : 0) + mMarginTop;
+            return (mParent != null ? mParent.getAncestorMarginTop() + mParent.getMarginTop() : 0);
         }
 
         public int getAncestorMarginBottom() {
-            return (mParent != null ? mParent.getAncestorMarginBottom() : 0) + mMarginBottom;
+            return (mParent != null ? mParent.getAncestorMarginBottom() + mParent.getMarginBottom() : 0);
         }
 
         public void setGap(int gap) {
@@ -1345,7 +1395,8 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                             right + mPaddingRight + mMarginRight,
                             bottom + mPaddingBottom + mMarginBottom);
                 } else {
-                    mLayoutRegion.union(left - mPaddingLeft, top - mPaddingTop, right + mPaddingRight, bottom + mPaddingBottom);
+                    mLayoutRegion.union(left - mPaddingLeft, top - mPaddingTop, right + mPaddingRight,
+                        bottom + mPaddingBottom);
                 }
             }
 

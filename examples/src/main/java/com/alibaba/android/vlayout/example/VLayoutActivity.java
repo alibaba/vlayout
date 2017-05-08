@@ -192,6 +192,7 @@ public class VLayoutActivity extends Activity {
             rangeStyle.setRange(4, 7);
             rangeStyle.setSpanCount(2);
             rangeStyle.setWeights(new float[]{46.665f});
+            rangeStyle.setPadding(7, 7, 7, 7);
             rangeStyle.setMargin(7, 7, 7, 7);
             rangeStyle.setHGap(3);
             rangeStyle.setVGap(3);
