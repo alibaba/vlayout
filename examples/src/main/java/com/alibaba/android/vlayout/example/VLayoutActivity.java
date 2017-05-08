@@ -27,6 +27,7 @@ package com.alibaba.android.vlayout.example;
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.DelegateAdapter.Adapter;
 import com.alibaba.android.vlayout.LayoutHelper;
+import com.alibaba.android.vlayout.Range;
 import com.alibaba.android.vlayout.RecyclablePagerAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
@@ -36,6 +37,8 @@ import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
+import com.alibaba.android.vlayout.layout.RangeGridLayoutHelper;
+import com.alibaba.android.vlayout.layout.RangeGridLayoutHelper.RangeStyle;
 import com.alibaba.android.vlayout.layout.ScrollFixLayoutHelper;
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
@@ -175,6 +178,25 @@ public class VLayoutActivity extends Activity {
         recyclerView.setAdapter(delegateAdapter);
 
         final List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
+
+        {
+            RangeGridLayoutHelper layoutHelper = new RangeGridLayoutHelper(4);
+            layoutHelper.setBgColor(Color.GREEN);
+            layoutHelper.setWeights(new float[]{20f, 26.665f});
+            layoutHelper.setPadding(7, 7, 7, 7);
+            layoutHelper.setMargin(7, 7, 7, 7);
+            layoutHelper.setHGap(3);
+            RangeStyle rangeStyle = new RangeStyle();
+            rangeStyle.setBgColor(Color.RED);
+            rangeStyle.setRange(4, 7);
+            rangeStyle.setSpanCount(2);
+            rangeStyle.setWeights(new float[]{46.665f});
+            rangeStyle.setMargin(7, 7, 7, 7);
+            rangeStyle.setHGap(3);
+            layoutHelper.addRangeStyle(Range.create(4, 7), rangeStyle);
+            adapters.add(new SubAdapter(this, layoutHelper, 12));
+
+        }
 
         if (BANNER_LAYOUT) {
             adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 1) {
