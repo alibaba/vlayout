@@ -78,13 +78,13 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean BANNER_LAYOUT = true;
 
-    private static final boolean FIX_LAYOUT = true;
+    private static final boolean FIX_LAYOUT = false;
 
     private static final boolean LINEAR_LAYOUT = true;
 
     private static final boolean SINGLE_LAYOUT = true;
 
-    private static final boolean FLOAT_LAYOUT = true;
+    private static final boolean FLOAT_LAYOUT = false;
 
     private static final boolean ONEN_LAYOUT = true;
 
@@ -92,7 +92,7 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean GRID_LAYOUT = true;
 
-    private static final boolean STICKY_LAYOUT = true;
+    private static final boolean STICKY_LAYOUT = false;
 
     private static final boolean STAGGER_LAYOUT = true;
 
@@ -186,6 +186,7 @@ public class VLayoutActivity extends Activity {
             layoutHelper.setPadding(7, 7, 7, 7);
             layoutHelper.setMargin(7, 7, 7, 7);
             layoutHelper.setHGap(3);
+            layoutHelper.setVGap(3);
             RangeStyle rangeStyle = new RangeStyle();
             rangeStyle.setBgColor(Color.RED);
             rangeStyle.setRange(4, 7);
@@ -193,6 +194,7 @@ public class VLayoutActivity extends Activity {
             rangeStyle.setWeights(new float[]{46.665f});
             rangeStyle.setMargin(7, 7, 7, 7);
             rangeStyle.setHGap(3);
+            rangeStyle.setVGap(3);
             layoutHelper.addRangeStyle(Range.create(4, 7), rangeStyle);
             adapters.add(new SubAdapter(this, layoutHelper, 12));
 

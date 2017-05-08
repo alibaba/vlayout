@@ -1052,6 +1052,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
 
+    @Override
     public void moveView(int fromIndex, int toIndex) {
         super.moveView(fromIndex, toIndex);
     }
@@ -1084,6 +1085,12 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     }
 
+    @Override
+    public void addBackgroundView(View view, boolean head) {
+        showView(view);
+        int index = head ? 0 : -1;
+        addView(view, index);
+    }
 
     @Override
     public void addFixedView(View view) {

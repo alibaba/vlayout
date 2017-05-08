@@ -26,7 +26,6 @@ package com.alibaba.android.vlayout.layout;
 
 import java.util.Arrays;
 
-import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.Range;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
@@ -37,7 +36,6 @@ import com.alibaba.android.vlayout.layout.GridLayoutHelper.SpanSizeLookup;
 
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompatBase.Action.Factory;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -278,8 +276,8 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     }
 
                     if (!isStartLine) {
-                        isStartLine = helper.getReverseLayout() ? index == getRange().getUpper().intValue()
-                            : index == getRange().getLower().intValue();
+                        isStartLine = helper.getReverseLayout() ? index == mRangeStyle.getRange().getUpper().intValue()
+                            : index == mRangeStyle.getRange().getLower().intValue();
                     }
                     if (!isSecondStartLine) {
                         if (rangeStyle != mRangeStyle) {
@@ -289,13 +287,13 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     }
 
                     if (!isEndLine) {
-                        isEndLine = helper.getReverseLayout() ? index == getRange().getLower().intValue()
-                            : index == getRange().getUpper().intValue();
+                        isEndLine = helper.getReverseLayout() ? index == mRangeStyle.getRange().getLower().intValue()
+                            : index == mRangeStyle.getRange().getUpper().intValue();
                     }
                     if (!isSecondEndLine) {
                         if (rangeStyle != mRangeStyle) {
-                            isSecondEndLine = helper.getReverseLayout() ? index == rangeStyle.getRange().getUpper()
-                                .intValue() : index == rangeStyle.getRange().getLower().intValue();
+                            isSecondEndLine = helper.getReverseLayout() ? index == rangeStyle.getRange().getLower()
+                                .intValue() : index == rangeStyle.getRange().getUpper().intValue();
                         }
                     }
 
@@ -350,8 +348,8 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             }
 
             if (!isStartLine) {
-                isStartLine = helper.getReverseLayout() ? pos == getRange().getUpper().intValue()
-                    : pos == getRange().getLower().intValue();
+                isStartLine = helper.getReverseLayout() ? pos == mRangeStyle.getRange().getUpper().intValue()
+                    : pos == mRangeStyle.getRange().getLower().intValue();
             }
             if (!isSecondStartLine) {
                 if (rangeStyle != mRangeStyle) {
@@ -361,14 +359,14 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             }
 
             if (!isEndLine) {
-                isEndLine = helper.getReverseLayout() ? pos == getRange().getLower().intValue()
-                    : pos == getRange().getUpper().intValue();
+                isEndLine = helper.getReverseLayout() ? pos == mRangeStyle.getRange().getLower().intValue()
+                    : pos == mRangeStyle.getRange().getUpper().intValue();
             }
 
             if (!isSecondEndLine) {
                 if (rangeStyle != mRangeStyle) {
-                    isSecondEndLine = helper.getReverseLayout() ? pos == rangeStyle.getRange().getUpper()
-                        .intValue() : pos == rangeStyle.getRange().getLower().intValue();
+                    isSecondEndLine = helper.getReverseLayout() ? pos == rangeStyle.getRange().getLower()
+                        .intValue() : pos == rangeStyle.getRange().getUpper().intValue();
                 }
             }
 
@@ -522,7 +520,10 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         final boolean layoutStart = layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START;
         if (!mLayoutWithAnchor && (!isEndLine || !layoutStart) && (!isStartLine || layoutStart)) {
             result.mConsumed += (layoutInVertical ? rangeStyle.mVGap : rangeStyle.mHGap);
+            Log.d("Longer", "--> " + currentPosition + " add gap");
         }
+
+        Log.d("Longer", "--> " + currentPosition + " consumed " + result.mConsumed);
 
 
         int left = 0, right = 0, top = 0, bottom = 0;
@@ -617,7 +618,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             }
         } else {
             if (offset == 0) {
-                return mRangeStyle.computeAtartAlignOffset(layoutInVertical);
+                return mRangeStyle.computeStartAlignOffset(layoutInVertical);
             }
         }
 
@@ -873,11 +874,12 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     break;
                 }
             }
+            Log.d("Longer", "endAlign " + offset);
             return offset;
         }
 
         //TODO compute align itr
-        public int computeAtartAlignOffset(boolean layoutInVertical) {
+        public int computeStartAlignOffset(boolean layoutInVertical) {
             int offset = layoutInVertical ? -mMarginTop - mPaddingTop : -mMarginLeft - mPaddingLeft;
             int startPosition = mRange.getLower().intValue();
             for (int i = 0, size = mChildren.size(); i < size; i++) {
@@ -888,6 +890,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     break;
                 }
             }
+            Log.d("Longer", "startAlign " + offset);
             return offset;
         }
 
@@ -899,6 +902,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     rangeStyle.beforeLayout(recycler, state, helper);
                 }
             }
+            Log.d("Longer", "beforeLayout " + mRange + " bgColor " + mBgColor);
 
             if (requireLayoutView()) {
                 if (mLayoutView != null) {
@@ -928,6 +932,8 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     rangeStyle.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
                 }
             }
+            Log.d("Longer", "afterLayout " + mRange + " bgColor " + mBgColor);
+
 
             if (DEBUG) {
                 Log.d(TAG, "call afterLayout() on " + this.getClass().getSimpleName());
@@ -958,7 +964,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
                         if (mLayoutView == null) {
                             mLayoutView = helper.generateLayoutView();
-                            helper.addOffFlowView(mLayoutView, true);
+                            helper.addBackgroundView(mLayoutView, true);
                         }
                         //finally fix layoutRegion's height and with here to avoid visual blank
                         if (helper.getOrientation() == VirtualLayoutManager.VERTICAL) {
@@ -969,7 +975,15 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                             mLayoutRegion.bottom = helper.getContentWidth() - helper.getPaddingBottom() - mMarginBottom;
                         }
 
+                        Log.d("Longer", "afterLayout " + mRange + " layoutRegion " + mLayoutRegion);
                         bindLayoutView(mLayoutView);
+                        if (isRoot()) {
+                            helper.hideView(mLayoutView);
+                            for (int i = 0, size = mChildren.size(); i < size; i++) {
+                                RangeStyle rangeStyle = mChildren.valueAt(i);
+                                helper.hideView(rangeStyle.mLayoutView);
+                            }
+                        }
                         return;
                     } else {
                         mLayoutRegion.set(0, 0, 0, 0);
@@ -1211,35 +1225,35 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         }
 
         public int getAncestorPaddingLeft() {
-            return (mParent != null ? mParent.getPaddingLeft() : 0) + mPaddingLeft;
+            return (mParent != null ? mParent.getAncestorPaddingLeft() : 0) + mPaddingLeft;
         }
 
         public int getAncestorPaddingRight() {
-            return (mParent != null ? mParent.getPaddingRight() : 0) + mPaddingRight;
+            return (mParent != null ? mParent.getAncestorPaddingRight() : 0) + mPaddingRight;
         }
 
         public int getAncestorPaddingTop() {
-            return (mParent != null ? mParent.getPaddingTop() : 0) + mPaddingTop;
+            return (mParent != null ? mParent.getAncestorPaddingTop() : 0) + mPaddingTop;
         }
 
         public int getAncestorPaddingBottom() {
-            return (mParent != null ? mParent.getPaddingBottom() : 0) + mPaddingBottom;
+            return (mParent != null ? mParent.getAncestorPaddingBottom() : 0) + mPaddingBottom;
         }
 
         public int getAncestorMarginLeft() {
-            return (mParent != null ? mParent.getMarginLeft() : 0) + mMarginLeft;
+            return (mParent != null ? mParent.getAncestorMarginLeft() : 0) + mMarginLeft;
         }
 
         public int getAncestorMarginRight() {
-            return (mParent != null ? mParent.getMarginRight() : 0) + mMarginRight;
+            return (mParent != null ? mParent.getAncestorMarginRight() : 0) + mMarginRight;
         }
 
         public int getAncestorMarginTop() {
-            return (mParent != null ? mParent.getMarginTop() : 0) + mMarginTop;
+            return (mParent != null ? mParent.getAncestorMarginTop() : 0) + mMarginTop;
         }
 
         public int getAncestorMarginBottom() {
-            return (mParent != null ? mParent.getMarginBottom() : 0) + mMarginBottom;
+            return (mParent != null ? mParent.getAncestorMarginBottom() : 0) + mMarginBottom;
         }
 
         public void setGap(int gap) {

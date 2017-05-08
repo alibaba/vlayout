@@ -112,6 +112,15 @@ public interface LayoutManagerHelper {
     void addOffFlowView(View view, boolean head);
 
     /**
+     * Add view out of normal flow, which means it won't be ignored in getChildAt, but still be able to scrolled with content
+     * But it's can be find by position via {@link #findViewByPosition(int)}.
+     * The differece between with {@link #addOffFlowView(View, boolean)} is that this method does not hide the view, it is used to add background view with overlapping.
+     * @param view View will be added
+     * @param head Whether added to the head or tail
+     */
+    void addBackgroundView(View view, boolean head);
+
+    /**
      * Add view to fixed layer, which overlays on the normal layer.
      * It won't be found by getChildAt and also scrolled with content.
      * Can only be get by position via {@link #findViewByPosition(int)}
