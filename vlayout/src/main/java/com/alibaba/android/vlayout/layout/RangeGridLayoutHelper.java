@@ -54,7 +54,7 @@ import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
  * @since 1.0.0
  */
 public class RangeGridLayoutHelper extends BaseLayoutHelper {
-    private static final String TAG = "GridLayoutHelper";
+    private static final String TAG = "RangeGridLayoutHelper";
 
     @SuppressWarnings("FieldCanBeLocal")
     private static boolean DEBUG = false;
@@ -520,10 +520,10 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         final boolean layoutStart = layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START;
         if (!mLayoutWithAnchor && (!isEndLine || !layoutStart) && (!isStartLine || layoutStart)) {
             result.mConsumed += (layoutInVertical ? rangeStyle.mVGap : rangeStyle.mHGap);
-            Log.d("Longer", "--> " + currentPosition + " add gap");
+            Log.d(TAG, "--> " + currentPosition + " add gap");
         }
 
-        Log.d("Longer", "--> " + currentPosition + " consumed " + result.mConsumed);
+        Log.d(TAG, "--> " + currentPosition + " consumed " + result.mConsumed);
 
 
         int left = 0, right = 0, top = 0, bottom = 0;
@@ -874,7 +874,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     break;
                 }
             }
-            Log.d("Longer", "endAlign " + offset);
+            Log.d(TAG, "endAlign " + offset);
             return offset;
         }
 
@@ -890,7 +890,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     break;
                 }
             }
-            Log.d("Longer", "startAlign " + offset);
+            Log.d(TAG, "startAlign " + offset);
             return offset;
         }
 
@@ -902,8 +902,6 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     rangeStyle.beforeLayout(recycler, state, helper);
                 }
             }
-            Log.d("Longer", "beforeLayout " + mRange + " bgColor " + mBgColor);
-
             if (requireLayoutView()) {
                 if (mLayoutView != null) {
                     // helper.detachChildView(mLayoutView);
@@ -932,9 +930,6 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     rangeStyle.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
                 }
             }
-            Log.d("Longer", "afterLayout " + mRange + " bgColor " + mBgColor);
-
-
             if (DEBUG) {
                 Log.d(TAG, "call afterLayout() on " + this.getClass().getSimpleName());
             }
@@ -975,9 +970,9 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                             mLayoutRegion.bottom = helper.getContentWidth() - helper.getPaddingBottom() - mMarginBottom;
                         }
 
-                        Log.d("Longer", "afterLayout " + mRange + " layoutRegion " + mLayoutRegion);
                         bindLayoutView(mLayoutView);
                         if (isRoot()) {
+                            //TODO hide itr
                             helper.hideView(mLayoutView);
                             for (int i = 0, size = mChildren.size(); i < size; i++) {
                                 RangeStyle rangeStyle = mChildren.valueAt(i);

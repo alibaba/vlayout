@@ -830,12 +830,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     private int getMaxEnd(int def, OrientationHelper helper) {
         int maxEnd = mSpans[0].getEndLine(def, helper);
-        Log.d("Longer", "maxEnd " + maxEnd);
+        Log.d(TAG, "maxEnd " + maxEnd);
         for (int i = 1; i < mNumLanes; i++) {
             final int spanEnd = mSpans[i].getEndLine(def, helper);
             if (spanEnd > maxEnd) {
                 maxEnd = spanEnd;
-                Log.d("Longer", "new maxEnd " + maxEnd + " i " + i);
+                Log.d(TAG, "new maxEnd " + maxEnd + " i " + i);
             }
         }
         return maxEnd;
@@ -843,12 +843,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     private int getMinEnd(int def, OrientationHelper helper) {
         int minEnd = mSpans[0].getEndLine(def, helper);
-        Log.d("Longer", "minEnd " + minEnd);
+        Log.d(TAG, "minEnd " + minEnd);
         for (int i = 1; i < mNumLanes; i++) {
             final int spanEnd = mSpans[i].getEndLine(def, helper);
             if (spanEnd < minEnd) {
                 minEnd = spanEnd;
-                Log.d("Longer", "new minEnd " + minEnd + " i " + i);
+                Log.d(TAG, "new minEnd " + minEnd + " i " + i);
             }
         }
         return minEnd;
