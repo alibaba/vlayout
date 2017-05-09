@@ -228,7 +228,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
         final int itemDirection = layoutState.getItemDirection();
         final boolean layingOutInPrimaryDirection =
-                itemDirection == LayoutStateWrapper.ITEM_DIRECTION_TAIL;
+            itemDirection == LayoutStateWrapper.ITEM_DIRECTION_TAIL;
 
         OrientationHelper orientationHelper = helper.getMainOrientationHelper();
 
@@ -274,8 +274,8 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     final int spanSize = getSpanSize(rangeStyle.mSpanSizeLookup, recycler, state, index);
                     if (spanSize > rangeStyle.mSpanCount) {
                         throw new IllegalArgumentException("Item at position " + index + " requires " +
-                                spanSize + " spans but RangeGridLayoutHelper has only " + rangeStyle.mSpanCount
-                                + " spans.");
+                            spanSize + " spans but RangeGridLayoutHelper has only " + rangeStyle.mSpanCount
+                            + " spans.");
                     }
 
                     View view = layoutState.retrieve(recycler, index);
@@ -342,8 +342,8 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             final int spanSize = getSpanSize(rangeStyle.mSpanSizeLookup, recycler, state, pos);
             if (spanSize > rangeStyle.mSpanCount) {
                 throw new IllegalArgumentException("Item at position " + pos + " requires " +
-                        spanSize + " spans but GridLayoutManager has only " + rangeStyle.mSpanCount
-                        + " spans.");
+                    spanSize + " spans but GridLayoutManager has only " + rangeStyle.mSpanCount
+                    + " spans.");
             }
             remainingSpan -= spanSize;
             if (remainingSpan < 0) {
@@ -455,18 +455,18 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                 spec = View.MeasureSpec.makeMeasureSpec(Math.max(0, spanLength), View.MeasureSpec.EXACTLY);
             } else {
                 spec = View.MeasureSpec.makeMeasureSpec(rangeStyle.mSizePerSpan * spanSize +
-                                Math.max(0, spanSize - 1) * (layoutInVertical ? rangeStyle.mHGap : rangeStyle.mVGap),
-                        View.MeasureSpec.EXACTLY);
+                        Math.max(0, spanSize - 1) * (layoutInVertical ? rangeStyle.mHGap : rangeStyle.mVGap),
+                    View.MeasureSpec.EXACTLY);
             }
             final LayoutParams lp = (LayoutParams) view.getLayoutParams();
 
             if (helper.getOrientation() == VERTICAL) {
                 helper.measureChild(view, spec, getMainDirSpec(rangeStyle, lp.height, mTotalSize,
-                        View.MeasureSpec.getSize(spec), lp.mAspectRatio));
+                    View.MeasureSpec.getSize(spec), lp.mAspectRatio));
             } else {
                 helper.measureChild(view,
-                        getMainDirSpec(rangeStyle, lp.width, mTotalSize, View.MeasureSpec.getSize(spec),
-                                lp.mAspectRatio), View.MeasureSpec.getSize(spec));
+                    getMainDirSpec(rangeStyle, lp.width, mTotalSize, View.MeasureSpec.getSize(spec),
+                        lp.mAspectRatio), View.MeasureSpec.getSize(spec));
             }
             final int size = orientationHelper.getDecoratedMeasurement(view);
             if (size > maxSize) {
@@ -490,8 +490,8 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     spec = View.MeasureSpec.makeMeasureSpec(Math.max(0, spanLength), View.MeasureSpec.EXACTLY);
                 } else {
                     spec = View.MeasureSpec.makeMeasureSpec(rangeStyle.mSizePerSpan * spanSize +
-                                    Math.max(0, spanSize - 1) * (layoutInVertical ? rangeStyle.mHGap : rangeStyle.mVGap),
-                            View.MeasureSpec.EXACTLY);
+                            Math.max(0, spanSize - 1) * (layoutInVertical ? rangeStyle.mHGap : rangeStyle.mVGap),
+                        View.MeasureSpec.EXACTLY);
                 }
 
                 if (helper.getOrientation() == VERTICAL) {
@@ -605,7 +605,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     }
                 } else {
                     top = helper.getPaddingTop() + rangeStyle.getFamilyMarginTop() + rangeStyle.getFamilyPaddingTop()
-                            + rangeStyle.mSizePerSpan * index + index * rangeStyle.mVGap;
+                        + rangeStyle.mSizePerSpan * index + index * rangeStyle.mVGap;
                 }
 
                 bottom = top + orientationHelper.getDecoratedMeasurementInOther(view);
@@ -613,7 +613,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
             if (DEBUG) {
                 Log.d(TAG, "layout item in position: " + params.getViewPosition() + " with text with SpanIndex: " + index + " into (" +
-                        left + ", " + top + ", " + right + ", " + bottom + " )");
+                    left + ", " + top + ", " + right + ", " + bottom + " )");
             }
 
             // We calculate everything with View's bounding box (which includes decor and margins)
@@ -671,7 +671,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
     }
 
     private static final int MAIN_DIR_SPEC =
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 
     private int getMainDirSpec(RangeStyle rangeStyle, int dim, int otherSize, int viewSize, float viewAspectRatio) {
         if (!Float.isNaN(viewAspectRatio) && viewAspectRatio > 0 && viewSize > 0) {
@@ -750,7 +750,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
     }
 
     private void assignSpans(RangeStyle rangeStyle, RecyclerView.Recycler recycler, RecyclerView.State state, int count,
-                             int consumedSpanCount, boolean layingOutInPrimaryDirection, LayoutManagerHelper helper) {
+        int consumedSpanCount, boolean layingOutInPrimaryDirection, LayoutManagerHelper helper) {
         int span, spanDiff, start, end, diff;
         // make sure we traverse from min position to max position
         if (layingOutInPrimaryDirection) {
@@ -1223,11 +1223,11 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                 for (int i = 0, size = mChildren.size(); i < size; i++) {
                     Range<Integer> range = mChildren.keyAt(i);
                     RangeStyle rangeStyle = mChildren.valueAt(i);
-                    Range<Integer> newRange = Range.create(range.getLower().intValue() + start,
-                        range.getUpper().intValue() + start);
+                    int newStart = range.getLower().intValue() + start;
+                    int newEnd = range.getUpper().intValue() + start;
+                    Range<Integer> newRange = Range.create(newStart, newEnd);
                     newMap.put(newRange, rangeStyle);
-                    rangeStyle.mSpanSizeLookup.setStartPosition(newRange.getLower().intValue());
-                    rangeStyle.mSpanSizeLookup.invalidateSpanIndexCache();
+                    rangeStyle.setRange(newStart, newEnd);
                 }
                 mChildren.clear();
                 mChildren.putAll(newMap);
