@@ -25,6 +25,7 @@
 package com.alibaba.android.vlayout.layout;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.Range;
@@ -37,6 +38,7 @@ import com.alibaba.android.vlayout.layout.GridLayoutHelper.SpanSizeLookup;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
+import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Recycler;
@@ -96,6 +98,12 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         setItemCount(itemCount);
     }
 
+    /**
+     *
+     * @param start offset relative to its parent
+     * @param end offset relative to its parent
+     * @param rangeStyle new range style
+     */
     public void addRangeStyle(int start, int end, RangeStyle rangeStyle) {
         mRangeStyle.addChildRangeStyle(start, end, rangeStyle);
     }
@@ -784,7 +792,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         private Range<Integer> mRange;
 
         //TODO update data structure
-        private ArrayMap<Range, RangeStyle> mChildren = new ArrayMap<>();
+        private ArrayMap<Range<Integer>, RangeStyle> mChildren = new ArrayMap<>();
 
         protected int mPaddingLeft;
 
@@ -1202,10 +1210,28 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             return mRange != null ? !mRange.contains(position) : true;
         }
 
+        /**
+         * @param start offset relative to its parent
+         * @param end offset relative to its parent
+         */
         public void setRange(int start, int end) {
             mRange = Range.create(start, end);
             mSpanSizeLookup.setStartPosition(start);
             mSpanSizeLookup.invalidateSpanIndexCache();
+            if (!mChildren.isEmpty()) {
+                SimpleArrayMap<Range<Integer>, RangeStyle> newMap = new SimpleArrayMap<>();
+                for (int i = 0, size = mChildren.size(); i < size; i++) {
+                    Range<Integer> range = mChildren.keyAt(i);
+                    RangeStyle rangeStyle = mChildren.valueAt(i);
+                    Range<Integer> newRange = Range.create(range.getLower().intValue() + start,
+                        range.getUpper().intValue() + start);
+                    newMap.put(newRange, rangeStyle);
+                    rangeStyle.mSpanSizeLookup.setStartPosition(newRange.getLower().intValue());
+                    rangeStyle.mSpanSizeLookup.invalidateSpanIndexCache();
+                }
+                mChildren.clear();
+                mChildren.putAll(newMap);
+            }
         }
 
         public Range<Integer> getRange() {

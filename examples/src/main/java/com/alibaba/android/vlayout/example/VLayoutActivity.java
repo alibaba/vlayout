@@ -179,27 +179,6 @@ public class VLayoutActivity extends Activity {
 
         final List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
 
-        {
-            RangeGridLayoutHelper layoutHelper = new RangeGridLayoutHelper(4);
-            layoutHelper.setBgColor(Color.GREEN);
-            layoutHelper.setWeights(new float[]{20f, 26.665f});
-            layoutHelper.setPadding(15, 15, 15, 15);
-            layoutHelper.setMargin(15, 15, 15, 15);
-            //layoutHelper.setHGap(10);
-            //layoutHelper.setVGap(10);
-            RangeStyle rangeStyle = new RangeStyle();
-            rangeStyle.setBgColor(Color.RED);
-            rangeStyle.setSpanCount(2);
-            rangeStyle.setWeights(new float[]{46.665f});
-            rangeStyle.setPadding(15, 15, 15, 15);
-            rangeStyle.setMargin(15, 15, 15, 15);
-            //rangeStyle.setHGap(5);
-            //rangeStyle.setVGap(5);
-            layoutHelper.addRangeStyle(4, 7, rangeStyle);
-            adapters.add(new SubAdapter(this, layoutHelper, 12));
-
-        }
-
         if (BANNER_LAYOUT) {
             adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 1) {
 
@@ -241,6 +220,27 @@ public class VLayoutActivity extends Activity {
                     }
                 }
             });
+        }
+
+        {
+            RangeGridLayoutHelper layoutHelper = new RangeGridLayoutHelper(4);
+            layoutHelper.setBgColor(Color.GREEN);
+            layoutHelper.setWeights(new float[]{20f, 26.665f});
+            layoutHelper.setPadding(15, 15, 15, 15);
+            layoutHelper.setMargin(15, 15, 15, 15);
+            //layoutHelper.setHGap(10);
+            //layoutHelper.setVGap(10);
+            RangeStyle rangeStyle = new RangeStyle();
+            rangeStyle.setBgColor(Color.RED);
+            rangeStyle.setSpanCount(2);
+            rangeStyle.setWeights(new float[]{46.665f});
+            rangeStyle.setPadding(15, 15, 15, 15);
+            rangeStyle.setMargin(15, 15, 15, 15);
+            //rangeStyle.setHGap(5);
+            //rangeStyle.setVGap(5);
+            layoutHelper.addRangeStyle(4, 7, rangeStyle);
+            adapters.add(new SubAdapter(this, layoutHelper, 12));
+
         }
 
 //        {
