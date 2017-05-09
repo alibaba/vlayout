@@ -96,8 +96,8 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         setItemCount(itemCount);
     }
 
-    public void addRangeStyle(Range range, RangeStyle rangeStyle) {
-        mRangeStyle.addChildRangeStyle(range, rangeStyle);
+    public void addRangeStyle(int start, int end, RangeStyle rangeStyle) {
+        mRangeStyle.addChildRangeStyle(start, end, rangeStyle);
     }
 
     public RangeStyle getRootRangeStyle() {
@@ -855,10 +855,11 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             mSpanSizeLookup.setSpanIndexCacheEnabled(true);
         }
 
-        public void addChildRangeStyle(Range range, RangeStyle rangeStyle) {
-            if (range != null && rangeStyle != null) {
+        public void addChildRangeStyle(int start, int end, RangeStyle rangeStyle) {
+            if (start <= end && rangeStyle != null) {
                 rangeStyle.setParent(this);
-                mChildren.put(range, rangeStyle);
+                rangeStyle.setRange(start, end);
+                mChildren.put(rangeStyle.getRange(), rangeStyle);
             }
         }
 

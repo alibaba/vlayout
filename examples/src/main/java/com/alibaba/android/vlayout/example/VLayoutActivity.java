@@ -189,14 +189,13 @@ public class VLayoutActivity extends Activity {
             //layoutHelper.setVGap(10);
             RangeStyle rangeStyle = new RangeStyle();
             rangeStyle.setBgColor(Color.RED);
-            rangeStyle.setRange(4, 7);
             rangeStyle.setSpanCount(2);
             rangeStyle.setWeights(new float[]{46.665f});
             rangeStyle.setPadding(15, 15, 15, 15);
             rangeStyle.setMargin(15, 15, 15, 15);
             //rangeStyle.setHGap(5);
             //rangeStyle.setVGap(5);
-            layoutHelper.addRangeStyle(Range.create(4, 7), rangeStyle);
+            layoutHelper.addRangeStyle(4, 7, rangeStyle);
             adapters.add(new SubAdapter(this, layoutHelper, 12));
 
         }
