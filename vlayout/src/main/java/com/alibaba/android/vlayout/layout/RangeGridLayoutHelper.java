@@ -266,7 +266,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     final int spanSize = getSpanSize(rangeStyle.mSpanSizeLookup, recycler, state, index);
                     if (spanSize > rangeStyle.mSpanCount) {
                         throw new IllegalArgumentException("Item at position " + index + " requires " +
-                                spanSize + " spans but GridLayoutManager has only " + rangeStyle.mSpanCount
+                                spanSize + " spans but RangeGridLayoutHelper has only " + rangeStyle.mSpanCount
                                 + " spans.");
                     }
 
@@ -518,10 +518,36 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         result.mConsumed = maxSize + startSpace + endSpace;
 
         final boolean layoutStart = layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START;
-        if (!mLayoutWithAnchor && (!isEndLine || !layoutStart) && (!isStartLine || layoutStart)) {
-            result.mConsumed += (layoutInVertical ? rangeStyle.mVGap : rangeStyle.mHGap);
-            Log.d(TAG, "--> " + currentPosition + " add gap");
+        int consumedGap = 0;
+        if (!mLayoutWithAnchor) {
+            if (!layoutStart) {
+                if (!isStartLine) {
+                    if (isSecondStartLine) {
+                        consumedGap = (layoutInVertical ? rangeStyle.mParent.mVGap : rangeStyle.mParent.mHGap);
+                        //Log.d(TAG, "1 --> " + currentPosition + " add gap " + consumedGap);
+                    } else {
+                        consumedGap = (layoutInVertical ? rangeStyle.mVGap : rangeStyle.mHGap);
+                        //Log.d(TAG, "2 --> " + currentPosition + " add gap " + consumedGap);
+                    }
+                }
+            } else {
+                if (!isEndLine) {
+                    if (isSecondEndLine) {
+                        consumedGap = (layoutInVertical ? rangeStyle.mParent.mVGap : rangeStyle.mParent.mHGap);
+                        //Log.d(TAG, "3 --> " + currentPosition + " add gap " + consumedGap);
+                    } else {
+                        consumedGap = (layoutInVertical ? rangeStyle.mVGap : rangeStyle.mHGap);
+                        //Log.d(TAG, "4 --> " + currentPosition + " add gap " + consumedGap);
+                    }
+                }
+            }
         }
+        result.mConsumed += consumedGap;
+
+        //if (!mLayoutWithAnchor && (!isEndLine || !layoutStart) && (!isStartLine || layoutStart)) {
+        //    result.mConsumed += (layoutInVertical ? rangeStyle.mVGap : rangeStyle.mHGap);
+        //    Log.d(TAG, "--> " + currentPosition + " add gap");
+        //}
 
         Log.d(TAG, "--> " + currentPosition + " consumed " + result.mConsumed + " startSpace " + startSpace + " endSpace " + endSpace);
 
@@ -529,18 +555,18 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         int left = 0, right = 0, top = 0, bottom = 0;
         if (layoutInVertical) {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                bottom = layoutState.getOffset() - endSpace - ((mLayoutWithAnchor || isEndLine) ? 0 : rangeStyle.mVGap);
+                bottom = layoutState.getOffset() - endSpace - (consumedGap);
                 top = bottom - maxSize;
             } else {
-                top = layoutState.getOffset() + startSpace + ((mLayoutWithAnchor || isStartLine) ? 0 : rangeStyle.mVGap);
+                top = layoutState.getOffset() + startSpace + (consumedGap);
                 bottom = top + maxSize;
             }
         } else {
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                right = layoutState.getOffset() - endSpace - (mLayoutWithAnchor || isEndLine ? 0 : rangeStyle.mHGap);
+                right = layoutState.getOffset() - endSpace - (consumedGap);
                 left = right - maxSize;
             } else {
-                left = layoutState.getOffset() + startSpace + (mLayoutWithAnchor || isStartLine ? 0 : rangeStyle.mHGap);
+                left = layoutState.getOffset() + startSpace + (consumedGap);
                 right = left + maxSize;
             }
         }
@@ -578,7 +604,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             }
 
             if (DEBUG) {
-                Log.d(TAG, "layout item in position: " + params.getViewPosition() + " with text " + ((TextView) view).getText() + " with SpanIndex: " + index + " into (" +
+                Log.d(TAG, "layout item in position: " + params.getViewPosition() + " with text with SpanIndex: " + index + " into (" +
                         left + ", " + top + ", " + right + ", " + bottom + " )");
             }
 
@@ -873,7 +899,6 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     break;
                 }
             }
-            Log.d(TAG, "endAlign " + offset);
             return offset;
         }
 
@@ -889,7 +914,6 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     break;
                 }
             }
-            Log.d(TAG, "startAlign " + offset);
             return offset;
         }
 

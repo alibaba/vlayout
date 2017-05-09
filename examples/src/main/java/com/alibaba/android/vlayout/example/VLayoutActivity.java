@@ -78,13 +78,13 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean BANNER_LAYOUT = true;
 
-    private static final boolean FIX_LAYOUT = false;
+    private static final boolean FIX_LAYOUT = true;
 
     private static final boolean LINEAR_LAYOUT = true;
 
     private static final boolean SINGLE_LAYOUT = true;
 
-    private static final boolean FLOAT_LAYOUT = false;
+    private static final boolean FLOAT_LAYOUT = true;
 
     private static final boolean ONEN_LAYOUT = true;
 
@@ -92,7 +92,7 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean GRID_LAYOUT = true;
 
-    private static final boolean STICKY_LAYOUT = false;
+    private static final boolean STICKY_LAYOUT = true;
 
     private static final boolean STAGGER_LAYOUT = true;
 
@@ -183,19 +183,19 @@ public class VLayoutActivity extends Activity {
             RangeGridLayoutHelper layoutHelper = new RangeGridLayoutHelper(4);
             layoutHelper.setBgColor(Color.GREEN);
             layoutHelper.setWeights(new float[]{20f, 26.665f});
-            layoutHelper.setPadding(7, 7, 7, 7);
-            layoutHelper.setMargin(7, 7, 7, 7);
-            layoutHelper.setHGap(3);
-            layoutHelper.setVGap(3);
+            layoutHelper.setPadding(15, 15, 15, 15);
+            layoutHelper.setMargin(15, 15, 15, 15);
+            //layoutHelper.setHGap(10);
+            //layoutHelper.setVGap(10);
             RangeStyle rangeStyle = new RangeStyle();
             rangeStyle.setBgColor(Color.RED);
             rangeStyle.setRange(4, 7);
             rangeStyle.setSpanCount(2);
             rangeStyle.setWeights(new float[]{46.665f});
-            rangeStyle.setPadding(7, 7, 7, 7);
-            rangeStyle.setMargin(7, 7, 7, 7);
-            rangeStyle.setHGap(3);
-            rangeStyle.setVGap(3);
+            rangeStyle.setPadding(15, 15, 15, 15);
+            rangeStyle.setMargin(15, 15, 15, 15);
+            //rangeStyle.setHGap(5);
+            //rangeStyle.setVGap(5);
             layoutHelper.addRangeStyle(Range.create(4, 7), rangeStyle);
             adapters.add(new SubAdapter(this, layoutHelper, 12));
 
