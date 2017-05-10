@@ -550,7 +550,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                 heightSpec = helper.getChildMeasureSpec(heightSize, params.height, true);
             }
 
-            helper.measureChild(view, widthSpec, heightSpec);
+            helper.measureChildWithMargins(view, widthSpec, heightSpec);
         } else {
             final int heightSpec = helper.getChildMeasureSpec(heightSize, params.height, false);
             int widthSpec;
@@ -562,7 +562,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                 widthSpec = helper.getChildMeasureSpec(widthSize, params.width, true);
             }
 
-            helper.measureChild(view, widthSpec, heightSpec);
+            helper.measureChildWithMargins(view, widthSpec, heightSpec);
         }
 
     }

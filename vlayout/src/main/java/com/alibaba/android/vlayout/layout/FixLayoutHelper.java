@@ -408,7 +408,7 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
             }
 
             // do measurement
-            helper.measureChild(view, widthSpec, heightSpec);
+            helper.measureChildWithMargins(view, widthSpec, heightSpec);
         } else {
             final int heightSpec = helper.getChildMeasureSpec(
                     helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
@@ -441,7 +441,7 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
 
 
             // do measurement
-            helper.measureChild(view, widthSpec, heightSpec);
+            helper.measureChildWithMargins(view, widthSpec, heightSpec);
         }
 
         int left, top, right, bottom;

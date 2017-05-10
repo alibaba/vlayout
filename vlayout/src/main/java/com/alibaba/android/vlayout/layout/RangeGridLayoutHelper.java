@@ -459,10 +459,10 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             final LayoutParams lp = (LayoutParams) view.getLayoutParams();
 
             if (helper.getOrientation() == VERTICAL) {
-                helper.measureChild(view, spec, getMainDirSpec(rangeStyle, lp.height, mTotalSize,
+                helper.measureChildWithMargins(view, spec, getMainDirSpec(rangeStyle, lp.height, mTotalSize,
                     View.MeasureSpec.getSize(spec), lp.mAspectRatio));
             } else {
-                helper.measureChild(view,
+                helper.measureChildWithMargins(view,
                     getMainDirSpec(rangeStyle, lp.width, mTotalSize, View.MeasureSpec.getSize(spec),
                         lp.mAspectRatio), View.MeasureSpec.getSize(spec));
             }
@@ -493,9 +493,9 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                 }
 
                 if (helper.getOrientation() == VERTICAL) {
-                    helper.measureChild(view, spec, maxMeasureSpec);
+                    helper.measureChildWithMargins(view, spec, maxMeasureSpec);
                 } else {
-                    helper.measureChild(view, maxMeasureSpec, spec);
+                    helper.measureChildWithMargins(view, maxMeasureSpec, spec);
                 }
             }
         }

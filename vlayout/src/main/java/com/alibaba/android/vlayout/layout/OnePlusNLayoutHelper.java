@@ -288,7 +288,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
         int heightSpec = helper.getChildMeasureSpec(parentHeight - parentVPadding,
             layoutInVertical ? lp.height : MeasureSpec.EXACTLY, layoutInVertical);
 
-        helper.measureChild(view, widthSpec, heightSpec);
+        helper.measureChildWithMargins(view, widthSpec, heightSpec);
 
         mainConsumed = orientationHelper.getDecoratedMeasurement(view) + (layoutInVertical ?
             getVerticalMargin() + getVerticalPadding()
@@ -331,12 +331,12 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             int width2 = Float.isNaN(weight2) ? (availableSpace - width1)
                 : (int) (availableSpace * weight2 / 100 + 0.5f);
 
-            helper.measureChild(child1,
+            helper.measureChildWithMargins(child1,
                 MeasureSpec.makeMeasureSpec(width1 + lp1.leftMargin + lp1.rightMargin,
                     MeasureSpec.EXACTLY),
                 helper.getChildMeasureSpec(helper.getContentHeight(), lp1.height, true));
 
-            helper.measureChild(child2,
+            helper.measureChildWithMargins(child2,
                 MeasureSpec.makeMeasureSpec(width2 + lp2.leftMargin + lp2.rightMargin,
                     MeasureSpec.EXACTLY),
                 helper.getChildMeasureSpec(helper.getContentHeight(), lp2.height, true));
@@ -372,14 +372,14 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             int height2 = Float.isNaN(weight2) ? (int) (availableSpace - height1)
                 : (int) (availableSpace * weight2 / 100 + 0.5f);
 
-            helper.measureChild(child1,
+            helper.measureChildWithMargins(child1,
                 helper.getChildMeasureSpec(helper.getContentWidth(), lp1.width, true),
                 MeasureSpec.makeMeasureSpec(height1 + lp1.topMargin + lp1.bottomMargin,
                     MeasureSpec.EXACTLY));
 
             int width = child1.getMeasuredWidth();
 
-            helper.measureChild(child2,
+            helper.measureChildWithMargins(child2,
                 MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(height2 + lp2.topMargin + lp2.bottomMargin,
                     MeasureSpec.EXACTLY));
@@ -445,7 +445,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             int width3 = Float.isNaN(weight3) ? (int) (width2)
                 : (int) (availableSpace * weight3 / 100 + 0.5);
 
-            helper.measureChild(child1,
+            helper.measureChildWithMargins(child1,
                 MeasureSpec.makeMeasureSpec(width1 + lp1.leftMargin + lp1.rightMargin,
                     MeasureSpec.EXACTLY),
                 helper.getChildMeasureSpec(helper.getContentHeight(), lp1.height, true));
@@ -459,13 +459,13 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
             int height3 = height1 - lp2.bottomMargin - lp3.topMargin - height2;
 
-            helper.measureChild(child2,
+            helper.measureChildWithMargins(child2,
                 MeasureSpec.makeMeasureSpec(width2 + lp2.leftMargin + lp2.rightMargin,
                     MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(height2 + lp2.topMargin + lp2.bottomMargin,
                     MeasureSpec.EXACTLY));
 
-            helper.measureChild(child3,
+            helper.measureChildWithMargins(child3,
                 MeasureSpec.makeMeasureSpec(width3 + lp3.leftMargin + lp3.rightMargin,
                     MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(height3 + lp3.topMargin + lp3.bottomMargin,
@@ -554,7 +554,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                 - lp4.leftMargin - width3))
                 : (int) (availableSpace * weight4 / 100 + 0.5f);
 
-            helper.measureChild(child1,
+            helper.measureChildWithMargins(child1,
                 MeasureSpec.makeMeasureSpec(width1 + lp1.leftMargin + lp1.rightMargin,
                     MeasureSpec.EXACTLY),
                 helper.getChildMeasureSpec(helper.getContentHeight(), lp1.height, true));
@@ -566,19 +566,19 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                     + 0.5f);
             int height3 = (int) ((height1 - lp2.bottomMargin - lp3.topMargin) - height2);
 
-            helper.measureChild(child2,
+            helper.measureChildWithMargins(child2,
                 MeasureSpec.makeMeasureSpec(width2 + lp2.leftMargin + lp2.rightMargin,
                     MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(height2 + lp2.topMargin + lp2.bottomMargin,
                     MeasureSpec.EXACTLY));
 
-            helper.measureChild(child3,
+            helper.measureChildWithMargins(child3,
                 MeasureSpec.makeMeasureSpec(width3 + lp3.leftMargin + lp3.rightMargin,
                     MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(height3 + lp3.topMargin + lp3.bottomMargin,
                     MeasureSpec.EXACTLY));
 
-            helper.measureChild(child4,
+            helper.measureChildWithMargins(child4,
                 MeasureSpec.makeMeasureSpec(width4 + lp4.leftMargin + lp4.rightMargin,
                     MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(height3 + lp4.topMargin + lp4.bottomMargin,
@@ -677,7 +677,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                 - lp4.leftMargin - width3 - width4))
                 : (int) (availableSpace * weight5 / 100 + 0.5f);
 
-            helper.measureChild(child1,
+            helper.measureChildWithMargins(child1,
                 MeasureSpec.makeMeasureSpec(width1 + lp1.leftMargin + lp1.rightMargin,
                     MeasureSpec.EXACTLY),
                 helper.getChildMeasureSpec(helper.getContentHeight(), lp1.height, true));
@@ -689,25 +689,25 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                     + 0.5f);
             int height3 = (int) ((height1 - lp2.bottomMargin - lp3.topMargin) - height2);
 
-            helper.measureChild(child2,
+            helper.measureChildWithMargins(child2,
                 MeasureSpec.makeMeasureSpec(width2 + lp2.leftMargin + lp2.rightMargin,
                     MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(height2 + lp2.topMargin + lp2.bottomMargin,
                     MeasureSpec.EXACTLY));
 
-            helper.measureChild(child3,
+            helper.measureChildWithMargins(child3,
                 MeasureSpec.makeMeasureSpec(width3 + lp3.leftMargin + lp3.rightMargin,
                     MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(height3 + lp3.topMargin + lp3.bottomMargin,
                     MeasureSpec.EXACTLY));
 
-            helper.measureChild(child4,
+            helper.measureChildWithMargins(child4,
                 MeasureSpec.makeMeasureSpec(width4 + lp4.leftMargin + lp4.rightMargin,
                     MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(height3 + lp4.topMargin + lp4.bottomMargin,
                     MeasureSpec.EXACTLY));
 
-            helper.measureChild(child5,
+            helper.measureChildWithMargins(child5,
                 MeasureSpec.makeMeasureSpec(width5 + lp5.leftMargin + lp5.rightMargin,
                     MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(height3 + lp5.topMargin + lp5.bottomMargin,

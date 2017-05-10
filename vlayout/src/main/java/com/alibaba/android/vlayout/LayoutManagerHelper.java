@@ -188,7 +188,7 @@ public interface LayoutManagerHelper {
     OrientationHelper getSecondaryOrientationHelper();
 
     /**
-     * Measure children views with margins and decorations, use this to measure children
+     * Measure children views with decorations, use this to measure children
      *
      * @param view
      * @param widthSpec
@@ -197,14 +197,24 @@ public interface LayoutManagerHelper {
     void measureChild(View view, int widthSpec, int heightSpec);
 
     /**
-     * Layout children views with margins and decorations.
+     * Measure children views with margins and decorations, use this to measure children
      *
-     * @param view
-     * @param left
-     * @param top
-     * @param right
-     * @param bottom
+     * @param child
+     * @param widthUsed
+     * @param heightUsed
      */
+    void measureChildWithMargins(View child, int widthUsed, int heightUsed);
+
+
+        /**
+         * Layout children views with margins and decorations.
+         *
+         * @param view
+         * @param left
+         * @param top
+         * @param right
+         * @param bottom
+         */
     void layoutChild(View view, int left, int top, int right, int bottom);
 
     /**

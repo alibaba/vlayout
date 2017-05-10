@@ -265,13 +265,13 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 int heightSpec = helper.getChildMeasureSpec(orientationHelper.getTotalSpace(),
                         Float.isNaN(lp.mAspectRatio) ? lp.height : (int) (
                                 View.MeasureSpec.getSize(widthSpec) / lp.mAspectRatio + 0.5f), true);
-                helper.measureChild(view, widthSpec, heightSpec);
+                helper.measureChildWithMargins(view, widthSpec, heightSpec);
             } else {
                 int heightSpec = helper.getChildMeasureSpec(mColLength, lp.height, false);
                 int widthSpec = helper.getChildMeasureSpec(orientationHelper.getTotalSpace(),
                         Float.isNaN(lp.mAspectRatio) ? lp.width : (int) (
                                 View.MeasureSpec.getSize(heightSpec) * lp.mAspectRatio + 0.5f), true);
-                helper.measureChild(view, widthSpec, heightSpec);
+                helper.measureChildWithMargins(view, widthSpec, heightSpec);
             }
 
 
