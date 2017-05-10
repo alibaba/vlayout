@@ -77,10 +77,11 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
     @Override
     public void setItemCount(int itemCount) {
-        if (itemCount > 0)
+        if (itemCount > 0) {
             super.setItemCount(1);
-        else
+        } else {
             super.setItemCount(0);
+        }
     }
 
     @Override
@@ -97,10 +98,11 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
         // find view in currentPosition
         View view = mFixView;
-        if (view == null)
+        if (view == null) {
             view = layoutState.next(recycler);
-        else
+        } else {
             layoutState.skipCurrentPosition();
+        }
         if (view == null) {
             result.mFinished = true;
             return;
@@ -249,7 +251,9 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
 
         // disabled if mPos is negative number
-        if (mPos < 0) return;
+        if (mPos < 0) {
+            return;
+        }
 
         final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
 
@@ -333,9 +337,10 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
             // (mDoNormalHandle && mFixView != null) || (!mDoNormalHandle && mFixView == null)
             View eView = mFixView;
-            if (eView == null)
+            if (eView == null) {
                 // !mDoNormalHandle && mFixView == null, find existing view
                 eView = helper.findViewByPosition(mPos);
+            }
 
             boolean normalHandle = false;
             boolean layoutInVertical = helper.getOrientation() == VERTICAL;
@@ -345,8 +350,9 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
                 if (eView == null) {
                     // TODO? why do condition here?
-                    if (mOffset + (mStickyStart ? startAdjust : endAdjust) > 0)
+                    if (mOffset + (mStickyStart ? startAdjust : endAdjust) > 0) {
                         normalHandle = true;
+                    }
                     mFixView = recycler.getViewForPosition(mPos);
                     doMeasure(mFixView, helper);
                 } else if (mStickyStart && orientationHelper.getDecoratedStart(eView) >= orientationHelper.getStartAfterPadding() + mOffset + startAdjust) {
@@ -500,8 +506,9 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                         helper.addChildView(mFixView, index);
                         mFixView = null;
                     }
-                } else
+                } else {
                     helper.addFixedView(mFixView);
+                }
 
             }
         }
@@ -539,10 +546,11 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                 heightSpec = View.MeasureSpec.makeMeasureSpec((int) (widthSize / viewAspectRatio + 0.5f), View.MeasureSpec.EXACTLY);
             } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
                 heightSpec = View.MeasureSpec.makeMeasureSpec((int) (widthSize / mAspectRatio + 0.5), View.MeasureSpec.EXACTLY);
-            } else
+            } else {
                 heightSpec = helper.getChildMeasureSpec(heightSize, params.height, true);
+            }
 
-            helper.measureChild(view, widthSpec, heightSpec);
+            helper.measureChildWithMargins(view, widthSpec, heightSpec);
         } else {
             final int heightSpec = helper.getChildMeasureSpec(heightSize, params.height, false);
             int widthSpec;
@@ -550,10 +558,11 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                 widthSpec = View.MeasureSpec.makeMeasureSpec((int) (heightSize * viewAspectRatio + 0.5), View.MeasureSpec.EXACTLY);
             } else if (!Float.isNaN(mAspectRatio) && mAspectRatio > 0) {
                 widthSpec = View.MeasureSpec.makeMeasureSpec((int) (heightSize * mAspectRatio + 0.5), View.MeasureSpec.EXACTLY);
-            } else
+            } else {
                 widthSpec = helper.getChildMeasureSpec(widthSize, params.width, true);
+            }
 
-            helper.measureChild(view, widthSpec, heightSpec);
+            helper.measureChildWithMargins(view, widthSpec, heightSpec);
         }
 
     }

@@ -268,7 +268,7 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
                         params.height, layoutInVertical);
             }
             // do measurement
-            helper.measureChild(view, widthSpec, heightSpec);
+            helper.measureChildWithMargins(view, widthSpec, heightSpec);
         } else {
             int widthSpec;
             final int heightSpec = helper.getChildMeasureSpec(
@@ -287,7 +287,7 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
                         params.width, !layoutInVertical);
             }
             // do measurement
-            helper.measureChild(view, widthSpec, heightSpec);
+            helper.measureChildWithMargins(view, widthSpec, heightSpec);
         }
 
 

@@ -1052,6 +1052,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
 
+    @Override
     public void moveView(int fromIndex, int toIndex) {
         super.moveView(fromIndex, toIndex);
     }
@@ -1084,6 +1085,12 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     }
 
+    @Override
+    public void addBackgroundView(View view, boolean head) {
+        showView(view);
+        int index = head ? 0 : -1;
+        addView(view, index);
+    }
 
     @Override
     public void addFixedView(View view) {
@@ -1142,7 +1149,12 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     @Override
     public void measureChild(View child, int widthSpec, int heightSpec) {
-        measureChildWithDecorationsAndMargin(child, widthSpec, heightSpec);
+        measureChildWithDecorations(child, widthSpec, heightSpec);
+    }
+
+    @Override
+    public void measureChildWithMargins(View child, int widthUsed, int heightUsed) {
+        measureChildWithDecorationsAndMargin(child, widthUsed, heightUsed);
     }
 
     @Override
@@ -1278,6 +1290,13 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
     private Rect mDecorInsets = new Rect();
+
+    private void measureChildWithDecorations(View child, int widthSpec, int heightSpec) {
+        calculateItemDecorationsForChild(child, mDecorInsets);
+        widthSpec = updateSpecWithExtra(widthSpec, mDecorInsets.left, mDecorInsets.right);
+        heightSpec = updateSpecWithExtra(heightSpec, mDecorInsets.top, mDecorInsets.bottom);
+        child.measure(widthSpec, heightSpec);
+    }
 
     private void measureChildWithDecorationsAndMargin(View child, int widthSpec, int heightSpec) {
         calculateItemDecorationsForChild(child, mDecorInsets);
