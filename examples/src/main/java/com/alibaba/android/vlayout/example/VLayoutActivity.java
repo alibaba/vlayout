@@ -25,9 +25,7 @@
 package com.alibaba.android.vlayout.example;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
-import com.alibaba.android.vlayout.DelegateAdapter.Adapter;
 import com.alibaba.android.vlayout.LayoutHelper;
-import com.alibaba.android.vlayout.Range;
 import com.alibaba.android.vlayout.RecyclablePagerAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
@@ -38,7 +36,7 @@ import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
 import com.alibaba.android.vlayout.layout.RangeGridLayoutHelper;
-import com.alibaba.android.vlayout.layout.RangeGridLayoutHelper.RangeStyle;
+import com.alibaba.android.vlayout.layout.RangeGridLayoutHelper.GridRangeStyle;
 import com.alibaba.android.vlayout.layout.ScrollFixLayoutHelper;
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
@@ -56,18 +54,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -275,7 +268,7 @@ public class VLayoutActivity extends Activity {
             layoutHelper.setMargin(15, 15, 15, 15);
             layoutHelper.setHGap(10);
             layoutHelper.setVGap(10);
-            RangeStyle rangeStyle = new RangeStyle();
+            GridRangeStyle rangeStyle = new GridRangeStyle();
             rangeStyle.setBgColor(Color.RED);
             rangeStyle.setSpanCount(2);
             rangeStyle.setWeights(new float[]{46.665f});
