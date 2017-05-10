@@ -63,6 +63,8 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
     private RangeStyle mRangeStyle;
 
+    private RangeLayoutState mRangeLayoutState;
+
     private int mTotalSize = 0;
 
     /**
@@ -96,6 +98,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         mRangeStyle.setVGap(vGap);
         mRangeStyle.setHGap(hGap);
         setItemCount(itemCount);
+        mRangeLayoutState = new RangeLayoutState();
     }
 
     /**
@@ -504,12 +507,14 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
         int startSpace = 0, endSpace = 0;
 
+        int secondStartSpace = 0, secondEndSpace = 0;
+
         if (isStartLine) {
             startSpace = layoutInVertical ? mRangeStyle.getMarginTop() + mRangeStyle.getPaddingTop()
                 : mRangeStyle.getMarginLeft() + mRangeStyle.getPaddingLeft();
         }
         if (isSecondStartLine) {
-            startSpace += (layoutInVertical ? rangeStyle.getMarginTop() + rangeStyle.getPaddingTop()
+            secondStartSpace = (layoutInVertical ? rangeStyle.getMarginTop() + rangeStyle.getPaddingTop()
                 : rangeStyle.getMarginLeft() + rangeStyle.getPaddingLeft());
         }
 
@@ -518,12 +523,12 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                 : mRangeStyle.getMarginRight() + mRangeStyle.getPaddingRight();
         }
         if (isSecondEndLine) {
-            endSpace += (layoutInVertical ? rangeStyle.getMarginBottom() + rangeStyle.getPaddingBottom()
+            secondEndSpace = (layoutInVertical ? rangeStyle.getMarginBottom() + rangeStyle.getPaddingBottom()
                 : rangeStyle.getMarginRight() + rangeStyle.getPaddingRight());
         }
 
 
-        result.mConsumed = maxSize + startSpace + endSpace;
+        result.mConsumed = maxSize + startSpace + endSpace + secondStartSpace + secondEndSpace;
 
         final boolean layoutStart = layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START;
         int consumedGap = 0;
@@ -532,45 +537,41 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                 if (!isStartLine) {
                     if (isSecondStartLine) {
                         consumedGap = (layoutInVertical ? rangeStyle.mParent.mVGap : rangeStyle.mParent.mHGap);
-                        //Log.d(TAG, "1 --> " + currentPosition + " add gap " + consumedGap);
                     } else {
                         consumedGap = (layoutInVertical ? rangeStyle.mVGap : rangeStyle.mHGap);
-                        //Log.d(TAG, "2 --> " + currentPosition + " add gap " + consumedGap);
                     }
                 }
             } else {
                 if (!isEndLine) {
                     if (isSecondEndLine) {
                         consumedGap = (layoutInVertical ? rangeStyle.mParent.mVGap : rangeStyle.mParent.mHGap);
-                        //Log.d(TAG, "3 --> " + currentPosition + " add gap " + consumedGap);
                     } else {
                         consumedGap = (layoutInVertical ? rangeStyle.mVGap : rangeStyle.mHGap);
-                        //Log.d(TAG, "4 --> " + currentPosition + " add gap " + consumedGap);
                     }
                 }
             }
         }
         result.mConsumed += consumedGap;
 
-        //if (!mLayoutWithAnchor && (!isEndLine || !layoutStart) && (!isStartLine || layoutStart)) {
-        //    result.mConsumed += (layoutInVertical ? rangeStyle.mVGap : rangeStyle.mHGap);
-        //    Log.d(TAG, "--> " + currentPosition + " add gap");
-        //}
-
-        Log.d(TAG, "--> " + currentPosition + " consumed " + result.mConsumed + " startSpace " + startSpace + " endSpace " + endSpace);
-
+        if (DEBUG) {
+            Log.d(TAG,
+                "--> " + currentPosition + " consumed " + result.mConsumed + " startSpace " + startSpace + " endSpace "
+                    + endSpace + " secondStartSpace " + secondStartSpace + " secondEndSpace " + secondEndSpace + " lastUnconsumedSpace " + mRangeLayoutState.lastUnconsumedSpace);
+        }
 
         int left = 0, right = 0, top = 0, bottom = 0;
         if (layoutInVertical) {
-            if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                bottom = layoutState.getOffset() - endSpace - (consumedGap);
+            if (layoutStart) {
+                bottom = layoutState.getOffset() - endSpace - secondEndSpace - (consumedGap) - mRangeLayoutState.lastUnconsumedSpace;
                 top = bottom - maxSize;
+                mRangeLayoutState.lastUnconsumedSpace = secondStartSpace;
             } else {
-                top = layoutState.getOffset() + startSpace + (consumedGap);
+                top = layoutState.getOffset() + startSpace + secondStartSpace + (consumedGap) + mRangeLayoutState.lastUnconsumedSpace;
                 bottom = top + maxSize;
+                mRangeLayoutState.lastUnconsumedSpace = secondEndSpace;
             }
         } else {
-            if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
+            if (layoutStart) {
                 right = layoutState.getOffset() - endSpace - (consumedGap);
                 left = right - maxSize;
             } else {
@@ -633,6 +634,15 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         Arrays.fill(rangeStyle.mSet, null);
         Arrays.fill(rangeStyle.mSpanIndices, 0);
         Arrays.fill(rangeStyle.mSpanCols, 0);
+        if (!layoutStart) {
+            if (isEndLine) {
+                mRangeLayoutState.reset();
+            }
+        } else {
+            if (isStartLine) {
+                mRangeLayoutState.reset();
+            }
+        }
     }
 
     @Override
@@ -662,12 +672,14 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
     public void onClear(LayoutManagerHelper helper) {
         super.onClear(helper);
         mRangeStyle.onClear();
+        mRangeLayoutState.reset();
     }
 
     @Override
     public void onItemsChanged(LayoutManagerHelper helper) {
         super.onItemsChanged(helper);
         mRangeStyle.onClear();
+        mRangeLayoutState.reset();
     }
 
     private static final int MAIN_DIR_SPEC =
@@ -983,6 +995,17 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                             mLayoutRegion.offset(-scrolled, 0);
                         }
                     }
+
+                    if (!isChildrenEmpty()) {
+                        for (int i = 0, size = mChildren.size(); i < size; i++) {
+                            RangeStyle rangeStyle = mChildren.valueAt(i);
+                            if (rangeStyle.mLayoutView != null) {
+                                mLayoutRegion.union(rangeStyle.mLayoutView.getLeft(), rangeStyle.mLayoutView.getTop(),
+                                    rangeStyle.mLayoutView.getRight(), rangeStyle.mLayoutView.getBottom());
+                            }
+                        }
+                    }
+
                     int contentWidth = helper.getContentWidth();
                     int contentHeight = helper.getContentHeight();
                     if (helper.getOrientation() == VirtualLayoutManager.VERTICAL ?
@@ -1453,6 +1476,15 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
         }
 
+    }
+
+    private class RangeLayoutState {
+
+        private int lastUnconsumedSpace = 0;
+
+        public void reset() {
+            lastUnconsumedSpace = 0;
+        }
     }
 
 }
