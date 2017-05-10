@@ -25,7 +25,6 @@
 package com.alibaba.android.vlayout.layout;
 
 import java.util.Arrays;
-import java.util.Iterator;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.Range;
@@ -45,14 +44,13 @@ import android.support.v7.widget.RecyclerView.Recycler;
 import android.support.v7.widget.RecyclerView.State;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
 
 /**
- * LayoutHelper provides GridLayout. The difference with {@link ColumnLayoutHelper} is that this layoutHelper can layout and recycle child views one line by one line.
+ * LayoutHelper provides RangeGridLayoutHelper. The difference with {@link GridLayoutHelper} is that this layoutHelper could has child group logically but implemented as flat.
  *
- * @author villadora
+ * @author longerian
  * @since 1.0.0
  */
 public class RangeGridLayoutHelper extends BaseLayoutHelper {
@@ -671,14 +669,15 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
     @Override
     public void onClear(LayoutManagerHelper helper) {
         super.onClear(helper);
-        mRangeStyle.onClear();
+        mRangeStyle.onClear(helper);
+        mRangeStyle.onInvalidateSpanIndexCache();
         mRangeLayoutState.reset();
     }
 
     @Override
     public void onItemsChanged(LayoutManagerHelper helper) {
         super.onItemsChanged(helper);
-        mRangeStyle.onClear();
+        mRangeStyle.onInvalidateSpanIndexCache();
         mRangeLayoutState.reset();
     }
 
@@ -900,11 +899,22 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             return rangeStyle;
         }
 
-        public void onClear() {
+        public void onClear(LayoutManagerHelper helper) {
+            if (mLayoutView != null) {
+                helper.removeChildView(mLayoutView);
+                mLayoutView = null;
+            }
+            for (int i = 0, size = mChildren.size(); i < size; i++) {
+                RangeStyle rangeStyle = mChildren.valueAt(i);
+                rangeStyle.onClear(helper);
+            }
+        }
+
+        public void onInvalidateSpanIndexCache() {
             mSpanSizeLookup.invalidateSpanIndexCache();
             for (int i = 0, size = mChildren.size(); i < size; i++) {
                 RangeStyle rangeStyle = mChildren.valueAt(i);
-                rangeStyle.mSpanSizeLookup.invalidateSpanIndexCache();
+                rangeStyle.onInvalidateSpanIndexCache();
             }
         }
 
@@ -1034,7 +1044,9 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                             helper.hideView(mLayoutView);
                             for (int i = 0, size = mChildren.size(); i < size; i++) {
                                 RangeStyle rangeStyle = mChildren.valueAt(i);
-                                helper.hideView(rangeStyle.mLayoutView);
+                                if (rangeStyle.mLayoutView != null) {
+                                    helper.hideView(rangeStyle.mLayoutView);
+                                }
                             }
                         }
                         return;
