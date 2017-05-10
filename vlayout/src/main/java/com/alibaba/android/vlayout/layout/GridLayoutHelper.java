@@ -171,6 +171,14 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         ensureSpanCount();
     }
 
+    public int getVGap() {
+        return mVGap;
+    }
+
+    public int getHGap() {
+        return mHGap;
+    }
+
     public int getSpanCount() {
         return mSpanCount;
     }
