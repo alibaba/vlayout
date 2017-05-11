@@ -35,6 +35,7 @@ import com.alibaba.android.vlayout.layout.GridLayoutHelper.DefaultSpanSizeLookup
 import com.alibaba.android.vlayout.layout.GridLayoutHelper.SpanSizeLookup;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Recycler;
@@ -57,8 +58,6 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
     private static boolean DEBUG = false;
 
     private GridRangeStyle mRangeStyle;
-
-    private RangeLayoutState mRangeLayoutState;
 
     private int mTotalSize = 0;
 
@@ -93,7 +92,6 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         mRangeStyle.setVGap(vGap);
         mRangeStyle.setHGap(hGap);
         setItemCount(itemCount);
-        mRangeLayoutState = new RangeLayoutState();
     }
 
     /**
@@ -212,6 +210,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         mRangeStyle.beforeLayout(recycler, state, helper);
     }
 
+    //TODO optimize this method
     @Override
     public void layoutViews(RecyclerView.Recycler recycler, RecyclerView.State state, LayoutStateWrapper layoutState, LayoutChunkResult result, LayoutManagerHelper helper) {
         // reach the end of this layout
@@ -548,22 +547,47 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         }
         result.mConsumed += consumedGap;
 
+        int lastUnconsumedSpace = 0;
+        if (layoutStart) {
+            int lastLinePosition = currentPosition + 1;
+            if (!isOutOfRange(lastLinePosition)) {
+                RangeStyle<GridRangeStyle> neighbourRange = mRangeStyle.findRangeStyleByPosition(lastLinePosition);
+                if (neighbourRange.isFirstPosition(lastLinePosition)) {
+                    lastUnconsumedSpace = layoutInVertical ? rangeStyle.getMarginTop() + rangeStyle.getPaddingTop()
+                        : rangeStyle.getMarginLeft() + rangeStyle.getPaddingLeft();
+                    if (DEBUG) {
+                        Log.d(TAG, "--> " + currentPosition + " 1 " + lastUnconsumedSpace);
+                    }
+                }
+            }
+        } else {
+            int lastLinePosition = currentPosition - 1;
+            if (!isOutOfRange(lastLinePosition)) {
+                RangeStyle<GridRangeStyle> neighbourRange = mRangeStyle.findRangeStyleByPosition(lastLinePosition);
+                if (neighbourRange.isLastPosition(lastLinePosition)) {
+                    lastUnconsumedSpace = layoutInVertical ? neighbourRange.getMarginBottom() + neighbourRange.getPaddingBottom()
+                        : neighbourRange.getMarginRight() + neighbourRange.getPaddingRight();
+                    if (DEBUG) {
+                        Log.d(TAG, "--> " + currentPosition + " 2 " + lastUnconsumedSpace);
+                    }
+                }
+            }
+        }
+
         if (DEBUG) {
             Log.d(TAG,
                 "--> " + currentPosition + " consumed " + result.mConsumed + " startSpace " + startSpace + " endSpace "
-                    + endSpace + " secondStartSpace " + secondStartSpace + " secondEndSpace " + secondEndSpace + " lastUnconsumedSpace " + mRangeLayoutState.lastUnconsumedSpace);
+                    + endSpace + " secondStartSpace " + secondStartSpace + " secondEndSpace " + secondEndSpace + " lastUnconsumedSpace " + lastUnconsumedSpace);
         }
 
         int left = 0, right = 0, top = 0, bottom = 0;
         if (layoutInVertical) {
             if (layoutStart) {
-                bottom = layoutState.getOffset() - endSpace - secondEndSpace - (consumedGap) - mRangeLayoutState.lastUnconsumedSpace;
+                bottom = layoutState.getOffset() - endSpace - secondEndSpace - (consumedGap) - lastUnconsumedSpace;
                 top = bottom - maxSize;
-                mRangeLayoutState.lastUnconsumedSpace = secondStartSpace;
             } else {
-                top = layoutState.getOffset() + startSpace + secondStartSpace + (consumedGap) + mRangeLayoutState.lastUnconsumedSpace;
+                top = layoutState.getOffset() + startSpace + secondStartSpace + (consumedGap) + lastUnconsumedSpace;
                 bottom = top + maxSize;
-                mRangeLayoutState.lastUnconsumedSpace = secondEndSpace;
             }
         } else {
             if (layoutStart) {
@@ -629,15 +653,6 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         Arrays.fill(rangeStyle.mSet, null);
         Arrays.fill(rangeStyle.mSpanIndices, 0);
         Arrays.fill(rangeStyle.mSpanCols, 0);
-        if (!layoutStart) {
-            if (isEndLine) {
-                mRangeLayoutState.reset();
-            }
-        } else {
-            if (isStartLine) {
-                mRangeLayoutState.reset();
-            }
-        }
     }
 
     @Override
@@ -668,14 +683,12 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         super.onClear(helper);
         mRangeStyle.onClear(helper);
         mRangeStyle.onInvalidateSpanIndexCache();
-        mRangeLayoutState.reset();
     }
 
     @Override
     public void onItemsChanged(LayoutManagerHelper helper) {
         super.onItemsChanged(helper);
         mRangeStyle.onInvalidateSpanIndexCache();
-        mRangeLayoutState.reset();
     }
 
     private static final int MAIN_DIR_SPEC =
@@ -850,6 +863,24 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             return rangeStyle;
         }
 
+        public GridRangeStyle findSiblingStyleByPosition(int position) {
+            GridRangeStyle rangeStyle = null;
+            if (mParent != null) {
+                ArrayMap<Range<Integer>, GridRangeStyle> siblings = mParent.mChildren;
+                for (int i = 0, size = siblings.size(); i < size; i++) {
+                    Range range = siblings.keyAt(i);
+                    if (range.contains(position)) {
+                        GridRangeStyle childRangeStyle = siblings.valueAt(i);
+                        if (!childRangeStyle.equals(this)) {
+                            rangeStyle = childRangeStyle;
+                        }
+                        break;
+                    }
+                }
+            }
+            return rangeStyle;
+        }
+
         public void onInvalidateSpanIndexCache() {
             mSpanSizeLookup.invalidateSpanIndexCache();
             for (int i = 0, size = mChildren.size(); i < size; i++) {
@@ -989,15 +1020,6 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             }
         }
 
-    }
-
-    private class RangeLayoutState {
-
-        private int lastUnconsumedSpace = 0;
-
-        public void reset() {
-            lastUnconsumedSpace = 0;
-        }
     }
 
 }

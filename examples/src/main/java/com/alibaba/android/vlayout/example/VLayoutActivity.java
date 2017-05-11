@@ -277,7 +277,16 @@ public class VLayoutActivity extends Activity {
             rangeStyle.setHGap(5);
             rangeStyle.setVGap(5);
             layoutHelper.addRangeStyle(4, 7, rangeStyle);
-            adapters.add(new SubAdapter(this, layoutHelper, 12));
+            GridRangeStyle rangeStyle1 = new GridRangeStyle();
+            rangeStyle1.setBgColor(Color.YELLOW);
+            rangeStyle1.setSpanCount(2);
+            rangeStyle1.setWeights(new float[]{46.665f});
+            rangeStyle1.setPadding(15, 15, 15, 15);
+            rangeStyle1.setMargin(15, 15, 15, 15);
+            rangeStyle1.setHGap(5);
+            rangeStyle1.setVGap(5);
+            layoutHelper.addRangeStyle(8, 11, rangeStyle1);
+            adapters.add(new SubAdapter(this, layoutHelper, 16));
 
         }
 

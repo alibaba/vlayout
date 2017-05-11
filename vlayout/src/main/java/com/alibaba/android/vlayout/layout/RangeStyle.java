@@ -1,5 +1,8 @@
 package com.alibaba.android.vlayout.layout;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.Range;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
@@ -7,6 +10,7 @@ import com.alibaba.android.vlayout.layout.BaseLayoutHelper.LayoutViewBindListene
 import com.alibaba.android.vlayout.layout.BaseLayoutHelper.LayoutViewUnBindListener;
 
 import android.graphics.Rect;
+import android.os.Parcelable.ClassLoaderCreator;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.util.SimpleArrayMap;
@@ -330,6 +334,14 @@ public class RangeStyle<T extends RangeStyle> {
         return mRange != null ? !mRange.contains(position) : true;
     }
 
+    public boolean isFirstPosition(int position) {
+        return mRange != null ? mRange.getLower().intValue() == position : false;
+    }
+
+    public boolean isLastPosition(int position) {
+        return mRange != null ? mRange.getUpper().intValue() == position : false;
+    }
+
     /**
      * @param start offset relative to its parent
      * @param end offset relative to its parent
@@ -536,4 +548,50 @@ public class RangeStyle<T extends RangeStyle> {
         }
 
     }
+
+    private static class RangeMap<T> {
+
+        private final static int CAPACITY = 64;
+
+        private Class<T> mClass;
+
+        private int lastIndex = -1;
+
+        private int[] mOffsetMap = new int[CAPACITY];
+
+        private T[] mCardMap = (T[])Array.newInstance(mClass, CAPACITY);
+
+        public RangeMap(Class<T> type) {
+            this.mClass = type;
+        }
+
+        public void addChild(int startOffset, int endOffset, T t) {
+            int index = lastIndex + 1;
+            if (index < mCardMap.length) {
+                mCardMap[index] = t;
+            } else {
+                int oldLength = mCardMap.length;
+                T[] newCardMap = (T[])Array.newInstance(mClass, oldLength * 2);
+                System.arraycopy(mCardMap, 0, newCardMap, 0, oldLength);
+                mCardMap = newCardMap;
+                mCardMap[oldLength] = t;
+                index = oldLength;
+
+                oldLength = mOffsetMap.length;
+                int[] newOffsetMap = new int[oldLength * 2];
+                System.arraycopy(mOffsetMap, 0, newOffsetMap, 0, oldLength);
+                mOffsetMap = newOffsetMap;
+            }
+            lastIndex = index;
+            for (int i = startOffset; i <= endOffset; i++) {
+                mOffsetMap[i] = index;
+            }
+        }
+
+        public T getChild(int offset) {
+            return mCardMap[mOffsetMap[offset]];
+        }
+
+    }
+
 }
