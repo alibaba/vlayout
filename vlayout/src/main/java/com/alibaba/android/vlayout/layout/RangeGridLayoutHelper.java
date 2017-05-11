@@ -553,8 +553,8 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             if (!isOutOfRange(lastLinePosition)) {
                 RangeStyle<GridRangeStyle> neighbourRange = mRangeStyle.findRangeStyleByPosition(lastLinePosition);
                 if (neighbourRange.isFirstPosition(lastLinePosition)) {
-                    lastUnconsumedSpace = layoutInVertical ? rangeStyle.getMarginTop() + rangeStyle.getPaddingTop()
-                        : rangeStyle.getMarginLeft() + rangeStyle.getPaddingLeft();
+                    lastUnconsumedSpace = layoutInVertical ? neighbourRange.getMarginTop() + neighbourRange.getPaddingTop()
+                        : neighbourRange.getMarginLeft() + neighbourRange.getPaddingLeft();
                     if (DEBUG) {
                         Log.d(TAG, "--> " + currentPosition + " 1 " + lastUnconsumedSpace);
                     }
