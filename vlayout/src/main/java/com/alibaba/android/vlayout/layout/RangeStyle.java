@@ -453,27 +453,19 @@ public class RangeStyle<T extends RangeStyle> {
                         mLayoutRegion.bottom = helper.getContentWidth() - helper.getPaddingBottom()
                             - getFamilyMarginBottom() - getAncestorPaddingBottom();
                     }
-
                     bindLayoutView(mLayoutView);
-                    if (isRoot()) {
-                        //TODO hide itr
-                        helper.hideView(mLayoutView);
-                        for (int i = 0, size = mChildren.size(); i < size; i++) {
-                            RangeStyle rangeStyle = mChildren.valueAt(i);
-                            if (rangeStyle.mLayoutView != null) {
-                                helper.hideView(rangeStyle.mLayoutView);
-                            }
-                        }
-                    }
+                    hideLayoutViews(helper);
                     return;
                 } else {
                     mLayoutRegion.set(0, 0, 0, 0);
                     if (mLayoutView != null) {
                         mLayoutView.layout(0, 0, 0, 0);
                     }
+                    hideLayoutViews(helper);
                 }
             }
         }
+        hideLayoutViews(helper);
 
         if (mLayoutView != null) {
             if (mLayoutViewUnBindListener != null) {
@@ -481,6 +473,20 @@ public class RangeStyle<T extends RangeStyle> {
             }
             helper.removeChildView(mLayoutView);
             mLayoutView = null;
+        }
+    }
+
+    private void hideLayoutViews(LayoutManagerHelper helper) {
+        if (isRoot()) {
+            if (mLayoutView != null) {
+                helper.hideView(mLayoutView);
+            }
+            for (int i = 0, size = mChildren.size(); i < size; i++) {
+                RangeStyle rangeStyle = mChildren.valueAt(i);
+                if (rangeStyle.mLayoutView != null) {
+                    helper.hideView(rangeStyle.mLayoutView);
+                }
+            }
         }
     }
 
