@@ -531,16 +531,28 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                 if (!isStartLine) {
                     if (isSecondStartLine) {
                         consumedGap = (layoutInVertical ? rangeStyle.mParent.mVGap : rangeStyle.mParent.mHGap);
+                        if (DEBUG) {
+                            Log.d(TAG, "--> " + currentPosition + " 1 " + consumedGap + " gap");
+                        }
                     } else {
                         consumedGap = (layoutInVertical ? rangeStyle.mVGap : rangeStyle.mHGap);
+                        if (DEBUG) {
+                            Log.d(TAG, "--> " + currentPosition + " 2 " + consumedGap + " gap");
+                        }
                     }
                 }
             } else {
                 if (!isEndLine) {
                     if (isSecondEndLine) {
                         consumedGap = (layoutInVertical ? rangeStyle.mParent.mVGap : rangeStyle.mParent.mHGap);
+                        if (DEBUG) {
+                            Log.d(TAG, "--> " + currentPosition + " 3 " + consumedGap + " gap");
+                        }
                     } else {
                         consumedGap = (layoutInVertical ? rangeStyle.mVGap : rangeStyle.mHGap);
+                        if (DEBUG) {
+                            Log.d(TAG, "--> " + currentPosition + " 4 " + consumedGap + " gap");
+                        }
                     }
                 }
             }

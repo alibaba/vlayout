@@ -539,6 +539,10 @@ public class RangeStyle<T extends RangeStyle> {
         }
     }
 
+    public void onClearChildMap() {
+        mChildren.clear();
+    }
+
     public void layoutChild(final View child, int left, int top, int right, int bottom, @NonNull LayoutManagerHelper helper, boolean addLayoutRegionWithMargin) {
         helper.layoutChild(child, left, top, right, bottom);
         if (requireLayoutView()) {
