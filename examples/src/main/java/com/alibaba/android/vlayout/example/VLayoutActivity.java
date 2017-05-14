@@ -61,6 +61,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -497,14 +498,15 @@ public class VLayoutActivity extends Activity {
         trigger = new Runnable() {
             @Override
             public void run() {
-                // recyclerView.scrollToPosition(22);
-                // recyclerView.getAdapter().notifyDataSetChanged();
-                // mainHandler.postDelayed(trigger, 1000);
+                 //recyclerView.scrollToPosition(22);
+                 //recyclerView.getAdapter().notifyDataSetChanged();
+                //mainHandler.postDelayed(trigger, 1000);
                 //List<DelegateAdapter.Adapter> newAdapters = new ArrayList<>();
                 //newAdapters.add((new SubAdapter(VLayoutActivity.this, new ColumnLayoutHelper(), 3)));
                 //newAdapters.add((new SubAdapter(VLayoutActivity.this, new GridLayoutHelper(4), 24)));
-                //delegateAdapter.addAdapters(newAdapters);
-                recyclerView.requestLayout();
+                //delegateAdapter.addAdapter(0, new SubAdapter(VLayoutActivity.this, new ColumnLayoutHelper(), 3));
+                //delegateAdapter.addAdapter(1, new SubAdapter(VLayoutActivity.this, new GridLayoutHelper(4), 24));
+                //delegateAdapter.notifyDataSetChanged();
             }
         };
 
