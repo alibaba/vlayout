@@ -52,7 +52,7 @@ import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
  * @since 1.0.0
  */
 public class RangeGridLayoutHelper extends BaseLayoutHelper {
-    private static final String TAG = "RangeGridLayoutHelper";
+    private static final String TAG = "RGLayoutHelper";
 
     @SuppressWarnings("FieldCanBeLocal")
     private static boolean DEBUG = false;
@@ -532,12 +532,12 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     if (isSecondStartLine) {
                         consumedGap = (layoutInVertical ? rangeStyle.mParent.mVGap : rangeStyle.mParent.mHGap);
                         if (DEBUG) {
-                            Log.d(TAG, "--> " + currentPosition + " 1 " + consumedGap + " gap");
+                            Log.d(TAG, "⬇ " + currentPosition + " 1 " + consumedGap + " gap");
                         }
                     } else {
                         consumedGap = (layoutInVertical ? rangeStyle.mVGap : rangeStyle.mHGap);
                         if (DEBUG) {
-                            Log.d(TAG, "--> " + currentPosition + " 2 " + consumedGap + " gap");
+                            Log.d(TAG, "⬇ " + currentPosition + " 2 " + consumedGap + " gap");
                         }
                     }
                 }
@@ -546,12 +546,12 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     if (isSecondEndLine) {
                         consumedGap = (layoutInVertical ? rangeStyle.mParent.mVGap : rangeStyle.mParent.mHGap);
                         if (DEBUG) {
-                            Log.d(TAG, "--> " + currentPosition + " 3 " + consumedGap + " gap");
+                            Log.d(TAG, "⬆ " + currentPosition + " 3 " + consumedGap + " gap");
                         }
                     } else {
                         consumedGap = (layoutInVertical ? rangeStyle.mVGap : rangeStyle.mHGap);
                         if (DEBUG) {
-                            Log.d(TAG, "--> " + currentPosition + " 4 " + consumedGap + " gap");
+                            Log.d(TAG, "⬆ " + currentPosition + " 4 " + consumedGap + " gap");
                         }
                     }
                 }
@@ -560,27 +560,39 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         result.mConsumed += consumedGap;
 
         int lastUnconsumedSpace = 0;
-        if (layoutStart) {
-            int lastLinePosition = currentPosition + 1;
-            if (!isOutOfRange(lastLinePosition)) {
-                RangeStyle<GridRangeStyle> neighbourRange = mRangeStyle.findRangeStyleByPosition(lastLinePosition);
-                if (neighbourRange.isFirstPosition(lastLinePosition)) {
-                    lastUnconsumedSpace = layoutInVertical ? neighbourRange.getMarginTop() + neighbourRange.getPaddingTop()
-                        : neighbourRange.getMarginLeft() + neighbourRange.getPaddingLeft();
-                    if (DEBUG) {
-                        Log.d(TAG, "--> " + currentPosition + " 1 " + lastUnconsumedSpace);
+        /** layoutView() may be triggered by layoutManager's scrollInternalBy() or onFocusSearchFailed() or onLayoutChildren()
+         *
+         * In case of scrollInternalBy() or onFocusSearchFailed(), layoutState.isRefreshLayout() == false, and layoutState.mOffset = ChildClosestToExpose + alignOffset,
+         * see {@link com.alibaba.android.vlayout.ExposeLinearLayoutManagerEx#updateLayoutStateExpose(int, int, boolean, State)},
+         * this means last line's layout padding or margin is not really consumed, so considering it before layout new line.
+         *
+         * In case of onLayoutChildren(), layoutState.isRefreshLayout() == true, and layoutState.mOffset = anchorInfo.mCoordinate = anchorChild.start + alignOffset,
+         * see {@link com.alibaba.android.vlayout.ExposeLinearLayoutManagerEx#updateAnchorInfoForLayoutExpose(State, AnchorInfo)},
+         * this means last line's layout padding or margin is consumed.
+         **/
+        if (!layoutState.isRefreshLayout()) {
+            if (layoutStart) {
+                int lastLinePosition = currentPosition + 1;
+                if (!isOutOfRange(lastLinePosition)) {
+                    RangeStyle<GridRangeStyle> neighbourRange = mRangeStyle.findRangeStyleByPosition(lastLinePosition);
+                    if (neighbourRange.isFirstPosition(lastLinePosition)) {
+                        lastUnconsumedSpace = layoutInVertical ? neighbourRange.getMarginTop() + neighbourRange.getPaddingTop()
+                            : neighbourRange.getMarginLeft() + neighbourRange.getPaddingLeft();
+                        if (DEBUG) {
+                            Log.d(TAG, "⬆ " + currentPosition + " 1 " + lastUnconsumedSpace + " last");
+                        }
                     }
                 }
-            }
-        } else {
-            int lastLinePosition = currentPosition - 1;
-            if (!isOutOfRange(lastLinePosition)) {
-                RangeStyle<GridRangeStyle> neighbourRange = mRangeStyle.findRangeStyleByPosition(lastLinePosition);
-                if (neighbourRange.isLastPosition(lastLinePosition)) {
-                    lastUnconsumedSpace = layoutInVertical ? neighbourRange.getMarginBottom() + neighbourRange.getPaddingBottom()
-                        : neighbourRange.getMarginRight() + neighbourRange.getPaddingRight();
-                    if (DEBUG) {
-                        Log.d(TAG, "--> " + currentPosition + " 2 " + lastUnconsumedSpace);
+            } else {
+                int lastLinePosition = currentPosition - 1;
+                if (!isOutOfRange(lastLinePosition)) {
+                    RangeStyle<GridRangeStyle> neighbourRange = mRangeStyle.findRangeStyleByPosition(lastLinePosition);
+                    if (neighbourRange.isLastPosition(lastLinePosition)) {
+                        lastUnconsumedSpace = layoutInVertical ? neighbourRange.getMarginBottom() + neighbourRange.getPaddingBottom()
+                            : neighbourRange.getMarginRight() + neighbourRange.getPaddingRight();
+                        if (DEBUG) {
+                            Log.d(TAG, "⬇ " + currentPosition + " 2 " + lastUnconsumedSpace + " last");
+                        }
                     }
                 }
             }
@@ -588,7 +600,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
         if (DEBUG) {
             Log.d(TAG,
-                "--> " + currentPosition + " consumed " + result.mConsumed + " startSpace " + startSpace + " endSpace "
+                (layoutStart ? "⬆ " : "⬇ ") + currentPosition + " consumed " + result.mConsumed + " startSpace " + startSpace + " endSpace "
                     + endSpace + " secondStartSpace " + secondStartSpace + " secondEndSpace " + secondEndSpace + " lastUnconsumedSpace " + lastUnconsumedSpace);
         }
 
@@ -603,10 +615,10 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             }
         } else {
             if (layoutStart) {
-                right = layoutState.getOffset() - endSpace - (consumedGap);
+                right = layoutState.getOffset() - endSpace - (consumedGap) - lastUnconsumedSpace;
                 left = right - maxSize;
             } else {
-                left = layoutState.getOffset() + startSpace + (consumedGap);
+                left = layoutState.getOffset() + startSpace + (consumedGap) + lastUnconsumedSpace;
                 right = left + maxSize;
             }
         }
@@ -676,14 +688,13 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
     @Override
     public int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-
         if (isLayoutEnd) {
             if (offset == getItemCount() - 1) {
-                return mRangeStyle.computeEndAlignOffset(layoutInVertical);
+                return mRangeStyle.computeEndAlignOffset(layoutInVertical, isLayoutEnd, useAnchor, helper);
             }
         } else {
             if (offset == 0) {
-                return mRangeStyle.computeStartAlignOffset(layoutInVertical);
+                return mRangeStyle.computeStartAlignOffset(layoutInVertical, isLayoutEnd, useAnchor, helper);
             }
         }
 
@@ -902,7 +913,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         }
 
         //TODO compute align itr
-        public int computeEndAlignOffset(boolean layoutInVertical) {
+        public int computeEndAlignOffset(boolean layoutInVertical, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
             int offset = layoutInVertical ? mMarginBottom + mPaddingBottom : mMarginRight + mPaddingRight;
             int endPosition = mRange.getUpper().intValue();
             for (int i = 0, size = mChildren.size(); i < size; i++) {
@@ -917,7 +928,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         }
 
         //TODO compute align itr
-        public int computeStartAlignOffset(boolean layoutInVertical) {
+        public int computeStartAlignOffset(boolean layoutInVertical, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
             int offset = layoutInVertical ? -mMarginTop - mPaddingTop : -mMarginLeft - mPaddingLeft;
             int startPosition = mRange.getLower().intValue();
             for (int i = 0, size = mChildren.size(); i < size; i++) {
