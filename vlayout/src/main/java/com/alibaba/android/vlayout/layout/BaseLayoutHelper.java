@@ -25,6 +25,7 @@
 package com.alibaba.android.vlayout.layout;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.R;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
@@ -89,6 +90,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         return mItemCount;
     }
 
+    @Override
     public void setItemCount(int itemCount) {
         this.mItemCount = itemCount;
     }
@@ -138,6 +140,9 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         } else {
             // if no layoutView is required, remove it
             if (mLayoutView != null) {
+                if (mLayoutViewUnBindListener != null) {
+                    mLayoutViewUnBindListener.onUnbind(mLayoutView, this);
+                }
                 helper.removeChildView(mLayoutView);
                 mLayoutView = null;
             }
@@ -173,9 +178,9 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
             if (!mLayoutRegion.isEmpty()) {
                 if (isValidScrolled(scrolled)) {
-                    if (helper.getOrientation() == VirtualLayoutManager.VERTICAL)
+                    if (helper.getOrientation() == VirtualLayoutManager.VERTICAL) {
                         mLayoutRegion.offset(0, -scrolled);
-                    else {
+                    } else {
                         mLayoutRegion.offset(-scrolled, 0);
                     }
                 }
@@ -202,8 +207,9 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
                     return;
                 } else {
                     mLayoutRegion.set(0, 0, 0, 0);
-                    if (mLayoutView != null)
+                    if (mLayoutView != null) {
                         mLayoutView.layout(0, 0, 0, 0);
+                    }
                 }
             }
         }
@@ -229,6 +235,9 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
     public final void clear(LayoutManagerHelper helper) {
         // remove LayoutViews if there is one
         if (mLayoutView != null) {
+            if (mLayoutViewUnBindListener != null) {
+                mLayoutViewUnBindListener.onUnbind(mLayoutView, this);
+            }
             helper.removeChildView(mLayoutView);
             mLayoutView = null;
         }
@@ -308,14 +317,83 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         void onUnbind(View layoutView, BaseLayoutHelper baseLayoutHelper);
     }
 
+
+    public interface LayoutViewHelper {
+
+        /**
+         * Implement it by maintaining a map between layoutView and image url or setting a unique tag to view. It's up to your choice.
+         * @param layoutView view ready to be binded with an image
+*        * @param id layoutView's identifier
+         */
+        void onBindViewSuccess(View layoutView, String id);
+    }
+
     private LayoutViewUnBindListener mLayoutViewUnBindListener;
 
     private LayoutViewBindListener mLayoutViewBindListener;
 
+    /**
+     * Helper to decide whether call {@link LayoutViewBindListener#onBind(View, BaseLayoutHelper)}.
+     * Here is a performance issue: {@link LayoutViewBindListener#onBind(View, BaseLayoutHelper)} is called during layout phase,
+     * when binding image to it would cause view tree to relayout, then the same  {@link LayoutViewBindListener#onBind(View, BaseLayoutHelper)} would be called.
+     * User should provide enough information to tell LayoutHelper whether image has been bind success.
+     * If image has been successfully binded , no more dead loop happens.
+     *
+     * Of course you can handle this logic by yourself and ignore this helper.
+     */
+    public static class DefaultLayoutViewHelper implements LayoutViewBindListener, LayoutViewUnBindListener, LayoutViewHelper {
+
+        private final LayoutViewBindListener mLayoutViewBindListener;
+
+        private final LayoutViewUnBindListener mLayoutViewUnBindListener;
+
+        public DefaultLayoutViewHelper(
+            LayoutViewBindListener layoutViewBindListener,
+            LayoutViewUnBindListener layoutViewUnBindListener) {
+            mLayoutViewBindListener = layoutViewBindListener;
+            mLayoutViewUnBindListener = layoutViewUnBindListener;
+        }
+
+        @Override
+        public void onBindViewSuccess(View layoutView, String id) {
+            layoutView.setTag(R.id.tag_layout_helper_bg, id);
+        }
+
+        @Override
+        public void onBind(View layoutView, BaseLayoutHelper baseLayoutHelper) {
+            if (layoutView.getTag(R.id.tag_layout_helper_bg) == null) {
+                if (mLayoutViewBindListener != null) {
+                    mLayoutViewBindListener.onBind(layoutView, baseLayoutHelper);
+                }
+            }
+        }
+
+        @Override
+        public void onUnbind(View layoutView, BaseLayoutHelper baseLayoutHelper) {
+            if (mLayoutViewUnBindListener != null) {
+                mLayoutViewUnBindListener.onUnbind(layoutView, baseLayoutHelper);
+            }
+            layoutView.setTag(R.id.tag_layout_helper_bg, null);
+        }
+    }
+
+    public void setLayoutViewHelper(DefaultLayoutViewHelper layoutViewHelper) {
+        mLayoutViewBindListener = layoutViewHelper;
+        mLayoutViewUnBindListener = layoutViewHelper;
+    }
+
+    /**
+     * Better to use {@link #setLayoutViewHelper(DefaultLayoutViewHelper)}
+     * @param bindListener
+     */
     public void setLayoutViewBindListener(LayoutViewBindListener bindListener) {
         mLayoutViewBindListener = bindListener;
     }
 
+    /**
+     * Better to use {@link #setLayoutViewHelper(DefaultLayoutViewHelper)}
+     * @param layoutViewUnBindListener
+     */
     public void setLayoutViewUnBindListener(
             LayoutViewUnBindListener layoutViewUnBindListener) {
         mLayoutViewUnBindListener = layoutViewUnBindListener;
@@ -337,7 +415,9 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
     }
 
     protected void handleStateOnResult(LayoutChunkResult result, View view) {
-        if (view == null) return;
+        if (view == null) {
+            return;
+        }
 
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
 

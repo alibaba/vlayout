@@ -107,7 +107,7 @@ public class SingleLayoutHelper extends ColumnLayoutHelper {
                             parentWidth / params.mAspectRatio + 0.5f), layoutInVertical && Float.isNaN(mAspectRatio));
 
             // do measurement
-            helper.measureChild(view, widthSpec, heightSpec);
+            helper.measureChildWithMargins(view, widthSpec, heightSpec);
         } else {
             final int widthSpec = helper.getChildMeasureSpec(parentWidth,
                     Float.isNaN(params.mAspectRatio) ? (Float.isNaN(mAspectRatio) ? params.width : parentWidth) : (int) (
@@ -116,7 +116,7 @@ public class SingleLayoutHelper extends ColumnLayoutHelper {
                      Float.isNaN(mAspectRatio) ? params.height : parentHeight, layoutInVertical && Float.isNaN(mAspectRatio));
 
             // do measurement
-            helper.measureChild(view, widthSpec, heightSpec);
+            helper.measureChildWithMargins(view, widthSpec, heightSpec);
         }
 
         OrientationHelper orientationHelper = helper.getMainOrientationHelper();

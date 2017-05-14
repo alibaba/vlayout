@@ -63,7 +63,9 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
 
 
     public void setDividerHeight(int dividerHeight) {
-        if (dividerHeight < 0) dividerHeight = 0;
+        if (dividerHeight < 0) {
+            dividerHeight = 0;
+        }
         this.mDividerHeight = dividerHeight;
     }
 
@@ -133,7 +135,7 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
                     layoutInVertical);
         }
 
-        helper.measureChild(view, widthSpec, heightSpec);
+        helper.measureChildWithMargins(view, widthSpec, heightSpec);
 
         OrientationHelper orientationHelper = helper.getMainOrientationHelper();
         result.mConsumed = orientationHelper.getDecoratedMeasurement(view) + startSpace + endSpace + gap;
@@ -194,8 +196,9 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
                 return layoutInVertical ? mMarginBottom + mPaddingBottom : mMarginRight + mPaddingRight;
             }
         } else {
-            if (offset == 0)
+            if (offset == 0) {
                 return layoutInVertical ? -mMarginTop - mPaddingTop : -mMarginLeft - mPaddingLeft;
+            }
         }
 
         return super.computeAlignOffset(offset, isLayoutEnd, useAnchor, helper);

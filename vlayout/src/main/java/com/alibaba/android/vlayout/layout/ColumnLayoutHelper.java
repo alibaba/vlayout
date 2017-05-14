@@ -173,7 +173,7 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
                                 .makeMeasureSpec(specialHeight, View.MeasureSpec.EXACTLY);
                     }
 
-                    helper.measureChild(view, View.MeasureSpec.makeMeasureSpec(resizeWidth, View.MeasureSpec.EXACTLY), heightSpec);
+                    helper.measureChildWithMargins(view, View.MeasureSpec.makeMeasureSpec(resizeWidth, View.MeasureSpec.EXACTLY), heightSpec);
 
                     // add width into usedWidth
                     usedWidth += resizeWidth;
@@ -202,7 +202,7 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
                 }
 
                 //if cols' length is less than view's count, then remainder views share the rest space
-                helper.measureChild(view,
+                helper.measureChildWithMargins(view,
                         View.MeasureSpec.makeMeasureSpec(resizeWidth, View.MeasureSpec.EXACTLY),
                         heightSpec);
 
@@ -215,7 +215,7 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
                 View view = mViews[i];
                 if (view.getMeasuredHeight() != minHeight) {
                     //noinspection ResourceType
-                    helper.measureChild(view, View.MeasureSpec.makeMeasureSpec(view.getMeasuredWidth(), View.MeasureSpec.EXACTLY),
+                    helper.measureChildWithMargins(view, View.MeasureSpec.makeMeasureSpec(view.getMeasuredWidth(), View.MeasureSpec.EXACTLY),
                             View.MeasureSpec.makeMeasureSpec(minHeight, View.MeasureSpec.EXACTLY));
                 }
             }
