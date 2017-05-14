@@ -190,6 +190,11 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
     }
 
     @Override
+    public void setLayoutViewHelper(DefaultLayoutViewHelper layoutViewHelper) {
+        mRangeStyle.setLayoutViewHelper(layoutViewHelper);
+    }
+
+    @Override
     public void setLayoutViewBindListener(LayoutViewBindListener bindListener) {
         mRangeStyle.setLayoutViewBindListener(bindListener);
     }
