@@ -112,6 +112,15 @@ public interface LayoutManagerHelper {
     void addOffFlowView(View view, boolean head);
 
     /**
+     * Add view out of normal flow, which means it won't be ignored in getChildAt, but still be able to scrolled with content
+     * But it's can be find by position via {@link #findViewByPosition(int)}.
+     * The differece between with {@link #addOffFlowView(View, boolean)} is that this method does not hide the view, it is used to add background view with overlapping.
+     * @param view View will be added
+     * @param head Whether added to the head or tail
+     */
+    void addBackgroundView(View view, boolean head);
+
+    /**
      * Add view to fixed layer, which overlays on the normal layer.
      * It won't be found by getChildAt and also scrolled with content.
      * Can only be get by position via {@link #findViewByPosition(int)}
@@ -179,7 +188,7 @@ public interface LayoutManagerHelper {
     OrientationHelper getSecondaryOrientationHelper();
 
     /**
-     * Measure children views with margins and decorations, use this to measure children
+     * Measure children views with decorations, use this to measure children
      *
      * @param view
      * @param widthSpec
@@ -188,14 +197,24 @@ public interface LayoutManagerHelper {
     void measureChild(View view, int widthSpec, int heightSpec);
 
     /**
-     * Layout children views with margins and decorations.
+     * Measure children views with margins and decorations, use this to measure children
      *
-     * @param view
-     * @param left
-     * @param top
-     * @param right
-     * @param bottom
+     * @param child
+     * @param widthUsed
+     * @param heightUsed
      */
+    void measureChildWithMargins(View child, int widthUsed, int heightUsed);
+
+
+        /**
+         * Layout children views with margins and decorations.
+         *
+         * @param view
+         * @param left
+         * @param top
+         * @param right
+         * @param bottom
+         */
     void layoutChild(View view, int left, int top, int right, int bottom);
 
     /**

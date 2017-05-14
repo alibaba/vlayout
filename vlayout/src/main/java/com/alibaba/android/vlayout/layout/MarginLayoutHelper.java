@@ -90,7 +90,7 @@ public abstract class MarginLayoutHelper extends LayoutHelper {
      *
      * @return
      */
-    protected int getHorizontalMargin() {
+    public int getHorizontalMargin() {
         return mMarginLeft + mMarginRight;
     }
 
@@ -99,7 +99,7 @@ public abstract class MarginLayoutHelper extends LayoutHelper {
      *
      * @return
      */
-    protected int getVerticalMargin() {
+    public int getVerticalMargin() {
         return mMarginTop + mMarginBottom;
     }
 
@@ -107,7 +107,7 @@ public abstract class MarginLayoutHelper extends LayoutHelper {
      * Get total padding in horizontal dimension
      * @return
      */
-    protected int getHorizontalPadding() {
+    public int getHorizontalPadding() {
         return mPaddingLeft + mPaddingRight;
     }
 
@@ -115,7 +115,7 @@ public abstract class MarginLayoutHelper extends LayoutHelper {
      * Get total padding in vertical dimension
      * @return
      */
-    protected int getVerticalPadding() {
+    public int getVerticalPadding() {
         return mPaddingTop + mPaddingBottom;
     }
 

@@ -171,6 +171,14 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         ensureSpanCount();
     }
 
+    public int getVGap() {
+        return mVGap;
+    }
+
+    public int getHGap() {
+        return mHGap;
+    }
+
     public int getSpanCount() {
         return mSpanCount;
     }
@@ -419,10 +427,10 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             final VirtualLayoutManager.LayoutParams lp = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
 
             if (helper.getOrientation() == VERTICAL) {
-                helper.measureChild(view, spec, getMainDirSpec(lp.height, mTotalSize,
+                helper.measureChildWithMargins(view, spec, getMainDirSpec(lp.height, mTotalSize,
                         View.MeasureSpec.getSize(spec), lp.mAspectRatio));
             } else {
-                helper.measureChild(view,
+                helper.measureChildWithMargins(view,
                         getMainDirSpec(lp.width, mTotalSize, View.MeasureSpec.getSize(spec),
                                 lp.mAspectRatio), View.MeasureSpec.getSize(spec));
             }
@@ -453,9 +461,9 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                 }
 
                 if (helper.getOrientation() == VERTICAL) {
-                    helper.measureChild(view, spec, maxMeasureSpec);
+                    helper.measureChildWithMargins(view, spec, maxMeasureSpec);
                 } else {
-                    helper.measureChild(view, maxMeasureSpec, spec);
+                    helper.measureChildWithMargins(view, maxMeasureSpec, spec);
                 }
             }
         }
