@@ -1,16 +1,15 @@
 package com.alibaba.android.vlayout.layout;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.Range;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.alibaba.android.vlayout.layout.BaseLayoutHelper.DefaultLayoutViewHelper;
 import com.alibaba.android.vlayout.layout.BaseLayoutHelper.LayoutViewBindListener;
 import com.alibaba.android.vlayout.layout.BaseLayoutHelper.LayoutViewUnBindListener;
 
 import android.graphics.Rect;
-import android.os.Parcelable.ClassLoaderCreator;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.util.SimpleArrayMap;
@@ -379,6 +378,9 @@ public class RangeStyle<T extends RangeStyle> {
         } else {
             // if no layoutView is required, remove it
             if (mLayoutView != null) {
+                if (mLayoutViewUnBindListener != null) {
+                    mLayoutViewUnBindListener.onUnbind(mLayoutView, getLayoutHelper());
+                }
                 helper.removeChildView(mLayoutView);
                 mLayoutView = null;
             }
@@ -515,6 +517,11 @@ public class RangeStyle<T extends RangeStyle> {
         mLayoutRegion.set(0, 0, 0, 0);
     }
 
+    public void setLayoutViewHelper(DefaultLayoutViewHelper layoutViewHelper) {
+        mLayoutViewBindListener = layoutViewHelper;
+        mLayoutViewUnBindListener = layoutViewHelper;
+    }
+
     public void setLayoutViewBindListener(LayoutViewBindListener bindListener) {
         mLayoutViewBindListener = bindListener;
     }
@@ -530,6 +537,9 @@ public class RangeStyle<T extends RangeStyle> {
 
     public void onClear(LayoutManagerHelper helper) {
         if (mLayoutView != null) {
+            if (mLayoutViewUnBindListener != null) {
+                mLayoutViewUnBindListener.onUnbind(mLayoutView, getLayoutHelper());
+            }
             helper.removeChildView(mLayoutView);
             mLayoutView = null;
         }
