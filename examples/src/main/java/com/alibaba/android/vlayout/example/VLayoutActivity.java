@@ -51,6 +51,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -90,6 +92,8 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean STAGGER_LAYOUT = true;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     private TextView mFirstText;
     private TextView mLastText;
 
@@ -104,6 +108,8 @@ public class VLayoutActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
+;
         mFirstText = (TextView) findViewById(R.id.first);
         mLastText = (TextView) findViewById(R.id.last);
         mCountText = (TextView) findViewById(R.id.count);
@@ -216,12 +222,12 @@ public class VLayoutActivity extends Activity {
             });
         }
 
-//        {
-//            GridLayoutHelper helper = new GridLayoutHelper(10);
-//            helper.setAspectRatio(4f);
-//            helper.setGap(10);
-//            adapters.add(new SubAdapter(this, helper, 80));
-//        }
+        {
+            GridLayoutHelper helper = new GridLayoutHelper(10);
+            helper.setAspectRatio(4f);
+            helper.setGap(10);
+            adapters.add(new SubAdapter(this, helper, 80));
+        }
 
         if (FLOAT_LAYOUT) {
             FloatLayoutHelper layoutHelper = new FloatLayoutHelper();
@@ -512,6 +518,18 @@ public class VLayoutActivity extends Activity {
 
 
         mainHandler.postDelayed(trigger, 1000);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mainHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2000L);
+            }
+        });
         setListenerToRootView();
     }
 
