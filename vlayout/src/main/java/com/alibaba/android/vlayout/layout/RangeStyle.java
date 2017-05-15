@@ -34,6 +34,10 @@ public class RangeStyle<T extends RangeStyle> {
 
     protected T mParent;
 
+    private int mOriginStartOffset = 0;
+
+    private int mOriginEndOffset = 0;
+
     protected Range<Integer> mRange;
 
     //TODO update data structure
@@ -75,6 +79,8 @@ public class RangeStyle<T extends RangeStyle> {
     public void addChildRangeStyle(int start, int end, T rangeStyle) {
         if (start <= end && rangeStyle != null) {
             rangeStyle.setParent(this);
+            rangeStyle.setOriginStartOffset(start);
+            rangeStyle.setOriginEndOffset(end);
             rangeStyle.setRange(start, end);
             mChildren.put(rangeStyle.getRange(), rangeStyle);
         }
@@ -307,6 +313,22 @@ public class RangeStyle<T extends RangeStyle> {
         return (mParent != null ? mParent.getAncestorMarginBottom() + mParent.getMarginBottom() : 0);
     }
 
+    public int getOriginStartOffset() {
+        return mOriginStartOffset;
+    }
+
+    public int getOriginEndOffset() {
+        return mOriginEndOffset;
+    }
+
+    public void setOriginStartOffset(int originStartOffset) {
+        mOriginStartOffset = originStartOffset;
+    }
+
+    public void setOriginEndOffset(int originEndOffset) {
+        mOriginEndOffset = originEndOffset;
+    }
+
     public Range<Integer> getRange() {
         return mRange;
     }
@@ -350,10 +372,9 @@ public class RangeStyle<T extends RangeStyle> {
         if (!mChildren.isEmpty()) {
             SimpleArrayMap<Range<Integer>, T> newMap = new SimpleArrayMap<>();
             for (int i = 0, size = mChildren.size(); i < size; i++) {
-                Range<Integer> range = mChildren.keyAt(i);
                 T rangeStyle = mChildren.valueAt(i);
-                int newStart = range.getLower().intValue() + start;
-                int newEnd = range.getUpper().intValue() + start;
+                int newStart = rangeStyle.getOriginStartOffset() + start;
+                int newEnd = rangeStyle.getOriginEndOffset() + start;
                 Range<Integer> newRange = Range.create(newStart, newEnd);
                 newMap.put(newRange, rangeStyle);
                 rangeStyle.setRange(newStart, newEnd);
