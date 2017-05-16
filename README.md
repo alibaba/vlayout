@@ -27,32 +27,28 @@ By providing a custom LayoutManager to RecyclerView, VirtualLayout is able to la
 
 ### Import Library
 
-Please find the latest version(1.0.3 so far) in maven repository. The newest version has been upload to jcenter and MavenCantral, make sure you have added at least one of these repositories.
+Please find the latest version(1.0.6 so far) in maven repository. The newest version has been upload to jcenter and MavenCantral, make sure you have added at least one of these repositories.
 
 For gradle:
-
-```
-// gradle
-compile ('com.alibaba.android:vlayout:1.0.3@aar') {
+``` gradle
+compile ('com.alibaba.android:vlayout:1.0.6@aar') {
 	transitive = true
 }
 ```
 
-Or in maven:
-
-```
-// pom.xml 
+Or in maven:  
+pom.xml
+``` xml
 <dependency>
   <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.6</version>
   <type>aar</type>
 </dependency>
 ```
 
 ### Initialize LayoutManager
-
-```
+``` java
 final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
 
@@ -62,18 +58,20 @@ recyclerView.setLayoutManager(layoutManager);
 ### Initialize recycled pool's size
 Provide a reasonable recycled pool's size to your recyclerView, since the default value may not meet your situation and cause re-create views when scolling.
 
-```
+``` java
 RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
 recyclerView.setRecycledViewPool(viewPool);
 viewPool.setMaxRecycledViews(0, 10);
 ```
 
+**Attention: the demo code above only modify the recycle pool size of item with type = 0, it you has more than one type in your adapter, you should update recycle pool size for each type.**
+
 ### Set Adapters
 
 * You can use `DelegateAdapter` for as a root adapter to make combination of your own adapters. Just make it extend ```DelegateAdapter.Adapter``` and overrides ```onCreateLayoutHelper``` method.
 
-```
-DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, hasStableItemType);
+``` java
+DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, hasConsistItemType);
 recycler.setAdapter(delegateAdapter);
 
 // Then you can set sub- adapters
@@ -89,9 +87,11 @@ adapter.notifyDataSetChanged();
 
 ```
 
+**Attention: When `hasConsistItemType = true`, items with same type value in different sub-adapters share the same type, their view would be reused during scroll. When `hasConsistItemType = false`, items with same type value in different sub-adapters do not share the same type internally.**
+
 * The other way to set adapter is extending ```VirtualLayoutAdapter``` and implementing it to make deep combination to your business code.
 
-```
+``` java
 public class MyAdapter extends VirtualLayoutAdapter {
    ......
 }
@@ -117,6 +117,19 @@ recycler.setAdapter(myAdapter);
 ```
 
 In this way, one thing you should note is that you should call ```setLayoutHelpers``` when the data of Adapter changes.
+
+### Config proguard
+
+Add following configs in your proguard file if your app is released with proguard.
+
+```
+-keepattributes InnerClasses
+-keep class com.alibaba.android.vlayout.ExposeLinearLayoutManagerEx { *; }
+-keep class android.support.v7.widget.RecyclerView$LayoutParams { *; }
+-keep class android.support.v7.widget.RecyclerView$ViewHolder { *; }
+-keep class android.support.v7.widget.ChildHelper { *; }
+-keep class android.support.v7.widget.RecyclerView$LayoutManager { *; }
+```
 
 # Demo
 

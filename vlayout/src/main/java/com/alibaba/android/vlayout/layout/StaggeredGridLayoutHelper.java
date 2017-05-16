@@ -24,6 +24,17 @@
 
 package com.alibaba.android.vlayout.layout;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+
+import com.alibaba.android.vlayout.BuildConfig;
+import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.Range;
+import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
@@ -32,17 +43,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.util.Log;
 import android.view.View;
-
-import com.alibaba.android.vlayout.BuildConfig;
-import com.alibaba.android.vlayout.LayoutManagerHelper;
-import com.alibaba.android.vlayout.Range;
-import com.alibaba.android.vlayout.VirtualLayoutManager;
-import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
 
 import static android.support.v7.widget.LinearLayoutManager.INVALID_OFFSET;
 import static com.alibaba.android.vlayout.VirtualLayoutManager.HORIZONTAL;
@@ -265,13 +265,13 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 int heightSpec = helper.getChildMeasureSpec(orientationHelper.getTotalSpace(),
                         Float.isNaN(lp.mAspectRatio) ? lp.height : (int) (
                                 View.MeasureSpec.getSize(widthSpec) / lp.mAspectRatio + 0.5f), true);
-                helper.measureChild(view, widthSpec, heightSpec);
+                helper.measureChildWithMargins(view, widthSpec, heightSpec);
             } else {
                 int heightSpec = helper.getChildMeasureSpec(mColLength, lp.height, false);
                 int widthSpec = helper.getChildMeasureSpec(orientationHelper.getTotalSpace(),
                         Float.isNaN(lp.mAspectRatio) ? lp.width : (int) (
                                 View.MeasureSpec.getSize(heightSpec) * lp.mAspectRatio + 0.5f), true);
-                helper.measureChild(view, widthSpec, heightSpec);
+                helper.measureChildWithMargins(view, widthSpec, heightSpec);
             }
 
 
@@ -402,14 +402,18 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             // in middle nothing need to do
             if (isLayoutEnd) {
                 if (offset == getItemCount() - 1) {
-                    return mMarginBottom + mPaddingBottom;
+                    //the last item may not have the largest bottom, so calculate gaps between last items in every lane
+                    return mMarginBottom + mPaddingBottom + (getMaxEnd(orientationHelper.getDecoratedEnd(child),
+                        orientationHelper) - orientationHelper.getDecoratedEnd(child));
                 } else if (!useAnchor) {
                     final int minEnd = getMinEnd(orientationHelper.getDecoratedStart(child), orientationHelper);
                     return minEnd - orientationHelper.getDecoratedEnd(child);
                 }
             } else {
                 if (offset == 0) {
-                    return -mMarginTop - mPaddingTop;
+                    //the first item may not have the smallest top, so calculate gaps between first items in every lane
+                    return -mMarginTop - mPaddingTop - (orientationHelper.getDecoratedStart(child) - getMinStart(
+                        orientationHelper.getDecoratedStart(child), orientationHelper));
                 } else if (!useAnchor) {
                     final int maxStart = getMaxStart(orientationHelper.getDecoratedEnd(child), orientationHelper);
                     return maxStart - orientationHelper.getDecoratedStart(child);
@@ -826,10 +830,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     private int getMaxEnd(int def, OrientationHelper helper) {
         int maxEnd = mSpans[0].getEndLine(def, helper);
+        Log.d(TAG, "maxEnd " + maxEnd);
         for (int i = 1; i < mNumLanes; i++) {
             final int spanEnd = mSpans[i].getEndLine(def, helper);
             if (spanEnd > maxEnd) {
                 maxEnd = spanEnd;
+                Log.d(TAG, "new maxEnd " + maxEnd + " i " + i);
             }
         }
         return maxEnd;
@@ -837,10 +843,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     private int getMinEnd(int def, OrientationHelper helper) {
         int minEnd = mSpans[0].getEndLine(def, helper);
+        Log.d(TAG, "minEnd " + minEnd);
         for (int i = 1; i < mNumLanes; i++) {
             final int spanEnd = mSpans[i].getEndLine(def, helper);
             if (spanEnd < minEnd) {
                 minEnd = spanEnd;
+                Log.d(TAG, "new minEnd " + minEnd + " i " + i);
             }
         }
         return minEnd;
@@ -1229,12 +1237,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
          * @param end   The end line
          * @return true if a new child can be added between start and end
          */
-        boolean isEmpty(int start, int end, OrientationHelper helper) {
+        boolean isEmpty(int start, int end, OrientationHelper orientationHelper) {
             final int count = mViews.size();
             for (int i = 0; i < count; i++) {
                 final View view = mViews.get(i);
-                if (helper.getDecoratedStart(view) < end &&
-                        helper.getDecoratedEnd(view) > start) {
+                if (orientationHelper.getDecoratedStart(view) < end &&
+                        orientationHelper.getDecoratedEnd(view) > start) {
                     return false;
                 }
             }

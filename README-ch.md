@@ -27,23 +27,21 @@ VirtualLayout是一个针对RecyclerView的LayoutManager扩展, 主要提供一�
 
 ## 使用
 
-版本请参考mvn repository上的最新版本（目前最新版本是1.0.3），最新的 aar 都会发布到 jcenter 和 MavenCentral 上，确保配置了这两个仓库源，然后引入aar依赖：
+版本请参考mvn repository上的最新版本（目前最新版本是1.0.6），最新的 aar 都会发布到 jcenter 和 MavenCentral 上，确保配置了这两个仓库源，然后引入aar依赖：
 
-```
-// gradle
-compile ('com.alibaba.android:vlayout:1.0.3@aar') {
+``` gradle 
+compile ('com.alibaba.android:vlayout:1.0.6@aar') {
 	transitive = true
 }
 ```
 
-或者maven
-
-```
-// pom.xml in maven
+或者maven:  
+pom.xml
+``` xml
 <dependency>
   <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.6</version>
   <type>aar</type>
 </dependency>
 ```
@@ -51,7 +49,7 @@ compile ('com.alibaba.android:vlayout:1.0.3@aar') {
 
 初始化```LayoutManager```
 
-```
+``` java
 final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
 
@@ -60,19 +58,22 @@ recyclerView.setLayoutManager(layoutManager);
 
 设置回收复用池大小，（如果一屏内相同类型的 View 个数比较多，需要设置一个合适的大小，防止来回滚动时重新创建 View）：
 
-```
+``` java
 RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
 recyclerView.setRecycledViewPool(viewPool);
 viewPool.setMaxRecycledViews(0, 10);
+
 ```
+
+**注意：上述示例代码里只针对type=0的item设置了复用池的大小，如果你的页面有多种type，需要为每一种类型的分别调整复用池大小参数。**
 
 加载数据时有两种方式:
 
 * 一种是使用 ```DelegateAdapter```, 可以像平常一样写继承自```DelegateAdapter.Adapter```的Adapter, 只比之前的Adapter需要多重载```onCreateLayoutHelper```方法。
 其他的和默认Adapter一样。
 
-```
-DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, hasStableItemType);
+``` java
+DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, hasConsistItemType);
 recycler.setAdapter(delegateAdapter);
 
 // 之后可以通过 setAdapters 或 addAdapter方法添加DelegateAdapter.Adapter
@@ -86,10 +87,12 @@ delegateAdapter.addAdapter(adapter);
 // 如果数据有变化，调用自定义 adapter 的 notifyDataSetChanged()
 adapter.notifyDataSetChanged();
 ```
+**注意：当hasConsistItemType=true的时候，不论是不是属于同一个子adapter，相同类型的item都能复用。表示它们共享一个类型。
+当hasConsistItemType=false的时候，不同子adapter之间的类型不共享**
 
 * 另一种是当业务有自定义的复杂需求的时候, 可以继承自```VirtualLayoutAdapter```, 实现自己的Adapter
 
-```
+``` java
 public class MyAdapter extends VirtualLayoutAdapter {
    ......
 }
@@ -116,7 +119,16 @@ recycler.setAdapter(myAdapter);
 
 在这种情况下，需要使用者注意在当```LayoutHelpers```的结构或者数据数量等会影响到布局的元素变化时，需要主动调用```setLayoutHepers```去更新布局模式。
 
+另外如果你的应用有混淆配置，请为vlayout添加一下防混淆配置：
 
+```
+-keepattributes InnerClasses
+-keep class com.alibaba.android.vlayout.ExposeLinearLayoutManagerEx { *; }
+-keep class android.support.v7.widget.RecyclerView$LayoutParams { *; }
+-keep class android.support.v7.widget.RecyclerView$ViewHolder { *; }
+-keep class android.support.v7.widget.ChildHelper { *; }
+-keep class android.support.v7.widget.RecyclerView$LayoutManager { *; }
+```
 
 # Demo
 

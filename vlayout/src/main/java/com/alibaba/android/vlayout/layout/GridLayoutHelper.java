@@ -78,8 +78,14 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
     private View[] mSet;
 
+    /**
+     * store index of each span
+     */
     private int[] mSpanIndices;
 
+    /**
+     * store size of each span when {@link #mWeights} is not empty
+     */
     private int[] mSpanCols;
 
 
@@ -126,7 +132,6 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         }
     }
 
-
     public void setSpanSizeLookup(SpanSizeLookup spanSizeLookup) {
         if (spanSizeLookup != null) {
             // TODO: handle reverse layout?
@@ -164,6 +169,14 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         mSpanSizeLookup.invalidateSpanIndexCache();
 
         ensureSpanCount();
+    }
+
+    public int getVGap() {
+        return mVGap;
+    }
+
+    public int getHGap() {
+        return mHGap;
     }
 
     public int getSpanCount() {
@@ -343,7 +356,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         // we should assign spans before item decor offsets are calculated
         assignSpans(recycler, state, count, consumedSpanCount, layingOutInPrimaryDirection, helper);
 
-        if (remainingSpan > 0 && mIsAutoExpand) {
+        if (remainingSpan > 0 && (count == consumedSpanCount) && mIsAutoExpand) {
+            //autoExpand only support when each cell occupy one span.
             if (layoutInVertical) {
                 mSizePerSpan = (helper.getContentWidth() - helper.getPaddingRight() - getHorizontalMargin() - getHorizontalPadding() -
                         helper.getPaddingLeft() - (count - 1) * mHGap) / count;
@@ -413,10 +427,10 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             final VirtualLayoutManager.LayoutParams lp = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
 
             if (helper.getOrientation() == VERTICAL) {
-                helper.measureChild(view, spec, getMainDirSpec(lp.height, mTotalSize,
+                helper.measureChildWithMargins(view, spec, getMainDirSpec(lp.height, mTotalSize,
                         View.MeasureSpec.getSize(spec), lp.mAspectRatio));
             } else {
-                helper.measureChild(view,
+                helper.measureChildWithMargins(view,
                         getMainDirSpec(lp.width, mTotalSize, View.MeasureSpec.getSize(spec),
                                 lp.mAspectRatio), View.MeasureSpec.getSize(spec));
             }
@@ -447,9 +461,9 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                 }
 
                 if (helper.getOrientation() == VERTICAL) {
-                    helper.measureChild(view, spec, maxMeasureSpec);
+                    helper.measureChildWithMargins(view, spec, maxMeasureSpec);
                 } else {
-                    helper.measureChild(view, maxMeasureSpec, spec);
+                    helper.measureChildWithMargins(view, maxMeasureSpec, spec);
                 }
             }
         }
@@ -669,7 +683,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
     }
 
     private void assignSpans(RecyclerView.Recycler recycler, RecyclerView.State state, int count,
-                             int consumedSpanCount, boolean layingOutInPrimaryDirection, LayoutManagerHelper layoutManagerHelper) {
+                             int consumedSpanCount, boolean layingOutInPrimaryDirection, LayoutManagerHelper helper) {
         int span, spanDiff, start, end, diff;
         // make sure we traverse from min position to max position
         if (layingOutInPrimaryDirection) {
@@ -682,7 +696,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             diff = -1;
         }
 
-        if (layoutManagerHelper.getOrientation() == VERTICAL && layoutManagerHelper.isDoLayoutRTL()) { // start from last span
+        if (helper.getOrientation() == VERTICAL && helper.isDoLayoutRTL()) { // start from last span
             span = consumedSpanCount - 1;
             spanDiff = -1;
         } else {
@@ -692,7 +706,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         for (int i = start; i != end; i += diff) {
             View view = mSet[i];
-            int spanSize = getSpanSize(recycler, state, layoutManagerHelper.getPosition(view));
+            int spanSize = getSpanSize(recycler, state, helper.getPosition(view));
             if (spanDiff == -1 && spanSize > 1) {
                 mSpanIndices[i] = span - (spanSize - 1);
             } else {
@@ -711,8 +725,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         }
 
         @Override
-        public int getSpanIndex(int position, int spanCount) {
-            return (position - mStartPosition) % spanCount;
+        public int getSpanIndex(int span, int spanCount) {
+            return (span - mStartPosition) % spanCount;
         }
     }
 

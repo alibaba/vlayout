@@ -65,6 +65,8 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
     private int mTotal = 0;
 
+    private final SparseArray<Pair<AdapterDataObserver, Adapter>> mIndexAry = new SparseArray<>();
+
     /**
      * Delegate Adapter merge multi sub adapters, default is thread-unsafe
      *
@@ -117,14 +119,12 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         int index = viewType - t;
         int subItemType = w - index;
 
-        int idx = findAdapterPositionByIndex(index);
-        if (idx < 0) {
+        Adapter adapter  = findAdapterByIndex(index);
+        if (adapter == null) {
             return null;
         }
 
-        Pair<AdapterDataObserver, Adapter> p = mAdapters.get(idx);
-
-        return p.second.onCreateViewHolder(parent, subItemType);
+        return adapter.onCreateViewHolder(parent, subItemType);
     }
 
     @SuppressWarnings("unchecked")
@@ -265,6 +265,8 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
         boolean hasStableIds = true;
         mTotal = 0;
+
+        Pair<AdapterDataObserver, Adapter> pair;
         for (Adapter adapter : adapters) {
             // every adapter has an unique index id
             AdapterDataObserver observer = new AdapterDataObserver(mTotal, mIndexGen == null ? mIndex++ : mIndexGen.incrementAndGet());
@@ -275,7 +277,9 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             helper.setItemCount(adapter.getItemCount());
             mTotal += helper.getItemCount();
             helpers.add(helper);
-            mAdapters.add(Pair.create(observer, adapter));
+            pair = Pair.create(observer, adapter);
+            mIndexAry.put(observer.mIndex, pair);
+            mAdapters.add(pair);
         }
 
         if (!hasObservers()) {
@@ -307,6 +311,8 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
         List<LayoutHelper> helpers = new LinkedList<>(super.getLayoutHelpers());
 
+        Pair<AdapterDataObserver, Adapter> pair;
+
         for (Adapter adapter : adapters) {
             // every adapter has an unique index id
             AdapterDataObserver observer = new AdapterDataObserver(mTotal, mIndexGen == null ? mIndex++ : mIndexGen.incrementAndGet());
@@ -318,7 +324,11 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             mTotal += helper.getItemCount();
 
             helpers.add(position, helper);
-            mAdapters.add(position, Pair.create(observer, adapter));
+
+            pair = Pair.create(observer, adapter);
+
+            mIndexAry.put(observer.mIndex, pair);
+            mAdapters.add(position, pair);
             position++;
         }
 
@@ -436,11 +446,12 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
         mItemTypeAry.clear();
         mAdapters.clear();
+        mIndexAry.clear();
     }
 
 
     @Nullable
-    protected Pair<AdapterDataObserver, Adapter> findAdapterByPosition(int position) {
+    public Pair<AdapterDataObserver, Adapter> findAdapterByPosition(int position) {
         final int count = mAdapters.size();
         if (count == 0) {
             return null;
@@ -470,33 +481,18 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     }
 
 
-    protected int findAdapterPositionByIndex(int index) {
-        final int count = mAdapters.size();
-        if (count == 0) {
-            return -1;
-        }
+    public int findAdapterPositionByIndex(int index) {
+        Pair<AdapterDataObserver, Adapter> rs = mIndexAry.get(index);
 
-        int s = 0, e = count - 1, m = -1;
-        Pair<AdapterDataObserver, Adapter> rs = null;
-
-        // binary search range
-        while (s <= e) {
-            m = (s + e) / 2;
-            rs = mAdapters.get(m);
-            if (rs.first.mIndex > index) {
-                e = m - 1;
-            } else if (rs.first.mIndex < index) {
-                s = m + 1;
-            } else if (rs.first.mIndex == index) {
-                break;
-            }
-            rs = null;
-        }
-
-        return rs == null ? -1 : m;
+        return rs == null ? -1 : mAdapters.indexOf(rs);
     }
 
-    private class AdapterDataObserver extends RecyclerView.AdapterDataObserver {
+    public Adapter findAdapterByIndex(int index) {
+        Pair<AdapterDataObserver, Adapter> rs = mIndexAry.get(index);
+        return rs.second;
+    }
+
+    protected class AdapterDataObserver extends RecyclerView.AdapterDataObserver {
         int mStartPosition;
 
         int mIndex = -1;
@@ -511,15 +507,14 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             this.mIndex = index;
         }
 
-        @Override
-        public void onChanged() {
+        private boolean updateLayoutHelper(){
             if (mIndex < 0) {
-                return;
+                return false;
             }
 
             final int idx = findAdapterPositionByIndex(mIndex);
             if (idx < 0) {
-                return;
+                return false;
             }
 
             Pair<AdapterDataObserver, Adapter> p = mAdapters.get(idx);
@@ -542,28 +537,47 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
                 // set helpers to refresh range
                 DelegateAdapter.super.setLayoutHelpers(helpers);
             }
+            return true;
+        }
 
+        @Override
+        public void onChanged() {
+            if (!updateLayoutHelper()) {
+                return;
+            }
             notifyDataSetChanged();
         }
 
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
-            onChanged();
+            if (!updateLayoutHelper()) {
+                return;
+            }
+            notifyItemRangeRemoved(mStartPosition + positionStart, itemCount);
         }
 
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
-            onChanged();
+            if (!updateLayoutHelper()) {
+                return;
+            }
+            notifyItemRangeInserted(mStartPosition + positionStart, itemCount);
         }
 
         @Override
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-            onChanged();
+            if (!updateLayoutHelper()) {
+                return;
+            }
+            notifyItemMoved(mStartPosition + fromPosition, mStartPosition + toPosition);
         }
 
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount) {
-            onChanged();
+            if (!updateLayoutHelper()) {
+                return;
+            }
+            notifyItemRangeChanged(mStartPosition + positionStart, itemCount);
         }
     }
 

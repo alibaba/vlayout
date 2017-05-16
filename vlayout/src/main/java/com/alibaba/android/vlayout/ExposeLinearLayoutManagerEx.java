@@ -1906,8 +1906,10 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         void hide(View view) {
             try {
                 ensureChildHelper();
-                args[0] = view;
-                mHideMethod.invoke(mInnerChildHelper, args);
+                if (mInnerHiddenView.indexOf(view) < 0) {
+                    args[0] = view;
+                    mHideMethod.invoke(mInnerChildHelper, args);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

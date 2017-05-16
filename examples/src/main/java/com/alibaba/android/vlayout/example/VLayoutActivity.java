@@ -25,7 +25,6 @@
 package com.alibaba.android.vlayout.example;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
-import com.alibaba.android.vlayout.DelegateAdapter.Adapter;
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.RecyclablePagerAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
@@ -36,6 +35,8 @@ import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
+import com.alibaba.android.vlayout.layout.RangeGridLayoutHelper;
+import com.alibaba.android.vlayout.layout.RangeGridLayoutHelper.GridRangeStyle;
 import com.alibaba.android.vlayout.layout.ScrollFixLayoutHelper;
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
@@ -55,13 +56,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -173,7 +172,6 @@ public class VLayoutActivity extends Activity {
 
         final List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
 
-
         if (BANNER_LAYOUT) {
             adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 1) {
 
@@ -260,6 +258,36 @@ public class VLayoutActivity extends Activity {
             layoutHelper.setOffset(100);
             layoutHelper.setAspectRatio(4);
             adapters.add(new SubAdapter(this, layoutHelper, 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
+        }
+
+        {
+            RangeGridLayoutHelper layoutHelper = new RangeGridLayoutHelper(4);
+            layoutHelper.setBgColor(Color.GREEN);
+            layoutHelper.setWeights(new float[]{20f, 26.665f});
+            layoutHelper.setPadding(15, 15, 15, 15);
+            layoutHelper.setMargin(15, 15, 15, 15);
+            layoutHelper.setHGap(10);
+            layoutHelper.setVGap(10);
+            GridRangeStyle rangeStyle = new GridRangeStyle();
+            rangeStyle.setBgColor(Color.RED);
+            rangeStyle.setSpanCount(2);
+            rangeStyle.setWeights(new float[]{46.665f});
+            rangeStyle.setPadding(15, 15, 15, 15);
+            rangeStyle.setMargin(15, 15, 15, 15);
+            rangeStyle.setHGap(5);
+            rangeStyle.setVGap(5);
+            layoutHelper.addRangeStyle(4, 7, rangeStyle);
+            GridRangeStyle rangeStyle1 = new GridRangeStyle();
+            rangeStyle1.setBgColor(Color.YELLOW);
+            rangeStyle1.setSpanCount(2);
+            rangeStyle1.setWeights(new float[]{46.665f});
+            rangeStyle1.setPadding(15, 15, 15, 15);
+            rangeStyle1.setMargin(15, 15, 15, 15);
+            rangeStyle1.setHGap(5);
+            rangeStyle1.setVGap(5);
+            layoutHelper.addRangeStyle(8, 11, rangeStyle1);
+            adapters.add(new SubAdapter(this, layoutHelper, 16));
+
         }
 
         if (SINGLE_LAYOUT) {
@@ -482,6 +510,30 @@ public class VLayoutActivity extends Activity {
 
 
         mainHandler.postDelayed(trigger, 1000);
+        setListenerToRootView();
+    }
+
+    boolean isOpened = false;
+
+    public void setListenerToRootView() {
+        final View activityRootView = getWindow().getDecorView().findViewById(android.R.id.content);
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
+                int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+                if (heightDiff > 100) { // 99% of the time the height diff will be due to a keyboard.
+                    if (isOpened == false) {
+                        //Do two things, make the view top visible and the editText smaller
+                    }
+                    isOpened = true;
+                } else if (isOpened == true) {
+                    isOpened = false;
+                    final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_view);
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     // RecyclableViewPager
