@@ -33,8 +33,6 @@ import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
 import com.alibaba.android.vlayout.layout.FixLayoutHelper;
 import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
-import com.alibaba.android.vlayout.layout.GroupGridLayoutHelper;
-import com.alibaba.android.vlayout.layout.GroupLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
 import com.alibaba.android.vlayout.layout.RangeGridLayoutHelper;
@@ -65,7 +63,6 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -224,12 +221,12 @@ public class VLayoutActivity extends Activity {
             });
         }
 
-        {
-            GridLayoutHelper helper = new GridLayoutHelper(10);
-            helper.setAspectRatio(4f);
-            helper.setGap(10);
-            adapters.add(new SubAdapter(this, helper, 80));
-        }
+        //{
+        //    GridLayoutHelper helper = new GridLayoutHelper(10);
+        //    helper.setAspectRatio(4f);
+        //    helper.setGap(10);
+        //    adapters.add(new SubAdapter(this, helper, 80));
+        //}
 
         if (FLOAT_LAYOUT) {
             FloatLayoutHelper layoutHelper = new FloatLayoutHelper();
