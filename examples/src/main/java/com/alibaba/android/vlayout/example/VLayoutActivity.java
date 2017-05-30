@@ -33,6 +33,8 @@ import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
 import com.alibaba.android.vlayout.layout.FixLayoutHelper;
 import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
+import com.alibaba.android.vlayout.layout.GroupGridLayoutHelper;
+import com.alibaba.android.vlayout.layout.GroupLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
 import com.alibaba.android.vlayout.layout.RangeGridLayoutHelper;
@@ -51,6 +53,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -61,6 +65,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -89,6 +94,8 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean STAGGER_LAYOUT = true;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     private TextView mFirstText;
     private TextView mLastText;
 
@@ -103,6 +110,8 @@ public class VLayoutActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
+;
         mFirstText = (TextView) findViewById(R.id.first);
         mLastText = (TextView) findViewById(R.id.last);
         mCountText = (TextView) findViewById(R.id.count);
@@ -215,12 +224,12 @@ public class VLayoutActivity extends Activity {
             });
         }
 
-//        {
-//            GridLayoutHelper helper = new GridLayoutHelper(10);
-//            helper.setAspectRatio(4f);
-//            helper.setGap(10);
-//            adapters.add(new SubAdapter(this, helper, 80));
-//        }
+        {
+            GridLayoutHelper helper = new GridLayoutHelper(10);
+            helper.setAspectRatio(4f);
+            helper.setGap(10);
+            adapters.add(new SubAdapter(this, helper, 80));
+        }
 
         if (FLOAT_LAYOUT) {
             FloatLayoutHelper layoutHelper = new FloatLayoutHelper();
@@ -497,19 +506,32 @@ public class VLayoutActivity extends Activity {
         trigger = new Runnable() {
             @Override
             public void run() {
-                // recyclerView.scrollToPosition(22);
-                // recyclerView.getAdapter().notifyDataSetChanged();
-                // mainHandler.postDelayed(trigger, 1000);
+                 //recyclerView.scrollToPosition(22);
+                 //recyclerView.getAdapter().notifyDataSetChanged();
+                //mainHandler.postDelayed(trigger, 1000);
                 //List<DelegateAdapter.Adapter> newAdapters = new ArrayList<>();
                 //newAdapters.add((new SubAdapter(VLayoutActivity.this, new ColumnLayoutHelper(), 3)));
                 //newAdapters.add((new SubAdapter(VLayoutActivity.this, new GridLayoutHelper(4), 24)));
-                //delegateAdapter.addAdapters(newAdapters);
-                recyclerView.requestLayout();
+                //delegateAdapter.addAdapter(0, new SubAdapter(VLayoutActivity.this, new ColumnLayoutHelper(), 3));
+                //delegateAdapter.addAdapter(1, new SubAdapter(VLayoutActivity.this, new GridLayoutHelper(4), 24));
+                //delegateAdapter.notifyDataSetChanged();
             }
         };
 
 
         mainHandler.postDelayed(trigger, 1000);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mainHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2000L);
+            }
+        });
         setListenerToRootView();
     }
 

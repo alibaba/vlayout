@@ -270,7 +270,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                 while (count < rangeStyle.mSpanCount && revRemainingSpan > 0) {
                     // go reverse direction to find views fill current row
                     index -= itemDirection;
-                    if (isOutOfRange(index)) {
+                    if (rangeStyle.isOutOfRange(index)) {
                         break;
                     }
                     final int spanSize = getSpanSize(rangeStyle.mSpanSizeLookup, recycler, state, index);
@@ -334,7 +334,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
         while (count < rangeStyle.mSpanCount && layoutState.hasMore(state) && remainingSpan > 0) {
             int pos = layoutState.getCurrentPosition();
-            if (isOutOfRange(pos)) {
+            if (rangeStyle.isOutOfRange(pos)) {
                 if (DEBUG) {
                     Log.d(TAG, "pos [" + pos + "] is out of range");
                 }
