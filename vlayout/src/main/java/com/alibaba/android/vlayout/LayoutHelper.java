@@ -24,6 +24,7 @@
 
 package com.alibaba.android.vlayout;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -79,7 +80,7 @@ public abstract class LayoutHelper {
      * @param end   end position of items handled by this layoutHelper, if end < start, it will throw {@link IllegalArgumentException}
      * @throws MismatchChildCountException when the (start - end) doesn't equal to itemCount
      */
-    void setRange(int start, int end) {
+    public void setRange(int start, int end) {
         if (end < start) {
             throw new IllegalArgumentException("end should be larger or equeal then start position");
         }
@@ -119,7 +120,7 @@ public abstract class LayoutHelper {
      * @return Range of integer
      */
     @NonNull
-    protected final Range<Integer> getRange() {
+    public final Range<Integer> getRange() {
         return mRange;
     }
 
@@ -185,6 +186,13 @@ public abstract class LayoutHelper {
         this.mZIndex = zIndex;
     }
 
+    /**
+     *
+     * @return The total region child view layouted.
+     */
+    public Rect getLayoutRegion() {
+        return null;
+    }
 
     /**
      * Get View that fixed in some position
@@ -314,6 +322,10 @@ public abstract class LayoutHelper {
     }
 
     public void onRestoreInstanceState(final Bundle bundle) {
+
+    }
+
+    public void setParentLayoutHelper(LayoutHelper parentLayoutHelper) {
 
     }
 
