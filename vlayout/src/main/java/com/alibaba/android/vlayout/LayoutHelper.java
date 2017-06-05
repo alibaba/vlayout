@@ -187,14 +187,6 @@ public abstract class LayoutHelper {
     }
 
     /**
-     *
-     * @return The total region child view layouted.
-     */
-    public Rect getLayoutRegion() {
-        return null;
-    }
-
-    /**
      * Get View that fixed in some position
      *
      * @return
@@ -322,10 +314,6 @@ public abstract class LayoutHelper {
     }
 
     public void onRestoreInstanceState(final Bundle bundle) {
-
-    }
-
-    public void setParentLayoutHelper(LayoutHelper parentLayoutHelper) {
 
     }
 

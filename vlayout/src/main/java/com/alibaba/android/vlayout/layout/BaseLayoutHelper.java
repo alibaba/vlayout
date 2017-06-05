@@ -48,8 +48,6 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     protected Rect mLayoutRegion = new Rect();
 
-    protected LayoutHelper mParentLayoutHelper;
-
     View mLayoutView;
 
     int mBgColor;
@@ -96,11 +94,6 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
     @Override
     public void setItemCount(int itemCount) {
         this.mItemCount = itemCount;
-    }
-
-    @Override
-    public final Rect getLayoutRegion() {
-        return mLayoutRegion;
     }
 
     /**
@@ -280,11 +273,6 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         layoutViews(recycler, state, layoutState, result, helper);
     }
 
-    @Override
-    public void setParentLayoutHelper(LayoutHelper groupLayoutHelper) {
-        this.mParentLayoutHelper = groupLayoutHelper;
-    }
-
     /**
      * Helper function which do layout children and also update layoutRegion
      * but it won't consider margin in layout, so you need take care of margin if you apply margin to your layoutView
@@ -302,7 +290,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     protected void layoutChild(final View child, int left, int top, int right, int bottom, @NonNull LayoutManagerHelper helper, boolean addLayoutRegionWithMargin) {
         helper.layoutChild(child, left, top, right, bottom);
-        //if (requireLayoutView()) {
+        if (requireLayoutView()) {
             if (addLayoutRegionWithMargin) {
                 mLayoutRegion
                         .union(left - mPaddingLeft - mMarginLeft, top - mPaddingTop - mMarginTop,
@@ -311,7 +299,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
             } else {
                 mLayoutRegion.union(left - mPaddingLeft, top - mPaddingTop, right + mPaddingRight, bottom + mPaddingBottom);
             }
-        //}
+        }
 
     }
 
