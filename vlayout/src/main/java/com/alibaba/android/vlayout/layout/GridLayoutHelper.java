@@ -223,7 +223,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         final int itemDirection = layoutState.getItemDirection();
         final boolean layingOutInPrimaryDirection =
-                itemDirection == LayoutStateWrapper.ITEM_DIRECTION_TAIL;
+            itemDirection == LayoutStateWrapper.ITEM_DIRECTION_TAIL;
 
         OrientationHelper orientationHelper = helper.getMainOrientationHelper();
 
@@ -231,15 +231,9 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         if (layoutInVertical) {
             mTotalSize = helper.getContentWidth() - helper.getPaddingRight() - helper.getPaddingLeft() - getHorizontalMargin() - getHorizontalPadding();
-            if (mParentLayoutHelper != null) {
-                mTotalSize -= (((BaseLayoutHelper) mParentLayoutHelper).getHorizontalMargin() + ((BaseLayoutHelper) mParentLayoutHelper).getHorizontalPadding());
-            }
             mSizePerSpan = (int) ((mTotalSize - (mSpanCount - 1) * mHGap) * 1.0f / mSpanCount + 0.5f);
         } else {
             mTotalSize = helper.getContentHeight() - helper.getPaddingBottom() - helper.getPaddingTop() - getVerticalMargin() - getVerticalPadding();
-            if (mParentLayoutHelper != null) {
-                mTotalSize -= (((BaseLayoutHelper) mParentLayoutHelper).getVerticalMargin() + ((BaseLayoutHelper) mParentLayoutHelper).getVerticalPadding());
-            }
             mSizePerSpan = (int) ((mTotalSize - (mSpanCount - 1) * mVGap) * 1.0f / mSpanCount + 0.5f);
         }
 
@@ -273,8 +267,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                     final int spanSize = getSpanSize(recycler, state, index);
                     if (spanSize > mSpanCount) {
                         throw new IllegalArgumentException("Item at position " + index + " requires " +
-                                spanSize + " spans but GridLayoutManager has only " + mSpanCount
-                                + " spans.");
+                            spanSize + " spans but GridLayoutManager has only " + mSpanCount
+                            + " spans.");
                     }
 
                     View view = layoutState.retrieve(recycler, index);
@@ -324,8 +318,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             final int spanSize = getSpanSize(recycler, state, pos);
             if (spanSize > mSpanCount) {
                 throw new IllegalArgumentException("Item at position " + pos + " requires " +
-                        spanSize + " spans but GridLayoutManager has only " + mSpanCount
-                        + " spans.");
+                    spanSize + " spans but GridLayoutManager has only " + mSpanCount
+                    + " spans.");
             }
             remainingSpan -= spanSize;
             if (remainingSpan < 0) {
@@ -422,18 +416,18 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                 spec = View.MeasureSpec.makeMeasureSpec(Math.max(0, spanLength), View.MeasureSpec.EXACTLY);
             } else {
                 spec = View.MeasureSpec.makeMeasureSpec(mSizePerSpan * spanSize +
-                                Math.max(0, spanSize - 1) * (layoutInVertical ? mHGap : mVGap),
-                        View.MeasureSpec.EXACTLY);
+                        Math.max(0, spanSize - 1) * (layoutInVertical ? mHGap : mVGap),
+                    View.MeasureSpec.EXACTLY);
             }
             final VirtualLayoutManager.LayoutParams lp = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
 
             if (helper.getOrientation() == VERTICAL) {
                 helper.measureChildWithMargins(view, spec, getMainDirSpec(lp.height, mTotalSize,
-                        View.MeasureSpec.getSize(spec), lp.mAspectRatio));
+                    View.MeasureSpec.getSize(spec), lp.mAspectRatio));
             } else {
                 helper.measureChildWithMargins(view,
-                        getMainDirSpec(lp.width, mTotalSize, View.MeasureSpec.getSize(spec),
-                                lp.mAspectRatio), View.MeasureSpec.getSize(spec));
+                    getMainDirSpec(lp.width, mTotalSize, View.MeasureSpec.getSize(spec),
+                        lp.mAspectRatio), View.MeasureSpec.getSize(spec));
             }
             final int size = orientationHelper.getDecoratedMeasurement(view);
             if (size > maxSize) {
@@ -457,8 +451,8 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                     spec = View.MeasureSpec.makeMeasureSpec(Math.max(0, spanLength), View.MeasureSpec.EXACTLY);
                 } else {
                     spec = View.MeasureSpec.makeMeasureSpec(mSizePerSpan * spanSize +
-                                    Math.max(0, spanSize - 1) * (layoutInVertical ? mHGap : mVGap),
-                            View.MeasureSpec.EXACTLY);
+                            Math.max(0, spanSize - 1) * (layoutInVertical ? mHGap : mVGap),
+                        View.MeasureSpec.EXACTLY);
                 }
 
                 if (helper.getOrientation() == VERTICAL) {
@@ -515,17 +509,11 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             if (layoutInVertical) {
                 if (weighted) {
                     left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft;
-                    if (mParentLayoutHelper != null) {
-                        left += ((BaseLayoutHelper) mParentLayoutHelper).getMarginLeft() + ((BaseLayoutHelper) mParentLayoutHelper).getPaddingLeft();
-                    }
                     for (int j = 0; j < index; j++) {
                         left += mSpanCols[j] + mHGap;
                     }
                 } else {
                     left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft + mSizePerSpan * index + index * mHGap;
-                    if (mParentLayoutHelper != null) {
-                        left += ((BaseLayoutHelper) mParentLayoutHelper).getMarginLeft() + ((BaseLayoutHelper) mParentLayoutHelper).getPaddingLeft();
-                    }
                 }
 
                 right = left + orientationHelper.getDecoratedMeasurementInOther(view);
@@ -533,18 +521,12 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
                 if (weighted) {
                     top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
-                    if (mParentLayoutHelper != null) {
-                        top += ((BaseLayoutHelper) mParentLayoutHelper).getMarginTop() + ((BaseLayoutHelper) mParentLayoutHelper).getPaddingTop();
-                    }
                     for (int j = 0; j < index; j++) {
                         top += mSpanCols[j] + mVGap;
                     }
                 } else {
                     top = helper.getPaddingTop() + mMarginTop + mPaddingTop
-                            + mSizePerSpan * index + index * mVGap;
-                    if (mParentLayoutHelper != null) {
-                        top += ((BaseLayoutHelper) mParentLayoutHelper).getMarginTop() + ((BaseLayoutHelper) mParentLayoutHelper).getPaddingTop();
-                    }
+                        + mSizePerSpan * index + index * mVGap;
                 }
 
                 bottom = top + orientationHelper.getDecoratedMeasurementInOther(view);
@@ -552,7 +534,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
             if (DEBUG) {
                 Log.d(TAG, "layout item in position: " + params.getViewPosition() + " with text " + ((TextView) view).getText() + " with SpanIndex: " + index + " into (" +
-                        left + ", " + top + ", " + right + ", " + bottom + " )");
+                    left + ", " + top + ", " + right + ", " + bottom + " )");
             }
 
             // We calculate everything with View's bounding box (which includes decor and margins)
@@ -585,8 +567,9 @@ public class GridLayoutHelper extends BaseLayoutHelper {
                 return layoutInVertical ? mMarginBottom + mPaddingBottom : mMarginRight + mPaddingRight;
             }
         } else {
-            if (offset == 0)
+            if (offset == 0) {
                 return layoutInVertical ? -mMarginTop - mPaddingTop : -mMarginLeft - mPaddingLeft;
+            }
         }
 
         return super.computeAlignOffset(offset, isLayoutEnd, useAnchor, helper);
