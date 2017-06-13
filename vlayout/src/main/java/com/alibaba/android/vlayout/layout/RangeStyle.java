@@ -576,18 +576,23 @@ public class RangeStyle<T extends RangeStyle> {
 
     public void layoutChild(final View child, int left, int top, int right, int bottom, @NonNull LayoutManagerHelper helper, boolean addLayoutRegionWithMargin) {
         helper.layoutChild(child, left, top, right, bottom);
-        if (requireLayoutView()) {
-            if (addLayoutRegionWithMargin) {
-                mLayoutRegion
-                    .union(left - mPaddingLeft - mMarginLeft, top - mPaddingTop - mMarginTop,
-                        right + mPaddingRight + mMarginRight,
-                        bottom + mPaddingBottom + mMarginBottom);
-            } else {
-                mLayoutRegion.union(left - mPaddingLeft, top - mPaddingTop, right + mPaddingRight,
-                    bottom + mPaddingBottom);
-            }
-        }
+        fillLayoutRegion(left, top, right, bottom, addLayoutRegionWithMargin);
+    }
 
+    protected void fillLayoutRegion(int left, int top, int right, int bottom, boolean addLayoutRegionWithMargin) {
+        if (addLayoutRegionWithMargin) {
+            mLayoutRegion
+                .union(left - mPaddingLeft - mMarginLeft, top - mPaddingTop - mMarginTop,
+                    right + mPaddingRight + mMarginRight,
+                    bottom + mPaddingBottom + mMarginBottom);
+        } else {
+            mLayoutRegion.union(left - mPaddingLeft, top - mPaddingTop, right + mPaddingRight,
+                bottom + mPaddingBottom);
+        }
+        if (mParent != null) {
+            mParent.fillLayoutRegion(left - mPaddingLeft - mMarginLeft, top - mPaddingTop - mMarginLeft, right + mPaddingRight + mMarginRight,
+                bottom + mPaddingBottom + mMarginBottom, addLayoutRegionWithMargin);
+        }
     }
 
     private static class RangeMap<T> {
