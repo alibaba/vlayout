@@ -6,9 +6,9 @@ Vlayout provides rich layout features, which are presented in the form of a seri
 
 Margin, padding have the similar concepts as normal Android system's margin and padding. There are several difference you should know:
 
-+ Here we say margin and padding, specificly mean ```LayoutHelper```'s margin and padding, not the ```RecyclerView```'s.
++ Here we say margin and padding, specifically mean ```LayoutHelper```'s margin and padding, not the ```RecyclerView```'s.
 + A ```RecyclerView``` could contains more than one layoutHelpers, which means each ```LayoutHelper``` is able to host its own margin and padding value.
-+ ```LayoutHelper```'s margin and padding can coexist with ```RecylerView```'s margin and padding.
++ ```LayoutHelper```'s margin and padding can coexist with ```RecyclerView```'s margin and padding.
 + Margin and padding is mainly supported by non-fix LayoutHelper.
 
 ![margin-padding](images/MarginPadding.png)
@@ -115,7 +115,7 @@ For ```LinearLayoutHelper```, call
 
 ```ColumnLayoutHelper``` and ```GridLayoutHelper```'s attribute, they both provide grid layout ability like ```GridLayoutManager```. **You are suggested to use ```GirdLayoutHelper```** since it is more powerful. By default, each column's width is equal and shares the available space. Setting weights allows each column's width occupies a certain percentage of available space. Just sounds like weight in ```LinearLayout```.
 
-This arribute is a float array, each item in array means the percentage of a column width. The sum of item value in array is 100, otherwise child view may be layouted outside the box. If there are four columns in this layout, the suggested length of weights is four, too. If length of weights array is larged than 4, the extra weight provided is ignored. If length of weights array is less than 4, the remaining views with no weight assigned share the ramaining available space.
+This attribute is a float array, each item in array means the percentage of a column width. The sum of item value in array is 100, otherwise child view may be layouted outside the box. If there are four columns in this layout, the suggested length of weights is four, too. If length of weights array is larger than 4, the extra weight provided is ignored. If length of weights array is less than 4, the remaining views with no weight assigned share the remaining available space.
 
 ![weights](images/Weights.png)
 
@@ -156,7 +156,7 @@ Setting spanSizeLookup call
 
 # autoExpand
 
-```GridLayoutHelper```'s attribute. On the occasion of one line view's count is less than spanCount, if autoExpand setted to be true, these view will expand to fill all available space, otherwise they will leave some blank area.
+```GridLayoutHelper```'s attribute. On the occasion of one line view's count is less than spanCount, if autoExpand is set to be true, these view will expand to fill all available space, otherwise they will leave some blank area.
 
 ![autoExpand](images/AutoExpand.png)
 
@@ -184,7 +184,7 @@ Setting spanSizeLookup call
 
 # alignType, x, y
 
-```FixLayoutHelper```, ```ScrollFixLayoutHelper```, ```FloatLayoutHelper```'s arributes, alignType defines the base position of fix area, there are four available values: ```TOP_LEFT```, ```TOP_RIGHT```, ```BOTTOM_LEFT```, ```BOTTOM_RIGHT```. ```x``` and ```y``` are the horizontal offset and vertical offset to this base position. The final offset is calculated with fixAreaAdjuster in addition as former mentioned.
+```FixLayoutHelper```, ```ScrollFixLayoutHelper```, ```FloatLayoutHelper```'s attributes, alignType defines the base position of fix area, there are four available values: ```TOP_LEFT```, ```TOP_RIGHT```, ```BOTTOM_LEFT```, ```BOTTOM_RIGHT```. ```x``` and ```y``` are the horizontal offset and vertical offset to this base position. The final offset is calculated with fixAreaAdjuster in addition as former mentioned.
 
 + ```TOP_LEFT```: base position is top left corner of parent container, ```x``` is the offset from child view's left edge to parent's left edge, ```y``` is the offset from child view's top edge to parent's top edge;
 + ```TOP_RIGHT```: base position is top right corner of parent container, ```x``` is the offset from child view's right edge to parent's right edge, ```y``` is the offset from child view's top edge to parent's top edge;
