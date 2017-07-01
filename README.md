@@ -30,29 +30,25 @@ By providing a custom LayoutManager to RecyclerView, VirtualLayout is able to la
 Please find the latest version(1.0.3 so far) in maven repository. The newest version has been upload to jcenter and MavenCentral, make sure you have added at least one of these repositories.
 
 For gradle:
-
-```
-// gradle
-compile ('com.alibaba.android:vlayout:1.0.3@aar') {
+``` gradle
+compile ('com.alibaba.android:vlayout:1.0.7@aar') {
 	transitive = true
 }
 ```
 
-Or in maven:
-
-```
-// pom.xml 
+Or in maven:  
+pom.xml
+``` xml
 <dependency>
   <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.7</version>
   <type>aar</type>
 </dependency>
 ```
 
 ### Initialize LayoutManager
-
-```
+``` java
 final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
 
@@ -62,7 +58,7 @@ recyclerView.setLayoutManager(layoutManager);
 ### Initialize recycled pool's size
 Provide a reasonable recycled pool's size to your recyclerView, since the default value may not meet your situation and cause re-create views when scrolling.
 
-```
+``` java
 RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
 recyclerView.setRecycledViewPool(viewPool);
 viewPool.setMaxRecycledViews(0, 10);
@@ -74,7 +70,7 @@ viewPool.setMaxRecycledViews(0, 10);
 
 * You can use `DelegateAdapter` for as a root adapter to make combination of your own adapters. Just make it extend ```DelegateAdapter.Adapter``` and overrides ```onCreateLayoutHelper``` method.
 
-```
+``` java
 DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, hasConsistItemType);
 recycler.setAdapter(delegateAdapter);
 
@@ -95,7 +91,7 @@ adapter.notifyDataSetChanged();
 
 * The other way to set adapter is extending ```VirtualLayoutAdapter``` and implementing it to make deep combination to your business code.
 
-```
+``` java
 public class MyAdapter extends VirtualLayoutAdapter {
    ......
 }
