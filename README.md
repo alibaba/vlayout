@@ -2,16 +2,16 @@
 
 [中文文档](README-ch.md)
 
-Project `vlayout` is a powerfull LayoutManager extension for RecyclerView, it provides a group of layouts for RecyclerView. Make it able to handle a complicate situation when grid, list and other layouts in the same recyclerview.
+Project `vlayout` is a powerful LayoutManager extension for RecyclerView, it provides a group of layouts for RecyclerView. Make it able to handle a complicate situation when grid, list and other layouts in the same recyclerview.
 
 ## Design
 
 By providing a custom LayoutManager to RecyclerView, VirtualLayout is able to layout child views with different style at single view elegantly. The custom LayoutManager manages a serial of layoutHelpers where each one implements the specific layout logic for a certain position range items. By the way, implementing your custom layoutHelper and provding it to the framework is also supported.
 
 ## Main Feature
-* Provide default common layout implements, decouple the View and Layout. Default layout implements are:
+* Provide default common layout implementation, decouple the View and Layout. Default layout implementations are:
 	* LinearLayoutHelper: provide linear layout as LinearLayoutManager.
-	* GridLayoutHelper: privide grid layout as GridLayoutManager, but with more feature.
+	* GridLayoutHelper: provide grid layout as GridLayoutManager, but with more feature.
 	* FixLayoutHelper: fix the view at certain position of screen, the view does not scroll with whole page.
 	* ScrollFixLayoutHelper: fix the view at certain position of screen, but the view does not show until it scrolls to it position.
 	* FloatLayoutHelper: float the view on top of page, user can drag and drop it.
@@ -27,7 +27,7 @@ By providing a custom LayoutManager to RecyclerView, VirtualLayout is able to la
 
 ### Import Library
 
-Please find the latest version(1.0.7 so far) in maven repository. The newest version has been upload to jcenter and MavenCantral, make sure you have added at least one of these repositories.
+Please find the latest version(1.0.3 so far) in maven repository. The newest version has been upload to jcenter and MavenCentral, make sure you have added at least one of these repositories.
 
 For gradle:
 ``` gradle
@@ -56,7 +56,7 @@ recyclerView.setLayoutManager(layoutManager);
 ```
 
 ### Initialize recycled pool's size
-Provide a reasonable recycled pool's size to your recyclerView, since the default value may not meet your situation and cause re-create views when scolling.
+Provide a reasonable recycled pool's size to your recyclerView, since the default value may not meet your situation and cause re-create views when scrolling.
 
 ``` java
 RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();

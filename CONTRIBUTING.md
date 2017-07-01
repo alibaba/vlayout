@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thank you for your attention to this project. Any bug, doc, examples and suggestion is appriciated. Here are some suggestions for you to create Pull Requests or open Issues.
+Thank you for your attention to this project. Any bug, doc, examples and suggestion is appreciated. Here are some suggestions for you to create Pull Requests or open Issues.
 
 ## Branch Management
 
@@ -56,7 +56,7 @@ for example:
 
 ## Issue
 
-* Please apply a propper label to an issue.
+* Please apply a proper label to an issue.
 * Suggested to use English.
 * Provide sufficient instructions to be able to reproduce the issue and make the issues clear. Such as phone model, system version, sdk version, crash logs and screen captures. 
 
