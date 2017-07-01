@@ -152,6 +152,7 @@ public class VLayoutActivity extends Activity {
             }
         });
 
+        layoutManager.setRecycleOffset(300);
 
         recyclerView.setLayoutManager(layoutManager);
 
@@ -258,6 +259,13 @@ public class VLayoutActivity extends Activity {
                     }
                 }
             });
+        }
+
+        {
+            SingleLayoutHelper layoutHelper = new SingleLayoutHelper();
+            layoutHelper.setBgColor(Color.BLUE);
+            layoutHelper.setMargin(0, 30, 0, 30);
+            adapters.add(new SubAdapter(this, layoutHelper, 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
         }
 
         if (STICKY_LAYOUT) {
