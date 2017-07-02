@@ -186,14 +186,14 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     @Override
     public void afterLayout(RecyclerView.Recycler recycler, RecyclerView.State state, int startPosition, int endPosition, int scrolled, LayoutManagerHelper helper) {
         super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
-
         if (startPosition > getRange().getUpper() || endPosition < getRange().getLower()) {
+            //do not in visible screen, skip
             return;
         }
-
         if (!state.isPreLayout() && helper.getChildCount() > 0) {
             // call after doing layout, to check whether there is a gap between staggered layout and other layouts
-            ViewCompat.postOnAnimation(helper.getChildAt(0), checkForGapsRunnable);
+            // TODO ask for help? why there's a gap here, as far as know, it happens only when there's a sticky upon staggered which is in abnormal status
+            //ViewCompat.postOnAnimation(helper.getChildAt(0), checkForGapsRunnable); comment by longerian
         }
     }
 
@@ -256,7 +256,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
             // handle margin for start/end line
             isStartLine = position - getRange().getLower() < mNumLanes;
-            isEndLine = getRange().getUpper() - position - 1 < mNumLanes;
+            isEndLine = getRange().getUpper() - position < mNumLanes; //fix the end line condiition
 
             helper.addChildView(layoutState, view);
 
@@ -292,10 +292,10 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             } else {
                 if (isEndLine) {
                     end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mMarginBottom + mPaddingRight : mMarginRight + mPaddingRight);
-                    //Log.d(TAG", "endLine " + position + " " + end);
+                    //Log.d(TAG, "endLine " + position + " " + end);
                 } else {
                     end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mVGap : mHGap);
-                    //Log.d(TAG", "normalEndLine " + position + " " + end);
+                    //Log.d(TAG, "normalEndLine " + position + " " + end);
                 }
                 start = end - orientationHelper.getDecoratedMeasurement(view);
             }
@@ -382,7 +382,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         if (state == RecyclerView.SCROLL_STATE_IDLE) {
-            checkForGaps();
+            //checkForGaps();
         }
     }
 
@@ -397,7 +397,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         if (child == null) {
             return 0;
         }
-
+        ensureLanes();
         if (layoutInVertical) {
             // in middle nothing need to do
             if (isLayoutEnd) {
@@ -806,10 +806,10 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     }
 
 
-    private int getMaxStart(int def, OrientationHelper helper) {
-        int maxStart = mSpans[0].getStartLine(def, helper);
+    private int getMaxStart(int defaultValue, OrientationHelper helper) {
+        int maxStart = mSpans[0].getStartLine(defaultValue, helper);
         for (int i = 1; i < mNumLanes; i++) {
-            final int spanStart = mSpans[i].getStartLine(def, helper);
+            final int spanStart = mSpans[i].getStartLine(defaultValue, helper);
             if (spanStart > maxStart) {
                 maxStart = spanStart;
             }
@@ -817,10 +817,10 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         return maxStart;
     }
 
-    private int getMinStart(int def, OrientationHelper helper) {
-        int minStart = mSpans[0].getStartLine(def, helper);
+    private int getMinStart(int defaultValue, OrientationHelper helper) {
+        int minStart = mSpans[0].getStartLine(defaultValue, helper);
         for (int i = 1; i < mNumLanes; i++) {
-            final int spanStart = mSpans[i].getStartLine(def, helper);
+            final int spanStart = mSpans[i].getStartLine(defaultValue, helper);
             if (spanStart < minStart) {
                 minStart = spanStart;
             }
@@ -828,27 +828,23 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         return minStart;
     }
 
-    private int getMaxEnd(int def, OrientationHelper helper) {
-        int maxEnd = mSpans[0].getEndLine(def, helper);
-        Log.d(TAG, "maxEnd " + maxEnd);
+    private int getMaxEnd(int defaultValue, OrientationHelper helper) {
+        int maxEnd = mSpans[0].getEndLine(defaultValue, helper);
         for (int i = 1; i < mNumLanes; i++) {
-            final int spanEnd = mSpans[i].getEndLine(def, helper);
+            final int spanEnd = mSpans[i].getEndLine(defaultValue, helper);
             if (spanEnd > maxEnd) {
                 maxEnd = spanEnd;
-                Log.d(TAG, "new maxEnd " + maxEnd + " i " + i);
             }
         }
         return maxEnd;
     }
 
-    private int getMinEnd(int def, OrientationHelper helper) {
-        int minEnd = mSpans[0].getEndLine(def, helper);
-        Log.d(TAG, "minEnd " + minEnd);
+    private int getMinEnd(int defaultValue, OrientationHelper helper) {
+        int minEnd = mSpans[0].getEndLine(defaultValue, helper);
         for (int i = 1; i < mNumLanes; i++) {
-            final int spanEnd = mSpans[i].getEndLine(def, helper);
+            final int spanEnd = mSpans[i].getEndLine(defaultValue, helper);
             if (spanEnd < minEnd) {
                 minEnd = spanEnd;
-                Log.d(TAG, "new minEnd " + minEnd + " i " + i);
             }
         }
         return minEnd;
@@ -1029,16 +1025,16 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         // Use this one when default value does not make sense and not having a value means a bug.
-        int getStartLine(int def, OrientationHelper helper) {
+        int getStartLine(int defaultValue, OrientationHelper helper) {
             if (mCachedStart != INVALID_LINE) {
                 return mCachedStart;
             }
 
-            if (def != INVALID_LINE && mViews.size() == 0) {
+            if (defaultValue != INVALID_LINE && mViews.size() == 0) {
                 if (mLastEdgeEnd != INVALID_LINE) {
                     return mLastEdgeEnd;
                 }
-                return def;
+                return defaultValue;
             }
 
             calculateCachedStart(helper);
@@ -1059,16 +1055,16 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         // Use this one when default value does not make sense and not having a value means a bug.
-        int getEndLine(int def, OrientationHelper helper) {
+        int getEndLine(int defaultValue, OrientationHelper helper) {
             if (mCachedEnd != INVALID_LINE) {
                 return mCachedEnd;
             }
 
-            if (def != INVALID_LINE && mViews.size() == 0) {
+            if (defaultValue != INVALID_LINE && mViews.size() == 0) {
                 if (mLastEdgeStart != INVALID_LINE) {
                     return mLastEdgeStart;
                 }
-                return def;
+                return defaultValue;
             }
 
             calculateCachedEnd(helper);

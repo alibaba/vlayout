@@ -362,6 +362,13 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             } else {
                 mSizePerSpan = (mTotalSize - (count - 1) * mVGap) / count;
             }
+        } else if (!layingOutInPrimaryDirection && remainingSpan == 0 && (count == consumedSpanCount) && mIsAutoExpand) {
+            //autoExpand only support when each cell occupy one span.
+            if (layoutInVertical) {
+                mSizePerSpan = (mTotalSize - (count - 1) * mHGap) / count;
+            } else {
+                mSizePerSpan = (mTotalSize - (count - 1) * mVGap) / count;
+            }
         }
 
 
