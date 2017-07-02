@@ -397,7 +397,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         if (child == null) {
             return 0;
         }
-
+        ensureLanes();
         if (layoutInVertical) {
             // in middle nothing need to do
             if (isLayoutEnd) {
@@ -806,10 +806,10 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     }
 
 
-    private int getMaxStart(int def, OrientationHelper helper) {
-        int maxStart = mSpans[0].getStartLine(def, helper);
+    private int getMaxStart(int defaultValue, OrientationHelper helper) {
+        int maxStart = mSpans[0].getStartLine(defaultValue, helper);
         for (int i = 1; i < mNumLanes; i++) {
-            final int spanStart = mSpans[i].getStartLine(def, helper);
+            final int spanStart = mSpans[i].getStartLine(defaultValue, helper);
             if (spanStart > maxStart) {
                 maxStart = spanStart;
             }
@@ -817,10 +817,10 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         return maxStart;
     }
 
-    private int getMinStart(int def, OrientationHelper helper) {
-        int minStart = mSpans[0].getStartLine(def, helper);
+    private int getMinStart(int defaultValue, OrientationHelper helper) {
+        int minStart = mSpans[0].getStartLine(defaultValue, helper);
         for (int i = 1; i < mNumLanes; i++) {
-            final int spanStart = mSpans[i].getStartLine(def, helper);
+            final int spanStart = mSpans[i].getStartLine(defaultValue, helper);
             if (spanStart < minStart) {
                 minStart = spanStart;
             }
@@ -828,27 +828,23 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         return minStart;
     }
 
-    private int getMaxEnd(int def, OrientationHelper helper) {
-        int maxEnd = mSpans[0].getEndLine(def, helper);
-        Log.d(TAG, "maxEnd " + maxEnd);
+    private int getMaxEnd(int defaultValue, OrientationHelper helper) {
+        int maxEnd = mSpans[0].getEndLine(defaultValue, helper);
         for (int i = 1; i < mNumLanes; i++) {
-            final int spanEnd = mSpans[i].getEndLine(def, helper);
+            final int spanEnd = mSpans[i].getEndLine(defaultValue, helper);
             if (spanEnd > maxEnd) {
                 maxEnd = spanEnd;
-                Log.d(TAG, "new maxEnd " + maxEnd + " i " + i);
             }
         }
         return maxEnd;
     }
 
-    private int getMinEnd(int def, OrientationHelper helper) {
-        int minEnd = mSpans[0].getEndLine(def, helper);
-        Log.d(TAG, "minEnd " + minEnd);
+    private int getMinEnd(int defaultValue, OrientationHelper helper) {
+        int minEnd = mSpans[0].getEndLine(defaultValue, helper);
         for (int i = 1; i < mNumLanes; i++) {
-            final int spanEnd = mSpans[i].getEndLine(def, helper);
+            final int spanEnd = mSpans[i].getEndLine(defaultValue, helper);
             if (spanEnd < minEnd) {
                 minEnd = spanEnd;
-                Log.d(TAG, "new minEnd " + minEnd + " i " + i);
             }
         }
         return minEnd;
@@ -1029,16 +1025,16 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         // Use this one when default value does not make sense and not having a value means a bug.
-        int getStartLine(int def, OrientationHelper helper) {
+        int getStartLine(int defaultValue, OrientationHelper helper) {
             if (mCachedStart != INVALID_LINE) {
                 return mCachedStart;
             }
 
-            if (def != INVALID_LINE && mViews.size() == 0) {
+            if (defaultValue != INVALID_LINE && mViews.size() == 0) {
                 if (mLastEdgeEnd != INVALID_LINE) {
                     return mLastEdgeEnd;
                 }
-                return def;
+                return defaultValue;
             }
 
             calculateCachedStart(helper);
@@ -1059,16 +1055,16 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         // Use this one when default value does not make sense and not having a value means a bug.
-        int getEndLine(int def, OrientationHelper helper) {
+        int getEndLine(int defaultValue, OrientationHelper helper) {
             if (mCachedEnd != INVALID_LINE) {
                 return mCachedEnd;
             }
 
-            if (def != INVALID_LINE && mViews.size() == 0) {
+            if (defaultValue != INVALID_LINE && mViews.size() == 0) {
                 if (mLastEdgeStart != INVALID_LINE) {
                     return mLastEdgeStart;
                 }
-                return def;
+                return defaultValue;
             }
 
             calculateCachedEnd(helper);
