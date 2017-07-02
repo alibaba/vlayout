@@ -127,6 +127,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
     private final Method mEnsureLayoutStateMethod;
 
+    private int recycleOffset;
 
     /**
      * Creates a vertical LinearLayoutManager
@@ -225,6 +226,10 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     public void setOrientation(int orientation) {
         super.setOrientation(orientation);
         mOrientationHelper = null;
+    }
+
+    public void setRecycleOffset(int recycleOffset) {
+        this.recycleOffset = recycleOffset;
     }
 
     /**
@@ -1032,7 +1037,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         if (mShouldReverseLayoutExpose) {
             for (int i = childCount - 1; i >= 0; i--) {
                 View child = getChildAt(i);
-                if (mOrientationHelper.getDecoratedEnd(child) > limit) {// stop here
+                if (mOrientationHelper.getDecoratedEnd(child) + recycleOffset > limit) {// stop here
                     recycleChildren(recycler, childCount - 1, i);
                     return;
                 }
@@ -1040,7 +1045,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         } else {
             for (int i = 0; i < childCount; i++) {
                 View child = getChildAt(i);
-                if (mOrientationHelper.getDecoratedEnd(child) > limit) {// stop here
+                if (mOrientationHelper.getDecoratedEnd(child) + recycleOffset > limit) {// stop here
                     recycleChildren(recycler, 0, i);
                     return;
                 }
@@ -1070,7 +1075,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         if (mShouldReverseLayoutExpose) {
             for (int i = 0; i < childCount; i++) {
                 View child = getChildAt(i);
-                if (mOrientationHelper.getDecoratedStart(child) < limit) {// stop here
+                if (mOrientationHelper.getDecoratedStart(child) - recycleOffset < limit) {// stop here
                     recycleChildren(recycler, 0, i);
                     return;
                 }
@@ -1078,7 +1083,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         } else {
             for (int i = childCount - 1; i >= 0; i--) {
                 View child = getChildAt(i);
-                if (mOrientationHelper.getDecoratedStart(child) < limit) {// stop here
+                if (mOrientationHelper.getDecoratedStart(child) - recycleOffset < limit) {// stop here
                     recycleChildren(recycler, childCount - 1, i);
                     return;
                 }

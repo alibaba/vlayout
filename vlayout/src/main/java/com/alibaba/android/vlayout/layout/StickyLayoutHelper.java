@@ -75,6 +75,10 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         this.mOffset = offset;
     }
 
+    public boolean isStickyNow() {
+        return !mDoNormalHandle;
+    }
+
     @Override
     public void setItemCount(int itemCount) {
         if (itemCount > 0) {
@@ -259,48 +263,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
         // not normal flow,
         if (!mDoNormalHandle && mPos >= startPosition && mPos <= endPosition) {
-            Log.i("TEST", "abnormal pos: " + mPos + " start: " + startPosition + " end: " + endPosition);
-
-            if (mFixView != null) {
-                int top, bottom;
-                View refer = null;
-                if (mStickyStart) {
-                    for (int i = helper.getChildCount() - 1; i >= 0; i--) {
-                        refer = helper.getChildAt(i);
-                        int anchorPos = helper.getPosition(refer);
-                        if (anchorPos < mPos) { // TODO: when view size is larger than totalSpace!
-                            top = orientationHelper.getDecoratedEnd(refer);
-                            LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
-                            if (layoutHelper instanceof MarginLayoutHelper) {
-                                top = top + ((MarginLayoutHelper) layoutHelper).mMarginBottom + ((MarginLayoutHelper) layoutHelper).mPaddingBottom;
-                            }
-                            if (top >= mOffset + mAdjuster.top) {
-                                mDoNormalHandle = true;
-                            }
-
-                            break;
-                        }
-                    }
-
-
-                } else {
-                    for (int i = 0; i < helper.getChildCount(); i++) {
-                        refer = helper.getChildAt(i);
-                        int anchorPos = helper.getPosition(refer);
-                        if (anchorPos > mPos) {
-                            bottom = orientationHelper.getDecoratedStart(refer);
-                            LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
-                            if (layoutHelper instanceof MarginLayoutHelper) {
-                                bottom = bottom - ((MarginLayoutHelper) layoutHelper).mMarginTop - ((MarginLayoutHelper) layoutHelper).mPaddingTop;
-                            }
-                            if (bottom >= mOffset + mAdjuster.bottom) {
-                                mDoNormalHandle = true;
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
+            fixLayoutStateFromAbnormal2Normal(orientationHelper, recycler, startPosition, endPosition, helper);
         }
 
         if (mDoNormalHandle || state.isPreLayout()) {
@@ -323,195 +286,377 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             if (mFixView.getParent() == null) {
                 helper.addFixedView(mFixView);
             } else {
-                if ((mStickyStart && endPosition >= mPos) || (!mStickyStart && startPosition <= mPos)) {
-                    helper.showView(mFixView);
-                    helper.addFixedView(mFixView);
-                } else {
-                    helper.removeChildView(mFixView);
-                    helper.recycleView(mFixView);
-                    mFixView = null;
-                }
+                fixLayoutStateInCase1(orientationHelper, recycler, startPosition, endPosition, helper);
             }
         } else {
-            // 1. normal flow to abnormal flow; 2. abnormal flow to normal flow
+            fixLayoutStateInCase2(orientationHelper, recycler, startPosition, endPosition, helper);
+        }
+    }
 
-            // (mDoNormalHandle && mFixView != null) || (!mDoNormalHandle && mFixView == null)
-            View eView = mFixView;
-            if (eView == null) {
-                // !mDoNormalHandle && mFixView == null, find existing view
-                eView = helper.findViewByPosition(mPos);
+    private void fixLayoutStateFromAbnormal2Normal(OrientationHelper orientationHelper, RecyclerView.Recycler recycler, int startPosition, int endPosition,
+        LayoutManagerHelper helper) {
+        //fix status, from abnormal to normal
+        Log.i(TAG, "abnormal pos: " + mPos + " start: " + startPosition + " end: " + endPosition);
+        if (mFixView != null) {
+            int top, bottom;
+            View refer = null;
+            if (mStickyStart) {
+                for (int i = helper.getChildCount() - 1; i >= 0; i--) {
+                    refer = helper.getChildAt(i);
+                    int anchorPos = helper.getPosition(refer);
+                    if (anchorPos < mPos) { // TODO: when view size is larger than totalSpace!
+                        top = orientationHelper.getDecoratedEnd(refer);
+                        LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
+                        if (layoutHelper instanceof MarginLayoutHelper) {
+                            top = top + ((MarginLayoutHelper) layoutHelper).mMarginBottom + ((MarginLayoutHelper) layoutHelper).mPaddingBottom;
+                        }
+                        if (top >= mOffset + mAdjuster.top) {
+                            mDoNormalHandle = true;
+                        }
+
+                        break;
+                    }
+                }
+
+
+            } else {
+                for (int i = 0; i < helper.getChildCount(); i++) {
+                    refer = helper.getChildAt(i);
+                    int anchorPos = helper.getPosition(refer);
+                    if (anchorPos > mPos) {
+                        bottom = orientationHelper.getDecoratedStart(refer);
+                        LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
+                        if (layoutHelper instanceof MarginLayoutHelper) {
+                            bottom = bottom - ((MarginLayoutHelper) layoutHelper).mMarginTop - ((MarginLayoutHelper) layoutHelper).mPaddingTop;
+                        }
+                        if (bottom >= mOffset + mAdjuster.bottom) {
+                            mDoNormalHandle = true;
+                        }
+                        break;
+                    }
+                }
             }
+        }
+    }
 
-            boolean normalHandle = false;
+    private void fixLayoutStateInCase1(OrientationHelper orientationHelper, RecyclerView.Recycler recycler, int startPosition, int endPosition,
+        LayoutManagerHelper helper) {
+        // considering the case when last layoutHelper has margin bottom
+        // 1. normal flow to abnormal flow; 2. abnormal flow to normal flow
+        if ((mStickyStart && endPosition >= mPos) || (!mStickyStart && startPosition <= mPos)) {
+            int consumed = orientationHelper.getDecoratedMeasurement(mFixView);
             boolean layoutInVertical = helper.getOrientation() == VERTICAL;
             final int startAdjust = layoutInVertical ? mAdjuster.top : mAdjuster.left;
             final int endAdjust = layoutInVertical ? mAdjuster.bottom : mAdjuster.right;
-            if ((mStickyStart && endPosition >= mPos) || (!mStickyStart && startPosition <= mPos)) {
 
-                if (eView == null) {
-                    // TODO? why do condition here?
-                    if (mOffset + (mStickyStart ? startAdjust : endAdjust) > 0) {
-                        normalHandle = true;
-                    }
-                    mFixView = recycler.getViewForPosition(mPos);
-                    doMeasure(mFixView, helper);
-                } else if (mStickyStart && orientationHelper.getDecoratedStart(eView) >= orientationHelper.getStartAfterPadding() + mOffset + startAdjust) {
-                    // normal
-                    normalHandle = true;
-                    mFixView = eView;
-                } else if (!mStickyStart && orientationHelper.getDecoratedEnd(eView) <= orientationHelper.getEndAfterPadding() - mOffset - endAdjust) {
-                    // normal
-                    normalHandle = true;
-                    mFixView = eView;
+            int left = 0, top = 0, right = 0, bottom = 0;
+            int index = -1;
+            if (layoutInVertical) {
+                // not support RTL now
+                if (helper.isDoLayoutRTL()) {
+                    right = helper.getContentWidth() - helper.getPaddingRight();
+                    left = right - orientationHelper.getDecoratedMeasurementInOther(mFixView);
                 } else {
-                    // abnormal
-                    // TODO: reuse views
-                    // mFixView = recycler.getViewForPosition(mPos);
-                    mFixView = eView;
+                    left = helper.getPaddingLeft();
+                    right = left + orientationHelper.getDecoratedMeasurementInOther(mFixView);
                 }
+
+                View refer = null;
+                if (mStickyStart) {
+                    for (int i = 0; i < helper.getChildCount(); i++) {
+                        refer = helper.getChildAt(i);
+                        int anchorPos = helper.getPosition(refer);
+                        if (anchorPos > mPos) { // TODO: when view size is larger than totalSpace!
+                            bottom = orientationHelper.getDecoratedStart(refer);
+                            LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
+                            if (layoutHelper instanceof MarginLayoutHelper) {
+                                bottom = bottom - ((MarginLayoutHelper) layoutHelper).mMarginTop - ((MarginLayoutHelper) layoutHelper).mPaddingTop;
+                            }
+                            top = bottom - consumed;
+                            index = i + 1;
+                            mDoNormalHandle = true;
+                            break;
+                        }
+                    }
+                } else {
+                    for (int i = helper.getChildCount() - 1; i >= 0; i--) {
+                        refer = helper.getChildAt(i);
+                        int anchorPos = helper.getPosition(refer);
+                        if (anchorPos < mPos) {
+                            top = orientationHelper.getDecoratedEnd(refer);
+                            LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
+                            if (layoutHelper instanceof MarginLayoutHelper) {
+                                top = top + ((MarginLayoutHelper) layoutHelper).mMarginBottom + ((MarginLayoutHelper) layoutHelper).mPaddingBottom;
+                            }
+                            bottom = top + consumed;
+                            index = i;
+                            mDoNormalHandle = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (refer == null || index < 0) {
+                    // can not find normal view for insert
+                    mDoNormalHandle = false;
+                }
+
+                if (helper.getReverseLayout() || !mStickyStart) {
+                    if (bottom > orientationHelper.getEndAfterPadding() - mOffset - endAdjust) {
+                        mDoNormalHandle = false;
+                    }
+                } else {
+                    if (top < orientationHelper.getStartAfterPadding() + mOffset + startAdjust) {
+                        mDoNormalHandle = false;
+                    }
+                }
+
+                if (!mDoNormalHandle) {
+                    if (helper.getReverseLayout() || !mStickyStart) {
+                        bottom = orientationHelper.getEndAfterPadding() - mOffset - endAdjust;
+                        top = bottom - consumed;
+                    } else {
+                        top = orientationHelper.getStartAfterPadding() + mOffset + startAdjust;
+                        bottom = top + consumed;
+                    }
+                }
+
+            } else {
+                top = helper.getPaddingTop();
+                bottom = top + orientationHelper.getDecoratedMeasurementInOther(mFixView);
+
+                if (mDoNormalHandle) {
+                    View refer = null;
+                    if (mStickyStart) {
+                        for (int i = helper.getChildCount() - 1; i >= 0; i--) {
+                            refer = helper.getChildAt(i);
+                            int anchorPos = helper.getPosition(refer);
+                            if (anchorPos < mPos) { // TODO: when view size is larger than totalSpace!
+                                left = orientationHelper.getDecoratedEnd(refer);
+                                right = left + consumed;
+                                break;
+                            }
+                        }
+                    } else {
+                        for (int i = 0; i < helper.getChildCount(); i++) {
+                            refer = helper.getChildAt(i);
+                            int anchorPos = helper.getPosition(refer);
+                            if (anchorPos > mPos) {
+                                right = orientationHelper.getDecoratedStart(refer);
+                                left = right - consumed;
+                                break;
+                            }
+                        }
+                    }
+                } else if (helper.getReverseLayout() || !mStickyStart) {
+                    right = orientationHelper.getEndAfterPadding() - mOffset - endAdjust;
+                    left = right - consumed;
+                } else {
+                    left = orientationHelper.getStartAfterPadding() + mOffset + startAdjust;
+                    right = left + consumed;
+                }
+
             }
 
+            layoutChild(mFixView, left, top, right, bottom, helper);
 
-            if (mFixView != null) {
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) mFixView.getLayoutParams();
-
-                if (params.isItemRemoved()) {
-                    // item is removed
-                    return;
+            if (mDoNormalHandle) {
+                // offset
+                if (index >= 0) {
+                    helper.addChildView(mFixView, index);
+                    mFixView = null;
                 }
+            } else {
+                helper.showView(mFixView);
+                helper.addFixedView(mFixView);
+            }
+        } else {
+            helper.removeChildView(mFixView);
+            helper.recycleView(mFixView);
+            mFixView = null;
+        }
+    }
 
-                // when do measure in after layout no need to consider scrolled
-                // doMeasure(mFixView, helper);
+    private void fixLayoutStateInCase2(OrientationHelper orientationHelper, RecyclerView.Recycler recycler, int startPosition, int endPosition,
+        LayoutManagerHelper helper) {
+        // 1. normal flow to abnormal flow; 2. abnormal flow to normal flow
+        // (mDoNormalHandle && mFixView != null) || (!mDoNormalHandle && mFixView == null)
+        View eView = mFixView;
+        if (eView == null) {
+            // !mDoNormalHandle && mFixView == null, find existing view
+            eView = helper.findViewByPosition(mPos);
+        }
 
-                // do layout
+        boolean normalHandle = false;
+        boolean layoutInVertical = helper.getOrientation() == VERTICAL;
+        final int startAdjust = layoutInVertical ? mAdjuster.top : mAdjuster.left;
+        final int endAdjust = layoutInVertical ? mAdjuster.bottom : mAdjuster.right;
+        if ((mStickyStart && endPosition >= mPos) || (!mStickyStart && startPosition <= mPos)) {
 
-                int consumed = orientationHelper.getDecoratedMeasurement(mFixView);
-
-
-                int left = 0, top = 0, right = 0, bottom = 0;
-                int index = -1;
-                if (layoutInVertical) {
-                    // not support RTL now
-                    if (helper.isDoLayoutRTL()) {
-                        right = helper.getContentWidth() - helper.getPaddingRight();
-                        left = right - orientationHelper.getDecoratedMeasurementInOther(mFixView);
-                    } else {
-                        left = helper.getPaddingLeft();
-                        right = left + orientationHelper.getDecoratedMeasurementInOther(mFixView);
-                    }
-
-                    if (normalHandle) {
-                        View refer = null;
-                        if (mStickyStart) {
-                            for (int i = helper.getChildCount() - 1; i >= 0; i--) {
-                                refer = helper.getChildAt(i);
-                                int anchorPos = helper.getPosition(refer);
-                                if (anchorPos < mPos) { // TODO: when view size is larger than totalSpace!
-                                    top = orientationHelper.getDecoratedEnd(refer);
-                                    LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
-                                    if (layoutHelper instanceof MarginLayoutHelper) {
-                                        top = top + ((MarginLayoutHelper) layoutHelper).mMarginBottom + ((MarginLayoutHelper) layoutHelper).mPaddingBottom;
-                                    }
-                                    bottom = top + consumed;
-                                    index = i + 1;
-                                    break;
-                                }
-                            }
-                        } else {
-                            for (int i = 0; i < helper.getChildCount(); i++) {
-                                refer = helper.getChildAt(i);
-                                int anchorPos = helper.getPosition(refer);
-                                if (anchorPos > mPos) {
-                                    bottom = orientationHelper.getDecoratedStart(refer);
-                                    LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
-                                    if (layoutHelper instanceof MarginLayoutHelper) {
-                                        bottom = bottom - ((MarginLayoutHelper) layoutHelper).mMarginTop - ((MarginLayoutHelper) layoutHelper).mPaddingTop;
-                                    }
-                                    top = bottom - consumed;
-                                    index = i;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (refer == null || index < 0) {
-                            // can not find normal view for insert
-                            normalHandle = false;
-                        }
-
-                        if (helper.getReverseLayout() || !mStickyStart) {
-                            if (bottom > orientationHelper.getEndAfterPadding() - mOffset - endAdjust) {
-                                normalHandle = false;
-                            }
-                        } else {
-                            if (top < orientationHelper.getStartAfterPadding() + mOffset + startAdjust) {
-                                normalHandle = false;
-                            }
-                        }
-
-                    }
-
-                    if (!normalHandle) {
-                        if (helper.getReverseLayout() || !mStickyStart) {
-                            bottom = orientationHelper.getEndAfterPadding() - mOffset - endAdjust;
-                            top = bottom - consumed;
-                        } else {
-                            top = orientationHelper.getStartAfterPadding() + mOffset + startAdjust;
-                            bottom = top + consumed;
-                        }
-                    }
-
-                } else {
-                    top = helper.getPaddingTop();
-                    bottom = top + orientationHelper.getDecoratedMeasurementInOther(mFixView);
-
-                    if (normalHandle) {
-                        View refer = null;
-                        if (mStickyStart) {
-                            for (int i = helper.getChildCount() - 1; i >= 0; i--) {
-                                refer = helper.getChildAt(i);
-                                int anchorPos = helper.getPosition(refer);
-                                if (anchorPos < mPos) { // TODO: when view size is larger than totalSpace!
-                                    left = orientationHelper.getDecoratedEnd(refer);
-                                    right = left + consumed;
-                                    break;
-                                }
-                            }
-                        } else {
-                            for (int i = 0; i < helper.getChildCount(); i++) {
-                                refer = helper.getChildAt(i);
-                                int anchorPos = helper.getPosition(refer);
-                                if (anchorPos > mPos) {
-                                    right = orientationHelper.getDecoratedStart(refer);
-                                    left = right - consumed;
-                                    break;
-                                }
-                            }
-                        }
-                    } else if (helper.getReverseLayout() || !mStickyStart) {
-                        right = orientationHelper.getEndAfterPadding() - mOffset - endAdjust;
-                        left = right - consumed;
-                    } else {
-                        left = orientationHelper.getStartAfterPadding() + mOffset + startAdjust;
-                        right = left + consumed;
-                    }
-
+            if (eView == null) {
+                // TODO? why do condition here?
+                if (mOffset + (mStickyStart ? startAdjust : endAdjust) > 0) {
+                    normalHandle = true;
                 }
-
-                layoutChild(mFixView, left, top, right, bottom, helper);
-
-                if (normalHandle) {
-                    // offset
-                    if (index >= 0) {
-                        helper.addChildView(mFixView, index);
-                        mFixView = null;
-                    }
-                } else {
-                    helper.addFixedView(mFixView);
-                }
-
+                mFixView = recycler.getViewForPosition(mPos);
+                doMeasure(mFixView, helper);
+            } else if (mStickyStart && orientationHelper.getDecoratedStart(eView) >= orientationHelper.getStartAfterPadding() + mOffset + startAdjust) {
+                // normal
+                normalHandle = true;
+                mFixView = eView;
+            } else if (!mStickyStart && orientationHelper.getDecoratedEnd(eView) <= orientationHelper.getEndAfterPadding() - mOffset - endAdjust) {
+                // normal
+                normalHandle = true;
+                mFixView = eView;
+            } else {
+                // abnormal
+                // TODO: reuse views
+                // mFixView = recycler.getViewForPosition(mPos);
+                mFixView = eView;
             }
         }
+
+
+        if (mFixView != null) {
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) mFixView.getLayoutParams();
+
+            if (params.isItemRemoved()) {
+                // item is removed
+                return;
+            }
+
+            // when do measure in after layout no need to consider scrolled
+            // doMeasure(mFixView, helper);
+
+            // do layout
+
+            int consumed = orientationHelper.getDecoratedMeasurement(mFixView);
+
+
+            int left = 0, top = 0, right = 0, bottom = 0;
+            int index = -1;
+            if (layoutInVertical) {
+                // not support RTL now
+                if (helper.isDoLayoutRTL()) {
+                    right = helper.getContentWidth() - helper.getPaddingRight();
+                    left = right - orientationHelper.getDecoratedMeasurementInOther(mFixView);
+                } else {
+                    left = helper.getPaddingLeft();
+                    right = left + orientationHelper.getDecoratedMeasurementInOther(mFixView);
+                }
+
+                if (normalHandle) {
+                    View refer = null;
+                    if (mStickyStart) {
+                        for (int i = helper.getChildCount() - 1; i >= 0; i--) {
+                            refer = helper.getChildAt(i);
+                            int anchorPos = helper.getPosition(refer);
+                            if (anchorPos < mPos) { // TODO: when view size is larger than totalSpace!
+                                top = orientationHelper.getDecoratedEnd(refer);
+                                LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
+                                if (layoutHelper instanceof MarginLayoutHelper) {
+                                    top = top + ((MarginLayoutHelper) layoutHelper).mMarginBottom + ((MarginLayoutHelper) layoutHelper).mPaddingBottom;
+                                }
+                                bottom = top + consumed;
+                                index = i + 1;
+                                break;
+                            }
+                        }
+                    } else {
+                        for (int i = 0; i < helper.getChildCount(); i++) {
+                            refer = helper.getChildAt(i);
+                            int anchorPos = helper.getPosition(refer);
+                            if (anchorPos > mPos) {
+                                bottom = orientationHelper.getDecoratedStart(refer);
+                                LayoutHelper layoutHelper = helper.findLayoutHelperByPosition(anchorPos);
+                                if (layoutHelper instanceof MarginLayoutHelper) {
+                                    bottom = bottom - ((MarginLayoutHelper) layoutHelper).mMarginTop - ((MarginLayoutHelper) layoutHelper).mPaddingTop;
+                                }
+                                top = bottom - consumed;
+                                index = i;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (refer == null || index < 0) {
+                        // can not find normal view for insert
+                        normalHandle = false;
+                    }
+
+                    if (helper.getReverseLayout() || !mStickyStart) {
+                        if (bottom > orientationHelper.getEndAfterPadding() - mOffset - endAdjust) {
+                            normalHandle = false;
+                        }
+                    } else {
+                        if (top < orientationHelper.getStartAfterPadding() + mOffset + startAdjust) {
+                            normalHandle = false;
+                        }
+                    }
+
+                }
+
+                if (!normalHandle) {
+                    if (helper.getReverseLayout() || !mStickyStart) {
+                        bottom = orientationHelper.getEndAfterPadding() - mOffset - endAdjust;
+                        top = bottom - consumed;
+                    } else {
+                        top = orientationHelper.getStartAfterPadding() + mOffset + startAdjust;
+                        bottom = top + consumed;
+                    }
+                }
+
+            } else {
+                top = helper.getPaddingTop();
+                bottom = top + orientationHelper.getDecoratedMeasurementInOther(mFixView);
+
+                if (normalHandle) {
+                    View refer = null;
+                    if (mStickyStart) {
+                        for (int i = helper.getChildCount() - 1; i >= 0; i--) {
+                            refer = helper.getChildAt(i);
+                            int anchorPos = helper.getPosition(refer);
+                            if (anchorPos < mPos) { // TODO: when view size is larger than totalSpace!
+                                left = orientationHelper.getDecoratedEnd(refer);
+                                right = left + consumed;
+                                break;
+                            }
+                        }
+                    } else {
+                        for (int i = 0; i < helper.getChildCount(); i++) {
+                            refer = helper.getChildAt(i);
+                            int anchorPos = helper.getPosition(refer);
+                            if (anchorPos > mPos) {
+                                right = orientationHelper.getDecoratedStart(refer);
+                                left = right - consumed;
+                                break;
+                            }
+                        }
+                    }
+                } else if (helper.getReverseLayout() || !mStickyStart) {
+                    right = orientationHelper.getEndAfterPadding() - mOffset - endAdjust;
+                    left = right - consumed;
+                } else {
+                    left = orientationHelper.getStartAfterPadding() + mOffset + startAdjust;
+                    right = left + consumed;
+                }
+
+            }
+
+            layoutChild(mFixView, left, top, right, bottom, helper);
+
+            if (normalHandle) {
+                // offset
+                if (index >= 0) {
+                    helper.addChildView(mFixView, index);
+                    mFixView = null;
+                }
+            } else {
+                helper.addFixedView(mFixView);
+            }
+
+        }
+        mDoNormalHandle = normalHandle;
     }
 
 
