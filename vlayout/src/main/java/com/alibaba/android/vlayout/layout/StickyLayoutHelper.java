@@ -75,6 +75,10 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         this.mOffset = offset;
     }
 
+    public boolean isStickyNow() {
+        return !mDoNormalHandle;
+    }
+
     @Override
     public void setItemCount(int itemCount) {
         if (itemCount > 0) {
