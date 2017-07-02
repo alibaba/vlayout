@@ -382,7 +382,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         if (state == RecyclerView.SCROLL_STATE_IDLE) {
-            checkForGaps();
+            //checkForGaps();
         }
     }
 
