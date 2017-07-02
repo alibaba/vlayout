@@ -403,6 +403,13 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             } else {
                 rangeStyle.mSizePerSpan = (mTotalSize - (count - 1) * rangeStyle.mVGap) / count;
             }
+        } else if (!layingOutInPrimaryDirection && remainingSpan == 0 && (count == consumedSpanCount) && rangeStyle.mIsAutoExpand) {
+            //autoExpand only support when each cell occupy one span.
+            if (layoutInVertical) {
+                rangeStyle.mSizePerSpan = (mTotalSize - (count - 1) * rangeStyle.mHGap) / count;
+            } else {
+                rangeStyle.mSizePerSpan = (mTotalSize - (count - 1) * rangeStyle.mVGap) / count;
+            }
         }
 
 
