@@ -186,14 +186,14 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     @Override
     public void afterLayout(RecyclerView.Recycler recycler, RecyclerView.State state, int startPosition, int endPosition, int scrolled, LayoutManagerHelper helper) {
         super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
-
         if (startPosition > getRange().getUpper() || endPosition < getRange().getLower()) {
+            //do not in visible screen, skip
             return;
         }
-
         if (!state.isPreLayout() && helper.getChildCount() > 0) {
             // call after doing layout, to check whether there is a gap between staggered layout and other layouts
-            ViewCompat.postOnAnimation(helper.getChildAt(0), checkForGapsRunnable);
+            // TODO ask for help? why there's a gap here, as far as know, it happens only when there's a sticky upon staggered which is in abnormal status
+            //ViewCompat.postOnAnimation(helper.getChildAt(0), checkForGapsRunnable); comment by longerian
         }
     }
 
@@ -256,7 +256,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
             // handle margin for start/end line
             isStartLine = position - getRange().getLower() < mNumLanes;
-            isEndLine = getRange().getUpper() - position - 1 < mNumLanes;
+            isEndLine = getRange().getUpper() - position < mNumLanes; //fix the end line condiition
 
             helper.addChildView(layoutState, view);
 
@@ -292,10 +292,10 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             } else {
                 if (isEndLine) {
                     end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mMarginBottom + mPaddingRight : mMarginRight + mPaddingRight);
-                    //Log.d(TAG", "endLine " + position + " " + end);
+                    //Log.d(TAG, "endLine " + position + " " + end);
                 } else {
                     end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mVGap : mHGap);
-                    //Log.d(TAG", "normalEndLine " + position + " " + end);
+                    //Log.d(TAG, "normalEndLine " + position + " " + end);
                 }
                 start = end - orientationHelper.getDecoratedMeasurement(view);
             }
