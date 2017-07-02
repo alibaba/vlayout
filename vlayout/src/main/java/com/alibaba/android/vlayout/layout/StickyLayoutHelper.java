@@ -652,6 +652,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             }
 
         }
+        mDoNormalHandle = normalHandle;
     }
 
 
