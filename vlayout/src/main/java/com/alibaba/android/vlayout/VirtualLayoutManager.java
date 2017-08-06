@@ -379,6 +379,24 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         }
     }
 
+    public void runAdjustLayout() {
+        final int startPosition = findFirstVisibleItemPosition();
+        final LayoutHelper firstLayoutHelper = mHelperFinder.getLayoutHelper(startPosition);
+        final int endPosition = findLastVisibleItemPosition();
+        final LayoutHelper lastLayoutHelper = mHelperFinder.getLayoutHelper(endPosition);
+        List<LayoutHelper> totalLayoutHelpers = mHelperFinder.getLayoutHelpers();
+        final int start = totalLayoutHelpers.indexOf(firstLayoutHelper);
+        final int end = totalLayoutHelpers.indexOf(lastLayoutHelper);
+        for (int i = start; i <= end; i++) {
+            try {
+                totalLayoutHelpers.get(i).adjustLayout(startPosition, endPosition, this);
+            } catch (Exception e) {
+                if (VirtualLayoutManager.sDebuggable) {
+                    throw e;
+                }
+            }
+        }
+    }
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {

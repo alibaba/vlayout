@@ -270,6 +270,14 @@ public abstract class LayoutHelper {
                                      int startPosition, int endPosition, int scrolled,
                                      LayoutManagerHelper helper);
 
+    /**
+     * Run to adjust layoutHelper's background area
+     * @param startPosition
+     * @param endPosition
+     * @param helper
+     */
+    public abstract void adjustLayout(int startPosition, int endPosition, LayoutManagerHelper helper);
+
     public void onItemsChanged(LayoutManagerHelper helper) {
 
     }
