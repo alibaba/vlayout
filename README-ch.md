@@ -137,6 +137,10 @@ recycler.setAdapter(myAdapter);
 
 [Demo工程](https://github.com/alibaba/vlayout/tree/master/examples)
 
+# FAQ
+
+使用之前或者碰到问题的时候，建议先看看其他[FAQ](docs/VLayoutFAQ.md)。
+
 # 布局属性
 
 每一种layoutHelper都有自己的布局属性来控制布局样式，详情请参考[文档](docs/ATTRIBUTES-ch.md)。
