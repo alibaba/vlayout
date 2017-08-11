@@ -56,3 +56,7 @@ RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListen
 在使用方的图片加载成功回调函数里设置一下图片加载成功的状态，可以自行维护一个map或者给View设置一个tag标记。
 
 我们提供了一个简单的`DefaultLayoutViewHelper`封装了这个逻辑，可以参考使用。
+
+## 在可滚动区域里嵌套使用vlayout的RecyclerView
+
+不太建议嵌套滚动，除非手势不冲突；如果要完全展开vlayout里的内容，牺牲滚动复用，可以调用`VirtualLayoutManager`的`public void setNestedScrolling(boolean nestedScrolling, int maxMeasureSize)`方法设置一下， 第一个参数为true，第二个参数是计算vlayout区域的最大高度（最终会修正成实际高度）。
