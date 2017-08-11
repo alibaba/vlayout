@@ -27,11 +27,11 @@ By providing a custom LayoutManager to RecyclerView, VirtualLayout is able to la
 
 ### Import Library
 
-Please find the latest version(1.0.3 so far) in maven repository. The newest version has been upload to jcenter and MavenCentral, make sure you have added at least one of these repositories.
+Please find the latest version(1.0.9 so far) in maven repository. The newest version has been upload to jcenter and MavenCentral, make sure you have added at least one of these repositories.
 
 For gradle:
 ``` gradle
-compile ('com.alibaba.android:vlayout:1.0.7@aar') {
+compile ('com.alibaba.android:vlayout:1.0.9@aar') {
 	transitive = true
 }
 ```
@@ -42,7 +42,7 @@ pom.xml
 <dependency>
   <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
-  <version>1.0.7</version>
+  <version>1.0.9</version>
   <type>aar</type>
 </dependency>
 ```
@@ -128,6 +128,7 @@ Add following configs in your proguard file if your app is released with proguar
 -keep class android.support.v7.widget.RecyclerView$LayoutParams { *; }
 -keep class android.support.v7.widget.RecyclerView$ViewHolder { *; }
 -keep class android.support.v7.widget.ChildHelper { *; }
+-keep class android.support.v7.widget.ChildHelper$Bucket { *; }
 -keep class android.support.v7.widget.RecyclerView$LayoutManager { *; }
 ```
 
