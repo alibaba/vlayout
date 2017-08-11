@@ -414,6 +414,9 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         mIndexAry.clear();
     }
 
+    public int getAdaptersCount(){
+        return mAdapters == null ? 0 : mAdapters.size();
+    }
 
     @Nullable
     public Pair<AdapterDataObserver, Adapter> findAdapterByPosition(int position) {
