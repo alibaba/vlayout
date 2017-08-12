@@ -193,8 +193,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
         if (!state.isPreLayout() && helper.getChildCount() > 0) {
             // call after doing layout, to check whether there is a gap between staggered layout and other layouts
-            // TODO ask for help? why there's a gap here, as far as know, it happens only when there's a sticky upon staggered which is in abnormal status
-            ViewCompat.postOnAnimation(helper.getChildAt(0), checkForGapsRunnable); //comment by longerian
+            ViewCompat.postOnAnimation(helper.getChildAt(0), checkForGapsRunnable);
         }
     }
 

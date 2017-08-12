@@ -295,22 +295,25 @@ public class VLayoutActivity extends Activity {
             adapters.add(new SubAdapter(this, layoutHelper, 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
         }
 
+        //{
+        //    final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(3, 10);
+        //    helper.setBgColor(0xFF86345A);
+        //    adapters.add(new SubAdapter(this, helper, 4) {
+        //
+        //        @Override
+        //        public void onBindViewHolder(MainViewHolder holder, int position) {
+        //            super.onBindViewHolder(holder, position);
+        //            LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
+        //            if (position % 2 == 0) {
+        //                layoutParams.mAspectRatio = 1.0f;
+        //            } else {
+        //                layoutParams.height = 340 + position % 7 * 20;
+        //            }
+        //            holder.itemView.setLayoutParams(layoutParams);
+        //        }
+        //    });
+        //}
         {
-            //final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(3, 10);
-            //helper.setBgColor(0xFF86345A);
-            //adapters.add(new SubAdapter(this, helper, 4) {
-            //    @Override
-            //    public void onBindViewHolder(MainViewHolder holder, int position) {
-            //        super.onBindViewHolder(holder, position);
-            //        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
-            //        if (position % 2 == 0) {
-            //            layoutParams.mAspectRatio = 1.0f;
-            //        } else {
-            //            layoutParams.height = 340 + position % 7 * 20;
-            //        }
-            //        holder.itemView.setLayoutParams(layoutParams);
-            //    }
-            //});
 
             final GridLayoutHelper helper = new GridLayoutHelper(3, 4);
             helper.setBgColor(0xFF86345A);
