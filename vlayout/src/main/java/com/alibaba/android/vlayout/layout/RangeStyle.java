@@ -13,6 +13,7 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.util.SimpleArrayMap;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -496,6 +497,51 @@ public class RangeStyle<T extends RangeStyle> {
             }
             helper.removeChildView(mLayoutView);
             mLayoutView = null;
+        }
+    }
+
+    public void adjustLayout(int startPosition, int endPosition, LayoutManagerHelper helper) {
+        if (!isChildrenEmpty()) {
+            for (int i = 0, size = mChildren.size(); i < size; i++) {
+                RangeStyle rangeStyle = mChildren.valueAt(i);
+                rangeStyle.adjustLayout(startPosition, endPosition, helper);
+            }
+        }
+        if (requireLayoutView()) {
+            View refer = null;
+            Rect tempRect = new Rect();
+            final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+            for (int i = 0; i < helper.getChildCount(); i++) {
+                refer = helper.getChildAt(i);
+                int anchorPos = helper.getPosition(refer);
+                if (getRange().contains(anchorPos)) {
+                    if (refer.getVisibility() == View.GONE) {
+                        tempRect.setEmpty();
+                    } else {
+                        final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
+                            refer.getLayoutParams();
+                        if (helper.getOrientation() == VirtualLayoutManager.VERTICAL) {
+                            tempRect.union(helper.getDecoratedLeft(refer) - params.leftMargin,
+                                orientationHelper.getDecoratedStart(refer),
+                                helper.getDecoratedRight(refer) + params.rightMargin,
+                                orientationHelper.getDecoratedEnd(refer));
+                        } else {
+                            tempRect.union(orientationHelper.getDecoratedStart(refer),
+                                helper.getDecoratedTop(refer) - params.topMargin, orientationHelper.getDecoratedEnd(refer),
+                                helper.getDecoratedBottom(refer) + params.bottomMargin);
+                        }
+                    }
+                }
+            }
+            if (!tempRect.isEmpty()) {
+                mLayoutRegion.set(tempRect.left - mPaddingLeft, tempRect.top - mPaddingTop,
+                    tempRect.right + mPaddingRight, tempRect.bottom + mPaddingBottom);
+            } else {
+                mLayoutRegion.setEmpty();
+            }
+            if (mLayoutView != null) {
+                mLayoutView.layout(mLayoutRegion.left, mLayoutRegion.top, mLayoutRegion.right, mLayoutRegion.bottom);
+            }
         }
     }
 

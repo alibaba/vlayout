@@ -1,0 +1,151 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2017 Alibaba Group
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.jfrog.artifactory'
+
+version = libraryVersion
+
+if (project.hasProperty('deployVersion')) {
+    version = project.getProperty('deployVersion')
+}
+
+if (project.hasProperty("android")) { // Android libraries
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.srcDirs
+    }
+
+//    task javadoc(type: Javadoc) {
+//        source = android.sourceSets.main.java.srcDirs
+//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+
+//        android.libraryVariants.all { variant ->
+//            println variant.javaCompile.classpath.files
+//            if(variant.name == 'release') { //我们只需 release 的 javadoc
+//                task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+//                    // title = ''
+//                    // description = ''
+//                    source = variant.javaCompile.source
+//                    classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
+//                    options {
+//                        encoding "utf-8"
+//                        links "http://docs.oracle.com/javase/7/docs/api/"
+//                        linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
+//                    }
+//                    exclude '**/BuildConfig.java'
+//                    exclude '**/R.java'
+//                }
+//                task("javadoc${variant.name.capitalize()}Jar", type: Jar, dependsOn: "generate${variant.name.capitalize()}Javadoc") {
+//                    classifier = 'javadoc'
+//                    from tasks.getByName("generate${variant.name.capitalize()}Javadoc").destinationDir
+//                }
+//                artifacts {
+//                    archives tasks.getByName("javadoc${variant.name.capitalize()}Jar")
+//                }
+//            }
+//        }
+//
+//    }
+} else { // Java libraries
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+}
+
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+
+artifacts {
+//    archives javadocJar
+    archives sourcesJar
+}
+
+// Bintray
+//Properties properties = new Properties()
+//properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+//    user = properties.getProperty("bintray.user")
+//    key = properties.getProperty("bintray.apikey")
+    user = project.hasProperty('bintrayUser') ? project.getProperty('bintrayUser') : ""
+    key = project.hasProperty('bintrayApikey') ? project.getProperty('bintrayApikey') : ""
+
+    configurations = ['archives']
+    pkg {
+        repo = bintrayRepo
+        name = bintrayName
+        desc = libraryDescription
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        publish = true
+        publicDownloadNumbers = true
+        version {
+            desc = libraryDescription
+            gpg {
+                sign = true //Determines whether to GPG sign the files. The default is false
+//                passphrase = properties.getProperty("bintray.gpg.password")
+                passphrase = project.hasProperty('bintrayGPG') ? project.getProperty('bintrayGPG') : ""
+                //Optional. The passphrase for GPG signing'
+            }
+        }
+    }
+}
+
+artifactory {
+    contextUrl = 'http://oss.jfrog.org/artifactory' //The base Artifactory URL if not overridden by the publisher/resolver
+    resolve {
+        repository {
+            repoKey = 'libs-release'
+        }
+    }
+    publish {
+        repository {
+            repoKey = 'oss-snapshot-local' //The Artifactory repository key to publish to
+            username = bintray.user
+            password = bintray.key
+            maven = true
+        }
+        defaults {
+//            the name is the same with that defined in bintray.configurations
+            publishConfigs('archives')
+        }
+    }
+}
+
+bintrayUpload.onlyIf {
+    !version.endsWith("-SNAPSHOT")
+}
+
+artifactoryPublish.onlyIf {
+    version.endsWith("-SNAPSHOT")
+}
+
+task deploy(dependsOn: ['install', 'bintrayUpload', 'artifactoryPublish']) << {
+    println "deploy ...."
+}

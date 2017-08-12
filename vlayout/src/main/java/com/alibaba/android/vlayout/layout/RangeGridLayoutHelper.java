@@ -698,6 +698,11 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
     }
 
     @Override
+    public void adjustLayout(int startPosition, int endPosition, LayoutManagerHelper helper) {
+        mRangeStyle.adjustLayout(startPosition, endPosition, helper);
+    }
+    
+    @Override
     public int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
         if (isLayoutEnd) {

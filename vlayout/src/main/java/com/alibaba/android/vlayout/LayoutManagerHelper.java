@@ -284,5 +284,12 @@ public interface LayoutManagerHelper {
      */
     int findLastVisibleItemPosition();
 
+    int getDecoratedLeft(View child);
+
+    int getDecoratedTop(View child);
+
+    int getDecoratedRight(View child);
+
+    int getDecoratedBottom(View child);
 }
 

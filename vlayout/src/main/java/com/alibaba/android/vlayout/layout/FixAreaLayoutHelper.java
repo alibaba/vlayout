@@ -24,6 +24,8 @@
 
 package com.alibaba.android.vlayout.layout;
 
+import com.alibaba.android.vlayout.LayoutManagerHelper;
+
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 
@@ -42,6 +44,11 @@ public abstract class FixAreaLayoutHelper extends BaseLayoutHelper {
     public void setFixViewAnimatorHelper(
             FixViewAnimatorHelper fixViewAnimatorHelper) {
         mFixViewAnimatorHelper = fixViewAnimatorHelper;
+    }
+
+    @Override
+    public void adjustLayout(int startPosition, int endPosition, LayoutManagerHelper helper) {
+
     }
 
     public interface FixViewAnimatorHelper {

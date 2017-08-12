@@ -240,14 +240,34 @@ public class VLayoutActivity extends Activity {
 
         if (LINEAR_LAYOUT) {
             LinearLayoutHelper layoutHelper1 = new LinearLayoutHelper();
+            layoutHelper1.setBgColor(Color.YELLOW);
             layoutHelper1.setAspectRatio(2.0f);
+            layoutHelper1.setMargin(10, 10, 10, 10);
+            layoutHelper1.setPadding(10, 10, 10, 10);
             LinearLayoutHelper layoutHelper2 = new LinearLayoutHelper();
             layoutHelper2.setAspectRatio(4.0f);
             layoutHelper2.setDividerHeight(10);
-            layoutHelper2.setMargin(10, 30, 10, 10);
-            layoutHelper2.setPadding(10, 30, 10, 10);
+            layoutHelper2.setMargin(10, 0, 10, 10);
+            layoutHelper2.setPadding(10, 0, 10, 10);
             layoutHelper2.setBgColor(0xFFF5A623);
-            adapters.add(new SubAdapter(this, layoutHelper1, 1));
+            final Handler mainHandler = new Handler(Looper.getMainLooper());
+            adapters.add(new SubAdapter(this, layoutHelper1, 1) {
+                @Override
+                public void onBindViewHolder(final MainViewHolder holder, int position) {
+                    super.onBindViewHolder(holder, position);
+                    final SubAdapter subAdapter = this;
+                    //mainHandler.postDelayed(new Runnable() {
+                    //    @Override
+                    //    public void run() {
+                    //        //delegateAdapter.removeAdapter(subAdapter);
+                    //        //notifyItemRemoved(1);
+                    //        holder.itemView.setVisibility(View.GONE);
+                    //        notifyItemChanged(1);
+                    //        layoutManager.runAdjustLayout();
+                    //    }
+                    //}, 2000L);
+                }
+            });
             adapters.add(new SubAdapter(this, layoutHelper2, 6) {
 
                 @Override
@@ -275,22 +295,25 @@ public class VLayoutActivity extends Activity {
             adapters.add(new SubAdapter(this, layoutHelper, 1, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100)));
         }
 
+        //{
+        //    final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(3, 10);
+        //    helper.setBgColor(0xFF86345A);
+        //    adapters.add(new SubAdapter(this, helper, 4) {
+        //
+        //        @Override
+        //        public void onBindViewHolder(MainViewHolder holder, int position) {
+        //            super.onBindViewHolder(holder, position);
+        //            LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
+        //            if (position % 2 == 0) {
+        //                layoutParams.mAspectRatio = 1.0f;
+        //            } else {
+        //                layoutParams.height = 340 + position % 7 * 20;
+        //            }
+        //            holder.itemView.setLayoutParams(layoutParams);
+        //        }
+        //    });
+        //}
         {
-            //final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(3, 10);
-            //helper.setBgColor(0xFF86345A);
-            //adapters.add(new SubAdapter(this, helper, 4) {
-            //    @Override
-            //    public void onBindViewHolder(MainViewHolder holder, int position) {
-            //        super.onBindViewHolder(holder, position);
-            //        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300);
-            //        if (position % 2 == 0) {
-            //            layoutParams.mAspectRatio = 1.0f;
-            //        } else {
-            //            layoutParams.height = 340 + position % 7 * 20;
-            //        }
-            //        holder.itemView.setLayoutParams(layoutParams);
-            //    }
-            //});
 
             final GridLayoutHelper helper = new GridLayoutHelper(3, 4);
             helper.setBgColor(0xFF86345A);

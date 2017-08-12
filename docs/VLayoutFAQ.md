@@ -56,3 +56,11 @@ RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListen
 在使用方的图片加载成功回调函数里设置一下图片加载成功的状态，可以自行维护一个map或者给View设置一个tag标记。
 
 我们提供了一个简单的`DefaultLayoutViewHelper`封装了这个逻辑，可以参考使用。
+
+## 在可滚动区域里嵌套使用vlayout的RecyclerView
+
+不太建议嵌套滚动，除非手势不冲突；如果要完全展开vlayout里的内容，牺牲滚动复用，可以调用`VirtualLayoutManager`的`setNoScrolling(true);`方法设置一下。
+
+## 为GridLayoutHelper的设置自定义SpanSizeLookup
+
+在SpanSizeLookup中，public int getSpanSize(int position)方法参数的position是整个页面的position信息，需要获取当前layoutHelper内的相对位置，需要减去一个偏移量，即position - getStartPosition()。
