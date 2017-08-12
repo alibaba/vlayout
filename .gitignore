@@ -48,5 +48,5 @@ target/
 lint.xml
 
 deploy.gradle
-jcenterDeploy.gradle
-jcenterInstall.gradle
+#jcenterDeploy.gradle
+#jcenterInstall.gradle

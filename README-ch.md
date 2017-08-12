@@ -27,10 +27,10 @@ VirtualLayout是一个针对RecyclerView的LayoutManager扩展, 主要提供一�
 
 ## 使用
 
-版本请参考mvn repository上的最新版本（目前最新版本是1.0.7），最新的 aar 都会发布到 jcenter 和 MavenCentral 上，确保配置了这两个仓库源，然后引入aar依赖：
+版本请参考mvn repository上的最新版本（目前最新版本是1.0.9），最新的 aar 都会发布到 jcenter 和 MavenCentral 上，确保配置了这两个仓库源，然后引入aar依赖：
 
 ``` gradle 
-compile ('com.alibaba.android:vlayout:1.0.7@aar') {
+compile ('com.alibaba.android:vlayout:1.0.9@aar') {
 	transitive = true
 }
 ```
@@ -41,7 +41,7 @@ pom.xml
 <dependency>
   <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
-  <version>1.0.7</version>
+  <version>1.0.9</version>
   <type>aar</type>
 </dependency>
 ```
@@ -127,6 +127,7 @@ recycler.setAdapter(myAdapter);
 -keep class android.support.v7.widget.RecyclerView$LayoutParams { *; }
 -keep class android.support.v7.widget.RecyclerView$ViewHolder { *; }
 -keep class android.support.v7.widget.ChildHelper { *; }
+-keep class android.support.v7.widget.ChildHelper$Bucket { *; }
 -keep class android.support.v7.widget.RecyclerView$LayoutManager { *; }
 ```
 
@@ -135,6 +136,10 @@ recycler.setAdapter(myAdapter);
 ![](http://img3.tbcdn.cn/L1/461/1/1b9bfb42009047f75cee08ae741505de2c74ac0a)
 
 [Demo工程](https://github.com/alibaba/vlayout/tree/master/examples)
+
+# FAQ
+
+使用之前或者碰到问题的时候，建议先看看其他[FAQ](docs/VLayoutFAQ.md)。
 
 # 布局属性
 

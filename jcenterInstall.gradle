@@ -1,9 +1,7 @@
-apply plugin: 'com.android.application'
-
 /*
  * MIT License
  *
- * Copyright (c) 2016 Alibaba Group
+ * Copyright (c) 2017 Alibaba Group
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,35 +22,45 @@ apply plugin: 'com.android.application'
  * SOFTWARE.
  */
 
-// apply plugin: 'view-inspector'
+apply plugin: 'com.github.dcendents.android-maven'
 
+group = GROUP
 
-android {
-    compileSdkVersion Integer.parseInt(System.properties['compileSdkVersion'])
-    buildToolsVersion System.properties['buildToolsVersion']
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                groupId publishedGroupId
+                artifactId artifact
 
-    defaultConfig {
-        applicationId "com.alibaba.android.vlayout.example"
-        minSdkVersion 14
-        targetSdkVersion Integer.parseInt(System.properties['targetSdkVersion'])
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        debug {
-            minifyEnabled false
-            debuggable true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+                // Add your description here
+                name libraryName
+                description libraryDescription
+                url siteUrl
+
+                // Set your license
+                licenses {
+                    license {
+                        name licenseName
+                        url licenseUrl
+                    }
+                }
+                developers {
+                    developer {
+                        id developerId
+                        name developerName
+                        email developerEmail
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+
+                }
+            }
         }
     }
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':vlayout')
-    compile 'com.crittercism.dexmaker:dexmaker:1.4'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:appcompat-v7:21.0.0'
-    compile 'com.android.support:support-annotations:21.0.0'
-    compile 'com.android.support:cardview-v7:23.1.1'
 }
