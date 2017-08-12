@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.BitSet;
 
 import com.alibaba.android.vlayout.BuildConfig;
+import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.Range;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
@@ -193,7 +194,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         if (!state.isPreLayout() && helper.getChildCount() > 0) {
             // call after doing layout, to check whether there is a gap between staggered layout and other layouts
             // TODO ask for help? why there's a gap here, as far as know, it happens only when there's a sticky upon staggered which is in abnormal status
-            //ViewCompat.postOnAnimation(helper.getChildAt(0), checkForGapsRunnable); comment by longerian
+            ViewCompat.postOnAnimation(helper.getChildAt(0), checkForGapsRunnable); //comment by longerian
         }
     }
 
@@ -382,7 +383,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         if (state == RecyclerView.SCROLL_STATE_IDLE) {
-            //checkForGaps();
+            checkForGaps();
         }
     }
 
@@ -512,6 +513,22 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                         View child = layoutManager.getChildAt(i - 1);
                         alignLine = orientationHelper.getDecoratedEnd(child) + layoutManager.obtainExtraMargin(child, true)
                                 - layoutManager.obtainExtraMargin(view, false);
+                        int viewStart = orientationHelper.getDecoratedStart(view);
+                        if (alignLine == viewStart) {
+                            //actually not gap here skip;
+                            viewAnchor = Integer.MIN_VALUE;
+                        } else {
+                            int nextPosition = layoutManager.getPosition(child);
+                            if (nextPosition != alignPos - 1) {
+                                //may has sticky layout, add extra space occur by stickyLayoutHelper
+                                LayoutHelper layoutHelper = layoutManager.findLayoutHelperByPosition(alignPos - 1);
+                                if (layoutHelper != null && layoutHelper instanceof StickyLayoutHelper) {
+                                    if (layoutHelper.getFixedView() != null) {
+                                        alignLine += layoutHelper.getFixedView().getMeasuredHeight();
+                                    }
+                                }
+                            }
+                        }
                     }
                     break;
                 }
