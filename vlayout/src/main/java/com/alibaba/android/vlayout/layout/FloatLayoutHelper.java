@@ -25,12 +25,12 @@
 package com.alibaba.android.vlayout.layout;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.OrientationHelperEx;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 
 import android.animation.ObjectAnimator;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
@@ -291,7 +291,7 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
         }
 
 
-        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
         int left, top, right, bottom;
 
         if (mAlignType == TOP_RIGHT) {
@@ -337,7 +337,7 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
             top = bottom - (layoutInVertical ? orientationHelper.getDecoratedMeasurement(view) : orientationHelper.getDecoratedMeasurementInOther(view));
         }
 
-        layoutChild(view, left, top, right, bottom, helper);
+        layoutChildWithMargin(view, left, top, right, bottom, helper);
     }
 
 

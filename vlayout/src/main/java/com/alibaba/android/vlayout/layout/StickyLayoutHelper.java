@@ -32,6 +32,7 @@ import android.view.View;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.OrientationHelperEx;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
@@ -118,7 +119,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
         // do layout
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
         result.mConsumed = orientationHelper.getDecoratedMeasurement(view);
 
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
@@ -208,7 +209,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         }
 
 
-        layoutChild(view, left, top, right, bottom, helper);
+        layoutChildWithMargin(view, left, top, right, bottom, helper);
 
         result.mConsumed += (layoutInVertical ? getVerticalMargin() : getHorizontalMargin());
 
@@ -259,7 +260,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             return;
         }
 
-        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
 
         // not normal flow,
         if (!mDoNormalHandle && mPos >= startPosition && mPos <= endPosition) {
@@ -293,7 +294,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         }
     }
 
-    private void fixLayoutStateFromAbnormal2Normal(OrientationHelper orientationHelper, RecyclerView.Recycler recycler, int startPosition, int endPosition,
+    private void fixLayoutStateFromAbnormal2Normal(OrientationHelperEx orientationHelper, RecyclerView.Recycler recycler, int startPosition, int endPosition,
         LayoutManagerHelper helper) {
         //fix status, from abnormal to normal
         Log.i(TAG, "abnormal pos: " + mPos + " start: " + startPosition + " end: " + endPosition);
@@ -339,7 +340,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         }
     }
 
-    private void fixLayoutStateInCase1(OrientationHelper orientationHelper, RecyclerView.Recycler recycler, int startPosition, int endPosition,
+    private void fixLayoutStateInCase1(OrientationHelperEx orientationHelper, RecyclerView.Recycler recycler, int startPosition, int endPosition,
         LayoutManagerHelper helper) {
         // considering the case when last layoutHelper has margin bottom
         // 1. normal flow to abnormal flow; 2. abnormal flow to normal flow
@@ -458,7 +459,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
             }
 
-            layoutChild(mFixView, left, top, right, bottom, helper);
+            layoutChildWithMargin(mFixView, left, top, right, bottom, helper);
 
             if (mDoNormalHandle) {
                 // offset
@@ -477,7 +478,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         }
     }
 
-    private void fixLayoutStateInCase2(OrientationHelper orientationHelper, RecyclerView.Recycler recycler, int startPosition, int endPosition,
+    private void fixLayoutStateInCase2(OrientationHelperEx orientationHelper, RecyclerView.Recycler recycler, int startPosition, int endPosition,
         LayoutManagerHelper helper) {
         // 1. normal flow to abnormal flow; 2. abnormal flow to normal flow
         // (mDoNormalHandle && mFixView != null) || (!mDoNormalHandle && mFixView == null)
@@ -643,7 +644,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
             }
 
-            layoutChild(mFixView, left, top, right, bottom, helper);
+            layoutChildWithMargin(mFixView, left, top, right, bottom, helper);
 
             if (normalHandle) {
                 // offset

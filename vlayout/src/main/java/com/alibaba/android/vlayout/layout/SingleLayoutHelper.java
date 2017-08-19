@@ -24,12 +24,12 @@
 
 package com.alibaba.android.vlayout.layout;
 
-import android.support.v7.widget.OrientationHelper;
+import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.OrientationHelperEx;
+import com.alibaba.android.vlayout.VirtualLayoutManager;
+
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
-import com.alibaba.android.vlayout.LayoutManagerHelper;
-import com.alibaba.android.vlayout.VirtualLayoutManager;
 
 import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 
@@ -119,7 +119,7 @@ public class SingleLayoutHelper extends ColumnLayoutHelper {
             helper.measureChildWithMargins(view, widthSpec, heightSpec);
         }
 
-        OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
 
         result.mConsumed = orientationHelper.getDecoratedMeasurement(view);
 
@@ -168,7 +168,7 @@ public class SingleLayoutHelper extends ColumnLayoutHelper {
             result.mConsumed += getHorizontalMargin() + getHorizontalPadding();
         }
 
-        layoutChild(view, left, top, right, bottom, helper);
+        layoutChildWithMargin(view, left, top, right, bottom, helper);
     }
 
 }
