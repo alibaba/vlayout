@@ -667,11 +667,7 @@ public class RangeStyle<T extends RangeStyle> {
     }
 
     public void layoutChild(final View child, int left, int top, int right, int bottom, @NonNull LayoutManagerHelper helper, boolean addLayoutRegionWithMargin) {
-        if (helper.isEnableMarginOverLap()) {
-            helper.layoutChild(child, left, top, right, bottom);
-        } else {
-            helper.layoutChildWithMargins(child, left, top, right, bottom);
-        }
+        helper.layoutChildWithMargins(child, left, top, right, bottom);
         fillLayoutRegion(left, top, right, bottom, addLayoutRegionWithMargin);
     }
 

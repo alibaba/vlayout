@@ -459,7 +459,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
             }
 
-            layoutChild(mFixView, left, top, right, bottom, helper);
+            layoutChildWithMargin(mFixView, left, top, right, bottom, helper);
 
             if (mDoNormalHandle) {
                 // offset

@@ -200,11 +200,7 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
         }
         // We calculate everything with View's bounding box (which includes decor and margins)
         // To calculate correct layout position, we subtract margins.
-        if (!isOverLapMargin) {
-            layoutChildWithMargin(view, left, top, right, bottom, helper);
-        } else {
-            layoutChild(view, left, top, right, bottom, helper);
-        }
+        layoutChildWithMargin(view, left, top, right, bottom, helper);
 
         if (DEBUG) {
             Log.d(TAG, "laid out child at position " + helper.getPosition(view) + ", with l:"
