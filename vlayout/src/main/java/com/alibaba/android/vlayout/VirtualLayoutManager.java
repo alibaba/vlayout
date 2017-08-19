@@ -43,6 +43,7 @@ import com.alibaba.android.vlayout.layout.BaseLayoutHelper;
 import com.alibaba.android.vlayout.layout.DefaultLayoutHelper;
 import com.alibaba.android.vlayout.layout.FixAreaAdjuster;
 import com.alibaba.android.vlayout.layout.FixAreaLayoutHelper;
+import com.alibaba.android.vlayout.layout.MarginLayoutHelper;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -81,14 +82,16 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     public static final int VERTICAL = OrientationHelper.VERTICAL;
 
 
-    protected OrientationHelper mOrientationHelper;
-    protected OrientationHelper mSecondaryOrientationHelper;
+    protected OrientationHelperEx mOrientationHelper;
+    protected OrientationHelperEx mSecondaryOrientationHelper;
 
     private RecyclerView mRecyclerView;
 
     private boolean mNoScrolling = false;
 
     private boolean mNestedScrolling = false;
+
+    private boolean mEnableMarginOverlapping = false;
 
     private int mMaxMeasureSize = -1;
 
@@ -114,8 +117,8 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
      */
     public VirtualLayoutManager(@NonNull final Context context, int orientation, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
-        this.mOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation);
-        this.mSecondaryOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation == VERTICAL ? HORIZONTAL : VERTICAL);
+        this.mOrientationHelper = OrientationHelperEx.createOrientationHelper(this, orientation);
+        this.mSecondaryOrientationHelper = OrientationHelperEx.createOrientationHelper(this, orientation == VERTICAL ? HORIZONTAL : VERTICAL);
         setHelperFinder(new RangeLayoutHelperFinder());
     }
 
@@ -246,6 +249,18 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         return this.mHelperFinder.getLayoutHelpers();
     }
 
+    public void setEnableMarginOverlapping(boolean enableMarginOverlapping) {
+        mEnableMarginOverlapping = enableMarginOverlapping;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isEnableMarginOverLap() {
+        return mEnableMarginOverlapping;
+    }
+
     /**
      * Either be {@link #HORIZONTAL} or {@link #VERTICAL}
      *
@@ -258,7 +273,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     @Override
     public void setOrientation(int orientation) {
-        this.mOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation);
+        this.mOrientationHelper = OrientationHelperEx.createOrientationHelper(this, orientation);
         super.setOrientation(orientation);
     }
 
@@ -323,9 +338,31 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         }
     }
 
+    public LayoutHelper findNeighbourNonfixLayoutHelper(LayoutHelper layoutHelper, boolean isLayoutEnd) {
+        int position = mHelperFinder.getLayoutHelpers().indexOf(layoutHelper);
+        if (layoutHelper == null || position == 0) {
+            return null;
+        }
+        int next = isLayoutEnd ? position - 1 : position + 1;
+        LayoutHelper helper = mHelperFinder.getLayoutHelper(next);
+        if (helper != null) {
+            if (helper.isFixLayout()) {
+                return null;
+            } else {
+                return helper;
+            }
+        } else {
+            return null;
+        }
+    }
+
     @Override
     protected int computeAlignOffset(View child, boolean isLayoutEnd, boolean useAnchor) {
-        int position = getPosition(child);
+        return computeAlignOffset(getPosition(child), isLayoutEnd, useAnchor);
+    }
+
+    @Override
+    protected int computeAlignOffset(int position, boolean isLayoutEnd, boolean useAnchor) {
         if (position != RecyclerView.NO_POSITION) {
             LayoutHelper helper = mHelperFinder.getLayoutHelper(position);
 
@@ -1156,12 +1193,12 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
     @Override
-    public OrientationHelper getMainOrientationHelper() {
+    public OrientationHelperEx getMainOrientationHelper() {
         return mOrientationHelper;
     }
 
     @Override
-    public OrientationHelper getSecondaryOrientationHelper() {
+    public OrientationHelperEx getSecondaryOrientationHelper() {
         return mSecondaryOrientationHelper;
     }
 
@@ -1192,10 +1229,16 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
     @Override
-    public void layoutChild(View child, int left, int top, int right, int bottom) {
+    public void layoutChildWithMargins(View child, int left, int top, int right, int bottom) {
         final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
         layoutDecorated(child, left + lp.leftMargin, top + lp.topMargin,
                 right - lp.rightMargin, bottom - lp.bottomMargin);
+    }
+
+    @Override
+    public void layoutChild(View child, int left, int top, int right, int bottom) {
+        layoutDecorated(child, left, top,
+                right, bottom);
     }
 
     @Override

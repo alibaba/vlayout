@@ -33,6 +33,7 @@ import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.OrientationHelperEx;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
@@ -181,7 +182,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
         }
 
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
 
         final int parentWidth = helper.getContentWidth();
         final int parentHeight = helper.getContentHeight();
@@ -218,20 +219,6 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
         return Float.NaN;
     }
 
-
-    private int mergeLayoutMargin(int viewMargin, int layoutMargin) {
-        // TODO: collapse has problem
-        if (layoutMargin > 0) {
-            return (viewMargin <= layoutMargin) ? 0 : viewMargin - layoutMargin;
-        }
-        return viewMargin;
-    }
-
-//    @Override
-//    protected void layoutChild(View child, int left, int top, int right, int bottom, @NonNull LayoutManagerHelper helper) {
-//        super.layoutChild(child, left, top, right, bottom, helper, true);
-//    }
-
     @Override
     public int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor,
             LayoutManagerHelper helper) {
@@ -264,7 +251,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
     private int handleOne(LayoutStateWrapper layoutState, LayoutChunkResult result, LayoutManagerHelper helper,
         boolean layoutInVertical, int parentWidth, int parentHeight, int parentHPadding, int parentVPadding) {
         int mainConsumed = 0;
-        OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
 
         View view = mChildrenViews[0];
         final ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(
@@ -296,7 +283,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
         calculateRect(mainConsumed, mAreaRect, layoutState, helper);
 
-        layoutChild(view, mAreaRect.left, mAreaRect.top, mAreaRect.right, mAreaRect.bottom,
+        layoutChildWithMargin(view, mAreaRect.left, mAreaRect.top, mAreaRect.right, mAreaRect.bottom,
             helper);
         handleStateOnResult(result, view);
         return mainConsumed;
@@ -305,7 +292,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
     private int handleTwo(LayoutStateWrapper layoutState, LayoutChunkResult result, LayoutManagerHelper helper,
         boolean layoutInVertical, int parentWidth, int parentHeight, int parentHPadding, int parentVPadding) {
         int mainConsumed = 0;
-        OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
         final View child1 = mChildrenViews[0];
         final ViewGroup.MarginLayoutParams lp1 = new ViewGroup.MarginLayoutParams(
             child1.getLayoutParams());
@@ -350,10 +337,10 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             int right1 = mAreaRect.left + orientationHelper
                 .getDecoratedMeasurementInOther(child1);
 
-            layoutChild(child1, mAreaRect.left, mAreaRect.top,
+            layoutChildWithMargin(child1, mAreaRect.left, mAreaRect.top,
                 right1, mAreaRect.bottom, helper);
 
-            layoutChild(child2,
+            layoutChildWithMargin(child2,
                 right1, mAreaRect.top,
                 right1 + orientationHelper.getDecoratedMeasurementInOther(child2),
                 mAreaRect.bottom, helper);
@@ -392,10 +379,10 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
             int bottom1 = mAreaRect.top + orientationHelper
                 .getDecoratedMeasurementInOther(child1);
-            layoutChild(child1, mAreaRect.left, mAreaRect.top,
+            layoutChildWithMargin(child1, mAreaRect.left, mAreaRect.top,
                 mAreaRect.right, bottom1, helper);
 
-            layoutChild(child2, mAreaRect.left,
+            layoutChildWithMargin(child2, mAreaRect.left,
                 bottom1, mAreaRect.right,
                 bottom1 + orientationHelper.getDecoratedMeasurementInOther(child2), helper);
         }
@@ -407,7 +394,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
     private int handleThree(LayoutStateWrapper layoutState, LayoutChunkResult result, LayoutManagerHelper helper,
         boolean layoutInVertical, int parentWidth, int parentHeight, int parentHPadding, int parentVPadding) {
         int mainConsumed = 0;
-        OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
         final View child1 = mChildrenViews[0];
         final ViewGroup.MarginLayoutParams lp1 = new ViewGroup.MarginLayoutParams(
             child1.getLayoutParams());
@@ -480,16 +467,16 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
             int right1 = mAreaRect.left + orientationHelper
                 .getDecoratedMeasurementInOther(child1);
-            layoutChild(child1, mAreaRect.left, mAreaRect.top, right1,
+            layoutChildWithMargin(child1, mAreaRect.left, mAreaRect.top, right1,
                 mAreaRect.bottom, helper);
 
             int right2 = right1 + orientationHelper.getDecoratedMeasurementInOther(child2);
-            layoutChild(child2,
+            layoutChildWithMargin(child2,
                 right1, mAreaRect.top, right2,
                 mAreaRect.top + child2.getMeasuredHeight() + lp2.topMargin
                     + lp2.bottomMargin, helper);
 
-            layoutChild(child3,
+            layoutChildWithMargin(child3,
                 right1,
                 mAreaRect.bottom - orientationHelper.getDecoratedMeasurement(child3),
                 right1 + orientationHelper.getDecoratedMeasurementInOther(child3),
@@ -506,7 +493,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
         boolean layoutInVertical, int parentWidth, int parentHeight, int parentHPadding, int parentVPadding) {
 
         int mainConsumed = 0;
-        OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
 
         final View child1 = mChildrenViews[0];
         final VirtualLayoutManager.LayoutParams lp1 = new VirtualLayoutManager.LayoutParams(
@@ -594,20 +581,20 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
             int right1 = mAreaRect.left + orientationHelper
                 .getDecoratedMeasurementInOther(child1);
-            layoutChild(child1, mAreaRect.left, mAreaRect.top,
+            layoutChildWithMargin(child1, mAreaRect.left, mAreaRect.top,
                 right1, mAreaRect.bottom, helper);
 
             int right2 = right1 + orientationHelper.getDecoratedMeasurementInOther(child2);
-            layoutChild(child2, right1, mAreaRect.top, right2,
+            layoutChildWithMargin(child2, right1, mAreaRect.top, right2,
                 mAreaRect.top + orientationHelper.getDecoratedMeasurement(child2),
                 helper);
 
             int right3 = right1 + orientationHelper.getDecoratedMeasurementInOther(child3);
-            layoutChild(child3, right1,
+            layoutChildWithMargin(child3, right1,
                 mAreaRect.bottom - orientationHelper.getDecoratedMeasurement(child3),
                 right3, mAreaRect.bottom, helper);
 
-            layoutChild(child4, right3,
+            layoutChildWithMargin(child4, right3,
                 mAreaRect.bottom - orientationHelper.getDecoratedMeasurement(child4),
                 right3 + orientationHelper.getDecoratedMeasurementInOther(child4),
                 mAreaRect.bottom, helper);
@@ -622,7 +609,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
     private int handleFive(LayoutStateWrapper layoutState, LayoutChunkResult result, LayoutManagerHelper helper,
         boolean layoutInVertical, int parentWidth, int parentHeight, int parentHPadding, int parentVPadding) {
         int mainConsumed = 0;
-        OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
         final View child1 = mChildrenViews[0];
         final VirtualLayoutManager.LayoutParams lp1 = new VirtualLayoutManager.LayoutParams(
             child1.getLayoutParams());
@@ -723,26 +710,26 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
             int right1 = mAreaRect.left + orientationHelper
                 .getDecoratedMeasurementInOther(child1);
-            layoutChild(child1, mAreaRect.left, mAreaRect.top,
+            layoutChildWithMargin(child1, mAreaRect.left, mAreaRect.top,
                 right1, mAreaRect.bottom, helper);
 
             int right2 = right1 + orientationHelper.getDecoratedMeasurementInOther(child2);
-            layoutChild(child2, right1, mAreaRect.top, right2,
+            layoutChildWithMargin(child2, right1, mAreaRect.top, right2,
                 mAreaRect.top + orientationHelper.getDecoratedMeasurement(child2),
                 helper);
 
             int right3 = right1 + orientationHelper.getDecoratedMeasurementInOther(child3);
-            layoutChild(child3, right1,
+            layoutChildWithMargin(child3, right1,
                 mAreaRect.bottom - orientationHelper.getDecoratedMeasurement(child3),
                 right3, mAreaRect.bottom, helper);
 
             int right4 = right3 + orientationHelper.getDecoratedMeasurementInOther(child4);
-            layoutChild(child4, right3,
+            layoutChildWithMargin(child4, right3,
                 mAreaRect.bottom - orientationHelper.getDecoratedMeasurement(child4),
                 right3 + orientationHelper.getDecoratedMeasurementInOther(child4),
                 mAreaRect.bottom, helper);
 
-            layoutChild(child5, right4,
+            layoutChildWithMargin(child5, right4,
                 mAreaRect.bottom - orientationHelper.getDecoratedMeasurement(child5),
                 right4 + orientationHelper.getDecoratedMeasurementInOther(child5),
                 mAreaRect.bottom, helper);

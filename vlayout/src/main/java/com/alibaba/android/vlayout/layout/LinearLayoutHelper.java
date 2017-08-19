@@ -24,13 +24,14 @@
 
 package com.alibaba.android.vlayout.layout;
 
-import android.support.v7.widget.OrientationHelper;
+import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.OrientationHelperEx;
+import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
+
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-
-import com.alibaba.android.vlayout.LayoutManagerHelper;
-import com.alibaba.android.vlayout.VirtualLayoutManager;
 
 import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
 
@@ -88,6 +89,7 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
         if (view == null) {
             return;
         }
+        final boolean isOverLapMargin = helper.isEnableMarginOverLap();
 
         VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
@@ -102,19 +104,37 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
                 : currentPosition == getRange().getLower().intValue();
 
         if (isStartLine) {
-            startSpace = layoutInVertical
-                    ? (isLayoutEnd ? mMarginTop + mPaddingTop : mMarginBottom + mPaddingBottom)
-                    : (isLayoutEnd ? mMarginLeft + mPaddingLeft : mMarginRight + mPaddingRight);
+            startSpace = computeStartSpace(helper, layoutInVertical, isLayoutEnd, isOverLapMargin);
         }
 
         if (isEndLine) {
-            endSpace = layoutInVertical
-                    ? (isLayoutEnd ? mMarginBottom + mPaddingBottom : mMarginTop + mPaddingTop)
-                    : (isLayoutEnd ? mMarginRight + mPaddingRight : mMarginLeft + mPaddingLeft);
+            endSpace = computeEndSpace(helper, layoutInVertical, isLayoutEnd, isOverLapMargin);
         }
 
         if (!isStartLine) {
-            gap = mDividerHeight;
+            if (!isOverLapMargin) {
+                gap = mDividerHeight;
+            } else {
+                if (isLayoutEnd) {
+                    int marginTop = params.topMargin;
+                    View sibling = helper.findViewByPosition(currentPosition - 1);
+                    int lastMarginBottom = sibling != null ? ((LayoutParams) sibling.getLayoutParams()).bottomMargin : 0;
+                    if (lastMarginBottom >= 0 && marginTop >= 0) {
+                        gap = Math.max(lastMarginBottom, marginTop);
+                    } else {
+                        gap = lastMarginBottom + marginTop;
+                    }
+                } else {
+                    int marginBottom = params.bottomMargin;
+                    View sibling = helper.findViewByPosition(currentPosition + 1);
+                    int lastMarginTop = sibling != null ? ((LayoutParams) sibling.getLayoutParams()).topMargin : 0;
+                    if (marginBottom >= 0 && lastMarginTop >= 0) {
+                        gap = Math.max(marginBottom, lastMarginTop);
+                    } else {
+                        gap = marginBottom + lastMarginTop;
+                    }
+                }
+            }
         }
 
         final int widthSize = helper.getContentWidth() - helper.getPaddingLeft() - helper
@@ -135,56 +155,61 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
                     layoutInVertical);
         }
 
-        helper.measureChildWithMargins(view, widthSpec, heightSpec);
-
-        OrientationHelper orientationHelper = helper.getMainOrientationHelper();
-        if (view.getVisibility() == View.GONE) {
-            result.mConsumed = startSpace + endSpace + gap;
+        if (!isOverLapMargin) {
+            helper.measureChildWithMargins(view, widthSpec, heightSpec);
         } else {
-            result.mConsumed = orientationHelper.getDecoratedMeasurement(view) + startSpace + endSpace + gap;
-            int left, top, right, bottom;
-            if (helper.getOrientation() == VERTICAL) {
-                // not support RTL now
-                if (helper.isDoLayoutRTL()) {
-                    right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight - mPaddingRight;
-                    left = right - orientationHelper.getDecoratedMeasurementInOther(view);
-                } else {
-                    left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft;
-                    right = left + orientationHelper.getDecoratedMeasurementInOther(view);
-                }
+            helper.measureChild(view, widthSpec, heightSpec);
+        }
 
-                // whether this layout pass is layout to start or to end
-                if (layoutState.getLayoutDirection() == VirtualLayoutManager.LayoutStateWrapper.LAYOUT_START) {
-                    // fill start, from bottom to top
-                    bottom = layoutState.getOffset() - startSpace - (isStartLine ? 0 : mDividerHeight);
-                    top = bottom - orientationHelper.getDecoratedMeasurement(view);
-                } else {
-                    // fill end, from top to bottom
-                    top = layoutState.getOffset() + startSpace + (isStartLine ? 0 : mDividerHeight);
-                    bottom = top + orientationHelper.getDecoratedMeasurement(view);
-                }
+        OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
+        result.mConsumed = orientationHelper.getDecoratedMeasurement(view) + startSpace + endSpace + gap;
+        int left, top, right, bottom;
+        if (helper.getOrientation() == VERTICAL) {
+            // not support RTL now
+            if (helper.isDoLayoutRTL()) {
+                right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight - mPaddingRight;
+                left = right - orientationHelper.getDecoratedMeasurementInOther(view);
             } else {
-                top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
-                bottom = top + orientationHelper.getDecoratedMeasurementInOther(view);
+                left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft;
+                right = left + orientationHelper.getDecoratedMeasurementInOther(view);
+            }
 
-                if (layoutState.getLayoutDirection() == VirtualLayoutManager.LayoutStateWrapper.LAYOUT_START) {
-                    // fill left, from right to left
-                    right = layoutState.getOffset() - startSpace - (isStartLine ? 0 : mDividerHeight);
-                    left = right - orientationHelper.getDecoratedMeasurement(view);
-                } else {
-                    // fill right, from left to right
-                    left = layoutState.getOffset() + startSpace + (isStartLine ? 0 : mDividerHeight);
-                    right = left + orientationHelper.getDecoratedMeasurement(view);
-                }
+            // whether this layout pass is layout to start or to end
+            if (layoutState.getLayoutDirection() == VirtualLayoutManager.LayoutStateWrapper.LAYOUT_START) {
+                // fill start, from bottom to top
+                bottom = layoutState.getOffset() - startSpace - (isStartLine ? 0 : gap);
+                top = bottom - orientationHelper.getDecoratedMeasurement(view);
+            } else {
+                // fill end, from top to bottom
+                top = layoutState.getOffset() + startSpace + (isStartLine ? 0 : gap);
+                bottom = top + orientationHelper.getDecoratedMeasurement(view);
             }
-            // We calculate everything with View's bounding box (which includes decor and margins)
-            // To calculate correct layout position, we subtract margins.
+        } else {
+            top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
+            bottom = top + orientationHelper.getDecoratedMeasurementInOther(view);
+
+            if (layoutState.getLayoutDirection() == VirtualLayoutManager.LayoutStateWrapper.LAYOUT_START) {
+                // fill left, from right to left
+                right = layoutState.getOffset() - startSpace - (isStartLine ? 0 : gap);
+                left = right - orientationHelper.getDecoratedMeasurement(view);
+            } else {
+                // fill right, from left to right
+                left = layoutState.getOffset() + startSpace + (isStartLine ? 0 : gap);
+                right = left + orientationHelper.getDecoratedMeasurement(view);
+            }
+        }
+        // We calculate everything with View's bounding box (which includes decor and margins)
+        // To calculate correct layout position, we subtract margins.
+        if (!isOverLapMargin) {
+            layoutChildWithMargin(view, left, top, right, bottom, helper);
+        } else {
             layoutChild(view, left, top, right, bottom, helper);
-            if (DEBUG) {
-                Log.d(TAG, "laid out child at position " + helper.getPosition(view) + ", with l:"
-                        + (left + params.leftMargin) + ", t:" + (top + params.topMargin) + ", r:"
-                        + (right - params.rightMargin) + ", b:" + (bottom - params.bottomMargin));
-            }
+        }
+
+        if (DEBUG) {
+            Log.d(TAG, "laid out child at position " + helper.getPosition(view) + ", with l:"
+                    + (left + params.leftMargin) + ", t:" + (top + params.topMargin) + ", r:"
+                    + (right - params.rightMargin) + ", b:" + (bottom - params.bottomMargin));
         }
 
         handleStateOnResult(result, view);

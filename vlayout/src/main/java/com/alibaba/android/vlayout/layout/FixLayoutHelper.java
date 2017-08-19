@@ -24,18 +24,16 @@
 
 package com.alibaba.android.vlayout.layout;
 
+import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.OrientationHelperEx;
+import com.alibaba.android.vlayout.VirtualLayoutManager;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewPropertyAnimator;
-
-import com.alibaba.android.vlayout.LayoutManagerHelper;
-import com.alibaba.android.vlayout.VirtualLayoutManager;
 
 import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 
@@ -376,7 +374,7 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
         final VirtualLayoutManager.LayoutParams params = (VirtualLayoutManager.LayoutParams) view
                 .getLayoutParams();
 
-        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
         if (layoutInVertical) {
             final int widthSpec = helper.getChildMeasureSpec(
@@ -471,7 +469,7 @@ public class FixLayoutHelper extends FixAreaLayoutHelper {
                     : orientationHelper.getDecoratedMeasurementInOther(view));
         }
 
-        layoutChild(view, left, top, right, bottom, helper);
+        layoutChildWithMargin(view, left, top, right, bottom, helper);
     }
 
     private static class FixViewAppearAnimatorListener extends AnimatorListenerAdapter {

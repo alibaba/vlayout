@@ -27,6 +27,7 @@ package com.alibaba.android.vlayout.layout;
 import java.util.Arrays;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.OrientationHelperEx;
 import com.alibaba.android.vlayout.Range;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
@@ -36,7 +37,6 @@ import com.alibaba.android.vlayout.layout.GridLayoutHelper.SpanSizeLookup;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Recycler;
 import android.support.v7.widget.RecyclerView.State;
@@ -110,11 +110,13 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
     @Override
     public void setMargin(int leftMargin, int topMargin, int rightMargin, int bottomMargin) {
+        super.setMargin(leftMargin, topMargin, rightMargin, bottomMargin);
         mRangeStyle.setMargin(leftMargin, topMargin, rightMargin, bottomMargin);
     }
 
     @Override
     public void setPadding(int leftPadding, int topPadding, int rightPadding, int bottomPadding) {
+        super.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
         mRangeStyle.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
     }
 
@@ -232,7 +234,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         final boolean layingOutInPrimaryDirection =
             itemDirection == LayoutStateWrapper.ITEM_DIRECTION_TAIL;
 
-        OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
 
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
 
@@ -289,23 +291,13 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                         isStartLine = helper.getReverseLayout() ? index == mRangeStyle.getRange().getUpper().intValue()
                             : index == mRangeStyle.getRange().getLower().intValue();
                     }
-                    if (!isSecondStartLine) {
-                        if (!rangeStyle.equals(mRangeStyle)) {
-                            isSecondStartLine = helper.getReverseLayout() ? index == rangeStyle.getRange().getUpper()
-                                .intValue() : index == rangeStyle.getRange().getLower().intValue();
-                        }
-                    }
+
 
                     if (!isEndLine) {
                         isEndLine = helper.getReverseLayout() ? index == mRangeStyle.getRange().getLower().intValue()
                             : index == mRangeStyle.getRange().getUpper().intValue();
                     }
-                    if (!isSecondEndLine) {
-                        if (!rangeStyle.equals(mRangeStyle)) {
-                            isSecondEndLine = helper.getReverseLayout() ? index == rangeStyle.getRange().getLower()
-                                .intValue() : index == rangeStyle.getRange().getUpper().intValue();
-                        }
-                    }
+
 
                     revRemainingSpan -= spanSize;
                     if (revRemainingSpan < 0) {
@@ -363,6 +355,9 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             }
             if (!isSecondStartLine) {
                 if (!rangeStyle.equals(mRangeStyle)) {
+                    if (mLayoutWithAnchor) {
+                        pos = layoutState.getCurrentPosition();
+                    }
                     isSecondStartLine = helper.getReverseLayout() ? pos == rangeStyle.getRange().getUpper()
                         .intValue() : pos == rangeStyle.getRange().getLower().intValue();
                 }
@@ -375,6 +370,9 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
             if (!isSecondEndLine) {
                 if (!rangeStyle.equals(mRangeStyle)) {
+                    if (mLayoutWithAnchor) {
+                        pos = layoutState.getCurrentPosition();
+                    }
                     isSecondEndLine = helper.getReverseLayout() ? pos == rangeStyle.getRange().getLower()
                         .intValue() : pos == rangeStyle.getRange().getUpper().intValue();
                 }
@@ -514,10 +512,11 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         int startSpace = 0, endSpace = 0;
 
         int secondStartSpace = 0, secondEndSpace = 0;
+        boolean isLayoutEnd = layoutState.getLayoutDirection() == VirtualLayoutManager.LayoutStateWrapper.LAYOUT_END;
+        final boolean isOverLapMargin = helper.isEnableMarginOverLap();
 
         if (isStartLine) {
-            startSpace = layoutInVertical ? mRangeStyle.getMarginTop() + mRangeStyle.getPaddingTop()
-                : mRangeStyle.getMarginLeft() + mRangeStyle.getPaddingLeft();
+            startSpace = computeStartSpace(helper, layoutInVertical, isLayoutEnd, isOverLapMargin);
         }
         if (isSecondStartLine) {
             secondStartSpace = (layoutInVertical ? rangeStyle.getMarginTop() + rangeStyle.getPaddingTop()
@@ -707,11 +706,11 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
         if (isLayoutEnd) {
             if (offset == getItemCount() - 1) {
-                return mRangeStyle.computeEndAlignOffset(layoutInVertical, isLayoutEnd, useAnchor, helper);
+                return GridRangeStyle.computeEndAlignOffset(mRangeStyle, layoutInVertical);
             }
         } else {
             if (offset == 0) {
-                return mRangeStyle.computeStartAlignOffset(layoutInVertical, isLayoutEnd, useAnchor, helper);
+                return GridRangeStyle.computeStartAlignOffset(mRangeStyle, layoutInVertical);
             }
         }
 
@@ -750,7 +749,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
     @Override
     public void checkAnchorInfo(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo, LayoutManagerHelper helper) {
-        if (state.getItemCount() > 0 && !state.isPreLayout()) {
+        if (state.getItemCount() > 0 ) {
             GridRangeStyle rangeStyle = mRangeStyle.findRangeStyleByPosition(anchorInfo.position);
             int span = rangeStyle.mSpanSizeLookup.getCachedSpanIndex(anchorInfo.position, rangeStyle.mSpanCount);
             if (anchorInfo.layoutFromEnd) {
@@ -892,12 +891,17 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
 
         //TODO find style itr
         public GridRangeStyle findRangeStyleByPosition(int position) {
-            GridRangeStyle rangeStyle = this;
-            for (int i = 0, size = mChildren.size(); i < size; i++) {
-                Range range = mChildren.keyAt(i);
-                if (range.contains(position)) {
-                    rangeStyle = mChildren.valueAt(i);
-                    break;
+            return findRangeStyle(this, position);
+        }
+
+        private GridRangeStyle findRangeStyle(GridRangeStyle rangeStyle, int position){
+            for (int i = 0, size = rangeStyle.mChildren.size(); i < size; i++) {
+                GridRangeStyle childRangeStyle = rangeStyle.mChildren.valueAt(i);
+                Range range = rangeStyle.mChildren.keyAt(i);
+                if (!childRangeStyle.isChildrenEmpty()){
+                    return findRangeStyle(childRangeStyle, position);
+                } else if (range.contains(position)) {
+                    return rangeStyle.mChildren.valueAt(i);
                 }
             }
             return rangeStyle;
@@ -929,30 +933,32 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             }
         }
 
-        //TODO compute align itr
-        public int computeEndAlignOffset(boolean layoutInVertical, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
-            int offset = layoutInVertical ? mMarginBottom + mPaddingBottom : mMarginRight + mPaddingRight;
-            int endPosition = mRange.getUpper().intValue();
-            for (int i = 0, size = mChildren.size(); i < size; i++) {
-                GridRangeStyle rangeStyle = mChildren.valueAt(i);
-                if (rangeStyle.mRange.getUpper().intValue() == endPosition) {
-                    offset += (layoutInVertical ? rangeStyle.mMarginBottom + rangeStyle.mPaddingBottom
-                        : rangeStyle.mMarginRight + rangeStyle.mPaddingRight);
+        public static int computeEndAlignOffset(GridRangeStyle rangeStyle, boolean layoutInVertical) {
+            int offset = layoutInVertical ? rangeStyle.mMarginBottom + rangeStyle.mPaddingBottom : rangeStyle.mMarginRight + rangeStyle.mPaddingRight;
+            int endPosition = rangeStyle.getRange().getUpper().intValue();
+            for (int i = 0, size = rangeStyle.mChildren.size(); i < size; i++) {
+                GridRangeStyle childRangeStyle = rangeStyle.mChildren.valueAt(i);
+                if (!childRangeStyle.isChildrenEmpty()){
+                    offset += computeEndAlignOffset(childRangeStyle, layoutInVertical);
+                }else if (childRangeStyle.mRange.getUpper().intValue() == endPosition) {
+                    offset += (layoutInVertical ? childRangeStyle.mMarginBottom + childRangeStyle.mPaddingBottom
+                        : childRangeStyle.mMarginRight + childRangeStyle.mPaddingRight);
                     break;
                 }
             }
             return offset;
         }
 
-        //TODO compute align itr
-        public int computeStartAlignOffset(boolean layoutInVertical, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
-            int offset = layoutInVertical ? -mMarginTop - mPaddingTop : -mMarginLeft - mPaddingLeft;
-            int startPosition = mRange.getLower().intValue();
-            for (int i = 0, size = mChildren.size(); i < size; i++) {
-                GridRangeStyle rangeStyle = mChildren.valueAt(i);
-                if (rangeStyle.mRange.getLower().intValue() == startPosition) {
-                    offset += (layoutInVertical ? -rangeStyle.mMarginTop - rangeStyle.mPaddingTop
-                        : -rangeStyle.mMarginLeft - rangeStyle.mPaddingLeft);
+        public static int computeStartAlignOffset(GridRangeStyle rangeStyle, boolean layoutInVertical) {
+            int offset = layoutInVertical ? -rangeStyle.mMarginTop - rangeStyle.mPaddingTop : -rangeStyle.mMarginLeft - rangeStyle.mPaddingLeft;
+            int startPosition = rangeStyle.getRange().getLower().intValue();
+            for (int i = 0, size = rangeStyle.mChildren.size(); i < size; i++) {
+                GridRangeStyle childRangeStyle = rangeStyle.mChildren.valueAt(i);
+                if (!childRangeStyle.isChildrenEmpty()){
+                    offset += computeStartAlignOffset(childRangeStyle, layoutInVertical);
+                }else if (childRangeStyle.mRange.getLower().intValue() == startPosition) {
+                    offset += (layoutInVertical ? -childRangeStyle.mMarginTop - childRangeStyle.mPaddingTop
+                        : -childRangeStyle.mMarginLeft - childRangeStyle.mPaddingLeft);
                     break;
                 }
             }
