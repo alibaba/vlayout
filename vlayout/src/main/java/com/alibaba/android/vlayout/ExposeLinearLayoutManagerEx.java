@@ -87,7 +87,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
      * Based on {@link #mOrientation}, an implementation is lazily created in
      * {@link #ensureLayoutStateExpose} method.
      */
-    private OrientationHelper mOrientationHelper;
+    private OrientationHelperEx mOrientationHelper;
 
     /**
      * We need to track this so that we can ignore current position when it changes.
@@ -806,7 +806,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         }
 
         if (mOrientationHelper == null) {
-            mOrientationHelper = OrientationHelper.createOrientationHelper(this, getOrientation());
+            mOrientationHelper = OrientationHelperEx.createOrientationHelper(this, getOrientation());
         }
 
         try {
@@ -918,6 +918,20 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         return 0;
     }
 
+    /**
+     * adjust align offset when fill view during scrolling or get margins when layout from anchor
+     *
+     * @param position
+     * @param isLayoutEnd
+     * @return
+     */
+    protected int computeAlignOffset(int position, boolean isLayoutEnd, boolean useAnchor) {
+        return 0;
+    }
+
+    public boolean isEnableMarginOverLap() {
+        return false;
+    }
 
     /**
      * {@inheritDoc}

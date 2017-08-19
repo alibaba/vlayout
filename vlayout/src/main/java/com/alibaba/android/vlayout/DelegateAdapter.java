@@ -418,6 +418,20 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         return mAdapters == null ? 0 : mAdapters.size();
     }
 
+    /**
+     *
+     * @param absoultePosition
+     * @return the relative position in sub adapter by the absoulte position in DelegaterAdapter. Return -1 if no sub adapter founded.
+     */
+    public int findOffsetPosition(int absoultePosition) {
+        Pair<AdapterDataObserver, Adapter> p = findAdapterByPosition(absoultePosition);
+        if (p == null) {
+            return -1;
+        }
+        int subAdapterPosition = absoultePosition - p.first.mStartPosition;
+        return subAdapterPosition;
+    }
+
     @Nullable
     public Pair<AdapterDataObserver, Adapter> findAdapterByPosition(int position) {
         final int count = mAdapters.size();
@@ -472,6 +486,14 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         public void updateStartPositionAndIndex(int startPosition, int index) {
             this.mStartPosition = startPosition;
             this.mIndex = index;
+        }
+
+        public int getStartPosition() {
+            return mStartPosition;
+        }
+
+        public int getIndex() {
+            return mIndex;
         }
 
         private boolean updateLayoutHelper(){

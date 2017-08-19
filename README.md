@@ -138,6 +138,10 @@ Add following configs in your proguard file if your app is released with proguar
 
 [Demo Project](https://github.com/alibaba/vlayout/tree/master/examples)
 
+# FAQ
+
+Read FAQ(In Chinese language only now) before submitting issue: [FAQ](docs/VLayoutFAQ.md)。
+
 # Layout Attributes
 
 Each layoutHelper has a few attributes to control its layout style. See [this](docs/ATTRIBUTES.md) to read more.

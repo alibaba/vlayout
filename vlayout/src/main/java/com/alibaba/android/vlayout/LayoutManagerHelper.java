@@ -178,14 +178,14 @@ public interface LayoutManagerHelper {
      *
      * @return
      */
-    OrientationHelper getMainOrientationHelper();
+    OrientationHelperEx getMainOrientationHelper();
 
     /**
      * OrientationHelper in secondary direction
      *
      * @return
      */
-    OrientationHelper getSecondaryOrientationHelper();
+    OrientationHelperEx getSecondaryOrientationHelper();
 
     /**
      * Measure children views with decorations, use this to measure children
@@ -215,6 +215,17 @@ public interface LayoutManagerHelper {
          * @param right
          * @param bottom
          */
+    void layoutChildWithMargins(View view, int left, int top, int right, int bottom);
+
+    /**
+     * Layout children views with decorations but without margins.
+     *
+     * @param view
+     * @param left
+     * @param top
+     * @param right
+     * @param bottom
+     */
     void layoutChild(View view, int left, int top, int right, int bottom);
 
     /**
@@ -283,6 +294,11 @@ public interface LayoutManagerHelper {
      * @return
      */
     int findLastVisibleItemPosition();
+
+    /**
+     * @return true to make margin between items or layout helpers overlapping, in vlayout, we support both vertical and horizontal margins overlapping between the siblings
+     */
+    boolean isEnableMarginOverLap();
 
     int getDecoratedLeft(View child);
 

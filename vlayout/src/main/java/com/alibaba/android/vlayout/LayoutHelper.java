@@ -303,6 +303,7 @@ public abstract class LayoutHelper {
      */
     public abstract void bindLayoutView(View layoutView);
 
+    public abstract boolean isFixLayout();
 
     /**
      * Get margins between layout when layout child at <code>offset</code>
@@ -314,8 +315,20 @@ public abstract class LayoutHelper {
      * @param helper      view layout helper
      * @return extra offset must be calculated in {@link VirtualLayoutManager}
      */
-    public abstract int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper);
+    public abstract int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor,
+        LayoutManagerHelper helper);
 
+    public abstract int computeMarginStart(int offset, boolean isLayoutEnd, boolean useAnchor,
+        LayoutManagerHelper helper);
+
+    public abstract int computeMarginEnd(int offset, boolean isLayoutEnd, boolean useAnchor,
+        LayoutManagerHelper helper);
+
+    public abstract int computePaddingStart(int offset, boolean isLayoutEnd, boolean useAnchor,
+        LayoutManagerHelper helper);
+
+    public abstract int computePaddingEnd(int offset, boolean isLayoutEnd, boolean useAnchor,
+        LayoutManagerHelper helper);
 
     public void onSaveState(final Bundle bundle) {
 

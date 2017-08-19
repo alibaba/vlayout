@@ -32,6 +32,7 @@ import java.util.BitSet;
 import com.alibaba.android.vlayout.BuildConfig;
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.OrientationHelperEx;
 import com.alibaba.android.vlayout.Range;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
@@ -209,9 +210,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         ensureLanes();
 
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
-        final OrientationHelper secondaryOrientationHelper = helper.getSecondaryOrientationHelper();
-
+        final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
+        final OrientationHelperEx secondaryOrientationHelper = helper.getSecondaryOrientationHelper();
+        final boolean isOverLapMargin = helper.isEnableMarginOverLap();
 
         mRemainingSpans.set(0, mNumLanes, true);
 
@@ -282,7 +283,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 start = currentSpan.getEndLine(defaultNewViewLine, orientationHelper);
 
                 if (isStartLine) {
-                    start += layoutInVertical ? mMarginTop + mPaddingTop : mMarginLeft + mPaddingLeft;
+                    start += computeStartSpace(helper, layoutInVertical, true, isOverLapMargin);
                     //Log.d(TAG", "startLine " + position + " " + start);
                 } else {
                     start += (layoutInVertical ? mVGap : mHGap);
@@ -323,9 +324,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             int otherEnd = otherStart + orientationHelper.getDecoratedMeasurementInOther(view);
 
             if (layoutInVertical) {
-                layoutChild(view, otherStart, start, otherEnd, end, helper);
+                layoutChildWithMargin(view, otherStart, start, otherEnd, end, helper);
             } else {
-                layoutChild(view, start, otherStart, end, otherEnd, helper);
+                layoutChildWithMargin(view, start, otherStart, end, otherEnd, helper);
             }
 
             updateRemainingSpans(currentSpan, layoutState.getLayoutDirection(), targetLine, orientationHelper);
@@ -391,7 +392,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     public int computeAlignOffset(int offset, boolean isLayoutEnd,
                                   boolean useAnchor, LayoutManagerHelper helper) {
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
         final View child = helper.findViewByPosition(offset + getRange().getLower());
 
         if (child == null) {
@@ -466,7 +467,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
 
-        final OrientationHelper orientationHelper = layoutManager.getMainOrientationHelper();
+        final OrientationHelperEx orientationHelper = layoutManager.getMainOrientationHelper();
         final int childCount = layoutManager.getChildCount();
         int viewAnchor = Integer.MIN_VALUE;
         int alignLine = Integer.MIN_VALUE;
@@ -581,7 +582,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
 
     private boolean checkSpanForGap(Span span, VirtualLayoutManager layoutManager, int line) {
-        OrientationHelper orientationHelper = layoutManager.getMainOrientationHelper();
+        OrientationHelperEx orientationHelper = layoutManager.getMainOrientationHelper();
         if (layoutManager.getReverseLayout()) {
             if (span.getEndLine(orientationHelper) < line) {
                 return true;
@@ -595,7 +596,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     private void recycle(RecyclerView.Recycler recycler, LayoutStateWrapper layoutState,
                          Span updatedSpan, int recycleLine, LayoutManagerHelper helper) {
-        OrientationHelper orientation = helper.getMainOrientationHelper();
+        OrientationHelperEx orientation = helper.getMainOrientationHelper();
         if (layoutState.getLayoutDirection() == LAYOUT_START) {
             // calculate recycle line
             int maxStart = getMaxStart(updatedSpan.getStartLine(orientation), orientation);
@@ -610,7 +611,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     }
 
     private void recycleFromStart(RecyclerView.Recycler recycler, int line, LayoutManagerHelper helper) {
-        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
         boolean changed = true;
         while (helper.getChildCount() > 0 && changed) {
             View child = helper.getChildAt(0);
@@ -632,7 +633,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     }
 
     private void recycleFromEnd(RecyclerView.Recycler recycler, int line, LayoutManagerHelper helper) {
-        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
         final int childCount = helper.getChildCount();
         int i;
         for (i = childCount - 1; i >= 0; i--) {
@@ -689,7 +690,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             View child = helper.findViewByPosition(childPos);
 
             if (child != null) {
-                final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+                final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
                 LayoutParams lp = (LayoutParams) child.getLayoutParams();
                 int position = lp.getViewPosition();
 
@@ -728,7 +729,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         return recyclable;
     }
 
-    private void updateAllRemainingSpans(int layoutDir, int targetLine, OrientationHelper helper) {
+    private void updateAllRemainingSpans(int layoutDir, int targetLine, OrientationHelperEx helper) {
         for (int i = 0; i < mNumLanes; i++) {
             if (mSpans[i].mViews.isEmpty()) {
                 continue;
@@ -737,7 +738,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
     }
 
-    private void updateRemainingSpans(Span span, int layoutDir, int targetLine, OrientationHelper helper) {
+    private void updateRemainingSpans(Span span, int layoutDir, int targetLine, OrientationHelperEx helper) {
         final int deletedSize = span.getDeletedSize();
         if (layoutDir == LayoutStateWrapper.LAYOUT_START) {
             final int line = span.getStartLine(helper);
@@ -756,7 +757,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
      * Finds the span for the next view.
      */
     private Span getNextSpan(int defaultLine, LayoutStateWrapper layoutState, LayoutManagerHelper helper) {
-        OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
         boolean preferLastSpan = false;
 
         if (helper.getOrientation() == HORIZONTAL) {
@@ -822,7 +823,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     }
 
 
-    private int getMaxStart(int defaultValue, OrientationHelper helper) {
+    private int getMaxStart(int defaultValue, OrientationHelperEx helper) {
         int maxStart = mSpans[0].getStartLine(defaultValue, helper);
         for (int i = 1; i < mNumLanes; i++) {
             final int spanStart = mSpans[i].getStartLine(defaultValue, helper);
@@ -833,7 +834,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         return maxStart;
     }
 
-    private int getMinStart(int defaultValue, OrientationHelper helper) {
+    private int getMinStart(int defaultValue, OrientationHelperEx helper) {
         int minStart = mSpans[0].getStartLine(defaultValue, helper);
         for (int i = 1; i < mNumLanes; i++) {
             final int spanStart = mSpans[i].getStartLine(defaultValue, helper);
@@ -844,7 +845,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         return minStart;
     }
 
-    private int getMaxEnd(int defaultValue, OrientationHelper helper) {
+    private int getMaxEnd(int defaultValue, OrientationHelperEx helper) {
         int maxEnd = mSpans[0].getEndLine(defaultValue, helper);
         for (int i = 1; i < mNumLanes; i++) {
             final int spanEnd = mSpans[i].getEndLine(defaultValue, helper);
@@ -855,7 +856,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         return maxEnd;
     }
 
-    private int getMinEnd(int defaultValue, OrientationHelper helper) {
+    private int getMinEnd(int defaultValue, OrientationHelperEx helper) {
         int minEnd = mSpans[0].getEndLine(defaultValue, helper);
         for (int i = 1; i < mNumLanes; i++) {
             final int spanEnd = mSpans[i].getEndLine(defaultValue, helper);
@@ -903,7 +904,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
         int mainGap = layoutInVertical ? mVGap : mHGap;
-        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
 
         if (reference == null) {
             if (BuildConfig.DEBUG) {
@@ -1027,7 +1028,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             mIndex = index;
         }
 
-        void calculateCachedStart(@NonNull OrientationHelper helper) {
+        void calculateCachedStart(@NonNull OrientationHelperEx helper) {
             if (mViews.size() == 0) {
                 mCachedStart = INVALID_LINE;
             } else {
@@ -1036,12 +1037,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
         }
 
-        int getStartLine(OrientationHelper helper) {
+        int getStartLine(OrientationHelperEx helper) {
             return getStartLine(INVALID_LINE, helper);
         }
 
         // Use this one when default value does not make sense and not having a value means a bug.
-        int getStartLine(int defaultValue, OrientationHelper helper) {
+        int getStartLine(int defaultValue, OrientationHelperEx helper) {
             if (mCachedStart != INVALID_LINE) {
                 return mCachedStart;
             }
@@ -1057,7 +1058,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             return mCachedStart;
         }
 
-        void calculateCachedEnd(OrientationHelper helper) {
+        void calculateCachedEnd(OrientationHelperEx helper) {
             if (mViews.size() == 0) {
                 mCachedEnd = INVALID_LINE;
             } else {
@@ -1066,12 +1067,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
         }
 
-        int getEndLine(OrientationHelper helper) {
+        int getEndLine(OrientationHelperEx helper) {
             return getEndLine(INVALID_LINE, helper);
         }
 
         // Use this one when default value does not make sense and not having a value means a bug.
-        int getEndLine(int defaultValue, OrientationHelper helper) {
+        int getEndLine(int defaultValue, OrientationHelperEx helper) {
             if (mCachedEnd != INVALID_LINE) {
                 return mCachedEnd;
             }
@@ -1087,7 +1088,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             return mCachedEnd;
         }
 
-        void prependToSpan(View view, OrientationHelper helper) {
+        void prependToSpan(View view, OrientationHelperEx helper) {
             LayoutParams lp = getLayoutParams(view);
             mViews.add(0, view);
             mCachedStart = INVALID_LINE;
@@ -1099,7 +1100,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
         }
 
-        void appendToSpan(View view, OrientationHelper helper) {
+        void appendToSpan(View view, OrientationHelperEx helper) {
             LayoutParams lp = getLayoutParams(view);
             mViews.add(view);
             mCachedEnd = INVALID_LINE;
@@ -1112,7 +1113,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         // Useful method to preserve positions on a re-layout.
-        void cacheReferenceLineAndClear(boolean reverseLayout, int offset, OrientationHelper helper) {
+        void cacheReferenceLineAndClear(boolean reverseLayout, int offset, OrientationHelperEx helper) {
             int reference;
             if (reverseLayout) {
                 reference = getEndLine(helper);
@@ -1152,7 +1153,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             mLastEdgeStart = mLastEdgeEnd = INVALID_LINE;
         }
 
-        void popEnd(OrientationHelper helper) {
+        void popEnd(OrientationHelperEx helper) {
             final int size = mViews.size();
             View end = mViews.remove(size - 1);
             final LayoutParams lp = getLayoutParams(end);
@@ -1174,7 +1175,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
 
-        void popStart(OrientationHelper helper) {
+        void popStart(OrientationHelperEx helper) {
             View start = mViews.remove(0);
             final LayoutParams lp = getLayoutParams(start);
             if (mViews.size() == 0) {
@@ -1223,7 +1224,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         // normalized offset is how much this span can scroll
-        int getNormalizedOffset(int dt, int targetStart, int targetEnd, OrientationHelper helper) {
+        int getNormalizedOffset(int dt, int targetStart, int targetEnd, OrientationHelperEx helper) {
             if (mViews.size() == 0) {
                 return 0;
             }
@@ -1249,7 +1250,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
          * @param end   The end line
          * @return true if a new child can be added between start and end
          */
-        boolean isEmpty(int start, int end, OrientationHelper orientationHelper) {
+        boolean isEmpty(int start, int end, OrientationHelperEx orientationHelper) {
             final int count = mViews.size();
             for (int i = 0; i < count; i++) {
                 final View view = mViews.get(i);
