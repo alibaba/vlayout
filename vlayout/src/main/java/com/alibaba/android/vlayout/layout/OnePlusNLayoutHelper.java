@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.OrientationHelperEx;
+import com.alibaba.android.vlayout.Range;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
@@ -250,8 +251,8 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
         Arrays.fill(mChildrenViews, null);
         Arrays.fill(mContentViews, null);
-        mHeader = null;
-        mFooter = null;
+        //mHeader = null;
+        //mFooter = null;
     }
 
 
@@ -266,19 +267,12 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
     @Override
     public int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor,
             LayoutManagerHelper helper) {
-        if (getItemCount() == 3) {
-            if (offset == 1 && isLayoutEnd) {
-                Log.w(TAG, "Should not happen after adjust anchor");
-                return 0;
-            }
-        } else if (getItemCount() == 4) {
-            if (offset == 1 && isLayoutEnd) {
-                return 0;
-            }
-        } else if (getItemCount() == 5) {
-            if (offset == 1 && isLayoutEnd) {
-                return 0;
-            }
+        if (offset == 1 && isLayoutEnd) {
+            Log.w(TAG, "Should not happen after adjust anchor without header");
+            return 0;
+        } else if (offset == 1 && useAnchor) {
+            Log.w(TAG, "Happens when header scroll out of windown and layoutManager use first content view as anchor to layout");
+            return -mMarginTop - mPaddingTop - (mHeader != null ? mHeader.getMeasuredHeight() : 0);
         }
 
         if (helper.getOrientation() == VERTICAL) {
