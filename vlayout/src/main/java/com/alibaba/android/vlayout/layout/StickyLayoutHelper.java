@@ -381,7 +381,6 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                             bottom = top + consumed;
                             index = i;
                             mDoNormalHandle = true;
-                            Log.d("Longer", "compute bottom top " + bottom + " " + top);
                             break;
                         }
                     }
