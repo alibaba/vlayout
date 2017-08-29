@@ -152,7 +152,7 @@ public class VLayoutActivity extends Activity {
             }
         });
 
-        //layoutManager.setRecycleOffset(300);
+        layoutManager.setRecycleOffset(300);
 
         recyclerView.setLayoutManager(layoutManager);
 

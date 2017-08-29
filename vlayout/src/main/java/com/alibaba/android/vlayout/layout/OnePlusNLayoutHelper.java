@@ -275,6 +275,10 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             if (offset == 1 && isLayoutEnd) {
                 return 0;
             }
+        } else if (getItemCount() == 5) {
+            if (offset == 1 && isLayoutEnd) {
+                return 0;
+            }
         }
 
         if (helper.getOrientation() == VERTICAL) {

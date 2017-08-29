@@ -591,7 +591,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
                         ? (isLayoutEnd ? calGap(lastMarginLayoutHelper.mMarginBottom, mMarginTop) : calGap(lastMarginLayoutHelper.mMarginTop, mMarginBottom))
                         : (isLayoutEnd ? calGap(lastMarginLayoutHelper.mMarginRight, mMarginLeft) : calGap(lastMarginLayoutHelper.mMarginLeft, mMarginRight));
             }
-            Log.e("huang", "computeStartSpace offset: " + offset + ", isLayoutEnd: " + isLayoutEnd + ", " + this);
+            //Log.e("huang", "computeStartSpace offset: " + offset + ", isLayoutEnd: " + isLayoutEnd + ", " + this);
             startSpace += layoutInVertical
                     ? (isLayoutEnd ? mPaddingTop : mPaddingBottom)
                     : (isLayoutEnd ? mPaddingLeft : mPaddingRight);
@@ -605,8 +605,8 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         int endSpace = layoutInVertical
                 ? (isLayoutEnd ? mMarginBottom + mPaddingBottom : mMarginTop + mPaddingTop)
                 : (isLayoutEnd ? mMarginRight + mPaddingRight : mMarginLeft + mPaddingLeft);
-        Log.e("huang", "computeEndSpace offset: " + endSpace + ", isLayoutEnd: " + isLayoutEnd + ", " + this);
-        Log.e("huang", "===================\n\n");
+        //Log.e("huang", "computeEndSpace offset: " + endSpace + ", isLayoutEnd: " + isLayoutEnd + ", " + this);
+        //Log.e("huang", "===================\n\n");
         return endSpace;
     }
 

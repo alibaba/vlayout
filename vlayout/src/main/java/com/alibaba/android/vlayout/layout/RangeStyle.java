@@ -93,7 +93,7 @@ public class RangeStyle<T extends RangeStyle> {
     }
 
     /**
-     * set paddings for this layoutHelper
+     * set paddings for this style
      * @param leftPadding left padding
      * @param topPadding top padding
      * @param rightPadding right padding
@@ -107,7 +107,7 @@ public class RangeStyle<T extends RangeStyle> {
     }
 
     /**
-     * Set margins for this layoutHelper
+     * Set margins for this style
      *
      * @param leftMargin left margin
      * @param topMargin top margin
@@ -219,18 +219,34 @@ public class RangeStyle<T extends RangeStyle> {
         mMarginBottom = marginBottom;
     }
 
+    /**
+     * Get total horizontal margin include its ancestor's and itself's.
+     * @return
+     */
     public int getFamilyHorizontalMargin() {
         return (mParent != null ? mParent.getFamilyHorizontalMargin() : 0) + getHorizontalMargin();
     }
 
+    /**
+     * Get total vertical margin include its ancestor's and itself's.
+     * @return
+     */
     public int getFamilyVerticalMargin() {
         return (mParent != null ? mParent.getFamilyVerticalMargin() : 0) + getVerticalMargin();
     }
 
+    /**
+     * Get total horizontal padding include its ancestor's and itself's.
+     * @return
+     */
     public int getFamilyHorizontalPadding() {
         return (mParent != null ? mParent.getFamilyHorizontalPadding() : 0) + getHorizontalPadding();
     }
 
+    /**
+     * Get total vertical padding include its ancestor's and itself's.
+     * @return
+     */
     public int getFamilyVerticalPadding() {
         return (mParent != null ? mParent.getFamilyVerticalPadding() : 0) + getVerticalPadding();
     }
@@ -267,18 +283,34 @@ public class RangeStyle<T extends RangeStyle> {
         return (mParent != null ? mParent.getFamilyMarginBottom() : 0) + mMarginBottom;
     }
 
+    /**
+     * Get total horizontal margin of its ancestor's.
+     * @return
+     */
     public int getAncestorHorizontalMargin() {
         return (mParent != null ? mParent.getAncestorHorizontalMargin() + mParent.getHorizontalMargin() : 0);
     }
 
+    /**
+     * Get total vertical margin of its ancestor's.
+     * @return
+     */
     public int getAncestorVerticalMargin() {
         return (mParent != null ? mParent.getAncestorVerticalMargin() + mParent.getVerticalMargin(): 0);
     }
 
+    /**
+     * Get total horizontal padding of its ancestor's.
+     * @return
+     */
     public int getAncestorHorizontalPadding() {
         return (mParent != null ? mParent.getAncestorHorizontalPadding() + mParent.getHorizontalPadding() : 0);
     }
 
+    /**
+     * Get total vertical padding of its ancestor's.
+     * @return
+     */
     public int getAncestorVerticalPadding() {
         return (mParent != null ? mParent.getAncestorVerticalPadding() + mParent.getVerticalPadding() : 0);
     }
