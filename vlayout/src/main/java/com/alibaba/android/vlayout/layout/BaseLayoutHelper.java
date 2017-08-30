@@ -34,7 +34,6 @@ import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -562,7 +561,6 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
                 areaRect.right = areaRect.left + mainAxisSize;
             }
         }
-        Log.d("Longer", "areaRect " + areaRect);
     }
 
     protected int computeStartSpace(LayoutManagerHelper helper, boolean layoutInVertical, boolean isLayoutEnd, boolean isOverLapMargin) {

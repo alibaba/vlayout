@@ -265,14 +265,23 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
     }
 
     @Override
+    protected void onClear(LayoutManagerHelper helper) {
+        super.onClear(helper);
+        mHeader = null;
+        mFooter = null;
+    }
+
+    @Override
     public int computeAlignOffset(int offset, boolean isLayoutEnd, boolean useAnchor,
             LayoutManagerHelper helper) {
+        //Log.d("Longer", "range " + getRange() + " offset " + offset + " isLayoutEnd " + isLayoutEnd + " useAnchor " + useAnchor + " mHeader " + (mHeader != null ? mHeader.hashCode() : "null"));
+        OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
         if (offset == 1 && isLayoutEnd) {
             Log.w(TAG, "Should not happen after adjust anchor without header");
             return 0;
-        } else if (offset == 1 && useAnchor) {
-            Log.w(TAG, "Happens when header scroll out of windown and layoutManager use first content view as anchor to layout");
-            return -mMarginTop - mPaddingTop - (mHeader != null ? mHeader.getMeasuredHeight() : 0);
+        } else if (useAnchor) {
+            Log.w(TAG, "Happens when header scroll out of window and layoutManager use first content view as anchor to layout");
+            return -mMarginTop - mPaddingTop - (mHeader != null ? orientationHelper.getDecoratedMeasurement(mHeader) : 0);
         }
 
         if (helper.getOrientation() == VERTICAL) {
