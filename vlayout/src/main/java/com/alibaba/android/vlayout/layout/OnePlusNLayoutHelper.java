@@ -373,7 +373,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
         if (mFooter != null) {
             layoutChildWithMargin(mFooter, mAreaRect.left, mAreaRect.bottom - footerConsumed, mAreaRect.right, mAreaRect.bottom, helper);
         }
-        handleStateOnResult(result, view);
+        handleStateOnResult(result, mHeader, view, mFooter);
         return mainConsumed;
     }
 
@@ -485,7 +485,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                 bottom1 + orientationHelper.getDecoratedMeasurementInOther(child2), helper);
         }
 
-        handleStateOnResult(result, child1, child2);
+        handleStateOnResult(result, mHeader, child1, child2, mFooter);
         return mainConsumed;
     }
 
@@ -592,7 +592,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             // TODO: horizontal support
         }
 
-        handleStateOnResult(result, child1, child2, child3);
+        handleStateOnResult(result, mHeader, child1, child2, child3, mFooter);
         return mainConsumed;
     }
 
@@ -717,7 +717,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             // TODO: horizontal support
         }
 
-        handleStateOnResult(result, child1, child2, child3, child4);
+        handleStateOnResult(result, mHeader, child1, child2, child3, child4, mFooter);
         return mainConsumed;
     }
 
@@ -861,7 +861,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             // TODO: horizontal support
         }
 
-        handleStateOnResult(result, child1, child2, child3, child4, child5);
+        handleStateOnResult(result, mHeader, child1, child2, child3, child4, child5, mFooter);
         return mainConsumed;
     }
 

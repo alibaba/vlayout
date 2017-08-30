@@ -516,6 +516,9 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         if (views == null) return;
 
         for (View view : views) {
+            if (view == null) {
+                continue;
+            }
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
 
             // Consume the available space if the view is not removed OR changed
@@ -559,6 +562,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
                 areaRect.right = areaRect.left + mainAxisSize;
             }
         }
+        Log.d("Longer", "areaRect " + areaRect);
     }
 
     protected int computeStartSpace(LayoutManagerHelper helper, boolean layoutInVertical, boolean isLayoutEnd, boolean isOverLapMargin) {

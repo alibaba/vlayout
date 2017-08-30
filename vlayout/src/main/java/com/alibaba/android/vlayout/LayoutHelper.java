@@ -178,8 +178,8 @@ public abstract class LayoutHelper {
     }
 
     /**
-     * Set zIndex of this {@link LayoutHelper}
-     *
+     * Experimental attribute, set zIndex of this {@link LayoutHelper}，it does not mean the z-index of view. It just reorder the layoutHelpers in linear flow.
+     * Do not use it currently.
      * @param zIndex
      */
     public void setZIndex(int zIndex) {
