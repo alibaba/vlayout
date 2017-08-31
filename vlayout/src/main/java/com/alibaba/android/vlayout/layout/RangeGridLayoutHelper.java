@@ -975,6 +975,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             for (int i = 0, size = rangeStyle.mChildren.size(); i < size; i++) {
                 GridRangeStyle childRangeStyle = rangeStyle.mChildren.valueAt(i);
                 if (!childRangeStyle.isChildrenEmpty()){
+                    //FIXEME may compute the wrong start space here
                     offset += computeStartAlignOffset(childRangeStyle, layoutInVertical);
                 }else if (childRangeStyle.mRange.getLower().intValue() == startPosition) {
                     offset += (layoutInVertical ? -childRangeStyle.mMarginTop - childRangeStyle.mPaddingTop
