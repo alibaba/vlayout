@@ -843,6 +843,26 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         }
     }
 
+    public int getBorderStartSpace(LayoutManagerHelper helper) {
+        int start = getRange().getLower().intValue();
+        RangeStyle rangeStyle = mRangeStyle.findRangeStyleByPosition(start);
+        if (helper.getOrientation() == VERTICAL) {
+            return rangeStyle.getFamilyMarginTop() + rangeStyle.getFamilyPaddingTop();
+        } else {
+            return rangeStyle.getFamilyMarginLeft() + rangeStyle.getFamilyPaddingLeft();
+        }
+    }
+
+    public int getBorderEndSpace(LayoutManagerHelper helper) {
+        int end = getRange().getUpper().intValue();
+        RangeStyle rangeStyle = mRangeStyle.findRangeStyleByPosition(end);
+        if (helper.getOrientation() == VERTICAL) {
+            return rangeStyle.getFamilyMarginBottom() + rangeStyle.getFamilyPaddingBottom();
+        } else {
+            return rangeStyle.getFamilyMarginRight() + rangeStyle.getFamilyPaddingRight();
+        }
+    }
+
     public static class GridRangeStyle extends RangeStyle<GridRangeStyle> {
 
         private float mAspectRatio = Float.NaN;
@@ -955,6 +975,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             for (int i = 0, size = rangeStyle.mChildren.size(); i < size; i++) {
                 GridRangeStyle childRangeStyle = rangeStyle.mChildren.valueAt(i);
                 if (!childRangeStyle.isChildrenEmpty()){
+                    //FIXEME may compute the wrong start space here
                     offset += computeStartAlignOffset(childRangeStyle, layoutInVertical);
                 }else if (childRangeStyle.mRange.getLower().intValue() == startPosition) {
                     offset += (layoutInVertical ? -childRangeStyle.mMarginTop - childRangeStyle.mPaddingTop

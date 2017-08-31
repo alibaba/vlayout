@@ -131,8 +131,9 @@ public abstract class AbstractFullFillLayoutHelper extends BaseLayoutHelper {
     public void checkAnchorInfo(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo, LayoutManagerHelper helper) {
         if (anchorInfo.layoutFromEnd) {
             anchorInfo.position = getRange().getUpper();
-        } else
+        } else {
             anchorInfo.position = getRange().getLower();
+        }
     }
 
     @Override
