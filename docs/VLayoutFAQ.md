@@ -15,6 +15,20 @@
 
 补充：后来发现一个 bug，当 `hasConsistItemType=true`，在同一位置数据变化，前后构造了不一样的 Adapter，它们返回的 itemType 一样，也会导致类型转换出错，详见：[#182](https://github.com/alibaba/vlayout/issues/182)，目前采用人工保证返回不同的 itemType 来规避。
 
+## 设置每种类型回收复用池的大小
+在 README 里写了这么一段 demo：`viewPool.setMaxRecycledViews(0, 10);`，很多人误以为只要这么设置就可以了，实际上有多少种类型的 itemType，就得为它们分别设置复用池大小。比如：
+
+```
+viewPool = new RecyclerView.RecycledViewPool();
+recyclerView.setRecycledViewPool(viewPool);
+viewPool.setMaxRecycledViews(0, 5);
+viewPool.setMaxRecycledViews(1, 5);
+viewPool.setMaxRecycledViews(2, 5);
+viewPool.setMaxRecycledViews(3, 10);
+viewPool.setMaxRecycledViews(4, 10);
+viewPool.setMaxRecycledViews(5, 10);
+...
+```
 ## 下拉刷新和加载更多
 
 VLayout 只负责布局，下拉刷新和加载更多需要业务方自己处理，当然可能存在和一些下拉刷新控件不兼容的 bug。
