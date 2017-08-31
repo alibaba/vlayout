@@ -29,6 +29,21 @@ viewPool.setMaxRecycledViews(4, 10);
 viewPool.setMaxRecycledViews(5, 10);
 ...
 ```
+
+## 混淆问题
+
+如果碰到release包（混淆过）无法正常运行，debug包（一般未混淆）可正常运行，检查一下混淆配置是否完整：
+
+```
+-keepattributes InnerClasses
+-keep class com.alibaba.android.vlayout.ExposeLinearLayoutManagerEx { *; }
+-keep class android.support.v7.widget.RecyclerView$LayoutParams { *; }
+-keep class android.support.v7.widget.RecyclerView$ViewHolder { *; }
+-keep class android.support.v7.widget.ChildHelper { *; }
+-keep class android.support.v7.widget.ChildHelper$Bucket { *; }
+-keep class android.support.v7.widget.RecyclerView$LayoutManager { *; }
+```
+
 ## 下拉刷新和加载更多
 
 VLayout 只负责布局，下拉刷新和加载更多需要业务方自己处理，当然可能存在和一些下拉刷新控件不兼容的 bug。
