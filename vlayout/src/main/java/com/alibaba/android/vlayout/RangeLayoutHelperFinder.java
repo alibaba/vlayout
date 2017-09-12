@@ -53,13 +53,6 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
         }
     };
 
-    private Comparator<LayoutHelper> mLayoutHelperComparator = new Comparator<LayoutHelper>() {
-        @Override
-        public int compare(LayoutHelper lhs, LayoutHelper rhs) {
-            return lhs.getRange().getLower().intValue() - rhs.getRange().getLower().intValue();
-        }
-    };
-
     @Override
     public Iterator<LayoutHelper> iterator() {
         return Collections.unmodifiableList(mLayoutHelpers).iterator();
@@ -102,8 +95,6 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
             }
 
             Collections.sort(mLayoutHelperItems, mLayoutHelperItemComparator);
-
-            Collections.sort(mLayoutHelpers, mLayoutHelperComparator);
         }
     }
 
