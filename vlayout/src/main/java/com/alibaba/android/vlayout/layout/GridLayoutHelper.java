@@ -24,8 +24,8 @@
 
 package com.alibaba.android.vlayout.layout;
 
-import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.OrientationHelperEx;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
@@ -220,12 +220,13 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         boolean isStartLine = false, isEndLine = false;
         final int currentPosition = layoutState.getCurrentPosition();
+        final boolean isOverLapMargin = helper.isEnableMarginOverLap();
 
         final int itemDirection = layoutState.getItemDirection();
         final boolean layingOutInPrimaryDirection =
             itemDirection == LayoutStateWrapper.ITEM_DIRECTION_TAIL;
 
-        OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
 
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
 
@@ -473,11 +474,11 @@ public class GridLayoutHelper extends BaseLayoutHelper {
         int startSpace = 0, endSpace = 0;
 
         if (isStartLine) {
-            startSpace = layoutInVertical ? mMarginTop + mPaddingTop : mMarginLeft + mPaddingLeft;
+            startSpace = computeStartSpace(helper, layoutInVertical, !helper.getReverseLayout(), isOverLapMargin);
         }
 
         if (isEndLine) {
-            endSpace = layoutInVertical ? mMarginBottom + mPaddingBottom : mMarginRight + mPaddingRight;
+            endSpace = computeEndSpace(helper, layoutInVertical, !helper.getReverseLayout(), isOverLapMargin);
         }
 
 
@@ -547,7 +548,7 @@ public class GridLayoutHelper extends BaseLayoutHelper {
             // We calculate everything with View's bounding box (which includes decor and margins)
             // To calculate correct layout position, we subtract margins.
             // modified by huifeng at 20160907, margins are already subtracted
-            layoutChild(view, left, top, right, bottom, helper);
+            layoutChildWithMargin(view, left, top, right, bottom, helper);
 
             // Consume the available space if the view is not removed OR changed
             if (params.isItemRemoved() || params.isItemChanged()) {

@@ -24,16 +24,16 @@
 
 package com.alibaba.android.vlayout.layout;
 
+import java.util.Arrays;
+
+import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.OrientationHelperEx;
+import com.alibaba.android.vlayout.VirtualLayoutManager;
+
 import android.graphics.Rect;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.alibaba.android.vlayout.LayoutManagerHelper;
-import com.alibaba.android.vlayout.VirtualLayoutManager;
-
-import java.util.Arrays;
 
 import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 
@@ -97,7 +97,7 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
         }
 
         final boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-        final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+        final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
 
         final int itemCount = getItemCount();
 
@@ -232,7 +232,7 @@ public class ColumnLayoutHelper extends AbstractFullFillLayoutHelper {
 
                 int right = left + orientationHelper.getDecoratedMeasurementInOther(view);
 
-                layoutChild(view, left, top, right, bottom, helper);
+                layoutChildWithMargin(view, left, top, right, bottom, helper);
 
                 left = right;
             }

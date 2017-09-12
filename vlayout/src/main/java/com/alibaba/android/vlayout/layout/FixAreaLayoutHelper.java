@@ -51,11 +51,35 @@ public abstract class FixAreaLayoutHelper extends BaseLayoutHelper {
 
     }
 
+    public boolean isFixLayout() {
+        return true;
+    }
+
     public interface FixViewAnimatorHelper {
 
         ViewPropertyAnimator onGetFixViewAppearAnimator(View fixView);
 
         ViewPropertyAnimator onGetFixViewDisappearAnimator(View fixView);
 
+    }
+
+    @Override
+    public int computeMarginStart(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
+        return 0;
+    }
+
+    @Override
+    public int computeMarginEnd(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
+        return 0;
+    }
+
+    @Override
+    public int computePaddingStart(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
+        return 0;
+    }
+
+    @Override
+    public int computePaddingEnd(int offset, boolean isLayoutEnd, boolean useAnchor, LayoutManagerHelper helper) {
+        return 0;
     }
 }

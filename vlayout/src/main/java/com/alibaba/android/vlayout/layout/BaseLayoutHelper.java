@@ -26,6 +26,7 @@ package com.alibaba.android.vlayout.layout;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
+import com.alibaba.android.vlayout.OrientationHelperEx;
 import com.alibaba.android.vlayout.R;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
@@ -33,7 +34,6 @@ import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -57,6 +57,11 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     public BaseLayoutHelper() {
 
+    }
+
+    @Override
+    public boolean isFixLayout() {
+        return false;
     }
 
     public int getBgColor() {
@@ -230,7 +235,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         if (requireLayoutView()) {
             View refer = null;
             Rect tempRect = new Rect();
-            final OrientationHelper orientationHelper = helper.getMainOrientationHelper();
+            final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
             for (int i = 0; i < helper.getChildCount(); i++) {
                 refer = helper.getChildAt(i);
                 int anchorPos = helper.getPosition(refer);
@@ -316,6 +321,35 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
     /**
      * Helper function which do layout children and also update layoutRegion
      * but it won't consider margin in layout, so you need take care of margin if you apply margin to your layoutView
+     *
+     * @param child  child that will be laid
+     * @param left   left position
+     * @param top    top position
+     * @param right  right position
+     * @param bottom bottom position
+     * @param helper layoutManagerHelper, help to lay child
+     */
+    protected void layoutChildWithMargin(final View child, int left, int top, int right, int bottom, @NonNull LayoutManagerHelper helper) {
+        layoutChildWithMargin(child, left, top, right, bottom, helper, false);
+    }
+
+    protected void layoutChildWithMargin(final View child, int left, int top, int right, int bottom, @NonNull LayoutManagerHelper helper, boolean addLayoutRegionWithMargin) {
+        helper.layoutChildWithMargins(child, left, top, right, bottom);
+        if (requireLayoutView()) {
+            if (addLayoutRegionWithMargin) {
+                mLayoutRegion
+                        .union(left - mPaddingLeft - mMarginLeft, top - mPaddingTop - mMarginTop,
+                                right + mPaddingRight + mMarginRight,
+                                bottom + mPaddingBottom + mMarginBottom);
+            } else {
+                mLayoutRegion.union(left - mPaddingLeft, top - mPaddingTop, right + mPaddingRight, bottom + mPaddingBottom);
+            }
+        }
+
+    }
+
+    /**
+     * Helper function which do layout children and also update layoutRegion
      *
      * @param child  child that will be laid
      * @param left   left position
@@ -481,6 +515,9 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         if (views == null) return;
 
         for (View view : views) {
+            if (view == null) {
+                continue;
+            }
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
 
             // Consume the available space if the view is not removed OR changed
@@ -526,4 +563,60 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         }
     }
 
+    protected int computeStartSpace(LayoutManagerHelper helper, boolean layoutInVertical, boolean isLayoutEnd, boolean isOverLapMargin) {
+        int startSpace = 0;
+        LayoutHelper lastLayoutHelper = null;
+        if (helper instanceof VirtualLayoutManager) {
+            lastLayoutHelper = ((VirtualLayoutManager) helper).findNeighbourNonfixLayoutHelper(this, isLayoutEnd);
+        }
+        MarginLayoutHelper lastMarginLayoutHelper = null;
+
+        if (lastLayoutHelper != null && lastLayoutHelper instanceof MarginLayoutHelper) {
+            lastMarginLayoutHelper = (MarginLayoutHelper) lastLayoutHelper;
+        }
+        if (lastLayoutHelper == this)
+            return 0;
+
+        if (!isOverLapMargin) {
+            startSpace = layoutInVertical
+                    ? (isLayoutEnd ? mMarginTop + mPaddingTop : mMarginBottom + mPaddingBottom)
+                    : (isLayoutEnd ? mMarginLeft + mPaddingLeft : mMarginRight + mPaddingRight);
+        } else {
+            int offset = 0;
+
+            if (lastMarginLayoutHelper == null) {
+                offset = layoutInVertical
+                        ? (isLayoutEnd ? mMarginTop + mPaddingTop : mMarginBottom + mPaddingBottom)
+                        : (isLayoutEnd ? mMarginLeft + mPaddingLeft : mMarginRight + mPaddingRight);
+            } else {
+                offset = layoutInVertical
+                        ? (isLayoutEnd ? calGap(lastMarginLayoutHelper.mMarginBottom, mMarginTop) : calGap(lastMarginLayoutHelper.mMarginTop, mMarginBottom))
+                        : (isLayoutEnd ? calGap(lastMarginLayoutHelper.mMarginRight, mMarginLeft) : calGap(lastMarginLayoutHelper.mMarginLeft, mMarginRight));
+            }
+            //Log.e("huang", "computeStartSpace offset: " + offset + ", isLayoutEnd: " + isLayoutEnd + ", " + this);
+            startSpace += layoutInVertical
+                    ? (isLayoutEnd ? mPaddingTop : mPaddingBottom)
+                    : (isLayoutEnd ? mPaddingLeft : mPaddingRight);
+
+            startSpace += offset;
+        }
+        return startSpace;
+    }
+
+    protected int computeEndSpace(LayoutManagerHelper helper, boolean layoutInVertical, boolean isLayoutEnd, boolean isOverLapMargin) {
+        int endSpace = layoutInVertical
+                ? (isLayoutEnd ? mMarginBottom + mPaddingBottom : mMarginTop + mPaddingTop)
+                : (isLayoutEnd ? mMarginRight + mPaddingRight : mMarginLeft + mPaddingLeft);
+        //Log.e("huang", "computeEndSpace offset: " + endSpace + ", isLayoutEnd: " + isLayoutEnd + ", " + this);
+        //Log.e("huang", "===================\n\n");
+        return endSpace;
+    }
+
+    private int calGap(int gap, int currGap) {
+        if (gap < currGap) {
+            return currGap - gap;
+        } else {
+            return 0;
+        }
+    }
 }

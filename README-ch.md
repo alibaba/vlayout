@@ -27,10 +27,10 @@ VirtualLayout是一个针对RecyclerView的LayoutManager扩展, 主要提供一�
 
 ## 使用
 
-版本请参考mvn repository上的最新版本（目前最新版本是1.0.9），最新的 aar 都会发布到 jcenter 和 MavenCentral 上，确保配置了这两个仓库源，然后引入aar依赖：
+版本请参考mvn repository上的最新版本（目前最新版本是1.2.0），最新的 aar 都会发布到 jcenter 和 MavenCentral 上，确保配置了这两个仓库源，然后引入aar依赖：
 
 ``` gradle 
-compile ('com.alibaba.android:vlayout:1.0.9@aar') {
+compile ('com.alibaba.android:vlayout:1.2.0@aar') {
 	transitive = true
 }
 ```
@@ -41,7 +41,7 @@ pom.xml
 <dependency>
   <groupId>com.alibaba.android</groupId>
   <artifactId>vlayout</artifactId>
-  <version>1.0.9</version>
+  <version>1.2.0</version>
   <type>aar</type>
 </dependency>
 ```
@@ -117,7 +117,7 @@ recycler.setAdapter(myAdapter);
 
 ```
 
-在这种情况下，需要使用者注意在当```LayoutHelpers```的结构或者数据数量等会影响到布局的元素变化时，需要主动调用```setLayoutHepers```去更新布局模式。
+在这种情况下，需要使用者注意在当```LayoutHelpers```的结构或者数据数量等会影响到布局的元素变化时，需要主动调用```setLayoutHelpers```去更新布局模式。
 
 另外如果你的应用有混淆配置，请为vlayout添加一下防混淆配置：
 
