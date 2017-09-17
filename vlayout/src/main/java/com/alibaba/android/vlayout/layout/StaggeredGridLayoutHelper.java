@@ -511,8 +511,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                     } else {
                         // if not, alignLine is the end of previous child
                         View child = layoutManager.getChildAt(i - 1);
-                        alignLine = orientationHelper.getDecoratedEnd(child) + layoutManager.obtainExtraMargin(child, true)
-                                - layoutManager.obtainExtraMargin(view, false);
+                        alignLine = orientationHelper.getDecoratedEnd(child) + layoutManager.obtainExtraMargin(child, true, false)
+                                - layoutManager.obtainExtraMargin(view, false, false);
                         int viewStart = orientationHelper.getDecoratedStart(view);
                         if (alignLine == viewStart) {
                             //actually not gap here skip;
@@ -527,6 +527,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                                         alignLine += layoutHelper.getFixedView().getMeasuredHeight();
                                     }
                                 }
+                            } else {
+                                LayoutHelper layoutHelper = layoutManager.findLayoutHelperByPosition(nextPosition);
+                                layoutHelper.getRange();
                             }
                         }
                     }
