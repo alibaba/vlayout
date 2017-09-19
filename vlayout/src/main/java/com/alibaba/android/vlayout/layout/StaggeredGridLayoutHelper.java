@@ -28,6 +28,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.List;
 
 import com.alibaba.android.vlayout.BuildConfig;
 import com.alibaba.android.vlayout.LayoutHelper;
@@ -86,6 +87,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     private LazySpanLookup mLazySpanLookup = new LazySpanLookup();
 
+    private List<View> prelayoutViewList = new ArrayList<>();
 
     private WeakReference<VirtualLayoutManager> mLayoutManager = null;
 
@@ -234,6 +236,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
         final int defaultNewViewLine = layoutState.getOffset();
 
+        prelayoutViewList.clear();
         while (layoutState.hasMore(state) && !mRemainingSpans.isEmpty() && !isOutOfRange(layoutState.getCurrentPosition())) {
             boolean isStartLine = false, isEndLine = false;
             View view = layoutState.next(recycler);
@@ -258,6 +261,10 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             // handle margin for start/end line
             isStartLine = position - getRange().getLower() < mNumLanes;
             isEndLine = getRange().getUpper() - position < mNumLanes; //fix the end line condiition
+
+            if (layoutState.isPreLayout()) {
+                prelayoutViewList.add(view);
+            }
 
             helper.addChildView(layoutState, view);
 
@@ -353,7 +360,6 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 }
             }
         }
-
         if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
             if (!isOutOfRange(layoutState.getCurrentPosition()) && layoutState.hasMore(state)) {
                 final int maxStart = getMaxStart(orientationHelper.getStartAfterPadding(), orientationHelper);
@@ -372,8 +378,36 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
 
         }
+
+        recycleForPreLayout(recycler, layoutState, helper);
     }
 
+    private void recycleForPreLayout(RecyclerView.Recycler recycler, LayoutStateWrapper layoutState, LayoutManagerHelper helper) {
+        final OrientationHelperEx orientationHelper = helper.getMainOrientationHelper();
+        for (int i = prelayoutViewList.size() - 1; i >= 0; i--) {
+            View child = prelayoutViewList.get(i);
+            if (child != null && orientationHelper.getDecoratedStart(child) > orientationHelper.getEndAfterPadding()) {
+                LayoutParams lp = (LayoutParams) child.getLayoutParams();
+                int position = lp.getViewPosition();
+                Span span = findSpan(position, child, false);
+                if (span != null) {
+                    span.popEnd(orientationHelper);
+                    helper.removeChildView(child);
+                    recycler.recycleView(child);
+                }
+            } else {
+                LayoutParams lp = (LayoutParams) child.getLayoutParams();
+                int position = lp.getViewPosition();
+                Span span = findSpan(position, child, false);
+                if (span != null) {
+                    span.popEnd(orientationHelper);
+                    helper.removeChildView(child);
+                    recycler.recycleView(child);
+                }
+                break;
+            }
+        }
+    }
 
     @Override
     public void onScrollStateChanged(int state, int startPosition,
@@ -405,7 +439,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 if (offset == getItemCount() - 1) {
                     //the last item may not have the largest bottom, so calculate gaps between last items in every lane
                     return mMarginBottom + mPaddingBottom + (getMaxEnd(orientationHelper.getDecoratedEnd(child),
-                        orientationHelper) - orientationHelper.getDecoratedEnd(child));
+                            orientationHelper) - orientationHelper.getDecoratedEnd(child));
                 } else if (!useAnchor) {
                     final int minEnd = getMinEnd(orientationHelper.getDecoratedStart(child), orientationHelper);
                     return minEnd - orientationHelper.getDecoratedEnd(child);
@@ -414,7 +448,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 if (offset == 0) {
                     //the first item may not have the smallest top, so calculate gaps between first items in every lane
                     return -mMarginTop - mPaddingTop - (orientationHelper.getDecoratedStart(child) - getMinStart(
-                        orientationHelper.getDecoratedStart(child), orientationHelper));
+                            orientationHelper.getDecoratedStart(child), orientationHelper));
                 } else if (!useAnchor) {
                     final int maxStart = getMaxStart(orientationHelper.getDecoratedEnd(child), orientationHelper);
                     return maxStart - orientationHelper.getDecoratedStart(child);
@@ -511,8 +545,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                     } else {
                         // if not, alignLine is the end of previous child
                         View child = layoutManager.getChildAt(i - 1);
-                        alignLine = orientationHelper.getDecoratedEnd(child) + layoutManager.obtainExtraMargin(child, true)
-                                - layoutManager.obtainExtraMargin(view, false);
+                        alignLine = orientationHelper.getDecoratedEnd(child) + layoutManager.obtainExtraMargin(child, true, false)
+                                - layoutManager.obtainExtraMargin(view, false, false);
                         int viewStart = orientationHelper.getDecoratedStart(view);
                         if (alignLine == viewStart) {
                             //actually not gap here skip;
@@ -527,6 +561,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                                         alignLine += layoutHelper.getFixedView().getMeasuredHeight();
                                     }
                                 }
+                            } else {
+                                LayoutHelper layoutHelper = layoutManager.findLayoutHelperByPosition(nextPosition);
+                                layoutHelper.getRange();
                             }
                         }
                     }
