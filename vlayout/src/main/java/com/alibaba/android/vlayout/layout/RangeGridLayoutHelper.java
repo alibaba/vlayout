@@ -250,7 +250,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                 rangeStyle.mSpanCount - 1) * rangeStyle.mVGap) * 1.0f / rangeStyle.mSpanCount + 0.5f);
         }
 
-
+        int maxOverlapOffset = 0;
         int count = 0;
         int consumedSpanCount = 0;
         int remainingSpan = rangeStyle.mSpanCount;
@@ -466,6 +466,9 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     View.MeasureSpec.EXACTLY);
             }
             final LayoutParams lp = (LayoutParams) view.getLayoutParams();
+            if (lp.mOverlapOffset > maxOverlapOffset) {
+                maxOverlapOffset = lp.mOverlapOffset;
+            }
 
             if (helper.getOrientation() == VERTICAL) {
                 helper.measureChildWithMargins(view, spec, getMainDirSpec(rangeStyle, lp.height, mTotalSize,
@@ -533,7 +536,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         }
 
 
-        result.mConsumed = maxSize + startSpace + endSpace + secondStartSpace + secondEndSpace;
+        result.mConsumed = maxSize + startSpace + endSpace + secondStartSpace + secondEndSpace - maxOverlapOffset;
 
         final boolean layoutStart = layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START;
         int consumedGap = 0;
@@ -569,6 +572,10 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
             }
         }
         result.mConsumed += consumedGap;
+
+        if (result.mConsumed <= 0) {
+            result.mConsumed = 0;
+        }
 
         int lastUnconsumedSpace = 0;
         /** layoutView() may be triggered by layoutManager's scrollInternalBy() or onFocusSearchFailed() or onLayoutChildren()
@@ -618,18 +625,18 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         int left = 0, right = 0, top = 0, bottom = 0;
         if (layoutInVertical) {
             if (layoutStart) {
-                bottom = layoutState.getOffset() - endSpace - secondEndSpace - (consumedGap) - lastUnconsumedSpace;
+                bottom = layoutState.getOffset() - endSpace - secondEndSpace - (consumedGap) - lastUnconsumedSpace + maxOverlapOffset;
                 top = bottom - maxSize;
             } else {
-                top = layoutState.getOffset() + startSpace + secondStartSpace + (consumedGap) + lastUnconsumedSpace;
+                top = layoutState.getOffset() + startSpace + secondStartSpace + (consumedGap) + lastUnconsumedSpace - maxOverlapOffset;
                 bottom = top + maxSize;
             }
         } else {
             if (layoutStart) {
-                right = layoutState.getOffset() - endSpace - (consumedGap) - lastUnconsumedSpace;
+                right = layoutState.getOffset() - endSpace - (consumedGap) - lastUnconsumedSpace + maxOverlapOffset;
                 left = right - maxSize;
             } else {
-                left = layoutState.getOffset() + startSpace + (consumedGap) + lastUnconsumedSpace;
+                left = layoutState.getOffset() + startSpace + (consumedGap) + lastUnconsumedSpace - maxOverlapOffset;
                 right = left + maxSize;
             }
         }
