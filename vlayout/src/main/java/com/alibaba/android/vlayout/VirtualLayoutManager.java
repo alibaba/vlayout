@@ -845,6 +845,8 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
         public int zIndex = 0;
 
+        public int mOverlapOffset = 0;
+
         public float mAspectRatio = Float.NaN;
 
         private int mOriginWidth = INVALIDE_SIZE;
