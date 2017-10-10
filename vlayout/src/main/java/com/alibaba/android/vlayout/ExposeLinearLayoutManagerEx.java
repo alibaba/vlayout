@@ -1153,7 +1153,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             }
             recycleByLayoutStateExpose(recycler, layoutState);
         }
-        int remainingSpace = layoutState.mAvailable + layoutState.mExtra;
+        int remainingSpace = layoutState.mAvailable + layoutState.mExtra + recycleOffset;
         while (remainingSpace > 0 && layoutState.hasMore(state)) {
             layoutChunkResultCache.resetInternal();
             layoutChunk(recycler, state, layoutState, layoutChunkResultCache);
