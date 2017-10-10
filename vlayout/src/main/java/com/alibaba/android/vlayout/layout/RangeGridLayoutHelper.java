@@ -536,7 +536,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         }
 
 
-        result.mConsumed = maxSize + startSpace + endSpace + secondStartSpace + secondEndSpace - maxOverlapOffset;
+        result.mConsumed = maxSize + startSpace + endSpace + secondStartSpace + secondEndSpace - maxOverlapOffset; //FIXME conflicts when layout to start
 
         final boolean layoutStart = layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START;
         int consumedGap = 0;
@@ -625,7 +625,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         int left = 0, right = 0, top = 0, bottom = 0;
         if (layoutInVertical) {
             if (layoutStart) {
-                bottom = layoutState.getOffset() - endSpace - secondEndSpace - (consumedGap) - lastUnconsumedSpace + maxOverlapOffset;
+                bottom = layoutState.getOffset() - endSpace - secondEndSpace - (consumedGap) - lastUnconsumedSpace + maxOverlapOffset; //FIXME should minus maxOverlapOffset
                 top = bottom - maxSize;
             } else {
                 top = layoutState.getOffset() + startSpace + secondStartSpace + (consumedGap) + lastUnconsumedSpace - maxOverlapOffset;

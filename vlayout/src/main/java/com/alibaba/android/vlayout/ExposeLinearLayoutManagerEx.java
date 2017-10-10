@@ -1153,7 +1153,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             }
             recycleByLayoutStateExpose(recycler, layoutState);
         }
-        int remainingSpace = layoutState.mAvailable + layoutState.mExtra + recycleOffset;
+        int remainingSpace = layoutState.mAvailable + layoutState.mExtra + (
+            layoutState.mLayoutDirection == LayoutState.LAYOUT_START ? 0 : recycleOffset); //TODO ugly bug fix, should fix overlapOffset first
         while (remainingSpace > 0 && layoutState.hasMore(state)) {
             layoutChunkResultCache.resetInternal();
             layoutChunk(recycler, state, layoutState, layoutChunkResultCache);
