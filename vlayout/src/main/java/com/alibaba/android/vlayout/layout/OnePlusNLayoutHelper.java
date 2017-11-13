@@ -25,6 +25,8 @@
 package com.alibaba.android.vlayout.layout;
 
 import android.graphics.Rect;
+import android.os.Build;
+import android.os.Trace;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -107,6 +109,11 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
     private static final String TAG = "OnePlusNLayoutHelper";
 
+    private static final String PRE_TRACE_TAG = "OPN beforeLayout";
+
+    private static final String LAYOUT_TRACE_TAG = "OPN layoutView";
+
+    private static final String POST_TRACE_TAG = "OPN afterLayout";
 
     private Rect mAreaRect = new Rect();
 
@@ -186,6 +193,10 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
         if (isOutOfRange(layoutState.getCurrentPosition())) {
             return;
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection(LAYOUT_TRACE_TAG);
+        }
+
 
         final int originCurPos = layoutState.getCurrentPosition();
 
@@ -253,6 +264,10 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
         Arrays.fill(mContentViews, null);
         //mHeader = null;
         //mFooter = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
+        }
+
     }
 
 

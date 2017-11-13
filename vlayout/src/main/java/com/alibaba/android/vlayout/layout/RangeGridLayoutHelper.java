@@ -35,6 +35,8 @@ import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper.DefaultSpanSizeLookup;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper.SpanSizeLookup;
 
+import android.os.Build;
+import android.os.Trace;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
@@ -53,6 +55,12 @@ import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
  */
 public class RangeGridLayoutHelper extends BaseLayoutHelper {
     private static final String TAG = "RGLayoutHelper";
+
+    private static final String PRE_TRACE_TAG = "RG beforeLayout";
+
+    private static final String LAYOUT_TRACE_TAG = "RG layoutView";
+
+    private static final String POST_TRACE_TAG = "RG afterLayout";
 
     @SuppressWarnings("FieldCanBeLocal")
     private static boolean DEBUG = false;
@@ -214,7 +222,13 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
     @Override
     public void beforeLayout(RecyclerView.Recycler recycler, RecyclerView.State state,
         LayoutManagerHelper helper) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection(PRE_TRACE_TAG);
+        }
         mRangeStyle.beforeLayout(recycler, state, helper);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
+        }
     }
 
     //TODO optimize this method
@@ -223,6 +237,10 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         // reach the end of this layout
         if (isOutOfRange(layoutState.getCurrentPosition())) {
             return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection(LAYOUT_TRACE_TAG);
         }
 
         boolean isStartLine = false, isEndLine = false;
@@ -250,7 +268,6 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                 rangeStyle.mSpanCount - 1) * rangeStyle.mVGap) * 1.0f / rangeStyle.mSpanCount + 0.5f);
         }
 
-        int maxOverlapOffset = 0;
         int count = 0;
         int consumedSpanCount = 0;
         int remainingSpan = rangeStyle.mSpanCount;
@@ -466,9 +483,6 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
                     View.MeasureSpec.EXACTLY);
             }
             final LayoutParams lp = (LayoutParams) view.getLayoutParams();
-            if (lp.mOverlapOffset > maxOverlapOffset) {
-                maxOverlapOffset = lp.mOverlapOffset;
-            }
 
             if (helper.getOrientation() == VERTICAL) {
                 helper.measureChildWithMargins(view, spec, getMainDirSpec(rangeStyle, lp.height, mTotalSize,
@@ -536,7 +550,7 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         }
 
 
-        result.mConsumed = maxSize + startSpace + endSpace + secondStartSpace + secondEndSpace - maxOverlapOffset;
+        result.mConsumed = maxSize + startSpace + endSpace + secondStartSpace + secondEndSpace;
 
         final boolean layoutStart = layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START;
         int consumedGap = 0;
@@ -625,18 +639,18 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         int left = 0, right = 0, top = 0, bottom = 0;
         if (layoutInVertical) {
             if (layoutStart) {
-                bottom = layoutState.getOffset() - endSpace - secondEndSpace - (consumedGap) - lastUnconsumedSpace + maxOverlapOffset;
+                bottom = layoutState.getOffset() - endSpace - secondEndSpace - (consumedGap) - lastUnconsumedSpace;
                 top = bottom - maxSize;
             } else {
-                top = layoutState.getOffset() + startSpace + secondStartSpace + (consumedGap) + lastUnconsumedSpace - maxOverlapOffset;
+                top = layoutState.getOffset() + startSpace + secondStartSpace + (consumedGap) + lastUnconsumedSpace;
                 bottom = top + maxSize;
             }
         } else {
             if (layoutStart) {
-                right = layoutState.getOffset() - endSpace - (consumedGap) - lastUnconsumedSpace + maxOverlapOffset;
+                right = layoutState.getOffset() - endSpace - (consumedGap) - lastUnconsumedSpace;
                 left = right - maxSize;
             } else {
-                left = layoutState.getOffset() + startSpace + (consumedGap) + lastUnconsumedSpace - maxOverlapOffset;
+                left = layoutState.getOffset() + startSpace + (consumedGap) + lastUnconsumedSpace;
                 right = left + maxSize;
             }
         }
@@ -695,12 +709,22 @@ public class RangeGridLayoutHelper extends BaseLayoutHelper {
         Arrays.fill(rangeStyle.mSet, null);
         Arrays.fill(rangeStyle.mSpanIndices, 0);
         Arrays.fill(rangeStyle.mSpanCols, 0);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
+        }
     }
 
     @Override
     public void afterLayout(Recycler recycler, State state, int startPosition, int endPosition, int scrolled,
         LayoutManagerHelper helper) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection(POST_TRACE_TAG);
+        }
         mRangeStyle.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
+        }
     }
 
     @Override

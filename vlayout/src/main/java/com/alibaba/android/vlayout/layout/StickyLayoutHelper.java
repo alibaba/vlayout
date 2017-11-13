@@ -30,6 +30,8 @@ import com.alibaba.android.vlayout.OrientationHelperEx;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
+import android.os.Build;
+import android.os.Trace;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -47,6 +49,12 @@ import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
 public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
     private static final String TAG = "StickyStartLayoutHelper";
+
+    private static final String PRE_TRACE_TAG = "Sticky beforeLayout";
+
+    private static final String LAYOUT_TRACE_TAG = "Sticky layoutView";
+
+    private static final String POST_TRACE_TAG = "Sticky afterLayout";
 
     private int mPos = -1;
 
@@ -100,6 +108,9 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             return;
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection(LAYOUT_TRACE_TAG);
+        }
         // find view in currentPosition
         View view = mFixView;
         if (view == null) {
@@ -109,6 +120,9 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         }
         if (view == null) {
             result.mFinished = true;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.endSection();
+            }
             return;
         }
 
@@ -224,14 +238,18 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             // result.mConsumed += mOffset;
         }
 
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
+        }
     }
 
 
     @Override
     public void beforeLayout(RecyclerView.Recycler recycler, RecyclerView.State state, LayoutManagerHelper helper) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection(PRE_TRACE_TAG);
+        }
         super.beforeLayout(recycler, state, helper);
-
 
         if (mFixView != null && helper.isViewHolderUpdated(mFixView)) {
             // recycle view for later usage
@@ -241,6 +259,9 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         }
 
         mDoNormalHandle = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
+        }
     }
 
 
@@ -252,10 +273,16 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
     @Override
     public void afterLayout(RecyclerView.Recycler recycler, RecyclerView.State state, int startPosition, int endPosition, int scrolled,
                             LayoutManagerHelper helper) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection(POST_TRACE_TAG);
+        }
         super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
 
         // disabled if mPos is negative number
         if (mPos < 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.endSection();
+            }
             return;
         }
 
@@ -275,6 +302,9 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                 helper.removeChildView(mFixView);
             } else {
                 // mDoNormalHandle == true && mFixView == null
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    Trace.endSection();
+                }
                 return;
             }
         }
@@ -290,6 +320,9 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             }
         } else {
             fixLayoutStateInCase2(orientationHelper, recycler, startPosition, endPosition, helper);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
         }
     }
 

@@ -38,7 +38,9 @@ import com.alibaba.android.vlayout.Range;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Trace;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.OrientationHelper;
@@ -62,6 +64,12 @@ import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     private static final String TAG = "Staggered";
+
+    private static final String PRE_TRACE_TAG = "Staggered beforeLayout";
+
+    private static final String LAYOUT_TRACE_TAG = "Staggered layoutView";
+
+    private static final String POST_TRACE_TAG = "Staggered afterLayout";
 
     private static final String LOOKUP_BUNDLE_KEY = "StaggeredGridLayoutHelper_LazySpanLookup";
 
@@ -160,6 +168,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     @Override
     public void beforeLayout(RecyclerView.Recycler recycler, RecyclerView.State state, LayoutManagerHelper helper) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection(PRE_TRACE_TAG);
+        }
         super.beforeLayout(recycler, state, helper);
 
         int availableWidth;
@@ -185,18 +196,30 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 mLayoutManager = new WeakReference<VirtualLayoutManager>((VirtualLayoutManager) helper);
             }
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
+        }
     }
 
     @Override
     public void afterLayout(RecyclerView.Recycler recycler, RecyclerView.State state, int startPosition, int endPosition, int scrolled, LayoutManagerHelper helper) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection(POST_TRACE_TAG);
+        }
         super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
         if (startPosition > getRange().getUpper() || endPosition < getRange().getLower()) {
             //do not in visible screen, skip
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.endSection();
+            }
             return;
         }
         if (!state.isPreLayout() && helper.getChildCount() > 0) {
             // call after doing layout, to check whether there is a gap between staggered layout and other layouts
             ViewCompat.postOnAnimation(helper.getChildAt(0), checkForGapsRunnable);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
         }
     }
 
@@ -207,6 +230,10 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                             LayoutManagerHelper helper) {
         if (isOutOfRange(layoutState.getCurrentPosition())) {
             return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection(LAYOUT_TRACE_TAG);
         }
 
         ensureLanes();
@@ -245,6 +272,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 break;
             }
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.beginSection("assignSpan");
+            }
             VirtualLayoutManager.LayoutParams lp = (VirtualLayoutManager.LayoutParams) view.getLayoutParams();
 
             // find the span to put the view
@@ -262,12 +292,26 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             isStartLine = position - getRange().getLower() < mNumLanes;
             isEndLine = getRange().getUpper() - position < mNumLanes; //fix the end line condiition
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.endSection();
+            }
+
             if (layoutState.isPreLayout()) {
                 prelayoutViewList.add(view);
             }
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.beginSection("addChild");
+            }
             helper.addChildView(layoutState, view);
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.endSection();
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.beginSection("measure");
+            }
             if (layoutInVertical) {
                 int widthSpec = helper.getChildMeasureSpec(mColLength, lp.width, false);
                 int heightSpec = helper.getChildMeasureSpec(orientationHelper.getTotalSpace(),
@@ -281,8 +325,13 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                                 View.MeasureSpec.getSize(heightSpec) * lp.mAspectRatio + 0.5f), true);
                 helper.measureChildWithMargins(view, widthSpec, heightSpec);
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.endSection();
+            }
 
-
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.beginSection("computeXY");
+            }
             int start;
             int end;
 
@@ -330,19 +379,50 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
             int otherEnd = otherStart + orientationHelper.getDecoratedMeasurementInOther(view);
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.endSection();
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.beginSection("layout");
+            }
             if (layoutInVertical) {
                 layoutChildWithMargin(view, otherStart, start, otherEnd, end, helper);
             } else {
                 layoutChildWithMargin(view, start, otherStart, end, otherEnd, helper);
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.endSection();
+            }
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.beginSection("updateSpan");
+            }
             updateRemainingSpans(currentSpan, layoutState.getLayoutDirection(), targetLine, orientationHelper);
 
-            recycle(recycler, layoutState, currentSpan, recycleLine, helper);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.endSection();
+            }
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.beginSection("recycle");
+            }
+            recycle(recycler, layoutState, currentSpan, recycleLine, helper);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.endSection();
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.beginSection("handleResult");
+            }
             handleStateOnResult(result, view);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                Trace.endSection();
+            }
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection("handleOutRange");
+        }
         if (isOutOfRange(layoutState.getCurrentPosition())) {
             // reach the end of layout, cache the gap
             // TODO: how to retain gap
@@ -359,6 +439,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                     }
                 }
             }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection("handleConsumed");
         }
         if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
             if (!isOutOfRange(layoutState.getCurrentPosition()) && layoutState.hasMore(state)) {
@@ -378,8 +464,22 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
 
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
+        }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.beginSection("recycleForPreLayout");
+        }
         recycleForPreLayout(recycler, layoutState, helper);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Trace.endSection();
+        }
     }
 
     private void recycleForPreLayout(RecyclerView.Recycler recycler, LayoutStateWrapper layoutState, LayoutManagerHelper helper) {
