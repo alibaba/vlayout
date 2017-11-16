@@ -25,7 +25,6 @@
 package com.alibaba.android.vlayout.layout;
 
 import android.graphics.Rect;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -34,7 +33,6 @@ import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.OrientationHelperEx;
-import com.alibaba.android.vlayout.Range;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
@@ -346,7 +344,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
         View view = mContentViews[0];
         final ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(
-            view.getLayoutParams());
+                (ViewGroup.MarginLayoutParams) view.getLayoutParams());
 
         if (!Float.isNaN(mAspectRatio)) {
             if (layoutInVertical) {
@@ -394,10 +392,10 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
         final View child1 = mContentViews[0];
         final ViewGroup.MarginLayoutParams lp1 = new ViewGroup.MarginLayoutParams(
-            child1.getLayoutParams());
+                (ViewGroup.MarginLayoutParams)child1.getLayoutParams());
         final View child2 = mContentViews[1];
         final ViewGroup.MarginLayoutParams lp2 = new ViewGroup.MarginLayoutParams(
-            child2.getLayoutParams());
+                (ViewGroup.MarginLayoutParams)child2.getLayoutParams());
         final float weight1 = getViewMainWeight(lp1, 0);
         final float weight2 = getViewMainWeight(lp1, 1);
 
@@ -506,14 +504,14 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
         final View child1 = mContentViews[0];
         final ViewGroup.MarginLayoutParams lp1 = new ViewGroup.MarginLayoutParams(
-            child1.getLayoutParams());
+                (ViewGroup.MarginLayoutParams)child1.getLayoutParams());
         final View child2 = helper.getReverseLayout() ? mContentViews[2] : mContentViews[1];
         final View child3 = helper.getReverseLayout() ? mContentViews[1] : mContentViews[2];
 
         final ViewGroup.MarginLayoutParams lp2 = new ViewGroup.MarginLayoutParams(
-            child2.getLayoutParams());
+                (ViewGroup.MarginLayoutParams)child2.getLayoutParams());
         final ViewGroup.MarginLayoutParams lp3 = new ViewGroup.MarginLayoutParams(
-            child3.getLayoutParams());
+                (ViewGroup.MarginLayoutParams)child3.getLayoutParams());
 
         final float weight1 = getViewMainWeight(lp1, 0);
         final float weight2 = getViewMainWeight(lp1, 1);
@@ -614,16 +612,16 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
         final View child1 = mContentViews[0];
         final VirtualLayoutManager.LayoutParams lp1 = new VirtualLayoutManager.LayoutParams(
-            child1.getLayoutParams());
+                (VirtualLayoutManager.LayoutParams)child1.getLayoutParams());
         final View child2 = helper.getReverseLayout() ? mContentViews[3] : mContentViews[1];
         final VirtualLayoutManager.LayoutParams lp2 = new VirtualLayoutManager.LayoutParams(
-            child2.getLayoutParams());
+                (VirtualLayoutManager.LayoutParams)child2.getLayoutParams());
         final View child3 = mContentViews[2];
         final VirtualLayoutManager.LayoutParams lp3 = new VirtualLayoutManager.LayoutParams(
-            child3.getLayoutParams());
+                (VirtualLayoutManager.LayoutParams)child3.getLayoutParams());
         final View child4 = helper.getReverseLayout() ? mContentViews[1] : mContentViews[3];
         final VirtualLayoutManager.LayoutParams lp4 = new VirtualLayoutManager.LayoutParams(
-            child4.getLayoutParams());
+                (VirtualLayoutManager.LayoutParams)child4.getLayoutParams());
 
         final float weight1 = getViewMainWeight(lp1, 0);
         final float weight2 = getViewMainWeight(lp1, 1);
@@ -738,19 +736,19 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
 
         final View child1 = mContentViews[0];
         final VirtualLayoutManager.LayoutParams lp1 = new VirtualLayoutManager.LayoutParams(
-            child1.getLayoutParams());
+                (VirtualLayoutManager.LayoutParams)child1.getLayoutParams());
         final View child2 = helper.getReverseLayout() ? mContentViews[4] : mContentViews[1];
         final VirtualLayoutManager.LayoutParams lp2 = new VirtualLayoutManager.LayoutParams(
-            child2.getLayoutParams());
+                (VirtualLayoutManager.LayoutParams)child2.getLayoutParams());
         final View child3 = helper.getReverseLayout() ? mContentViews[3] : mContentViews[2];
         final VirtualLayoutManager.LayoutParams lp3 = new VirtualLayoutManager.LayoutParams(
-            child3.getLayoutParams());
+                (VirtualLayoutManager.LayoutParams)child3.getLayoutParams());
         final View child4 = helper.getReverseLayout() ? mContentViews[2] : mContentViews[3];
         final VirtualLayoutManager.LayoutParams lp4 = new VirtualLayoutManager.LayoutParams(
-            child4.getLayoutParams());
+                (VirtualLayoutManager.LayoutParams)child4.getLayoutParams());
         final View child5 = helper.getReverseLayout() ? mContentViews[1] : mContentViews[4];
         final VirtualLayoutManager.LayoutParams lp5 = new VirtualLayoutManager.LayoutParams(
-            child5.getLayoutParams());
+                (VirtualLayoutManager.LayoutParams)child5.getLayoutParams());
 
         final float weight1 = getViewMainWeight(lp1, 0);
         final float weight2 = getViewMainWeight(lp1, 1);
