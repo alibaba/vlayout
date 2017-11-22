@@ -52,7 +52,5 @@ dependencies {
     compile project(':vlayout')
     compile 'com.crittercism.dexmaker:dexmaker:1.4'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:appcompat-v7:21.0.0'
-    compile 'com.android.support:support-annotations:21.0.0'
-    compile 'com.android.support:cardview-v7:23.1.1'
+    compile 'com.android.support:cardview-v7:26.1.0'
 }
