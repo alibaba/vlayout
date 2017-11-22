@@ -131,6 +131,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
     private int recycleOffset;
 
+    private int prefetchItemCount = 5;
+
     /**
      * Creates a vertical LinearLayoutManager
      *
@@ -220,6 +222,12 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         this.recycleOffset = recycleOffset;
     }
 
+    public void setPrefetchItemCount(int prefetchItemCount) {
+        if (prefetchItemCount > 0) {
+            this.prefetchItemCount = prefetchItemCount;
+        }
+    }
+
     @Override
     public void collectAdjacentPrefetchPositions(int dx, int dy, RecyclerView.State state,
         LayoutPrefetchRegistry layoutPrefetchRegistry) {
@@ -238,20 +246,13 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
     void collectPrefetchPositionsForLayoutState(RecyclerView.State state, LayoutState layoutState,
         LayoutPrefetchRegistry layoutPrefetchRegistry) {
         int count = 0;
-        while (count < 5 && layoutState.hasMore(state)) {
+        while (count < prefetchItemCount && layoutState.hasMore(state)) {
 
             final int pos = layoutState.mCurrentPosition;
             layoutPrefetchRegistry.addPosition(pos, Math.max(0, layoutState.mScrollingOffset));
             layoutState.mCurrentPosition += layoutState.mItemDirection;
             count++;
-            //Log.d("Longer", "add " + pos + " offset " + Math.max(0, layoutState.mScrollingOffset) + " itemCount " + state.getItemCount());
         }
-
-        //final int pos = layoutState.mCurrentPosition;
-        //if (pos >= 0 && pos < state.getItemCount()) {
-        //    Log.d("Longer", "add " + pos + " offset " + Math.max(0, layoutState.mScrollingOffset) + " itemCount " + state.getItemCount());
-        //    layoutPrefetchRegistry.addPosition(pos, Math.max(0, layoutState.mScrollingOffset));
-        //}
     }
 
     /**

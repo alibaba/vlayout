@@ -77,19 +77,11 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // compile project(':extension')
-    if (useNewSupportLibrary == true) {
-        compile 'com.android.support:recyclerview-v7:26.1.0@aar'
-        compile('com.android.support:support-v4:26.1.0@aar')
-        compile 'com.android.support:support-annotations:26.1.0'
-        compile 'com.android.support:support-compat:26.1.0'
-        compile 'com.android.support:support-core-ui:26.1.0'
-    } else {
-        compile 'com.android.support:recyclerview-v7:23.1.1@aar'
-        compile('com.android.support:support-v4:23.1.1@aar') {
-            exclude group: 'com.android.support', module: 'support-annotations'
-        }
-        compile 'com.android.support:support-annotations:23.1.1'
-    }
+    compile 'com.android.support:recyclerview-v7:26.0.2@aar'
+    compile('com.android.support:support-v4:26.0.2@aar')
+    compile 'com.android.support:support-annotations:26.0.2'
+    compile ('com.android.support:support-compat:26.0.2')
+    compile 'com.android.support:support-core-ui:26.0.2'
 
     androidTestCompile "org.robolectric:robolectric:3.0"
 }

@@ -49,8 +49,10 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':vlayout')
+    compile (project(':vlayout')) {
+        transitive = true
+    }
     compile 'com.crittercism.dexmaker:dexmaker:1.4'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:cardview-v7:26.1.0'
+    compile 'com.android.support:cardview-v7:26.0.2'
 }
