@@ -574,8 +574,6 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         if (lastLayoutHelper != null && lastLayoutHelper instanceof MarginLayoutHelper) {
             lastMarginLayoutHelper = (MarginLayoutHelper) lastLayoutHelper;
         }
-        if (lastLayoutHelper == this)
-            return 0;
 
         if (!isOverLapMargin) {
             startSpace = layoutInVertical
