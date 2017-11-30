@@ -24,6 +24,19 @@
 
 package com.alibaba.android.vlayout;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import com.alibaba.android.vlayout.layout.BaseLayoutHelper;
+import com.alibaba.android.vlayout.layout.DefaultLayoutHelper;
+import com.alibaba.android.vlayout.layout.FixAreaAdjuster;
+import com.alibaba.android.vlayout.layout.FixAreaLayoutHelper;
+
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
@@ -38,20 +51,6 @@ import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-
-import com.alibaba.android.vlayout.layout.BaseLayoutHelper;
-import com.alibaba.android.vlayout.layout.DefaultLayoutHelper;
-import com.alibaba.android.vlayout.layout.FixAreaAdjuster;
-import com.alibaba.android.vlayout.layout.FixAreaLayoutHelper;
-import com.alibaba.android.vlayout.layout.MarginLayoutHelper;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -339,17 +338,25 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
     public LayoutHelper findNeighbourNonfixLayoutHelper(LayoutHelper layoutHelper, boolean isLayoutEnd) {
-        int position = mHelperFinder.getLayoutHelpers().indexOf(layoutHelper);
-        if (layoutHelper == null || position == 0) {
+        if (layoutHelper == null) {
             return null;
         }
-        int next = isLayoutEnd ? position - 1 : position + 1;
-        LayoutHelper helper = mHelperFinder.getLayoutHelper(next);
-        if (helper != null) {
-            if (helper.isFixLayout()) {
-                return null;
+        List<LayoutHelper> layoutHelpers = mHelperFinder.getLayoutHelpers();
+        int index = layoutHelpers.indexOf(layoutHelper);
+        if (index == -1) {
+            return null;
+        }
+        int next = isLayoutEnd ? index - 1 : index + 1;
+        if (next >= 0 && next < layoutHelpers.size()) {
+            LayoutHelper helper = layoutHelpers.get(next);
+            if (helper != null) {
+                if (helper.isFixLayout()) {
+                    return null;
+                } else {
+                    return helper;
+                }
             } else {
-                return helper;
+                return null;
             }
         } else {
             return null;
