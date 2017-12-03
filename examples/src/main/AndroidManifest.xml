@@ -55,6 +55,10 @@
 
         </activity>
 
+        <activity android:name="com.alibaba.android.vlayout.example.DebugActivity">
+
+        </activity>
+
     </application>
 
 </manifest>
