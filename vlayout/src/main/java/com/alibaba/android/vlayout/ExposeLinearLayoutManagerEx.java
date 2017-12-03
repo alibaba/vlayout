@@ -1156,7 +1156,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             recycleByLayoutStateExpose(recycler, layoutState);
         }
         int remainingSpace = layoutState.mAvailable + layoutState.mExtra + (
-            layoutState.mLayoutDirection == LayoutState.LAYOUT_START ? 0 : recycleOffset); //TODO ugly bug fix, should fix overlapOffset first
+            layoutState.mLayoutDirection == LayoutState.LAYOUT_START ? 0 : recycleOffset); //FIXME  opt here to fix bg and shake
         while (remainingSpace > 0 && layoutState.hasMore(state)) {
             layoutChunkResultCache.resetInternal();
             layoutChunk(recycler, state, layoutState, layoutChunkResultCache);
@@ -1736,12 +1736,11 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         }
 
         public void assignFromView(View child) {
-            //TODO fixme coordinate
             if (mLayoutFromEnd) {
                 mCoordinate = mOrientationHelper.getDecoratedEnd(child) + computeAlignOffset(child, mLayoutFromEnd, true) +
-                        mOrientationHelper.getTotalSpaceChange() - ((LayoutParams) child.getLayoutParams()).mOverlapOffset;
+                        mOrientationHelper.getTotalSpaceChange();
             } else {
-                mCoordinate = mOrientationHelper.getDecoratedStart(child) + computeAlignOffset(child, mLayoutFromEnd, true) + ((LayoutParams) child.getLayoutParams()).mOverlapOffset;
+                mCoordinate = mOrientationHelper.getDecoratedStart(child) + computeAlignOffset(child, mLayoutFromEnd, true);
             }
 
             mPosition = getPosition(child);
