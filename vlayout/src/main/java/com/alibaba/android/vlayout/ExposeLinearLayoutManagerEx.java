@@ -41,6 +41,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
+
 /**
  * This class is used to expose layoutChunk method, should not be used in anywhere else
  * It's only a valid class technically and with no features/functions in it
@@ -1153,7 +1155,8 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             }
             recycleByLayoutStateExpose(recycler, layoutState);
         }
-        int remainingSpace = layoutState.mAvailable + layoutState.mExtra + recycleOffset;
+        int remainingSpace = layoutState.mAvailable + layoutState.mExtra + (
+            layoutState.mLayoutDirection == LayoutState.LAYOUT_START ? 0 : recycleOffset); //TODO ugly bug fix, should fix overlapOffset first
         while (remainingSpace > 0 && layoutState.hasMore(state)) {
             layoutChunkResultCache.resetInternal();
             layoutChunk(recycler, state, layoutState, layoutChunkResultCache);
@@ -1733,11 +1736,12 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
         }
 
         public void assignFromView(View child) {
+            //TODO fixme coordinate
             if (mLayoutFromEnd) {
                 mCoordinate = mOrientationHelper.getDecoratedEnd(child) + computeAlignOffset(child, mLayoutFromEnd, true) +
-                        mOrientationHelper.getTotalSpaceChange();
+                        mOrientationHelper.getTotalSpaceChange() - ((LayoutParams) child.getLayoutParams()).mOverlapOffset;
             } else {
-                mCoordinate = mOrientationHelper.getDecoratedStart(child) + computeAlignOffset(child, mLayoutFromEnd, true);
+                mCoordinate = mOrientationHelper.getDecoratedStart(child) + computeAlignOffset(child, mLayoutFromEnd, true) + ((LayoutParams) child.getLayoutParams()).mOverlapOffset;
             }
 
             mPosition = getPosition(child);
