@@ -130,13 +130,20 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     @SuppressWarnings("unchecked")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
         Pair<AdapterDataObserver, Adapter> pair = findAdapterByPosition(position);
         if (pair == null) {
             return;
         }
-
-        pair.second.onBindViewHolder(holder, position - pair.first.mStartPosition);
+        pair.second.onBindViewHolder(holder, position - pair.first.mStartPosition, payloads);
         pair.second.onBindViewHolderWithOffset(holder, position - pair.first.mStartPosition, position);
+
     }
 
     @Override
@@ -567,6 +574,14 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
                 return;
             }
             notifyItemRangeChanged(mStartPosition + positionStart, itemCount);
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
+            if (!updateLayoutHelper()) {
+                return;
+            }
+            notifyItemRangeChanged(mStartPosition + positionStart, itemCount, payload);
         }
     }
 
