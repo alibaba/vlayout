@@ -192,6 +192,9 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
         }
 
         int count = getAllChildren(mChildrenViews, recycler, layoutState, result, helper);
+        if (count == 0) {
+            return;
+        }
         int contentCount = count;
         if (hasHeader) {
             contentCount = contentCount - 1;
