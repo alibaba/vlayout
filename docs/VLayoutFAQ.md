@@ -110,3 +110,7 @@ RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListen
   }
 ```
 中的 `onBindViewHolderWithOffset()` 方法代替传统的 `onBindViewHolder()` 方法，其中的 `position` 参数也是相对位置。
+
+## `StickyLayoutHelper`里的 item 被其他 item 覆盖
+
+`StickyLayoutHelper`里的 item 在 sticky 状态时是会被添加到 `RecyclerView` 的最顶层，如果它被覆盖，很有可能是其他 item 里设置了一个 z 参数（>= 5.0 系统）或者是被调整了 drawingOrder（`RecyclerView` 有 `setChildDrawingOrderCallback` 接口调整绘制顺序），一个典型的场景是使用了 `CardView`。解决方法是给它设置一个更大的 z 参数（>= 5.0 系统），或者检查一下有没有调整 drawingOrder 的地方。
