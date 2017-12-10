@@ -67,6 +67,8 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
     private final SparseArray<Pair<AdapterDataObserver, Adapter>> mIndexAry = new SparseArray<>();
 
+    private long[] cantorReverse = new long[2];
+
     /**
      * Delegate Adapter merge multi sub adapters, default is thread-unsafe
      *
@@ -113,11 +115,10 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
 
         // reverse Cantor Function
-        int w = (int) (Math.floor(Math.sqrt(8 * viewType + 1) - 1) / 2);
-        int t = (w * w + w) / 2;
+        Cantor.reverseCantor(viewType, cantorReverse);
 
-        int index = viewType - t;
-        int subItemType = w - index;
+        int index = (int)cantorReverse[1];
+        int subItemType = (int)cantorReverse[0];
 
         Adapter adapter  = findAdapterByIndex(index);
         if (adapter == null) {
@@ -172,7 +173,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
         int index = p.first.mIndex;
 
-        return (int) getCantor(subItemType, index);
+        return (int) Cantor.getCantor(subItemType, index);
     }
 
 
@@ -194,7 +195,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         /*
          * Now we have a pairing function problem, we use cantor pairing function for itemId.
          */
-        return getCantor(index, itemId);
+        return Cantor.getCantor(index, itemId);
     }
 
     @Override
@@ -642,11 +643,6 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         protected void onBindViewHolderWithOffset(VH holder, int position, int offsetTotal) {
 
         }
-    }
-
-
-    private static long getCantor(long k1, long k2) {
-        return (k1 + k2) * (k1 + k2 + 1) / 2 + k2;
     }
 
 }

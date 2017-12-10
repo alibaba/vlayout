@@ -157,7 +157,7 @@ public class VLayoutActivity extends Activity {
 
         viewPool.setMaxRecycledViews(0, 20);
 
-        final DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, false);
+        final DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, true);
 
         recyclerView.setAdapter(delegateAdapter);
 
