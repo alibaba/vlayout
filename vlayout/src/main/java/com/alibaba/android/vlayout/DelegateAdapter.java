@@ -105,7 +105,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         if (mHasConsistItemType) {
             Adapter adapter = mItemTypeAry.get(viewType);
             if (adapter != null) {
-                 return adapter.onCreateViewHolder(parent, viewType);
+                return adapter.onCreateViewHolder(parent, viewType);
             }
 
             return null;
@@ -119,7 +119,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         int index = viewType - t;
         int subItemType = w - index;
 
-        Adapter adapter  = findAdapterByIndex(index);
+        Adapter adapter = findAdapterByIndex(index);
         if (adapter == null) {
             return null;
         }
@@ -142,7 +142,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             return;
         }
         pair.second.onBindViewHolder(holder, position - pair.first.mStartPosition, payloads);
-        pair.second.onBindViewHolderWithOffset(holder, position - pair.first.mStartPosition, position);
+        pair.second.onBindViewHolderWithOffset(holder, position - pair.first.mStartPosition, position, payloads);
 
     }
 
@@ -421,12 +421,11 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         mIndexAry.clear();
     }
 
-    public int getAdaptersCount(){
+    public int getAdaptersCount() {
         return mAdapters == null ? 0 : mAdapters.size();
     }
 
     /**
-     *
      * @param absoultePosition
      * @return the relative position in sub adapter by the absoulte position in DelegaterAdapter. Return -1 if no sub adapter founded.
      */
@@ -503,7 +502,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             return mIndex;
         }
 
-        private boolean updateLayoutHelper(){
+        private boolean updateLayoutHelper() {
             if (mIndex < 0) {
                 return false;
             }
@@ -656,6 +655,10 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
         protected void onBindViewHolderWithOffset(VH holder, int position, int offsetTotal) {
 
+        }
+
+        protected void onBindViewHolderWithOffset(VH holder, int position, int offsetTotal, List<Object> payloads) {
+            onBindViewHolderWithOffset(holder, position, offsetTotal);
         }
     }
 
