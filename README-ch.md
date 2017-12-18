@@ -2,11 +2,26 @@
 
 [English Document](README.md)
 
+## Tangram 相关开源库
+
+### Android
+
++ [Tangram-Android](https://github.com/alibaba/Tangram-Android)
++ [Virtualview-Android](https://github.com/alibaba/Virtualview-Android)
++ [vlayout](https://github.com/alibaba/vlayout)
++ [UltraViewPager](https://github.com/alibaba/UltraViewPager)
+
+### iOS
+
++ [Tangram-iOS](https://github.com/alibaba/Tangram-iOS)
++ [Virtualview-iOS](https://github.com/alibaba/VirtualView-iOS)
++ [LazyScrollView](https://github.com/alibaba/lazyscrollview)
+
 VirtualLayout是一个针对RecyclerView的LayoutManager扩展, 主要提供一整套布局方案和布局间的组件复用的问题。
 
 ## 设计思路
 
-通过定制化的LayoutManager，接管整个RecyclerView的布局逻辑；LayoutManager管理了一系列LayoutHelper，LayoutHelper负责具体布局逻辑实现的地方；每一个LayoutHelper负责页面某一个范围内的组件布局；不同的LayoutHelper可以做不同的布局逻辑，因此可以在一个RecyclerView页面里提供异构的布局结构，这就能比系统自带的LinearLayoutManager、GridLayoutManager等提供更加丰富的能力。同时支持扩展LayoutHelper来提供更多的布局能力。
+通过定制化的LayoutManager，接管整个RecyclerView的布局逻辑；LayoutManager管理了一系列LayoutHelper，LayoutHelper负责具体布局逻辑实现的地方；每一个LayoutHelper负责页面某一个范围内的组件布局；不同的LayoutHelper可以做不同的布局逻辑，因此可以在一个RecyclerView页面里提供异构的布局结构，这就能比系统自带的LinearLayoutManager、aridLayoutManager等提供更加丰富的能力。同时支持扩展LayoutHelper来提供更多的布局能力。
 
 ## 主要功能
 
