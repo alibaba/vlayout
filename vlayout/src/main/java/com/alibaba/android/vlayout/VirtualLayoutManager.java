@@ -1372,10 +1372,15 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     private void measureChildWithDecorationsAndMargin(View child, int widthSpec, int heightSpec) {
         calculateItemDecorationsForChild(child, mDecorInsets);
         RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) child.getLayoutParams();
-        widthSpec = updateSpecWithExtra(widthSpec, lp.leftMargin + mDecorInsets.left,
+
+        if (getOrientation() == VERTICAL) {
+            widthSpec = updateSpecWithExtra(widthSpec, lp.leftMargin + mDecorInsets.left,
                 lp.rightMargin + mDecorInsets.right);
-        heightSpec = updateSpecWithExtra(heightSpec, lp.topMargin + mDecorInsets.top,
-                lp.bottomMargin + mDecorInsets.bottom);
+        }
+        if (getOrientation() == HORIZONTAL) {
+            heightSpec = updateSpecWithExtra(heightSpec, mDecorInsets.top,
+                    mDecorInsets.bottom);
+        }
         child.measure(widthSpec, heightSpec);
     }
 
