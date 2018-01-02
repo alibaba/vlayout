@@ -114,3 +114,10 @@ RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListen
 ## `StickyLayoutHelper`里的 item 被其他 item 覆盖
 
 `StickyLayoutHelper`里的 item 在 sticky 状态时是会被添加到 `RecyclerView` 的最顶层，如果它被覆盖，很有可能是其他 item 里设置了一个 z 参数（>= 5.0 系统）或者是被调整了 drawingOrder（`RecyclerView` 有 `setChildDrawingOrderCallback` 接口调整绘制顺序），一个典型的场景是使用了 `CardView`。解决方法是给它设置一个更大的 z 参数（>= 5.0 系统），或者检查一下有没有调整 drawingOrder 的地方。
+
+## 背景图在滑动过程中变形
+
+layoutHelper 根据 item 元素的位置和大小确定整块背景的大小，当 layoutHelper 在有未显示元素时，不清楚自己的区域到底有多大，在可见元素变化时会动态计算区域大小，并调节背景 view 的大小，于是就导致了背景 view 中图片会根据 view 的大小去调整自己的显示。通过把背景 imageview 的 scaleType 设置为 matrix，这样就不会跟随imageview的宽高进行变化，同时根据不同手机的 dpi 提前调整好背景图片的尺寸后，再放入 imageview 中就能解决问题。[#275](https://github.com/alibaba/vlayout/issues/275)
+
+## 判断 `StickyLayoutHelper` 里的 item 是否到达顶部
+通过 `virtualLayoutManager.findFirstVisibleItemPosition()`，如果大于 `StickyLayoutHelper` 里的 item 的位置，说明已经到顶部。[#277](https://github.com/alibaba/vlayout/issues/277)
