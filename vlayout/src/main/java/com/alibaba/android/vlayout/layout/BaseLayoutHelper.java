@@ -534,35 +534,6 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
         }
     }
 
-
-    protected void calculateRect(int mainAxisSize, Rect areaRect, LayoutStateWrapper layoutState, LayoutManagerHelper helper) {
-        if (helper.getOrientation() == VirtualLayoutManager.VERTICAL) {
-            areaRect.left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft;
-            areaRect.right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight - mPaddingRight;
-
-            // whether this layout pass is layout to start or to end
-            if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                // fill start, from bottom to top
-                areaRect.bottom = layoutState.getOffset() - mMarginBottom - mPaddingBottom;
-                areaRect.top = areaRect.bottom - mainAxisSize;
-            } else {
-                areaRect.top = layoutState.getOffset() + mMarginTop + mPaddingTop;
-                areaRect.bottom = areaRect.top + mainAxisSize;
-            }
-        } else {
-            areaRect.top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
-            areaRect.bottom = helper.getContentHeight() - helper.getPaddingBottom() - mMarginBottom - mPaddingBottom;
-
-            if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                areaRect.right = layoutState.getOffset() - mMarginRight - mPaddingRight;
-                areaRect.left = areaRect.right - mainAxisSize;
-            } else {
-                areaRect.left = layoutState.getOffset() + mMarginLeft + mPaddingLeft;
-                areaRect.right = areaRect.left + mainAxisSize;
-            }
-        }
-    }
-
     protected int computeStartSpace(LayoutManagerHelper helper, boolean layoutInVertical, boolean isLayoutEnd, boolean isOverLapMargin) {
         int startSpace = 0;
         LayoutHelper lastLayoutHelper = null;
@@ -578,16 +549,12 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
             return 0;
 
         if (!isOverLapMargin) {
-            startSpace = layoutInVertical
-                    ? (isLayoutEnd ? mMarginTop + mPaddingTop : mMarginBottom + mPaddingBottom)
-                    : (isLayoutEnd ? mMarginLeft + mPaddingLeft : mMarginRight + mPaddingRight);
+            startSpace = layoutInVertical ? mMarginTop + mPaddingTop : mMarginLeft + mPaddingLeft;
         } else {
             int offset = 0;
 
             if (lastMarginLayoutHelper == null) {
-                offset = layoutInVertical
-                        ? (isLayoutEnd ? mMarginTop + mPaddingTop : mMarginBottom + mPaddingBottom)
-                        : (isLayoutEnd ? mMarginLeft + mPaddingLeft : mMarginRight + mPaddingRight);
+                offset = layoutInVertical ? mMarginTop + mPaddingTop : mMarginLeft + mPaddingLeft;
             } else {
                 offset = layoutInVertical
                         ? (isLayoutEnd ? calGap(lastMarginLayoutHelper.mMarginBottom, mMarginTop) : calGap(lastMarginLayoutHelper.mMarginTop, mMarginBottom))
@@ -605,8 +572,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     protected int computeEndSpace(LayoutManagerHelper helper, boolean layoutInVertical, boolean isLayoutEnd, boolean isOverLapMargin) {
         int endSpace = layoutInVertical
-                ? (isLayoutEnd ? mMarginBottom + mPaddingBottom : mMarginTop + mPaddingTop)
-                : (isLayoutEnd ? mMarginRight + mPaddingRight : mMarginLeft + mPaddingLeft);
+                ? mMarginBottom + mPaddingBottom : mMarginLeft + mPaddingLeft;
         //Log.e("huang", "computeEndSpace offset: " + endSpace + ", isLayoutEnd: " + isLayoutEnd + ", " + this);
         //Log.e("huang", "===================\n\n");
         return endSpace;

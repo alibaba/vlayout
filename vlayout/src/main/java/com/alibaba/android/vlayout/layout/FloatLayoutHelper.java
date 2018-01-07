@@ -275,8 +275,8 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
                         helper.getContentHeight() - helper.getPaddingTop() - helper.getPaddingBottom(),
                         params.height, layoutInVertical);
             }
-            // do measurement
-            helper.measureChildWithMargins(view, widthSpec, heightSpec);
+            // do measurement, measure child without taking off margins, see https://github.com/alibaba/Tangram-Android/issues/81
+            helper.measureChild(view, widthSpec, heightSpec);
         } else {
             int widthSpec;
             final int heightSpec = helper.getChildMeasureSpec(
@@ -294,8 +294,8 @@ public class FloatLayoutHelper extends FixAreaLayoutHelper {
                         helper.getContentWidth() - helper.getPaddingLeft() - helper.getPaddingRight(),
                         params.width, !layoutInVertical);
             }
-            // do measurement
-            helper.measureChildWithMargins(view, widthSpec, heightSpec);
+            // do measurement,  measure child without taking off margins, see https://github.com/alibaba/Tangram-Android/issues/81
+            helper.measureChild(view, widthSpec, heightSpec);
         }
 
 
