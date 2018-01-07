@@ -1739,11 +1739,22 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
             if (mLayoutFromEnd) {
                 mCoordinate = mOrientationHelper.getDecoratedEnd(child) + computeAlignOffset(child, mLayoutFromEnd, true) +
                         mOrientationHelper.getTotalSpaceChange();
+                if (DEBUG) {
+                    Log.d(TAG, "1 mLayoutFromEnd " + mLayoutFromEnd + " mOrientationHelper.getDecoratedEnd(child) "
+                        + mOrientationHelper.getDecoratedEnd(child) + " computeAlignOffset(child, mLayoutFromEnd, true) " + computeAlignOffset(child, mLayoutFromEnd, true));
+                }
             } else {
                 mCoordinate = mOrientationHelper.getDecoratedStart(child) + computeAlignOffset(child, mLayoutFromEnd, true);
+                if (DEBUG) {
+                    Log.d(TAG, "2 mLayoutFromEnd " + mLayoutFromEnd + " mOrientationHelper.getDecoratedStart(child) "
+                        + mOrientationHelper.getDecoratedStart(child) + " computeAlignOffset(child, mLayoutFromEnd, true) " + computeAlignOffset(child, mLayoutFromEnd, true));
+                }
             }
 
             mPosition = getPosition(child);
+            if (DEBUG) {
+                Log.d(TAG, "position " + mPosition + " mCoordinate " + mCoordinate);
+            }
         }
     }
 

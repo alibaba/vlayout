@@ -549,16 +549,12 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
             return 0;
 
         if (!isOverLapMargin) {
-            startSpace = layoutInVertical
-                    ? (isLayoutEnd ? mMarginTop + mPaddingTop : mMarginBottom + mPaddingBottom)
-                    : (isLayoutEnd ? mMarginLeft + mPaddingLeft : mMarginRight + mPaddingRight);
+            startSpace = layoutInVertical ? mMarginTop + mPaddingTop : mMarginLeft + mPaddingLeft;
         } else {
             int offset = 0;
 
             if (lastMarginLayoutHelper == null) {
-                offset = layoutInVertical
-                        ? (isLayoutEnd ? mMarginTop + mPaddingTop : mMarginBottom + mPaddingBottom)
-                        : (isLayoutEnd ? mMarginLeft + mPaddingLeft : mMarginRight + mPaddingRight);
+                offset = layoutInVertical ? mMarginTop + mPaddingTop : mMarginLeft + mPaddingLeft;
             } else {
                 offset = layoutInVertical
                         ? (isLayoutEnd ? calGap(lastMarginLayoutHelper.mMarginBottom, mMarginTop) : calGap(lastMarginLayoutHelper.mMarginTop, mMarginBottom))
@@ -576,8 +572,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     protected int computeEndSpace(LayoutManagerHelper helper, boolean layoutInVertical, boolean isLayoutEnd, boolean isOverLapMargin) {
         int endSpace = layoutInVertical
-                ? (isLayoutEnd ? mMarginBottom + mPaddingBottom : mMarginTop + mPaddingTop)
-                : (isLayoutEnd ? mMarginRight + mPaddingRight : mMarginLeft + mPaddingLeft);
+                ? mMarginBottom + mPaddingBottom : mMarginLeft + mPaddingLeft;
         //Log.e("huang", "computeEndSpace offset: " + endSpace + ", isLayoutEnd: " + isLayoutEnd + ", " + this);
         //Log.e("huang", "===================\n\n");
         return endSpace;
