@@ -196,12 +196,19 @@ public abstract class AbstractFullFillLayoutHelper extends BaseLayoutHelper {
     public boolean isRecyclable(int childPos, int startIndex, int endIndex, LayoutManagerHelper helper, boolean fromStart) {
         Range<Integer> range = getRange();
         if (range.contains(childPos)) {
-            return Range.create(startIndex, endIndex).contains(range);
+            if (hasHeader && childPos == getRange().getLower()) {
+                return true;
+            }
+            if (hasFooter && childPos == getRange().getUpper()) {
+                return true;
+            }
+            Range<Integer> childRange = Range.create(range.getLower() + (hasHeader ? 1 : 0),
+                range.getUpper() - (hasFooter ? 1 : 0));
+            return Range.create(startIndex, endIndex).contains(childRange);
         } else {
             Log.w(TAG, "Child item not match");
             return true;
         }
-        //NOTE may opt to recycle header or footer separately
     }
 
     public void setHasHeader(boolean hasHeader) {
