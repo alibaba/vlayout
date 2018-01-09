@@ -36,7 +36,6 @@ import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.State;
-import android.util.Log;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
@@ -181,7 +180,6 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             + getVerticalMargin() + getVerticalPadding();
 
         final int currentPosition = layoutState.getCurrentPosition();
-        Log.d("Longer", "currentPosition " + currentPosition);
         if (hasHeader && currentPosition == getRange().getLower()) {
             View header = nextView(recycler, layoutState, helper, result);
             int headerConsumed = handleHeader(header, layoutState, result, helper, layoutInVertical, parentWidth, parentHeight,
@@ -221,7 +219,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                 int left = 0, right = 0, top = 0, bottom = 0;
                 if (layoutInVertical) {
                     if (layoutStart) {
-                        bottom = layoutState.getOffset() - (mLayoutWithAnchor ? 0 : mMarginBottom + mPaddingBottom);
+                        bottom = layoutState.getOffset() - (mLayoutWithAnchor ? 0 : mMarginBottom + mPaddingBottom); //TODO margin overlap
                         top = bottom - footerConsumed;
                     } else {
                         top = layoutState.getOffset();
@@ -231,7 +229,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                     right = left + orientationHelper.getDecoratedMeasurementInOther(footer);
                 } else {
                     if (layoutStart) {
-                        right = layoutState.getOffset() - (mLayoutWithAnchor ? 0 : mMarginRight + mPaddingRight);
+                        right = layoutState.getOffset() - (mLayoutWithAnchor ? 0 : mMarginRight + mPaddingRight); //TODO margin overlap
                         left = right - footerConsumed;
                     } else {
                         left = layoutState.getOffset();
