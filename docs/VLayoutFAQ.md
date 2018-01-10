@@ -121,3 +121,94 @@ layoutHelper 根据 item 元素的位置和大小确定整块背景的大小，�
 
 ## 判断 `StickyLayoutHelper` 里的 item 是否到达顶部
 通过 `virtualLayoutManager.findFirstVisibleItemPosition()`，如果大于 `StickyLayoutHelper` 里的 item 的位置，说明已经到顶部。[#277](https://github.com/alibaba/vlayout/issues/277)
+
+## 滚动到某个 item 位置，并带偏移一个距离
+有时候自带的 scrollToPosition 方法或者 smoothScrollToPosition 方法不满足需求，可以尝试自己用动画驱动做一个滚动，下面是一种参考实现，可以基于此调整动画参数；
+
+```
+public class RecyclerViewFlinger implements Runnable {
+
+    private static final String TAG = "Flinger";
+
+    private static final float MILLISECONDS_PER_INCH = 25.0F;
+
+    private RecyclerView mRecyclerView;
+
+    private int targetPosition;
+
+    private int offset;
+
+    private int direction = 1;
+
+    private ScrollFinishedListener mFinishedListener;
+
+    private int lastTop;
+
+    private int step;
+
+    public RecyclerViewFlinger(RecyclerView recyclerView, int targetPosition, int offset,
+            ScrollFinishedListener finishedListener) {
+        this.mRecyclerView = recyclerView;
+        this.targetPosition = targetPosition; //targetPosition 目标item的位置
+        this.offset = offset;//offset 是目标 item 距离顶部的偏移量
+        this.mFinishedListener = finishedListener;//可以设置一个滚动回调
+        if (mRecyclerView != null) {
+            int firstVisibleItemPosition = mRecyclerView.getFirstVisiblePosition();
+            direction = firstVisibleItemPosition < targetPosition ? 1 : -1;
+        }
+        this.step = mRecyclerView.getMeasuredHeight() / 2; //滚动步长，时间等都可以细调
+    }
+
+    @Override
+    public void run() {
+        if (mRecyclerView != null) {
+            int firstVisibleItemPosition = mRecyclerView.getFirstVisiblePosition();
+            int lastVisibleItemPosition = mRecyclerView.getLastVisiblePosition();
+            boolean inscreen = targetPosition >= firstVisibleItemPosition && targetPosition <= lastVisibleItemPosition;
+            if (inscreen) {
+                View targetView = mRecyclerView.getLayoutManager().findViewByPosition(targetPosition);
+                if (targetView != null) {
+                    int top = targetView.getTop();
+                    int dy = top - offset;
+                    mRecyclerView.smoothScrollBy(0, dy);
+                    if (lastTop == top) {
+                        if (mFinishedListener != null) {
+                            mFinishedListener.onPostExecute(targetView);
+                        }
+                    } else {
+                        lastTop = top;
+                        postOnAnimation();
+                    }
+                }
+            } else {
+                mRecyclerView.smoothScrollBy(0, step * direction);
+                postOnAnimation();
+            }
+
+        }
+    }
+
+    public void postOnAnimation() {
+        if (mRecyclerView == null) {
+            return;
+        }
+        ViewCompat.postOnAnimation(mRecyclerView, this);
+    }
+
+    public void stop() {
+        mFinishedListener = null;
+        if (mRecyclerView == null) {
+            return;
+        }
+        mRecyclerView.removeCallbacks(this);
+    }
+
+    public interface ScrollFinishedListener {
+        void onPostExecute(View view);
+    }
+
+}
+```
+
+
+
