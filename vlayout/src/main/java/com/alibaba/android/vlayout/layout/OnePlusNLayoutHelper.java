@@ -184,58 +184,62 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
             View header = nextView(recycler, layoutState, helper, result);
             int headerConsumed = handleHeader(header, layoutState, result, helper, layoutInVertical, parentWidth, parentHeight,
                 parentHPadding, parentVPadding);
-            int left = 0, right = 0, top = 0, bottom = 0;
-            if (layoutInVertical) {
-                if (layoutStart) {
-                    bottom = layoutState.getOffset();
-                    top = bottom - headerConsumed;
+            if (header != null) {
+                int left = 0, right = 0, top = 0, bottom = 0;
+                if (layoutInVertical) {
+                    if (layoutStart) {
+                        bottom = layoutState.getOffset();
+                        top = bottom - headerConsumed;
+                    } else {
+                        top = layoutState.getOffset() + (mLayoutWithAnchor ? 0 : mMarginTop + mPaddingTop);
+                        bottom = top + headerConsumed;
+                    }
+                    left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft;
+                    right = left + orientationHelper.getDecoratedMeasurementInOther(header);
                 } else {
-                    top = layoutState.getOffset() + (mLayoutWithAnchor ? 0 : mMarginTop + mPaddingTop);
-                    bottom = top + headerConsumed;
+                    if (layoutStart) {
+                        right = layoutState.getOffset();
+                        left = right - headerConsumed;
+                    } else {
+                        left = layoutState.getOffset() + (mLayoutWithAnchor ? 0 : mMarginLeft + mPaddingLeft);
+                        right = left + headerConsumed;
+                    }
+                    top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
+                    bottom = top + orientationHelper.getDecoratedMeasurementInOther(header);
                 }
-                left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft;
-                right = left + orientationHelper.getDecoratedMeasurementInOther(header);
-            } else {
-                if (layoutStart) {
-                    right = layoutState.getOffset();
-                    left = right - headerConsumed;
-                } else {
-                    left = layoutState.getOffset() + (mLayoutWithAnchor ? 0 : mMarginLeft + mPaddingLeft);
-                    right = left + headerConsumed;
-                }
-                top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
-                bottom = top + orientationHelper.getDecoratedMeasurementInOther(header);
+                layoutChildWithMargin(header, left, top, right, bottom, helper);
             }
-            layoutChildWithMargin(header, left, top, right, bottom, helper);
             result.mConsumed = headerConsumed;
             handleStateOnResult(result, header);
         } else if (hasFooter && currentPosition == getRange().getUpper()) {
             View footer = nextView(recycler, layoutState, helper, result);
             int footerConsumed = handleFooter(footer, layoutState, result, helper, layoutInVertical, parentWidth, parentHeight,
                 parentHPadding, parentVPadding);
-            int left = 0, right = 0, top = 0, bottom = 0;
-            if (layoutInVertical) {
-                if (layoutStart) {
-                    bottom = layoutState.getOffset() - (mLayoutWithAnchor ? 0 : mMarginBottom + mPaddingBottom);
-                    top = bottom - footerConsumed;
+            if (footer != null) {
+                int left = 0, right = 0, top = 0, bottom = 0;
+                if (layoutInVertical) {
+                    if (layoutStart) {
+                        bottom = layoutState.getOffset() - (mLayoutWithAnchor ? 0 : mMarginBottom + mPaddingBottom); //TODO margin overlap
+                        top = bottom - footerConsumed;
+                    } else {
+                        top = layoutState.getOffset();
+                        bottom = top + footerConsumed;
+                    }
+                    left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft;
+                    right = left + orientationHelper.getDecoratedMeasurementInOther(footer);
                 } else {
-                    top = layoutState.getOffset();
-                    bottom = top + footerConsumed;
+                    if (layoutStart) {
+                        right = layoutState.getOffset() - (mLayoutWithAnchor ? 0 : mMarginRight + mPaddingRight); //TODO margin overlap
+                        left = right - footerConsumed;
+                    } else {
+                        left = layoutState.getOffset();
+                        right = left + footerConsumed;
+                    }
+                    top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
+                    bottom = top + orientationHelper.getDecoratedMeasurementInOther(footer);
                 }
-                left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft;
-                right = left + orientationHelper.getDecoratedMeasurementInOther(footer);
-            } else {
-                if (layoutStart) {
-                    right = layoutState.getOffset() - (mLayoutWithAnchor ? 0 : mMarginRight + mPaddingRight);
-                    left = right - footerConsumed;
-                } else {
-                    left = layoutState.getOffset();
-                    right = left + footerConsumed;
-                }
-                top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
-                bottom = top + orientationHelper.getDecoratedMeasurementInOther(footer);
+                layoutChildWithMargin(footer, left, top, right, bottom, helper);
             }
-            layoutChildWithMargin(footer, left, top, right, bottom, helper);
             result.mConsumed = footerConsumed;
             handleStateOnResult(result, footer);
         } else {
@@ -244,7 +248,7 @@ public class OnePlusNLayoutHelper extends AbstractFullFillLayoutHelper {
                 mChildrenViews = new View[contentCount];
             }
             int count = getAllChildren(mChildrenViews, recycler, layoutState, result, helper);
-            if (count == 0) {
+            if (count == 0 || count < contentCount) {
                 return;
             }
             int mainConsumed = 0;
