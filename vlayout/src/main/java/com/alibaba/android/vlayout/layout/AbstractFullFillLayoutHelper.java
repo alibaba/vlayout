@@ -24,7 +24,10 @@
 
 package com.alibaba.android.vlayout.layout;
 
+import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.Recycler;
+import android.support.v7.widget.RecyclerView.State;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -44,6 +47,12 @@ import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 public abstract class AbstractFullFillLayoutHelper extends BaseLayoutHelper {
 
     private static final String TAG = "FullFillLayoutHelper";
+
+    protected boolean hasHeader = false;
+
+    protected boolean hasFooter = false;
+
+    protected boolean mLayoutWithAnchor = false;
 
     protected int getAllChildren(View[] toFill,
                                  RecyclerView.Recycler recycler, LayoutStateWrapper layoutState,
@@ -130,10 +139,26 @@ public abstract class AbstractFullFillLayoutHelper extends BaseLayoutHelper {
     @Override
     public void checkAnchorInfo(RecyclerView.State state, VirtualLayoutManager.AnchorInfoWrapper anchorInfo, LayoutManagerHelper helper) {
         if (anchorInfo.layoutFromEnd) {
-            anchorInfo.position = getRange().getUpper();
+            if (!hasFooter) {
+                anchorInfo.position = getRange().getUpper();
+            } else {
+                //keep the previously calculated position
+            }
         } else {
-            anchorInfo.position = getRange().getLower();
+            if (!hasHeader) {
+                anchorInfo.position = getRange().getLower();
+            } else {
+                //keep the previously calculated position
+            }
         }
+        mLayoutWithAnchor = true;
+    }
+
+    @Override
+    public void afterLayout(Recycler recycler, State state, int startPosition, int endPosition, int scrolled,
+        LayoutManagerHelper helper) {
+        super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
+        mLayoutWithAnchor = false;
     }
 
     @Override
@@ -171,10 +196,54 @@ public abstract class AbstractFullFillLayoutHelper extends BaseLayoutHelper {
     public boolean isRecyclable(int childPos, int startIndex, int endIndex, LayoutManagerHelper helper, boolean fromStart) {
         Range<Integer> range = getRange();
         if (range.contains(childPos)) {
-            return Range.create(startIndex, endIndex).contains(range);
+            if (hasHeader && childPos == getRange().getLower()) {
+                return true;
+            }
+            if (hasFooter && childPos == getRange().getUpper()) {
+                return true;
+            }
+            Range<Integer> childRange = Range.create(range.getLower() + (hasHeader ? 1 : 0),
+                range.getUpper() - (hasFooter ? 1 : 0));
+            return Range.create(startIndex, endIndex).contains(childRange);
         } else {
             Log.w(TAG, "Child item not match");
             return true;
+        }
+    }
+
+    public void setHasHeader(boolean hasHeader) {
+        this.hasHeader = hasHeader;
+    }
+
+    public void setHasFooter(boolean hasFooter) {
+        this.hasFooter = hasFooter;
+    }
+
+    protected void calculateRect(int mainAxisSize, Rect areaRect, LayoutStateWrapper layoutState, LayoutManagerHelper helper) {
+        if (helper.getOrientation() == VirtualLayoutManager.VERTICAL) {
+            areaRect.left = helper.getPaddingLeft() + mMarginLeft + mPaddingLeft;
+            areaRect.right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight - mPaddingRight;
+
+            // whether this layout pass is layout to start or to end
+            if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
+                // fill start, from bottom to top
+                areaRect.bottom = layoutState.getOffset() - (mLayoutWithAnchor ? 0 : (hasFooter ? 0 : mMarginBottom + mPaddingBottom));
+                areaRect.top = areaRect.bottom - mainAxisSize;
+            } else {
+                areaRect.top = layoutState.getOffset() + (mLayoutWithAnchor ? 0 : (hasHeader ? 0 : mMarginTop + mPaddingTop));
+                areaRect.bottom = areaRect.top + mainAxisSize;
+            }
+        } else {
+            areaRect.top = helper.getPaddingTop() + mMarginTop + mPaddingTop;
+            areaRect.bottom = helper.getContentHeight() - helper.getPaddingBottom() - mMarginBottom - mPaddingBottom;
+
+            if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
+                areaRect.right = layoutState.getOffset() - (mLayoutWithAnchor ? 0 :(hasFooter ? 0 : mMarginRight + mPaddingRight));
+                areaRect.left = areaRect.right - mainAxisSize;
+            } else {
+                areaRect.left = layoutState.getOffset() + (mLayoutWithAnchor ? 0 : (hasHeader ? 0 : mMarginLeft + mPaddingLeft));
+                areaRect.right = areaRect.left + mainAxisSize;
+            }
         }
     }
 }

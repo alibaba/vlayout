@@ -89,6 +89,10 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     private List<View> prelayoutViewList = new ArrayList<>();
 
+    private boolean mLayoutWithAnchor;
+
+    private int anchorPosition;
+
     private WeakReference<VirtualLayoutManager> mLayoutManager = null;
 
     private final Runnable checkForGapsRunnable = new Runnable() {
@@ -190,6 +194,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     @Override
     public void afterLayout(RecyclerView.Recycler recycler, RecyclerView.State state, int startPosition, int endPosition, int scrolled, LayoutManagerHelper helper) {
         super.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
+        mLayoutWithAnchor = false;
         if (startPosition > getRange().getUpper() || endPosition < getRange().getLower()) {
             //do not in visible screen, skip
             return;
@@ -239,6 +244,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         prelayoutViewList.clear();
         while (layoutState.hasMore(state) && !mRemainingSpans.isEmpty() && !isOutOfRange(layoutState.getCurrentPosition())) {
             boolean isStartLine = false, isEndLine = false;
+            int currentPosition = layoutState.getCurrentPosition();
             View view = layoutState.next(recycler);
 
             if (view == null) {
@@ -260,7 +266,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             }
             // handle margin for start/end line
             isStartLine = position - getRange().getLower() < mNumLanes;
-            isEndLine = getRange().getUpper() - position < mNumLanes; //fix the end line condiition
+            isEndLine = getRange().getUpper() - position < mNumLanes; //fix the end line condition, edit by longerian
 
             if (layoutState.isPreLayout()) {
                 prelayoutViewList.add(view);
@@ -291,15 +297,22 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
                 if (isStartLine) {
                     start += computeStartSpace(helper, layoutInVertical, true, isOverLapMargin);
-                    //Log.d(TAG", "startLine " + position + " " + start);
                 } else {
-                    start += (layoutInVertical ? mVGap : mHGap);
-                    //Log.d(TAG", "normalStartLine " + position + " " + start);
+                    if (mLayoutWithAnchor) {
+                        if (Math.abs(currentPosition - anchorPosition) < mNumLanes) {
+                            //do not add extra gaps here
+                        } else {
+                            start += (layoutInVertical ? mVGap : mHGap);
+                        }
+                    } else {
+                        start += (layoutInVertical ? mVGap : mHGap);
+                    }
                 }
                 end = start + orientationHelper.getDecoratedMeasurement(view);
             } else {
                 if (isEndLine) {
-                    end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mMarginBottom + mPaddingRight : mMarginRight + mPaddingRight);
+                    end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ?
+                        mMarginBottom + mPaddingRight : mMarginRight + mPaddingRight);
                     //Log.d(TAG, "endLine " + position + " " + end);
                 } else {
                     end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mVGap : mHGap);
@@ -997,6 +1010,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                         }
                     }
                 }
+            } else {
+                anchorPosition = anchorInfo.position;
+                mLayoutWithAnchor = true;
             }
 
             if (BuildConfig.DEBUG) {
@@ -1173,6 +1189,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         void clear() {
+            Log.d("Longer", "clear span");
             mViews.clear();
             invalidateCache();
             mDeletedSize = 0;
