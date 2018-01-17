@@ -113,6 +113,13 @@ bintray {
                 passphrase = project.hasProperty('bintrayGPG') ? project.getProperty('bintrayGPG') : ""
                 //Optional. The passphrase for GPG signing'
             }
+
+            mavenCentralSync {
+                sync = true
+                user = project.hasProperty('bintray.oss.user') ? project.getProperty('bintray.oss.user') : ""
+                password = project.hasProperty('bintray.oss.password') ? project.getProperty('bintray.oss.password') : ""
+                close = '1'
+            }
         }
     }
 }
