@@ -41,7 +41,6 @@ import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.util.Log;
@@ -1189,7 +1188,6 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         void clear() {
-            Log.d("Longer", "clear span");
             mViews.clear();
             invalidateCache();
             mDeletedSize = 0;
