@@ -27,9 +27,11 @@ package com.alibaba.android.vlayout.layout;
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.OrientationHelperEx;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.alibaba.android.vlayout.VirtualLayoutManager.AnchorInfoWrapper;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.State;
 import android.util.Log;
 import android.view.View;
 
@@ -46,6 +48,8 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
     private static final boolean DEBUG = false;
 
     private int mDividerHeight = 0;
+
+    private boolean mLayoutWithAnchor = false;
 
     public LinearLayoutHelper() {
         this(0);
@@ -113,8 +117,9 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
 
         if (!isStartLine) {
             if (!isOverLapMargin) {
-                gap = mDividerHeight;
+                gap = mLayoutWithAnchor ? 0 : mDividerHeight;
             } else {
+                //TODO check layout with anchor
                 if (isLayoutEnd) {
                     int marginTop = params.topMargin;
                     View sibling = helper.findViewByPosition(currentPosition - 1);
@@ -209,6 +214,13 @@ public class LinearLayoutHelper extends BaseLayoutHelper {
         }
 
         handleStateOnResult(result, view);
+        mLayoutWithAnchor = false;
+    }
+
+    @Override
+    public void checkAnchorInfo(State state, AnchorInfoWrapper anchorInfo, LayoutManagerHelper helper) {
+        super.checkAnchorInfo(state, anchorInfo, helper);
+        mLayoutWithAnchor = true;
     }
 
     @Override
