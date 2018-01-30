@@ -24,20 +24,41 @@
 
 apply plugin: 'com.android.library'
 
+buildscript {
+    repositories {
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url "http://oss.jfrog.org/oss-snapshot-local/" }
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.0'
+    }
+}
+
+repositories {
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url "http://oss.jfrog.org/oss-snapshot-local/" }
+    jcenter()
+    mavenLocal()
+}
+
+
 ext {
     bintrayRepo = 'Tangram'
     bintrayName = 'vlayout'
 
-    publishedGroupId = GROUP
-    libraryName = ARTIFACT
-    artifact = ARTIFACT
+    publishedGroupId = project.hasProperty('GROUP') ? GROUP : ''
+    libraryName = project.hasProperty('ARTIFACT') ? ARTIFACT : ''
+    artifact = project.hasProperty('ARTIFACT') ? ARTIFACT : ''
 
     libraryDescription = 'Project vlayout is a powerfull LayoutManager extension for RecyclerView, it provides a group of layouts for RecyclerView. Make it able to handle a complicate situation when grid, list and other layouts in the same recyclerview.'
 
     siteUrl = 'https://github.com/alibaba/vlayout'
     gitUrl = 'https://github.com/alibaba/vlayout.git'
 
-    libraryVersion = VERSION_NAME
+    libraryVersion = project.hasProperty('VERSION_NAME') ? VERSION_NAME : ''
 
     developerId = 'longerian'
     developerName = 'longerian'
@@ -71,13 +92,19 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }    }
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // compile project(':extension')
-    if (useNewSupportLibrary == true) {
+    if (project.hasProperty('useNewSupportLibrary')) {
         compile 'com.android.support:recyclerview-v7:25.2.0@aar'
         compile('com.android.support:support-v4:25.2.0@aar')
         compile 'com.android.support:support-annotations:25.2.0'
