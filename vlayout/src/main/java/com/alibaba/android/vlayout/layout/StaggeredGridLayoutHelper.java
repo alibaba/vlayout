@@ -404,18 +404,18 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 Span span = findSpan(position, child, false);
                 if (span != null) {
                     span.popEnd(orientationHelper);
-                    helper.removeChildView(child);
-                    recycler.recycleView(child);
                 }
+                helper.removeChildView(child);
+                recycler.recycleView(child);
             } else {
                 LayoutParams lp = (LayoutParams) child.getLayoutParams();
                 int position = lp.getViewPosition();
                 Span span = findSpan(position, child, false);
                 if (span != null) {
                     span.popEnd(orientationHelper);
-                    helper.removeChildView(child);
-                    recycler.recycleView(child);
                 }
+                helper.removeChildView(child);
+                recycler.recycleView(child);
                 break;
             }
         }
@@ -1341,7 +1341,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         int getSpan(int position) {
-            if (mData == null || position >= mData.length) {
+            if (mData == null || position >= mData.length || position < 0) {
                 return INVALID_SPAN_ID;
             } else {
                 return mData[position];
