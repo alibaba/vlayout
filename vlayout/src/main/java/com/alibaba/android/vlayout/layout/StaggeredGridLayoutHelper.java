@@ -41,7 +41,6 @@ import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutParams;
 import android.util.Log;
@@ -405,18 +404,18 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
                 Span span = findSpan(position, child, false);
                 if (span != null) {
                     span.popEnd(orientationHelper);
-                    helper.removeChildView(child);
-                    recycler.recycleView(child);
                 }
+                helper.removeChildView(child);
+                recycler.recycleView(child);
             } else {
                 LayoutParams lp = (LayoutParams) child.getLayoutParams();
                 int position = lp.getViewPosition();
                 Span span = findSpan(position, child, false);
                 if (span != null) {
                     span.popEnd(orientationHelper);
-                    helper.removeChildView(child);
-                    recycler.recycleView(child);
                 }
+                helper.removeChildView(child);
+                recycler.recycleView(child);
                 break;
             }
         }
@@ -1189,7 +1188,6 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         void clear() {
-            Log.d("Longer", "clear span");
             mViews.clear();
             invalidateCache();
             mDeletedSize = 0;
@@ -1343,7 +1341,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         }
 
         int getSpan(int position) {
-            if (mData == null || position >= mData.length) {
+            if (mData == null || position >= mData.length || position < 0) {
                 return INVALID_SPAN_ID;
             } else {
                 return mData[position];
