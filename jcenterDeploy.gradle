@@ -86,14 +86,21 @@ artifacts {
 }
 
 // Bintray
-//Properties properties = new Properties()
-//properties.load(project.rootProject.file('local.properties').newDataInputStream())
+Properties properties = new Properties()
+File localProperties = project.rootProject.file('local.properties')
+if (localProperties.exists()) {
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+}
 
 bintray {
-//    user = properties.getProperty("bintray.user")
-//    key = properties.getProperty("bintray.apikey")
-    user = project.hasProperty('bintrayUser') ? project.getProperty('bintrayUser') : ""
-    key = project.hasProperty('bintrayApikey') ? project.getProperty('bintrayApikey') : ""
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    if (!user) {
+        user = project.hasProperty('bintrayUser') ? project.getProperty('bintrayUser') : ""
+    }
+    if (!key) {
+        key = project.hasProperty('bintrayApikey') ? project.getProperty('bintrayApikey') : ""
+    }
 
     configurations = ['archives']
     pkg {
@@ -109,15 +116,23 @@ bintray {
             desc = libraryDescription
             gpg {
                 sign = true //Determines whether to GPG sign the files. The default is false
-//                passphrase = properties.getProperty("bintray.gpg.password")
-                passphrase = project.hasProperty('bintrayGPG') ? project.getProperty('bintrayGPG') : ""
+                passphrase = properties.getProperty("bintray.gpg.password")
+                if (!passphrase) {
+                    passphrase = project.hasProperty('bintrayGPG') ? project.getProperty('bintrayGPG') : ""
+                }
                 //Optional. The passphrase for GPG signing'
             }
 
             mavenCentralSync {
                 sync = true
-                user = project.hasProperty('bintray.oss.user') ? project.getProperty('bintray.oss.user') : ""
-                password = project.hasProperty('bintray.oss.password') ? project.getProperty('bintray.oss.password') : ""
+                user = properties.getProperty('bintray.oss.user')
+                if (!user) {
+                    user = project.hasProperty('bintray.oss.user') ? project.getProperty('bintray.oss.user') : ""
+                }
+                password = properties.getProperty('bintray.oss.password')
+                if (!password) {
+                    password = project.hasProperty('bintray.oss.password') ? project.getProperty('bintray.oss.password') : ""
+                }
                 close = '1'
             }
         }
