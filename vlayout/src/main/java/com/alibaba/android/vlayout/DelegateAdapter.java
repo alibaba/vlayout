@@ -131,13 +131,18 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     @SuppressWarnings("unchecked")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Pair<AdapterDataObserver, Adapter> pair = findAdapterByPosition(position);
+        if (pair == null) {
+            return;
+        }
 
+        pair.second.onBindViewHolder(holder, position - pair.first.mStartPosition);
+        pair.second.onBindViewHolderWithOffset(holder, position - pair.first.mStartPosition, position);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
-        super.onBindViewHolder(holder, position, payloads);
         Pair<AdapterDataObserver, Adapter> pair = findAdapterByPosition(position);
         if (pair == null) {
             return;
@@ -216,7 +221,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         super.onViewRecycled(holder);
 
         int position = holder.getPosition();
-        if (position > 0) {
+        if (position >= 0) {
             Pair<AdapterDataObserver, Adapter> pair = findAdapterByPosition(position);
             if (pair != null) {
                 pair.second.onViewRecycled(holder);
@@ -230,7 +235,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
         super.onViewAttachedToWindow(holder);
         int position = holder.getPosition();
-        if (position > 0) {
+        if (position >= 0) {
             Pair<AdapterDataObserver, Adapter> pair = findAdapterByPosition(position);
             if (pair != null) {
                 pair.second.onViewAttachedToWindow(holder);
@@ -243,7 +248,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         int position = holder.getPosition();
-        if (position > 0) {
+        if (position >= 0) {
             Pair<AdapterDataObserver, Adapter> pair = findAdapterByPosition(position);
             if (pair != null) {
                 pair.second.onViewDetachedFromWindow(holder);
