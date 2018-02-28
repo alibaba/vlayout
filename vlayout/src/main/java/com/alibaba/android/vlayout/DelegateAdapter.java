@@ -221,7 +221,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         super.onViewRecycled(holder);
 
         int position = holder.getPosition();
-        if (position > 0) {
+        if (position >= 0) {
             Pair<AdapterDataObserver, Adapter> pair = findAdapterByPosition(position);
             if (pair != null) {
                 pair.second.onViewRecycled(holder);
@@ -235,7 +235,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
         super.onViewAttachedToWindow(holder);
         int position = holder.getPosition();
-        if (position > 0) {
+        if (position >= 0) {
             Pair<AdapterDataObserver, Adapter> pair = findAdapterByPosition(position);
             if (pair != null) {
                 pair.second.onViewAttachedToWindow(holder);
@@ -248,7 +248,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         int position = holder.getPosition();
-        if (position > 0) {
+        if (position >= 0) {
             Pair<AdapterDataObserver, Adapter> pair = findAdapterByPosition(position);
             if (pair != null) {
                 pair.second.onViewDetachedFromWindow(holder);
