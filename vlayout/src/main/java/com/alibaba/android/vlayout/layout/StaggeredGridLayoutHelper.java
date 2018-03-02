@@ -359,13 +359,15 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             // reach the end of layout, cache the gap
             // TODO: how to retain gap
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
-                for (Span span : mSpans) {
+                for (int i = 0, size = mSpans.length; i < size; i++) {
+                    Span span = mSpans[i];
                     if (span.mCachedStart != INVALID_LINE) {
                         span.mLastEdgeStart = span.mCachedStart;
                     }
                 }
             } else {
-                for (Span span : mSpans) {
+                for (int i = 0, size = mSpans.length; i < size; i++) {
+                    Span span = mSpans[i];
                     if (span.mCachedEnd != INVALID_LINE) {
                         span.mLastEdgeEnd = span.mCachedEnd;
                     }
@@ -594,7 +596,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             //FIXME do not clear loopup, may cause lane error while scroll
             //mLazySpanLookup.clear();
 
-            for (Span span : mSpans) {
+            for (int i = 0, size = mSpans.length; i < size; i++) {
+                Span span = mSpans[i];
                 span.setLine(alignLine);
             }
 
@@ -619,7 +622,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         BitSet mSpansToCheck = new BitSet(mNumLanes);
         mSpansToCheck.set(0, mNumLanes, true);
 
-        for (Span span : mSpans) {
+        for (int i = 0, size = mSpans.length; i < size; i++) {
+            Span span = mSpans[i];
             if (span.mViews.size() != 0 && checkSpanForGap(span, layoutManager, alignLine)) {
                 return layoutManager.getReverseLayout() ? span.mViews.get(span.mViews.size() - 1) : span.mViews.get(0);
             }
@@ -926,7 +930,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "onRefreshLayout span.clear()");
             }
-            for (Span span : mSpans) {
+            for (int i = 0, size = mSpans.length; i < size; i++) {
+                Span span = mSpans[i];
                 span.clear();
             }
         }
@@ -959,13 +964,15 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "checkAnchorInfo span.clear()");
             }
-            for (Span span : mSpans) {
+            for (int i = 0, size = mSpans.length; i < size; i++) {
+                Span span = mSpans[i];
                 span.clear();
                 span.setLine(anchorInfo.coordinate);
             }
         } else {
             int anchorPos = anchorInfo.layoutFromEnd ? Integer.MIN_VALUE : Integer.MAX_VALUE;
-            for (Span span : mSpans) {
+            for (int i = 0, size = mSpans.length; i < size; i++) {
+                Span span = mSpans[i];
                 if (!span.mViews.isEmpty()) {
                     if (anchorInfo.layoutFromEnd) {
                         View view = span.mViews.get(span.mViews.size() - 1);
@@ -1017,7 +1024,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "checkAnchorInfo span.cacheReferenceLineAndClear()");
             }
-            for (Span span : mSpans) {
+            for (int i = 0, size = mSpans.length; i < size; i++) {
+                Span span = mSpans[i];
                 span.cacheReferenceLineAndClear(helper.getReverseLayout() ^ anchorInfo.layoutFromEnd, offset, orientationHelper);
             }
         }
@@ -1047,7 +1055,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     public void onOffsetChildrenVertical(int dy, LayoutManagerHelper helper) {
         super.onOffsetChildrenVertical(dy, helper);
         if (helper.getOrientation() == VERTICAL) {
-            for (Span span : mSpans) {
+            for (int i = 0, size = mSpans.length; i < size; i++) {
+                Span span = mSpans[i];
                 span.onOffset(dy);
             }
         }
@@ -1057,7 +1066,8 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     public void onOffsetChildrenHorizontal(int dx, LayoutManagerHelper helper) {
         super.onOffsetChildrenHorizontal(dx, helper);
         if (helper.getOrientation() == HORIZONTAL) {
-            for (Span span : mSpans) {
+            for (int i = 0, size = mSpans.length; i < size; i++) {
+                Span span = mSpans[i];
                 span.onOffset(dx);
             }
         }

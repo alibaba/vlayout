@@ -29,13 +29,11 @@ import android.support.annotation.Nullable;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
-  An implement of {@link LayoutHelperFinder} which finds layoutHelpers by position
+ * An implement of {@link LayoutHelperFinder} which finds layoutHelpers by position
  */
 public class RangeLayoutHelperFinder extends LayoutHelperFinder {
 
@@ -46,6 +44,9 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
     private List<LayoutHelper> mLayoutHelpers = new LinkedList<>();
 
     @NonNull
+    private List<LayoutHelper> mReverseLayoutHelpers =new LinkedList<>();
+
+    @NonNull
     private Comparator<LayoutHelperItem> mLayoutHelperItemComparator = new Comparator<LayoutHelperItem>() {
         @Override
         public int compare(LayoutHelperItem lhs, LayoutHelperItem rhs) {
@@ -54,31 +55,8 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
     };
 
     @Override
-    public Iterator<LayoutHelper> iterator() {
-        return Collections.unmodifiableList(mLayoutHelpers).iterator();
-    }
-
-    @Override
-    protected Iterable<LayoutHelper> reverse() {
-        final ListIterator<LayoutHelper> i = mLayoutHelpers.listIterator(mLayoutHelpers.size());
-        return new Iterable<LayoutHelper>() {
-            @Override
-            public Iterator<LayoutHelper> iterator() {
-                return new Iterator<LayoutHelper>() {
-                    public boolean hasNext() {
-                        return i.hasPrevious();
-                    }
-
-                    public LayoutHelper next() {
-                        return i.previous();
-                    }
-
-                    public void remove() {
-                        i.remove();
-                    }
-                };
-            }
-        };
+    protected List<LayoutHelper> reverse() {
+        return mReverseLayoutHelpers;
     }
 
     /**
@@ -87,11 +65,16 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
     @Override
     public void setLayouts(@Nullable List<LayoutHelper> layouts) {
         mLayoutHelpers.clear();
+        mReverseLayoutHelpers.clear();
         mLayoutHelperItems.clear();
         if (layouts != null) {
-            for (LayoutHelper helper : layouts) {
+            for (int i = 0, size = layouts.size(); i < size; i++) {
+                LayoutHelper helper = layouts.get(i);
                 mLayoutHelpers.add(helper);
                 mLayoutHelperItems.add(new LayoutHelperItem(helper));
+            }
+            for (int i = layouts.size() - 1; i >= 0; i--) {
+                mReverseLayoutHelpers.add(layouts.get(i));
             }
 
             Collections.sort(mLayoutHelperItems, mLayoutHelperItemComparator);
@@ -101,7 +84,7 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
     @NonNull
     @Override
     protected List<LayoutHelper> getLayoutHelpers() {
-        return Collections.unmodifiableList(mLayoutHelpers);
+        return mLayoutHelpers;
     }
 
     @Nullable
@@ -123,15 +106,15 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
                 e = m - 1;
             } else if (rs.getEndPosition() < position) {
                 s = m + 1;
-            } else if (rs.getStartPosition() <= position && rs.getEndPosition() >= position)
+            } else if (rs.getStartPosition() <= position && rs.getEndPosition() >= position) {
                 break;
+            }
 
             rs = null;
         }
 
         return rs == null ? null : rs.layoutHelper;
     }
-
 
     static class LayoutHelperItem {
 
