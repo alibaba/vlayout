@@ -167,3 +167,6 @@ recycler.setAdapter(myAdapter);
 # 开源许可证
 
 vlayout遵循MIT开源许可证协议。
+
+# 微信群
+搜索帐号 longerian 获取邀请
