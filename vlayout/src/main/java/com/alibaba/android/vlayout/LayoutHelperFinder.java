@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * LayoutHelperFinder provides as repository of LayoutHelpers
  */
-public abstract class LayoutHelperFinder implements Iterable<LayoutHelper> {
+public abstract class LayoutHelperFinder {
 
     /**
      * Put layouts into the finder
@@ -57,10 +57,10 @@ public abstract class LayoutHelperFinder implements Iterable<LayoutHelper> {
     protected abstract List<LayoutHelper> getLayoutHelpers();
 
     /**
-     * Get iterator that in reverse order
+     * Get layoutHelpers that in reverse order
      *
      * @return
      */
-    protected abstract Iterable<LayoutHelper> reverse();
+    protected abstract List<LayoutHelper> reverse();
 
 }

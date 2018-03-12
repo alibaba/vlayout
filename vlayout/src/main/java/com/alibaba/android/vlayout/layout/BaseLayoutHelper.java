@@ -507,14 +507,14 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
 
     /**
      * Helper methods to handle focus states for views
-     * FIXME 可变参数性能不好,会引起一次潜在的数组对象创建,在频繁滑动过程中,容易引起GC,如果只有一个View,建议调用上述方法
      * @param result
      * @param views
      */
-    protected void handleStateOnResult(LayoutChunkResult result, View... views) {
+    protected void handleStateOnResult(LayoutChunkResult result, View[] views) {
         if (views == null) return;
 
-        for (View view : views) {
+        for (int i = 0; i < views.length; i++) {
+            View view = views[i];
             if (view == null) {
                 continue;
             }
