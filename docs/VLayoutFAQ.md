@@ -13,7 +13,7 @@
 
 因此如果没有处理好这一点，会导致 `ViewHolder` 的类型转换异常等 bug。有一篇更加详细的资料可参考：[PairFunction](http://pingguohe.net/2017/05/03/the-beauty-of-math-in-vlayout.html)
 
-补充：后来发现一个 bug，当 `hasConsistItemType=true`，在同一位置数据变化，前后构造了不一样的 Adapter，它们返回的 itemType 一样，也会导致类型转换出错，详见：[#182](https://github.com/alibaba/vlayout/issues/182)，目前采用人工保证返回不同的 itemType 来规避。
+补充：后来发现一个 bug，当 `hasConsistItemType=false`，在同一位置数据变化，前后构造了不一样的 Adapter，它们返回的 itemType 一样，也会导致类型转换出错，详见：[#182](https://github.com/alibaba/vlayout/issues/182)，目前采用人工保证返回不同的 itemType 来规避。
 
 ## 设置每种类型回收复用池的大小
 在 README 里写了这么一段 demo：`viewPool.setMaxRecycledViews(0, 10);`，很多人误以为只要这么设置就可以了，实际上有多少种类型的 itemType，就得为它们分别设置复用池大小。比如：
