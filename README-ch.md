@@ -171,4 +171,7 @@ recycler.setAdapter(myAdapter);
 vlayout遵循MIT开源许可证协议。
 
 # 微信群
-搜索帐号 longerian 获取邀请
+
+![](https://img.alicdn.com/tfs/TB11_2_kbSYBuNjSspiXXXNzpXa-167-167.png)
+
+搜索 `tangram_` 或者扫描以上二维码添加 Tangram 为好友，以便我们邀请你入群。
