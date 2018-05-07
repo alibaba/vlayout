@@ -33,22 +33,17 @@ public class ViewLifeCycleHelper {
             if (scrHeight == 0) {
                 scrHeight = view.getContext().getResources().getDisplayMetrics().heightPixels;
             }
-//            Log.e("huang", "checkViewStatusInScreen: view=" + view.getTag(R.id.tag_layout_helper_bg) + " rect=" + rect.toString());
 
             if (mVirtualLayoutManager.getVirtualLayoutDirection() == VirtualLayoutManager.LayoutState.LAYOUT_END) {
-                if (view.getTop() < 0 && view.getBottom() > 0 && isViewReadyDisAppear(view)) {
-//                    Log.e("huang", "LAYOUT_END checkViewDisAppear: " + rect.toString() + "view=" + view.getTag(R.id.tag_layout_helper_bg));
+                if (view.getTop() < 0 && view.getBottom() > 0 && isViewReadyDisAppearing(view)) {
                     setViewDisappearing(view);
-                } else if (view.getTop() < scrHeight && view.getBottom() > scrHeight && isViewReadyAppear(view)) {
-//                    Log.e("huang", "LAYOUT_END checkViewAppear: " + rect.toString() + "view=" + view.getTag(R.id.tag_layout_helper_bg));
+                } else if (view.getTop() < scrHeight && view.getBottom() > scrHeight && isViewReadyAppearing(view)) {
                     setViewAppearing(view);
                 }
             } else {
-                if (view.getTop() < 0 && view.getBottom() > 0 && isViewReadyAppear(view)) {
-//                    Log.e("huang", "LAYOUT_START checkViewAppear: " + rect.toString() + "view=" + view.getTag(R.id.tag_layout_helper_bg));
+                if (view.getTop() < 0 && view.getBottom() > 0 && isViewReadyAppearing(view)) {
                     setViewAppearing(view);
-                } else if (view.getTop() < scrHeight && view.getBottom() > scrHeight && isViewReadyDisAppear(view)) {
-//                    Log.e("huang", "LAYOUT_START checkViewDisAppear: " + rect.toString() + "view=" + view.getTag(R.id.tag_layout_helper_bg));
+                } else if (view.getTop() < scrHeight && view.getBottom() > scrHeight && isViewReadyDisAppearing(view)) {
                     setViewDisappearing(view);
                 }
             }
@@ -56,30 +51,21 @@ public class ViewLifeCycleHelper {
             if (view.getTop() > 0 && view.getBottom() < scrHeight) {
                 // fully in screen
 
-                if (isViewReadyAppear(view)) {
-                    // if not appeared, call appear
+                if (isViewReadyAppearing(view)) {
                     setViewAppearing(view);
-//                    Log.e("huang", "Add appear: " + rect.toString() + " view=" + view.getTag(R.id.tag_layout_helper_bg));
 
-                } else {
-                    if (getViewStatus(view) != STATUS.APPEARED) {
-                        setViewAppeared(view);
-//                        Log.e("huang", "Appeared: " + rect.toString() + " view=" + view.getTag(R.id.tag_layout_helper_bg));
-                    }
+                } else if (isViewReadyAppeared(view)) {
+                    setViewAppeared(view);
                 }
             } else if (view.getBottom() < 0 || view.getTop() > scrHeight) {
                 // not in screen
-                if (isViewReadyDisAppear(view)) {
-                    // if not disappeared, call disappear
+                if (isViewReadyDisAppearing(view)) {
                     setViewDisappearing(view);
-//                    Log.e("huang", "Add disappear:" + rect.toString() + " view=" + view.getTag(R.id.tag_layout_helper_bg));
 
-                } else {
-                    if (getViewStatus(view) != STATUS.DISAPPEARED) {
-                        setViewDisappeared(view);
-//                        Log.e("huang", "Disappeared: " + rect.toString() + " view=" + view.getTag(R.id.tag_layout_helper_bg));
-                    }
+                } else if (isViewReadyDisAppeared(view)) {
+                    setViewDisappeared(view);
                 }
+
             }
         }
     }
@@ -96,7 +82,7 @@ public class ViewLifeCycleHelper {
         mViewStatusMap.put(view, status);
     }
 
-    private boolean isViewReadyAppear(View view) {
+    private boolean isViewReadyAppearing(View view) {
         return getViewStatus(view) == STATUS.DISAPPEARED;
     }
 
@@ -111,6 +97,10 @@ public class ViewLifeCycleHelper {
         }
     }
 
+    private boolean isViewReadyAppeared(View view) {
+        return getViewStatus(view) == STATUS.APPEARING;
+    }
+
     private void setViewAppeared(View view) {
         if (getViewStatus(view) == STATUS.APPEARED) {
             return;
@@ -121,7 +111,7 @@ public class ViewLifeCycleHelper {
         }
     }
 
-    private boolean isViewReadyDisAppear(View view) {
+    private boolean isViewReadyDisAppearing(View view) {
         return getViewStatus(view) == STATUS.APPEARED;
     }
 
@@ -134,6 +124,10 @@ public class ViewLifeCycleHelper {
         if (null != mViewLifeCycleListener) {
             mViewLifeCycleListener.onDisappearing(view);
         }
+    }
+
+    private boolean isViewReadyDisAppeared(View view) {
+        return getViewStatus(view) == STATUS.DISAPPEARING;
     }
 
     private void setViewDisappeared(View view) {
