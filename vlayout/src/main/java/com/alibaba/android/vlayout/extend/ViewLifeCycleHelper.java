@@ -35,20 +35,20 @@ public class ViewLifeCycleHelper {
             }
 
             if (mVirtualLayoutManager.getVirtualLayoutDirection() == VirtualLayoutManager.LayoutState.LAYOUT_END) {
-                if (view.getTop() < 0 && view.getBottom() > 0 && isViewReadyDisAppearing(view)) {
+                if (view.getTop() <= 0 && view.getBottom() >= 0 && isViewReadyDisAppearing(view)) {
                     setViewDisappearing(view);
-                } else if (view.getTop() < scrHeight && view.getBottom() > scrHeight && isViewReadyAppearing(view)) {
+                } else if (view.getTop() <= scrHeight && view.getBottom() >= scrHeight && isViewReadyAppearing(view)) {
                     setViewAppearing(view);
                 }
             } else {
-                if (view.getTop() < 0 && view.getBottom() > 0 && isViewReadyAppearing(view)) {
+                if (view.getTop() <= 0 && view.getBottom() >= 0 && isViewReadyAppearing(view)) {
                     setViewAppearing(view);
-                } else if (view.getTop() < scrHeight && view.getBottom() > scrHeight && isViewReadyDisAppearing(view)) {
+                } else if (view.getTop() <= scrHeight && view.getBottom() >= scrHeight && isViewReadyDisAppearing(view)) {
                     setViewDisappearing(view);
                 }
             }
 
-            if (view.getTop() > 0 && view.getBottom() < scrHeight) {
+            if (view.getTop() >= 0 && view.getBottom() <= scrHeight) {
                 // fully in screen
 
                 if (isViewReadyAppearing(view)) {
@@ -57,7 +57,7 @@ public class ViewLifeCycleHelper {
                 } else if (isViewReadyAppeared(view)) {
                     setViewAppeared(view);
                 }
-            } else if (view.getBottom() < 0 || view.getTop() > scrHeight) {
+            } else if (view.getBottom() <= 0 || view.getTop() >= scrHeight) {
                 // not in screen
                 if (isViewReadyDisAppearing(view)) {
                     setViewDisappearing(view);

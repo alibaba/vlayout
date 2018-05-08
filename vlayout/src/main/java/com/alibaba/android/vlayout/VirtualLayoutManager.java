@@ -621,6 +621,11 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         if (null == viewLifeCycleListener) {
             throw new IllegalArgumentException("ViewLifeCycleListener should not be null!");
         }
+
+        if (recycleOffset == 0) {
+            throw new IllegalArgumentException("ViewLifeCycleListener should work with virtualLayoutManager.setRecycleOffset()!");
+        }
+
         mViewLifeCycleHelper = new ViewLifeCycleHelper(this, viewLifeCycleListener);
     }
 

@@ -129,7 +129,7 @@ class ExposeLinearLayoutManagerEx extends LinearLayoutManager {
 
     private final Method mEnsureLayoutStateMethod;
 
-    private int recycleOffset;
+    protected int recycleOffset;
 
     /**
      * Creates a vertical LinearLayoutManager
