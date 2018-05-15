@@ -477,7 +477,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
     public void bindLayoutView(@NonNull final View layoutView) {
         layoutView.measure(View.MeasureSpec.makeMeasureSpec(mLayoutRegion.width(), View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(mLayoutRegion.height(), View.MeasureSpec.EXACTLY));
-        layoutView.layout(mLayoutRegion.left, mLayoutRegion.top, mLayoutRegion.right, mLayoutRegion.bottom);
+        layoutView.layout(0,0, mLayoutRegion.width(), mLayoutRegion.height());
         layoutView.setBackgroundColor(mBgColor);
 
         if (mLayoutViewBindListener != null) {
