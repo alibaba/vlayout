@@ -29,6 +29,7 @@ import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.RecyclablePagerAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
+import com.alibaba.android.vlayout.extend.PerformanceMonitor;
 import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
 import com.alibaba.android.vlayout.layout.FixLayoutHelper;
 import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
@@ -119,7 +120,22 @@ public class VLayoutActivity extends Activity {
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_view);
 
         final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
+        layoutManager.setPerformanceMonitor(new PerformanceMonitor() {
 
+            long start;
+            long end;
+
+            @Override
+            public void recordStart(String phase, View view) {
+                start = System.currentTimeMillis();
+            }
+
+            @Override
+            public void recordEnd(String phase, View view) {
+                end = System.currentTimeMillis();
+                Log.d("VLayoutActivity", view.getClass().getName() + " " + (end - start));
+            }
+        });
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
