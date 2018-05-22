@@ -1,5 +1,6 @@
 package com.alibaba.android.vlayout.extend;
 
+import android.support.annotation.Keep;
 import android.view.View;
 
 /**
@@ -18,6 +19,7 @@ public class PerformanceMonitor {
      * @param phase
      * @param viewType
      */
+    @Keep
     public void recordStart(String phase, String viewType) {
 
     }
@@ -27,6 +29,7 @@ public class PerformanceMonitor {
      * @param phase
      * @param viewType
      */
+    @Keep
     public void recordEnd(String phase, String viewType) {
 
     }
@@ -36,6 +39,7 @@ public class PerformanceMonitor {
      * @param phase
      * @param view
      */
+    @Keep
     public void recordStart(String phase, View view) {
 
     }
@@ -45,6 +49,7 @@ public class PerformanceMonitor {
      * @param phase
      * @param view
      */
+    @Keep
     public void recordEnd(String phase, View view) {
 
     }
