@@ -93,6 +93,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     private boolean mNestedScrolling = false;
 
+    private boolean mCanScrollHorizontally;
+
+    private boolean mCanScrollVertically;
+
     private boolean mEnableMarginOverlapping = false;
 
     private int mMaxMeasureSize = -1;
@@ -122,6 +126,8 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         super(context, orientation, reverseLayout);
         this.mOrientationHelper = OrientationHelperEx.createOrientationHelper(this, orientation);
         this.mSecondaryOrientationHelper = OrientationHelperEx.createOrientationHelper(this, orientation == VERTICAL ? HORIZONTAL : VERTICAL);
+        this.mCanScrollVertically = super.canScrollVertically();
+        this.mCanScrollHorizontally = super.canScrollHorizontally();
         setHelperFinder(new RangeLayoutHelperFinder());
     }
 
@@ -134,6 +140,14 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         mSpaceMeasured = false;
         mMeasuredFullSpace = 0;
         mSpaceMeasuring = false;
+    }
+
+    public void setCanScrollVertically(boolean canScrollVertically) {
+        this.mCanScrollVertically = canScrollVertically;
+    }
+
+    public void setCanScrollHorizontally(boolean canScrollHorizontally) {
+        this.mCanScrollHorizontally = canScrollHorizontally;
     }
 
     public void setNestedScrolling(boolean nestedScrolling) {
@@ -1261,12 +1275,12 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     @Override
     public boolean canScrollHorizontally() {
-        return super.canScrollHorizontally() && !mNoScrolling;
+        return mCanScrollHorizontally && !mNoScrolling;
     }
 
     @Override
     public boolean canScrollVertically() {
-        return super.canScrollVertically() && !mNoScrolling;
+        return mCanScrollVertically && !mNoScrolling;
     }
 
     @Override
