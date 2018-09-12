@@ -291,6 +291,10 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         } else {
             fixLayoutStateInCase2(orientationHelper, recycler, startPosition, endPosition, helper);
         }
+
+        if (mFixView != null){
+            mFixView.setBackgroundColor(mBgColor);
+        }
     }
 
     private void fixLayoutStateFromAbnormal2Normal(OrientationHelperEx orientationHelper, RecyclerView.Recycler recycler, int startPosition, int endPosition,

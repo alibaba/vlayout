@@ -24,15 +24,9 @@
 
 package com.alibaba.android.vlayout;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.android.vlayout.extend.PerformanceMonitor;
+import com.alibaba.android.vlayout.extend.ViewLifeCycleHelper;
+import com.alibaba.android.vlayout.extend.ViewLifeCycleListener;
 import com.alibaba.android.vlayout.layout.BaseLayoutHelper;
 import com.alibaba.android.vlayout.layout.DefaultLayoutHelper;
 import com.alibaba.android.vlayout.layout.FixAreaAdjuster;
@@ -52,6 +46,14 @@ import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -102,6 +104,8 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     private int mMaxMeasureSize = -1;
 
     private PerformanceMonitor mPerformanceMonitor;
+
+    private ViewLifeCycleHelper mViewLifeCycleHelper;
 
     public VirtualLayoutManager(@NonNull final Context context) {
         this(context, VERTICAL);
@@ -456,6 +460,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
                     }
                 }
             }
+
+            if (null != mViewLifeCycleHelper) {
+                mViewLifeCycleHelper.checkViewStatusInScreen();
+            }
         }
     }
 
@@ -625,6 +633,26 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             LayoutHelper layoutHelper = layoutHelpers.get(i);
             layoutHelper.onOffsetChildrenVertical(dy, this);
         }
+
+        if (null != mViewLifeCycleHelper) {
+            mViewLifeCycleHelper.checkViewStatusInScreen();
+        }
+    }
+
+    public void setViewLifeCycleListener(@NonNull ViewLifeCycleListener viewLifeCycleListener) {
+        if (null == viewLifeCycleListener) {
+            throw new IllegalArgumentException("ViewLifeCycleListener should not be null!");
+        }
+
+        if (recycleOffset == 0) {
+            throw new IllegalArgumentException("ViewLifeCycleListener should work with virtualLayoutManager.setRecycleOffset()!");
+        }
+
+        mViewLifeCycleHelper = new ViewLifeCycleHelper(this, viewLifeCycleListener);
+    }
+
+    public int getVirtualLayoutDirection() {
+        return mLayoutState.mLayoutDirection;
     }
 
     private LayoutStateWrapper mTempLayoutStateWrapper = new LayoutStateWrapper();
@@ -1438,7 +1466,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
         if (getOrientation() == VERTICAL) {
             widthSpec = updateSpecWithExtra(widthSpec, lp.leftMargin + mDecorInsets.left,
-                lp.rightMargin + mDecorInsets.right);
+                    lp.rightMargin + mDecorInsets.right);
         }
         if (getOrientation() == HORIZONTAL) {
             heightSpec = updateSpecWithExtra(heightSpec, mDecorInsets.top,

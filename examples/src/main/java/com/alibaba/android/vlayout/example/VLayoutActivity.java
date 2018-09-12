@@ -30,6 +30,7 @@ import com.alibaba.android.vlayout.RecyclablePagerAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 import com.alibaba.android.vlayout.extend.PerformanceMonitor;
+import com.alibaba.android.vlayout.extend.ViewLifeCycleListener;
 import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
 import com.alibaba.android.vlayout.layout.FixLayoutHelper;
 import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
@@ -110,8 +111,8 @@ public class VLayoutActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
-;
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        ;
         mFirstText = (TextView) findViewById(R.id.first);
         mLastText = (TextView) findViewById(R.id.last);
         mCountText = (TextView) findViewById(R.id.count);
@@ -151,8 +152,6 @@ public class VLayoutActivity extends Activity {
             }
         });
 
-        layoutManager.setRecycleOffset(300);
-
         recyclerView.setLayoutManager(layoutManager);
 
         // layoutManager.setReverseLayout(true);
@@ -172,6 +171,31 @@ public class VLayoutActivity extends Activity {
         // recyclerView.addItemDecoration(itemDecoration);
 
         viewPool.setMaxRecycledViews(0, 20);
+
+        layoutManager.setRecycleOffset(300);
+
+        // viewLifeCycleListener should be used with setRecycleOffset()
+        layoutManager.setViewLifeCycleListener(new ViewLifeCycleListener() {
+            @Override
+            public void onAppearing(View view) {
+//                Log.e("ViewLifeCycleTest", "onAppearing: " + view);
+            }
+
+            @Override
+            public void onDisappearing(View view) {
+//                Log.e("ViewLifeCycleTest", "onDisappearing: " + view);
+            }
+
+            @Override
+            public void onAppeared(View view) {
+//                Log.e("ViewLifeCycleTest", "onAppeared: " + view);
+            }
+
+            @Override
+            public void onDisappeared(View view) {
+//                Log.e("ViewLifeCycleTest", "onDisappeared: " + view);
+            }
+        });
 
         final DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, true);
 
@@ -280,7 +304,7 @@ public class VLayoutActivity extends Activity {
             });
         }
 
-		{
+        {
             RangeGridLayoutHelper layoutHelper = new RangeGridLayoutHelper(4);
             layoutHelper.setBgColor(Color.GREEN);
             layoutHelper.setWeights(new float[]{20f, 26.665f});
@@ -355,7 +379,7 @@ public class VLayoutActivity extends Activity {
 
             adapters.add(new SubAdapter(this, layoutHelper, 23));
         }
-		
+
         {
             SingleLayoutHelper layoutHelper = new SingleLayoutHelper();
             layoutHelper.setBgColor(Color.BLUE);
@@ -632,7 +656,7 @@ public class VLayoutActivity extends Activity {
         }
 
         adapters.add(
-            new FooterAdapter(recyclerView, VLayoutActivity.this, new GridLayoutHelper(1), 1));
+                new FooterAdapter(recyclerView, VLayoutActivity.this, new GridLayoutHelper(1), 1));
 
         delegateAdapter.setAdapters(adapters);
 
@@ -642,8 +666,8 @@ public class VLayoutActivity extends Activity {
         trigger = new Runnable() {
             @Override
             public void run() {
-                 //recyclerView.scrollToPosition(22);
-                 //recyclerView.getAdapter().notifyDataSetChanged();
+                //recyclerView.scrollToPosition(22);
+                //recyclerView.getAdapter().notifyDataSetChanged();
                 //mainHandler.postDelayed(trigger, 1000);
                 //List<DelegateAdapter.Adapter> newAdapters = new ArrayList<>();
                 //newAdapters.add((new SubAdapter(VLayoutActivity.this, new ColumnLayoutHelper(), 3)));
@@ -672,7 +696,6 @@ public class VLayoutActivity extends Activity {
                 //footer.toggleFoot();
             }
         });
-
 
 
         mainHandler.postDelayed(trigger, 1000);
