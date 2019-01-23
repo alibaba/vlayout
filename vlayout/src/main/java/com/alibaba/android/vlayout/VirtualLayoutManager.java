@@ -47,12 +47,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 
@@ -106,6 +108,20 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     private PerformanceMonitor mPerformanceMonitor;
 
     private ViewLifeCycleHelper mViewLifeCycleHelper;
+
+    private Comparator<Pair<Range<Integer>, Integer>> mRangeComparator = new Comparator<Pair<Range<Integer>, Integer>>() {
+        @Override
+        public int compare(Pair<Range<Integer>, Integer> a, Pair<Range<Integer>, Integer> b) {
+            if (a == null && b == null) return 0;
+            if (a == null) return -1;
+            if (b == null) return 1;
+
+            Range<Integer> lr = a.first;
+            Range<Integer> rr = b.first;
+
+            return lr.getLower() - rr.getLower();
+        }
+    };
 
     public VirtualLayoutManager(@NonNull final Context context) {
         this(context, VERTICAL);
@@ -175,9 +191,12 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         List<LayoutHelper> helpers = new LinkedList<>();
         if (this.mHelperFinder != null) {
             List<LayoutHelper> layoutHelpers = mHelperFinder.getLayoutHelpers();
-            for (int i = 0, size = layoutHelpers.size(); i < size; i++) {
-                LayoutHelper helper = layoutHelpers.get(i);
-                helpers.add(helper);
+            Iterator<LayoutHelper> iterator = layoutHelpers.iterator();
+            LayoutHelper layoutHelper = null;
+            while (iterator.hasNext()) {
+                layoutHelper = iterator.next();
+                helpers.add(layoutHelper);
+
             }
         }
 
@@ -211,17 +230,18 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
      */
     public void setLayoutHelpers(@Nullable List<LayoutHelper> helpers) {
         List<LayoutHelper> layoutHelpers = mHelperFinder.getLayoutHelpers();
-        for (int i = 0, size = layoutHelpers.size(); i < size; i++) {
-            LayoutHelper helper = layoutHelpers.get(i);
+        Iterator<LayoutHelper> it0 = layoutHelpers.iterator();
+        while (it0.hasNext()) {
+            LayoutHelper helper = it0.next();
             oldHelpersSet.put(System.identityHashCode(helper), helper);
         }
 
         // set ranges
         if (helpers != null) {
             int start = 0;
-            for (int i = 0; i < helpers.size(); i++) {
-                LayoutHelper helper = helpers.get(i);
-
+            Iterator<LayoutHelper> it1 = helpers.iterator();
+            while (it1.hasNext()) {
+                LayoutHelper helper = it1.next();
                 if (helper instanceof FixAreaLayoutHelper) {
                     ((FixAreaLayoutHelper) helper).setAdjuster(mFixAreaAdjustor);
                 }
@@ -244,11 +264,11 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         this.mHelperFinder.setLayouts(helpers);
 
         layoutHelpers = mHelperFinder.getLayoutHelpers();
-        for (int i = 0, size = layoutHelpers.size(); i < size; i++) {
-            LayoutHelper helper = layoutHelpers.get(i);
-            newHelpersSet.put(System.identityHashCode(helper), helper);
+        Iterator<LayoutHelper> iterator = layoutHelpers.iterator();
+        while (iterator.hasNext()) {
+            LayoutHelper layoutHelper = iterator.next();
+            newHelpersSet.put(System.identityHashCode(layoutHelper), layoutHelper);
         }
-
 
         for (Iterator<Map.Entry<Integer, LayoutHelper>> it = oldHelpersSet.entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<Integer, LayoutHelper> entry = it.next();
@@ -364,8 +384,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         mTempAnchorInfoWrapper.position = anchorInfo.mPosition;
         mTempAnchorInfoWrapper.coordinate = anchorInfo.mCoordinate;
         List<LayoutHelper> layoutHelpers = mHelperFinder.getLayoutHelpers();
-        for (int i = 0, size = layoutHelpers.size(); i < size; i++) {
-            LayoutHelper layoutHelper = layoutHelpers.get(i);
+        Iterator<LayoutHelper> iterator = layoutHelpers.iterator();
+        LayoutHelper layoutHelper = null;
+        while (iterator.hasNext()) {
+            layoutHelper = iterator.next();
             layoutHelper.onRefreshLayout(state, mTempAnchorInfoWrapper, this);
         }
     }
@@ -434,8 +456,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
         if (mNested == 0) {
             List<LayoutHelper> reverseLayoutHelpers = mHelperFinder.reverse();
-            for (int i = 0, size = reverseLayoutHelpers.size(); i < size; i++) {
-                LayoutHelper layoutHelper = reverseLayoutHelpers.get(i);
+            Iterator<LayoutHelper> iterator = reverseLayoutHelpers.iterator();
+            LayoutHelper layoutHelper = null;
+            while (iterator.hasNext()) {
+                layoutHelper = iterator.next();
                 layoutHelper.beforeLayout(recycler, state, this);
             }
         }
@@ -450,8 +474,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             final int startPosition = findFirstVisibleItemPosition();
             final int endPosition = findLastVisibleItemPosition();
             List<LayoutHelper> layoutHelpers = mHelperFinder.getLayoutHelpers();
-            for (int i = 0, size = layoutHelpers.size(); i < size; i++) {
-                LayoutHelper layoutHelper = layoutHelpers.get(i);
+            Iterator<LayoutHelper> iterator = layoutHelpers.iterator();
+            LayoutHelper layoutHelper = null;
+            while (iterator.hasNext()) {
+                layoutHelper = iterator.next();
                 try {
                     layoutHelper.afterLayout(recycler, state, startPosition, endPosition, scrolled, this);
                 } catch (Exception e) {
@@ -608,8 +634,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         int startPosition = findFirstVisibleItemPosition();
         int endPosition = findLastVisibleItemPosition();
         List<LayoutHelper> layoutHelpers = mHelperFinder.getLayoutHelpers();
-        for (int i = 0, size = layoutHelpers.size(); i < size; i++) {
-            LayoutHelper layoutHelper = layoutHelpers.get(i);
+        Iterator<LayoutHelper> iterator = layoutHelpers.iterator();
+        LayoutHelper layoutHelper = null;
+        while (iterator.hasNext()) {
+            layoutHelper = iterator.next();
             layoutHelper.onScrollStateChanged(state, startPosition, endPosition, this);
         }
     }
@@ -619,9 +647,12 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         super.offsetChildrenHorizontal(dx);
 
         List<LayoutHelper> layoutHelpers = mHelperFinder.getLayoutHelpers();
-        for (int i = 0, size = layoutHelpers.size(); i < size; i++) {
-            LayoutHelper layoutHelper = layoutHelpers.get(i);
+        Iterator<LayoutHelper> iterator = layoutHelpers.iterator();
+        LayoutHelper layoutHelper = null;
+        while (iterator.hasNext()) {
+            layoutHelper = iterator.next();
             layoutHelper.onOffsetChildrenHorizontal(dx, this);
+
         }
     }
 
@@ -629,8 +660,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     public void offsetChildrenVertical(int dy) {
         super.offsetChildrenVertical(dy);
         List<LayoutHelper> layoutHelpers = mHelperFinder.getLayoutHelpers();
-        for (int i = 0, size = layoutHelpers.size(); i < size; i++) {
-            LayoutHelper layoutHelper = layoutHelpers.get(i);
+        Iterator<LayoutHelper> iterator = layoutHelpers.iterator();
+        LayoutHelper layoutHelper = null;
+        while (iterator.hasNext()) {
+            layoutHelper = iterator.next();
             layoutHelper.onOffsetChildrenVertical(dy, this);
         }
 
@@ -657,7 +690,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     private LayoutStateWrapper mTempLayoutStateWrapper = new LayoutStateWrapper();
 
-    private List<Pair<Range<Integer>, Integer>> mRangeLengths = new LinkedList<>();
+    private List<Pair<Range<Integer>, Integer>> mRangeLengths = new ArrayList<>();
 
     @Nullable
     private int findRangeLength(@NonNull final Range<Integer> range) {
@@ -732,19 +765,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
             }
 
             mRangeLengths.add(Pair.create(range, consumed));
-            Collections.sort(mRangeLengths, new Comparator<Pair<Range<Integer>, Integer>>() {
-                @Override
-                public int compare(Pair<Range<Integer>, Integer> a, Pair<Range<Integer>, Integer> b) {
-                    if (a == null && b == null) return 0;
-                    if (a == null) return -1;
-                    if (b == null) return 1;
-
-                    Range<Integer> lr = a.first;
-                    Range<Integer> rr = b.first;
-
-                    return lr.getLower() - rr.getLower();
-                }
-            });
+            Collections.sort(mRangeLengths, mRangeComparator);
         }
     }
 
@@ -852,8 +873,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     @Override
     public void onItemsChanged(RecyclerView recyclerView) {
         List<LayoutHelper> layoutHelpers = mHelperFinder.getLayoutHelpers();
-        for (int i = 0, size = layoutHelpers.size(); i < size; i++) {
-            LayoutHelper layoutHelper = layoutHelpers.get(i);
+        Iterator<LayoutHelper> iterator = layoutHelpers.iterator();
+        LayoutHelper layoutHelper = null;
+        while (iterator.hasNext()) {
+            layoutHelper = iterator.next();
             layoutHelper.onItemsChanged(this);
         }
 
@@ -907,8 +930,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         super.onDetachedFromWindow(view, recycler);
 
         List<LayoutHelper> layoutHelpers = mHelperFinder.getLayoutHelpers();
-        for (int i = 0, size = layoutHelpers.size(); i < size; i++) {
-            LayoutHelper layoutHelper = layoutHelpers.get(i);
+        Iterator<LayoutHelper> iterator = layoutHelpers.iterator();
+        LayoutHelper layoutHelper = null;
+        while (iterator.hasNext()) {
+            layoutHelper = iterator.next();
             layoutHelper.clear(this);
         }
 
@@ -1141,8 +1166,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
         // TODO: support zIndex?
         List<View> views = new LinkedList<>();
         List<LayoutHelper> layoutHelpers = mHelperFinder.getLayoutHelpers();
-        for (int i = 0, size = layoutHelpers.size(); i < size; i++) {
-            LayoutHelper layoutHelper = layoutHelpers.get(i);
+        Iterator<LayoutHelper> iterator = layoutHelpers.iterator();
+        LayoutHelper layoutHelper = null;
+        while (iterator.hasNext()) {
+            layoutHelper = iterator.next();
             View fixedView = layoutHelper.getFixedView();
             if (fixedView != null) {
                 views.add(fixedView);

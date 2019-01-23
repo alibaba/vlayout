@@ -27,10 +27,13 @@ package com.alibaba.android.vlayout;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * An implement of {@link LayoutHelperFinder} which finds layoutHelpers by position
@@ -45,6 +48,8 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
 
     @NonNull
     private List<LayoutHelper> mReverseLayoutHelpers =new LinkedList<>();
+
+    private LayoutHelperItem[] mSortedLayoutHelpers = null;
 
     @NonNull
     private Comparator<LayoutHelperItem> mLayoutHelperItemComparator = new Comparator<LayoutHelperItem>() {
@@ -68,16 +73,21 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
         mReverseLayoutHelpers.clear();
         mLayoutHelperItems.clear();
         if (layouts != null) {
-            for (int i = 0, size = layouts.size(); i < size; i++) {
-                LayoutHelper helper = layouts.get(i);
+            ListIterator<LayoutHelper> iterator = layouts.listIterator();
+            LayoutHelper helper = null;
+            while (iterator.hasNext()) {
+                helper = iterator.next();
                 mLayoutHelpers.add(helper);
                 mLayoutHelperItems.add(new LayoutHelperItem(helper));
             }
-            for (int i = layouts.size() - 1; i >= 0; i--) {
-                mReverseLayoutHelpers.add(layouts.get(i));
+
+            while (iterator.hasPrevious()) {
+                mReverseLayoutHelpers.add(iterator.previous());
             }
 
-            Collections.sort(mLayoutHelperItems, mLayoutHelperItemComparator);
+            // Collections.sort(mLayoutHelperItems, mLayoutHelperItemComparator);
+            mSortedLayoutHelpers = mLayoutHelperItems.toArray(new LayoutHelperItem[mLayoutHelperItems.size()]);
+            Arrays.sort(mSortedLayoutHelpers, mLayoutHelperItemComparator);
         }
     }
 
@@ -90,18 +100,17 @@ public class RangeLayoutHelperFinder extends LayoutHelperFinder {
     @Nullable
     @Override
     public LayoutHelper getLayoutHelper(int position) {
-        final int count = mLayoutHelperItems.size();
-        if (count == 0) {
+        if (mSortedLayoutHelpers == null || mSortedLayoutHelpers.length == 0) {
             return null;
         }
+        final int count = mSortedLayoutHelpers.length;
 
         int s = 0, e = count - 1, m;
         LayoutHelperItem rs = null;
-
         // binary search range
         while (s <= e) {
             m = (s + e) / 2;
-            rs = mLayoutHelperItems.get(m);
+            rs = mSortedLayoutHelpers[m];
             if (rs.getStartPosition() > position) {
                 e = m - 1;
             } else if (rs.getEndPosition() < position) {
