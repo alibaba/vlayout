@@ -168,9 +168,3 @@ Before you open an issue or create a pull request, please read [Contributing Gui
 # LICENSE
 
 Vlayout is available under the MIT license.
-
-# WeChatGroup
-
-![](https://img.alicdn.com/tfs/TB11_2_kbSYBuNjSspiXXXNzpXa-167-167.png)
-
-Search `tangram_` or scan the QR code above to be invited in WeChat.

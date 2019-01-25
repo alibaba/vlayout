@@ -28,11 +28,11 @@ public class Cantor {
             result = new long[2];
         }
         // reverse Cantor Function
-        int w = (int) (Math.floor(Math.sqrt(8 * cantor + 1) - 1) / 2);
-        int t = (w * w + w) / 2;
+        long w = (long) (Math.floor(Math.sqrt(8 * cantor + 1) - 1) / 2);
+        long t = (w * w + w) / 2;
 
-        int k2 = (int)(cantor - t);
-        int k1 = w - k2;
+        long k2 = cantor - t;
+        long k1 = w - k2;
         result[0] = k1;
         result[1] = k2;
     }
