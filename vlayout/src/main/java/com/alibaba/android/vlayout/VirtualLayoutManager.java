@@ -222,6 +222,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     private HashMap<Integer, LayoutHelper> oldHelpersSet = new HashMap<>();
 
     private BaseLayoutHelper.LayoutViewBindListener mLayoutViewBindListener;
+    private boolean mShouldCleanViewCaches;
 
     /**
      * Update layoutHelpers, data changes will cause layoutHelpers change
@@ -259,6 +260,8 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
                 start += helper.getItemCount();
             }
+        } else {
+            mShouldCleanViewCaches = true;
         }
 
         this.mHelperFinder.setLayouts(helpers);
@@ -1434,6 +1437,13 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
 
         super.detachAndScrapAttachedViews(recycler);
+        if (mShouldCleanViewCaches) {
+            mShouldCleanViewCaches = false;
+            removeAndRecycleAllViews(recycler);
+//            removeAndRecycleScrapInt(recycler);
+            recycler.clear();
+            mRecyclerView.getRecycledViewPool().clear();
+        }
     }
 
     @Override

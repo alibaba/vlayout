@@ -36,6 +36,6 @@
         android:background="@drawable/item_background"
         android:gravity="center"
         android:textColor="#999999"
-        android:textSize="22sp"
+        android:textSize="16sp"
         android:textStyle="bold"/>
 </FrameLayout>
