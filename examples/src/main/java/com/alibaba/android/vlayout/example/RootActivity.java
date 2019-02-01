@@ -18,6 +18,7 @@ public class RootActivity extends ListActivity {
             MainActivity.class.getSimpleName(),
             TestActivity.class.getSimpleName(),
             OnePlusNLayoutActivity.class.getSimpleName(),
+            DynamicAdapterActivity.class.getSimpleName(),
             DebugActivity.class.getSimpleName()
     };
 
@@ -26,6 +27,7 @@ public class RootActivity extends ListActivity {
             MainActivity.class,
             TestActivity.class,
             OnePlusNLayoutActivity.class,
+            DynamicAdapterActivity.class,
             DebugActivity.class
     };
 
