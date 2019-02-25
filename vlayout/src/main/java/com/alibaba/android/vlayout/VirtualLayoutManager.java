@@ -24,14 +24,6 @@
 
 package com.alibaba.android.vlayout;
 
-import com.alibaba.android.vlayout.extend.PerformanceMonitor;
-import com.alibaba.android.vlayout.extend.ViewLifeCycleHelper;
-import com.alibaba.android.vlayout.extend.ViewLifeCycleListener;
-import com.alibaba.android.vlayout.layout.BaseLayoutHelper;
-import com.alibaba.android.vlayout.layout.DefaultLayoutHelper;
-import com.alibaba.android.vlayout.layout.FixAreaAdjuster;
-import com.alibaba.android.vlayout.layout.FixAreaLayoutHelper;
-
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
@@ -47,6 +39,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import com.alibaba.android.vlayout.extend.PerformanceMonitor;
+import com.alibaba.android.vlayout.extend.ViewLifeCycleHelper;
+import com.alibaba.android.vlayout.extend.ViewLifeCycleListener;
+import com.alibaba.android.vlayout.layout.BaseLayoutHelper;
+import com.alibaba.android.vlayout.layout.DefaultLayoutHelper;
+import com.alibaba.android.vlayout.layout.FixAreaAdjuster;
+import com.alibaba.android.vlayout.layout.FixAreaLayoutHelper;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -54,7 +54,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 
@@ -77,7 +76,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     private static final String TRACE_LAYOUT = "VLM onLayoutChildren";
     private static final String TRACE_SCROLL = "VLM scroll";
 
-    private static boolean sDebuggable = false;
+    public static boolean sDebuggable = false;
 
     public static void enableDebugging(boolean isDebug) {
         sDebuggable = isDebug;
@@ -744,7 +743,9 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
         // no item consumed
         if (layoutState.mCurrentPosition == position) {
-            Log.w(TAG, "layoutHelper[" + layoutHelper.getClass().getSimpleName() + "@" + layoutHelper.toString() + "] consumes no item!");
+            if (sDebuggable) {
+                Log.w(TAG, "layoutHelper[" + layoutHelper.getClass().getSimpleName() + "@" + layoutHelper.toString() + "] consumes no item!");
+            }
             // break as no item consumed
             result.mFinished = true;
         } else {
