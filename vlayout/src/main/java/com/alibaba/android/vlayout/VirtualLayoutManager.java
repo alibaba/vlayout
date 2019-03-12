@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import com.alibaba.android.vlayout.extend.LayoutManagerCanScrollListener;
 import com.alibaba.android.vlayout.extend.PerformanceMonitor;
 import com.alibaba.android.vlayout.extend.ViewLifeCycleHelper;
 import com.alibaba.android.vlayout.extend.ViewLifeCycleListener;
@@ -99,6 +100,8 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     private boolean mCanScrollHorizontally;
 
     private boolean mCanScrollVertically;
+
+    private LayoutManagerCanScrollListener layoutManagerCanScrollListener;
 
     private boolean mEnableMarginOverlapping = false;
 
@@ -167,6 +170,10 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     public void setCanScrollHorizontally(boolean canScrollHorizontally) {
         this.mCanScrollHorizontally = canScrollHorizontally;
+    }
+
+    public void setLayoutManagerCanScrollListener(LayoutManagerCanScrollListener layoutManagerCanScrollListener) {
+        this.layoutManagerCanScrollListener = layoutManagerCanScrollListener;
     }
 
     public void setNestedScrolling(boolean nestedScrolling) {
@@ -1327,12 +1334,20 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
     @Override
     public boolean canScrollHorizontally() {
-        return mCanScrollHorizontally && !mNoScrolling;
+        boolean ret = true;
+        if (layoutManagerCanScrollListener != null) {
+            ret = ret && layoutManagerCanScrollListener.canScrollHorizontally();
+        }
+        return mCanScrollHorizontally && !mNoScrolling && ret;
     }
 
     @Override
     public boolean canScrollVertically() {
-        return mCanScrollVertically && !mNoScrolling;
+        boolean ret = true;
+        if (layoutManagerCanScrollListener != null) {
+            ret = ret && layoutManagerCanScrollListener.canScrollVertically();
+        }
+        return mCanScrollVertically && !mNoScrolling && ret;
     }
 
     @Override

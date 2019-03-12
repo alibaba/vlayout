@@ -29,6 +29,7 @@ import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.RecyclablePagerAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
+import com.alibaba.android.vlayout.extend.LayoutManagerCanScrollListener;
 import com.alibaba.android.vlayout.extend.PerformanceMonitor;
 import com.alibaba.android.vlayout.extend.ViewLifeCycleListener;
 import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
@@ -194,6 +195,20 @@ public class VLayoutActivity extends Activity {
             @Override
             public void onDisappeared(View view) {
 //                Log.e("ViewLifeCycleTest", "onDisappeared: " + view);
+            }
+        });
+
+        layoutManager.setLayoutManagerCanScrollListener(new LayoutManagerCanScrollListener() {
+            @Override
+            public boolean canScrollVertically() {
+                Log.i("vlayout", "canScrollVertically: ");
+                return true;
+            }
+
+            @Override
+            public boolean canScrollHorizontally() {
+                Log.i("vlayout", "canScrollHorizontally: ");
+                return true;
             }
         });
 
