@@ -30,9 +30,8 @@ import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.View;
@@ -40,7 +39,7 @@ import android.widget.TextView;
 
 import java.util.Arrays;
 
-import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
+import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
 
 
 /**

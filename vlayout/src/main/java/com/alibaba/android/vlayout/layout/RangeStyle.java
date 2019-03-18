@@ -11,11 +11,11 @@ import com.alibaba.android.vlayout.layout.BaseLayoutHelper.LayoutViewBindListene
 import com.alibaba.android.vlayout.layout.BaseLayoutHelper.LayoutViewUnBindListener;
 
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
-import android.support.v4.util.ArrayMap;
-import android.support.v4.util.SimpleArrayMap;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.collection.ArrayMap;
+import androidx.collection.SimpleArrayMap;
+
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 

@@ -24,7 +24,7 @@
 
 package com.alibaba.android.vlayout.extend;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.View;

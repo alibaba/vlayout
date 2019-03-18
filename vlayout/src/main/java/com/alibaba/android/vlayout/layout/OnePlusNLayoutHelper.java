@@ -34,9 +34,9 @@ import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
 import android.graphics.Rect;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.State;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.State;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
