@@ -24,9 +24,8 @@
 
 package com.alibaba.android.vlayout;
 
-import android.support.annotation.Nullable;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 /**
@@ -131,21 +130,21 @@ public interface LayoutManagerHelper {
 
     /**
      * Mark a view as hidden, it will show on the screen,
-     * but can not be access via {@link RecyclerView.LayoutManager#getChildCount()} and {@link android.support.v7.widget.RecyclerView.LayoutManager#getChildAt(int)}
+     * but can not be access via {@link RecyclerView.LayoutManager#getChildCount()} and {@link androidx.recyclerview.widget.RecyclerView.LayoutManager#getChildAt(int)}
      *
      * @param view
      */
     void hideView(View view);
 
     /**
-     * Mark a hidden view re-shown, so you can get it from {@link android.support.v7.widget.RecyclerView.LayoutManager#getChildAt(int)}
+     * Mark a hidden view re-shown, so you can get it from {@link androidx.recyclerview.widget.RecyclerView.LayoutManager#getChildAt(int)}
      *
      * @param view
      */
     void showView(View view);
 
     /**
-     * Get {@link android.support.v7.widget.RecyclerView.ViewHolder} for a view in RecyclerView
+     * Get {@link androidx.recyclerview.widget.RecyclerView.ViewHolder} for a view in RecyclerView
      *
      * @param child
      * @return

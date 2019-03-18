@@ -30,12 +30,12 @@ import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.AnchorInfoWrapper;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.State;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.State;
 import android.util.Log;
 import android.view.View;
 
-import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
+import static androidx.recyclerview.widget.LinearLayoutManager.VERTICAL;
 
 
 /**

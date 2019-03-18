@@ -29,10 +29,10 @@ import android.content.Context;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.OrientationHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
@@ -41,7 +41,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 
 /**
  * This class is used to expose layoutChunk method, should not be used in anywhere else

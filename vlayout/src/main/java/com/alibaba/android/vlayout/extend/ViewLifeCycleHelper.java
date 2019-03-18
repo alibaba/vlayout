@@ -1,7 +1,8 @@
 package com.alibaba.android.vlayout.extend;
 
-import android.support.annotation.NonNull;
-import android.support.v4.util.ArrayMap;
+import androidx.annotation.NonNull;
+import androidx.collection.ArrayMap;
+
 import android.view.View;
 
 import com.alibaba.android.vlayout.VirtualLayoutManager;

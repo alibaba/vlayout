@@ -28,7 +28,7 @@ import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.OrientationHelperEx;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;

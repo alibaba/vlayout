@@ -28,7 +28,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Looper;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 import android.view.View;

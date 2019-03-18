@@ -28,20 +28,27 @@ buildscript {
     repositories {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
         maven { url "http://oss.jfrog.org/oss-snapshot-local/" }
-        mavenCentral()
-        jcenter()
+//        mavenCentral()
+//        jcenter()
+//        google()
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:3.3.1'
     }
 }
 
 repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven { url "http://oss.jfrog.org/oss-snapshot-local/" }
-    jcenter()
-    mavenLocal()
+//    jcenter()
+//    mavenLocal()
+    maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
 }
 
 
@@ -105,17 +112,17 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // compile project(':extension')
     if (project.hasProperty('useNewSupportLibrary')) {
-        compile 'com.android.support:recyclerview-v7:25.2.0@aar'
-        compile('com.android.support:support-v4:25.2.0@aar')
-        compile 'com.android.support:support-annotations:25.2.0'
-        compile 'com.android.support:support-compat:25.2.0'
-        compile 'com.android.support:support-core-ui:25.2.0'
+        compile 'com.android.support:recyclerview-v7:27.1.1'
+        compile 'com.android.support:support-v4:27.1.1'
+        compile 'com.android.support:support-annotations:27.1.1'
+        compile 'com.android.support:support-compat:27.1.1'
+        compile 'com.android.support:support-core-ui:27.1.1'
     } else {
-        compile 'com.android.support:recyclerview-v7:23.1.1@aar'
-        compile('com.android.support:support-v4:23.1.1@aar') {
+        compile 'com.android.support:recyclerview-v7:27.1.1'
+        compile('com.android.support:support-v4:27.1.1') {
             exclude group: 'com.android.support', module: 'support-annotations'
         }
-        compile 'com.android.support:support-annotations:23.1.1'
+        compile 'com.android.support:support-annotations:27.1.1'
     }
 
     androidTestCompile "org.robolectric:robolectric:3.0"
