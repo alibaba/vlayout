@@ -709,8 +709,8 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
     public void onClear(LayoutManagerHelper helper) {
         super.onClear(helper);
         if (mFixView != null) {
-            helper.removeChildView(mFixView);
             helper.recycleView(mFixView);
+            helper.removeChildView(mFixView);
             mFixView = null;
         }
     }
