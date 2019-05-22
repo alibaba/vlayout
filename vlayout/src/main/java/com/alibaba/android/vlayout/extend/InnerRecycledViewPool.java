@@ -30,9 +30,6 @@ import android.util.SparseIntArray;
 import android.view.View;
 
 import java.io.Closeable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Wrapping original RecycledViewPool to provides destroy callback on Views
@@ -44,7 +41,7 @@ public final class InnerRecycledViewPool extends RecyclerView.RecycledViewPool {
 
     private static final String TAG = "InnerRecycledViewPool";
 
-    private static final int DEFAULT_MAX_SIZE = 5;
+    private static int DEFAULT_MAX_SIZE = 20;
 
     /*
      * Wrapped InnerPool
@@ -176,5 +173,9 @@ public final class InnerRecycledViewPool extends RecyclerView.RecycledViewPool {
                 Log.w(TAG, Log.getStackTraceString(e), e);
             }
         }
+    }
+
+    public void setDefaultMaxSize(int maxSize) {
+        DEFAULT_MAX_SIZE = maxSize;
     }
 }
