@@ -498,7 +498,9 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             if (mDoNormalHandle) {
                 // offset
                 if (index >= 0) {
-                    helper.addChildView(mFixView, index);
+                    if (mFixView.getParent() == null) {
+                        helper.addChildView(mFixView, index);
+                    }
                     mFixView = null;
                 }
             } else {
@@ -530,7 +532,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
             if (eView == null) {
                 // TODO? why do condition here?
-                if (mOffset + (mStickyStart ? startAdjust : endAdjust) > 0) {
+                if (mOffset + (mStickyStart ? startAdjust : endAdjust) >= 0) {
                     normalHandle = true;
                 }
                 mFixView = recycler.getViewForPosition(mPos);
@@ -687,7 +689,9 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             if (normalHandle) {
                 // offset
                 if (index >= 0) {
-                    helper.addChildView(mFixView, index);
+                    if (mFixView.getParent() == null) {
+                        helper.addChildView(mFixView, index);
+                    }
                     mFixView = null;
                 }
             } else {
