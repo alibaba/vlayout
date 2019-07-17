@@ -288,6 +288,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             }
         }
 
+        View stickyView = mFixView;
         // Not in normal flow
         if (!mDoNormalHandle && mFixView != null) {
             // already capture in layoutViews phase
@@ -307,7 +308,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
         if (stickyListener != null) {
             if (isLastStatusSticking && !isStickyNow()) {
-                stickyListener.onUnSticky(mPos, mFixView);
+                stickyListener.onUnSticky(mPos, stickyView);
                 isLastStatusSticking = false;
             } else if (!isLastStatusSticking && isStickyNow()) {
                 stickyListener.onSticky(mPos, mFixView);
