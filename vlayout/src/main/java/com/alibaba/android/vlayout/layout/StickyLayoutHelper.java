@@ -302,10 +302,6 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
             fixLayoutStateInCase2(orientationHelper, recycler, startPosition, endPosition, helper);
         }
 
-        if (mFixView != null) {
-            mFixView.setBackgroundColor(mBgColor);
-        }
-
         if (stickyListener != null) {
             if (isLastStatusSticking && !isStickyNow()) {
                 stickyListener.onUnSticky(mPos, stickyView);
