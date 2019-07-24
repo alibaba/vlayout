@@ -1034,7 +1034,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     @Override
     public void onItemsChanged(LayoutManagerHelper helper) {
-        mLazySpanLookup.clear();
+//        mLazySpanLookup.clear();
     }
 
     @Override
