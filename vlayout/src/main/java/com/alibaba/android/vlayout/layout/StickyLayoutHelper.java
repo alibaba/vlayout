@@ -63,7 +63,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
     private boolean mDoNormalHandle = false;
 
-    private boolean isLastStatusSticking = true;
+    private boolean isLastStatusSticking = false;
 
     private StickyListener stickyListener;
 
