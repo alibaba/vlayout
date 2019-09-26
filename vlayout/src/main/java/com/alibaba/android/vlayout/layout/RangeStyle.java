@@ -1,6 +1,8 @@
 package com.alibaba.android.vlayout.layout;
 
 import java.lang.reflect.Array;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.OrientationHelperEx;
@@ -43,7 +45,7 @@ public class RangeStyle<T extends RangeStyle> {
     protected Range<Integer> mRange;
 
     //TODO update data structure
-    protected ArrayMap<Range<Integer>, T> mChildren = new ArrayMap<>();
+    protected HashMap<Range<Integer>, T> mChildren = new HashMap<>();
 
     protected int mPaddingLeft;
 
@@ -404,9 +406,9 @@ public class RangeStyle<T extends RangeStyle> {
     public void setRange(int start, int end) {
         mRange = Range.create(start, end);
         if (!mChildren.isEmpty()) {
-            SimpleArrayMap<Range<Integer>, T> newMap = new SimpleArrayMap<>();
-            for (int i = 0, size = mChildren.size(); i < size; i++) {
-                T rangeStyle = mChildren.valueAt(i);
+            HashMap<Range<Integer>, T> newMap = new HashMap<>();
+            for (Map.Entry<Range<Integer>, T> entry : mChildren.entrySet()) {
+                T rangeStyle = entry.getValue();
                 int newStart = rangeStyle.getOriginStartOffset() + start;
                 int newEnd = rangeStyle.getOriginEndOffset() + start;
                 Range<Integer> newRange = Range.create(newStart, newEnd);
@@ -421,9 +423,9 @@ public class RangeStyle<T extends RangeStyle> {
     public void beforeLayout(RecyclerView.Recycler recycler, RecyclerView.State state,
         LayoutManagerHelper helper) {
         if (!isChildrenEmpty()) {
-            for (int i = 0, size = mChildren.size(); i < size; i++) {
-                RangeStyle rangeStyle = mChildren.valueAt(i);
-                rangeStyle.beforeLayout(recycler, state, helper);
+            for (Map.Entry<Range<Integer>, T> entry : mChildren.entrySet()) {
+                RangeStyle childRangeStyle = entry.getValue();
+                childRangeStyle.beforeLayout(recycler, state, helper);
             }
         }
         if (requireLayoutView()) {
@@ -452,9 +454,9 @@ public class RangeStyle<T extends RangeStyle> {
         LayoutManagerHelper helper) {
 
         if (!isChildrenEmpty()) {
-            for (int i = 0, size = mChildren.size(); i < size; i++) {
-                RangeStyle rangeStyle = mChildren.valueAt(i);
-                rangeStyle.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
+            for (Map.Entry<Range<Integer>, T> entry : mChildren.entrySet()) {
+                RangeStyle childRangeStyle = entry.getValue();
+                childRangeStyle.afterLayout(recycler, state, startPosition, endPosition, scrolled, helper);
             }
         }
         if (DEBUG) {
@@ -521,8 +523,8 @@ public class RangeStyle<T extends RangeStyle> {
 
     private void unionChildRegion(RangeStyle<T> rangeStyle) {
         if (!rangeStyle.isChildrenEmpty()) {
-            for (int i = 0, size = rangeStyle.mChildren.size(); i < size; i++) {
-                RangeStyle childRangeStyle = rangeStyle.mChildren.valueAt(i);
+            for (Map.Entry<Range<Integer>, T> entry : rangeStyle.mChildren.entrySet()) {
+                RangeStyle childRangeStyle = entry.getValue();
                 unionChildRegion(childRangeStyle);
                 if (childRangeStyle.mLayoutView != null) {
                     rangeStyle.mLayoutRegion.union(childRangeStyle.mLayoutView.getLeft(), childRangeStyle.mLayoutView.getTop(),
@@ -534,8 +536,8 @@ public class RangeStyle<T extends RangeStyle> {
 
     private void removeChildViews(LayoutManagerHelper helper, RangeStyle<T> rangeStyle) {
         if (!rangeStyle.isChildrenEmpty()) {
-            for (int i = 0, size = rangeStyle.mChildren.size(); i < size; i++) {
-                RangeStyle childRangeStyle = rangeStyle.mChildren.valueAt(i);
+            for (Map.Entry<Range<Integer>, T> entry : rangeStyle.mChildren.entrySet()) {
+                RangeStyle childRangeStyle = entry.getValue();
                 removeChildViews(helper, childRangeStyle);
             }
         }
@@ -551,8 +553,8 @@ public class RangeStyle<T extends RangeStyle> {
 
     public void adjustLayout(int startPosition, int endPosition, LayoutManagerHelper helper) {
         if (!isChildrenEmpty()) {
-            for (int i = 0, size = mChildren.size(); i < size; i++) {
-                RangeStyle rangeStyle = mChildren.valueAt(i);
+            for (Map.Entry<Range<Integer>, T> entry : mChildren.entrySet()) {
+                RangeStyle rangeStyle = entry.getValue();
                 rangeStyle.adjustLayout(startPosition, endPosition, helper);
             }
         }
@@ -605,8 +607,8 @@ public class RangeStyle<T extends RangeStyle> {
     }
 
     private void hideChildLayoutViews(LayoutManagerHelper helper, RangeStyle<T> rangeStyle) {
-        for (int i = 0, size = rangeStyle.mChildren.size(); i < size; i++) {
-            RangeStyle childRangeStyle = rangeStyle.mChildren.valueAt(i);
+        for (Map.Entry<Range<Integer>, T> entry : rangeStyle.mChildren.entrySet()) {
+            RangeStyle childRangeStyle = entry.getValue();
             if (!childRangeStyle.isChildrenEmpty()) {
                 hideChildLayoutViews(helper, childRangeStyle);
             }
@@ -628,8 +630,8 @@ public class RangeStyle<T extends RangeStyle> {
     private boolean requireChildLayoutView(RangeStyle<T> rangeStyle) {
         boolean self = rangeStyle.mBgColor != 0 || rangeStyle.mLayoutViewBindListener != null;
 
-        for (int i = 0, size = rangeStyle.mChildren.size(); i < size; i++) {
-            RangeStyle childRangeStyle = rangeStyle.mChildren.valueAt(i);
+        for (Map.Entry<Range<Integer>, T> entry : rangeStyle.mChildren.entrySet()) {
+            RangeStyle childRangeStyle = entry.getValue();
             if (!childRangeStyle.isChildrenEmpty()) {
                 self |= requireChildLayoutView(childRangeStyle);
             } else {
@@ -688,8 +690,8 @@ public class RangeStyle<T extends RangeStyle> {
             return;
         }
 
-        for (int i = 0, size = rangeStyle.mChildren.size(); i < size; i++) {
-            RangeStyle childRangeStyle = rangeStyle.mChildren.valueAt(i);
+        for (Map.Entry<Range<Integer>, T> entry : rangeStyle.mChildren.entrySet()) {
+            RangeStyle childRangeStyle = entry.getValue();
             clearChild(helper, childRangeStyle);
         }
     }
