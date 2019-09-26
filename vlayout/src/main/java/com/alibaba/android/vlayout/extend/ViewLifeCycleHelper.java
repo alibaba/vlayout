@@ -6,6 +6,8 @@ import android.view.View;
 
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 
+import java.util.HashMap;
+
 public class ViewLifeCycleHelper {
     public enum STATUS {
         APPEARING,
@@ -14,7 +16,7 @@ public class ViewLifeCycleHelper {
         DISAPPEARED
     }
 
-    private ArrayMap<View, STATUS> mViewStatusMap = new ArrayMap<>();
+    private HashMap<View, STATUS> mViewStatusMap = new HashMap<>();
 
     private ViewLifeCycleListener mViewLifeCycleListener;
 
