@@ -311,7 +311,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             } else {
                 if (isEndLine) {
                     end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ?
-                        mMarginBottom + mPaddingRight : mMarginRight + mPaddingRight);
+                            mMarginBottom + mPaddingRight : mMarginRight + mPaddingRight);
                     //Log.d(TAG, "endLine " + position + " " + end);
                 } else {
                     end = currentSpan.getStartLine(defaultNewViewLine, orientationHelper) - (layoutInVertical ? mVGap : mHGap);
@@ -1054,7 +1054,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     @Override
     public void onOffsetChildrenVertical(int dy, LayoutManagerHelper helper) {
         super.onOffsetChildrenVertical(dy, helper);
-        if (helper.getOrientation() == VERTICAL) {
+        if (helper.getOrientation() == VERTICAL && mSpans != null) {
             for (int i = 0, size = mSpans.length; i < size; i++) {
                 Span span = mSpans[i];
                 span.onOffset(dy);
@@ -1065,7 +1065,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     @Override
     public void onOffsetChildrenHorizontal(int dx, LayoutManagerHelper helper) {
         super.onOffsetChildrenHorizontal(dx, helper);
-        if (helper.getOrientation() == HORIZONTAL) {
+        if (helper.getOrientation() == HORIZONTAL && mSpans != null) {
             for (int i = 0, size = mSpans.length; i < size; i++) {
                 Span span = mSpans[i];
                 span.onOffset(dx);

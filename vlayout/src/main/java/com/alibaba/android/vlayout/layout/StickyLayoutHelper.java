@@ -85,7 +85,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
     }
 
     public boolean isStickyNow() {
-        return !mDoNormalHandle;
+        return !mDoNormalHandle && mFixView != null;
     }
 
     @Override
