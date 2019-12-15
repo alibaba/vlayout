@@ -57,5 +57,6 @@ allprojects {
         google()
 
         //这么多库还不能解决。。。test01测试
+        //这么多库还不能解决。。。test02测试
     }
 }
