@@ -30,9 +30,15 @@ buildscript {
         maven { url "http://oss.jfrog.org/oss-snapshot-local/" }
         mavenCentral()
         jcenter()
+        google()
+        jcenter { url "http://jcenter.bintray.com/" }//关键
+        maven { url 'https://maven.fabric.io/public' }//关键
+        maven { url 'https://jitpack.io' }//关键
+        maven { url 'https://maven.fabric.io/public' }//关键
+        maven { url "https://maven.google.com" }//关键
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'com.github.xfumihiro.view-inspector:view-inspector-plugin:0.1.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.0.0'
@@ -46,5 +52,10 @@ allprojects {
         maven { url "http://oss.jfrog.org/oss-snapshot-local/" }
         jcenter()
         mavenLocal()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+        google()
+
+        //这么多库还不能解决。。。test01测试
     }
 }
