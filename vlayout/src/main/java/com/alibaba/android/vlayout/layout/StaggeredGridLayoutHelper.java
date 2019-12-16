@@ -355,7 +355,7 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             handleStateOnResult(result, view);
         }
 
-        if (isOutOfRange(layoutState.getCurrentPosition())) {
+        if (isOutOfRange(layoutState.getCurrentPosition()) && mSpans != null) {
             // reach the end of layout, cache the gap
             // TODO: how to retain gap
             if (layoutState.getLayoutDirection() == LayoutStateWrapper.LAYOUT_START) {
@@ -596,9 +596,11 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             //FIXME do not clear loopup, may cause lane error while scroll
             //mLazySpanLookup.clear();
 
-            for (int i = 0, size = mSpans.length; i < size; i++) {
-                Span span = mSpans[i];
-                span.setLine(alignLine);
+            if (mSpans != null) {
+                for (int i = 0, size = mSpans.length; i < size; i++) {
+                    Span span = mSpans[i];
+                    span.setLine(alignLine);
+                }
             }
 
             layoutManager.requestSimpleAnimationsInNextLayout();
@@ -622,10 +624,12 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
         BitSet mSpansToCheck = new BitSet(mNumLanes);
         mSpansToCheck.set(0, mNumLanes, true);
 
-        for (int i = 0, size = mSpans.length; i < size; i++) {
-            Span span = mSpans[i];
-            if (span.mViews.size() != 0 && checkSpanForGap(span, layoutManager, alignLine)) {
-                return layoutManager.getReverseLayout() ? span.mViews.get(span.mViews.size() - 1) : span.mViews.get(0);
+        if (mSpans != null) {
+            for (int i = 0, size = mSpans.length; i < size; i++) {
+                Span span = mSpans[i];
+                if (span.mViews.size() != 0 && checkSpanForGap(span, layoutManager, alignLine)) {
+                    return layoutManager.getReverseLayout() ? span.mViews.get(span.mViews.size() - 1) : span.mViews.get(0);
+                }
             }
         }
 
@@ -709,6 +713,9 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
 
     private Span findSpan(int position, View child, boolean isStart) {
         int span = mLazySpanLookup.getSpan(position);
+        if (mSpans == null){
+            return null;
+        }
         if (span >= 0 && span < mSpans.length) {
             Span sp = mSpans[span];
             if (isStart && sp.findStart(child)) {
@@ -930,9 +937,11 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "onRefreshLayout span.clear()");
             }
-            for (int i = 0, size = mSpans.length; i < size; i++) {
-                Span span = mSpans[i];
-                span.clear();
+            if (mSpans != null) {
+                for (int i = 0, size = mSpans.length; i < size; i++) {
+                    Span span = mSpans[i];
+                    span.clear();
+                }
             }
         }
     }
@@ -964,22 +973,26 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "checkAnchorInfo span.clear()");
             }
-            for (int i = 0, size = mSpans.length; i < size; i++) {
-                Span span = mSpans[i];
-                span.clear();
-                span.setLine(anchorInfo.coordinate);
+            if (mSpans != null) {
+                for (int i = 0, size = mSpans.length; i < size; i++) {
+                    Span span = mSpans[i];
+                    span.clear();
+                    span.setLine(anchorInfo.coordinate);
+                }
             }
         } else {
             int anchorPos = anchorInfo.layoutFromEnd ? Integer.MIN_VALUE : Integer.MAX_VALUE;
-            for (int i = 0, size = mSpans.length; i < size; i++) {
-                Span span = mSpans[i];
-                if (!span.mViews.isEmpty()) {
-                    if (anchorInfo.layoutFromEnd) {
-                        View view = span.mViews.get(span.mViews.size() - 1);
-                        anchorPos = Math.max(anchorPos, helper.getPosition(view));
-                    } else {
-                        View view = span.mViews.get(0);
-                        anchorPos = Math.min(anchorPos, helper.getPosition(view));
+            if (mSpans != null) {
+                for (int i = 0, size = mSpans.length; i < size; i++) {
+                    Span span = mSpans[i];
+                    if (!span.mViews.isEmpty()) {
+                        if (anchorInfo.layoutFromEnd) {
+                            View view = span.mViews.get(span.mViews.size() - 1);
+                            anchorPos = Math.max(anchorPos, helper.getPosition(view));
+                        } else {
+                            View view = span.mViews.get(0);
+                            anchorPos = Math.min(anchorPos, helper.getPosition(view));
+                        }
                     }
                 }
             }
@@ -1024,9 +1037,11 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "checkAnchorInfo span.cacheReferenceLineAndClear()");
             }
-            for (int i = 0, size = mSpans.length; i < size; i++) {
-                Span span = mSpans[i];
-                span.cacheReferenceLineAndClear(helper.getReverseLayout() ^ anchorInfo.layoutFromEnd, offset, orientationHelper);
+            if (mSpans != null) {
+                for (int i = 0, size = mSpans.length; i < size; i++) {
+                    Span span = mSpans[i];
+                    span.cacheReferenceLineAndClear(helper.getReverseLayout() ^ anchorInfo.layoutFromEnd, offset, orientationHelper);
+                }
             }
         }
     }
