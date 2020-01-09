@@ -206,7 +206,7 @@ public abstract class BaseLayoutHelper extends MarginLayoutHelper {
                         mLayoutRegion.right = helper.getContentWidth() - helper.getPaddingRight() - mMarginRight;
                     } else {
                         mLayoutRegion.top = helper.getPaddingTop() + mMarginTop;
-                        mLayoutRegion.bottom = helper.getContentWidth() - helper.getPaddingBottom() - mMarginBottom;
+                        mLayoutRegion.bottom = helper.getContentHeight() - helper.getPaddingBottom() - mMarginBottom;
                     }
 
                     bindLayoutView(mLayoutView);
