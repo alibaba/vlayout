@@ -35,6 +35,8 @@ import com.alibaba.android.vlayout.OrientationHelperEx;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
+import java.util.List;
+
 import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
 
 
@@ -66,6 +68,8 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
     private boolean isLastStatusSticking = false;
 
     private StickyListener stickyListener;
+
+    private boolean mHasIncreaseOffset = false;
 
     public StickyLayoutHelper() {
         this(true);
@@ -287,7 +291,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                 return;
             }
         }
-
+        
         View stickyView = mFixView;
         // Not in normal flow
         if (!mDoNormalHandle && mFixView != null) {
@@ -370,6 +374,12 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                                        LayoutManagerHelper helper) {
         // considering the case when last layoutHelper has margin bottom
         // 1. normal flow to abnormal flow; 2. abnormal flow to normal flow
+
+        if (!mHasIncreaseOffset) {
+            increaseOffsetConsiderTopStickyView(helper);
+            mHasIncreaseOffset = true;
+        }
+
         if ((mStickyStart && endPosition >= mPos) || (!mStickyStart && startPosition <= mPos)) {
             int consumed = orientationHelper.getDecoratedMeasurement(mFixView);
             boolean layoutInVertical = helper.getOrientation() == VERTICAL;
@@ -754,6 +764,33 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
     public void setStickyListener(StickyListener stickyListener) {
         this.stickyListener = stickyListener;
+    }
+
+    /**
+     *
+     * increase offset when there are multi-sticky views at the top of current view
+     * in order to avoid views overlap
+     * increasing value is equal to total sticky views' height.
+     * @param helper
+     */
+    private void increaseOffsetConsiderTopStickyView(LayoutManagerHelper helper) {
+        if (helper instanceof VirtualLayoutManager){
+            List<LayoutHelper> helperList = ((VirtualLayoutManager) helper).getLayoutHelpers();
+            int height = 0;
+            for (LayoutHelper helperItem : helperList) {
+                if (helperItem.getRange().getUpper() < this.getRange().getLower()) {
+                    if (helperItem.isFixLayout()) {
+                        View view = helperItem.getFixedView();
+                        if (view != null) {
+                            height += view.getHeight();
+                        }
+                    }
+                }
+            }
+
+            mOffset += height;
+        }
+
     }
 }
 
