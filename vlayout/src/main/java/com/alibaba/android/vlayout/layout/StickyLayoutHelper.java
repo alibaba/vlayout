@@ -69,8 +69,6 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
     private StickyListener stickyListener;
 
-    private boolean mHasIncreaseOffset = false;
-
     public StickyLayoutHelper() {
         this(true);
     }
@@ -234,7 +232,6 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         if (mDoNormalHandle) {
             helper.addChildView(layoutState, view);
             handleStateOnResult(result, view);
-            mFixView = null;
         } else {
             // result.mConsumed += mOffset;
         }
@@ -374,15 +371,11 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         // considering the case when last layoutHelper has margin bottom
         // 1. normal flow to abnormal flow; 2. abnormal flow to normal flow
 
-        if (!mHasIncreaseOffset) {
-            increaseOffsetConsiderTopStickyView(helper);
-            mHasIncreaseOffset = true;
-        }
-
         if ((mStickyStart && endPosition >= mPos) || (!mStickyStart && startPosition <= mPos)) {
             int consumed = orientationHelper.getDecoratedMeasurement(mFixView);
             boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-            final int startAdjust = layoutInVertical ? mAdjuster.top : mAdjuster.left;
+            int extraTopOffset = getExtraTopOffset(helper);
+            final int startAdjust = layoutInVertical ? mAdjuster.top + extraTopOffset : mAdjuster.left;
             final int endAdjust = layoutInVertical ? mAdjuster.bottom : mAdjuster.right;
 
             int left = 0, top = 0, right = 0, bottom = 0;
@@ -507,7 +500,6 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                     if (mFixView.getParent() == null) {
                         helper.addChildView(mFixView, index);
                     }
-                    mFixView = null;
                 }
             } else {
                 helper.showView(mFixView);
@@ -532,7 +524,8 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
         boolean normalHandle = false;
         boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-        final int startAdjust = layoutInVertical ? mAdjuster.top : mAdjuster.left;
+        int extraTopOffset = getExtraTopOffset(helper);
+        final int startAdjust = layoutInVertical ? mAdjuster.top + extraTopOffset : mAdjuster.left;
         final int endAdjust = layoutInVertical ? mAdjuster.bottom : mAdjuster.right;
         if ((mStickyStart && endPosition >= mPos) || (!mStickyStart && startPosition <= mPos)) {
 
@@ -698,7 +691,6 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
                     if (mFixView.getParent() == null) {
                         helper.addChildView(mFixView, index);
                     }
-//                    mFixView = null;
                 }
             } else {
                 helper.addFixedView(mFixView);
@@ -767,29 +759,29 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
     /**
      *
-     * increase offset when there are multi-sticky views at the top of current view
+     * get extra top offset when there are multi-sticky views at the top of current view
      * in order to avoid views overlap
-     * increasing value is equal to total sticky views' height.
+     * the offset value is equal to total sticky views' height.
      * @param helper
      */
-    private void increaseOffsetConsiderTopStickyView(LayoutManagerHelper helper) {
+    private int getExtraTopOffset(LayoutManagerHelper helper) {
+        int offset = 0;
         if (helper instanceof VirtualLayoutManager){
             List<LayoutHelper> helperList = ((VirtualLayoutManager) helper).getLayoutHelpers();
-            int height = 0;
             for (LayoutHelper helperItem : helperList) {
-                if (helperItem.getRange().getUpper() < this.getRange().getLower()) {
-                    if (helperItem.isFixLayout()) {
+                if (helperItem.isFixLayout()) {
+                    if (helperItem.getRange().getUpper() < this.getRange().getLower()) {
                         View view = helperItem.getFixedView();
                         if (view != null) {
-                            height += view.getHeight();
+                            offset += view.getHeight();
                         }
                     }
                 }
             }
 
-            mOffset += height;
         }
 
+        return offset;
     }
 }
 
