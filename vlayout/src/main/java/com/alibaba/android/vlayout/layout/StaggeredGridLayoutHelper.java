@@ -641,10 +641,10 @@ public class StaggeredGridLayoutHelper extends BaseLayoutHelper {
     private boolean checkSpanForGap(Span span, VirtualLayoutManager layoutManager, int line) {
         OrientationHelperEx orientationHelper = layoutManager.getMainOrientationHelper();
         if (layoutManager.getReverseLayout()) {
-            if (span.getEndLine(orientationHelper) < line) {
+            if (span.getEndLine(orientationHelper) != line) {
                 return true;
             }
-        } else if (span.getStartLine(orientationHelper) > line) {
+        } else if (span.getStartLine(orientationHelper) != line) {
             return true;
         }
         return false;
