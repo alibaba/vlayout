@@ -35,6 +35,8 @@ import com.alibaba.android.vlayout.OrientationHelperEx;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
 
+import java.util.List;
+
 import static android.support.v7.widget.LinearLayoutManager.VERTICAL;
 
 
@@ -49,6 +51,10 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         void onSticky(int pos, View view);
 
         void onUnSticky(int pos, View view);
+    }
+
+    public interface Stackable {
+        boolean enable();
     }
 
     private static final String TAG = "StickyStartLayoutHelper";
@@ -66,6 +72,7 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
     private boolean isLastStatusSticking = false;
 
     private StickyListener stickyListener;
+    private Stackable mStackable;
 
     public StickyLayoutHelper() {
         this(true);
@@ -230,7 +237,6 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         if (mDoNormalHandle) {
             helper.addChildView(layoutState, view);
             handleStateOnResult(result, view);
-            mFixView = null;
         } else {
             // result.mConsumed += mOffset;
         }
@@ -373,7 +379,8 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
         if ((mStickyStart && endPosition >= mPos) || (!mStickyStart && startPosition <= mPos)) {
             int consumed = orientationHelper.getDecoratedMeasurement(mFixView);
             boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-            final int startAdjust = layoutInVertical ? mAdjuster.top : mAdjuster.left;
+            int extraTopOffset = getExtraTopOffset(helper);
+            final int startAdjust = layoutInVertical ? mAdjuster.top + extraTopOffset : mAdjuster.left;
             final int endAdjust = layoutInVertical ? mAdjuster.bottom : mAdjuster.right;
 
             int left = 0, top = 0, right = 0, bottom = 0;
@@ -523,7 +530,8 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
         boolean normalHandle = false;
         boolean layoutInVertical = helper.getOrientation() == VERTICAL;
-        final int startAdjust = layoutInVertical ? mAdjuster.top : mAdjuster.left;
+        int extraTopOffset = getExtraTopOffset(helper);
+        final int startAdjust = layoutInVertical ? mAdjuster.top + extraTopOffset : mAdjuster.left;
         final int endAdjust = layoutInVertical ? mAdjuster.bottom : mAdjuster.right;
         if ((mStickyStart && endPosition >= mPos) || (!mStickyStart && startPosition <= mPos)) {
 
@@ -754,6 +762,41 @@ public class StickyLayoutHelper extends FixAreaLayoutHelper {
 
     public void setStickyListener(StickyListener stickyListener) {
         this.stickyListener = stickyListener;
+    }
+
+    public void setStackable(Stackable stackable) {
+        mStackable = stackable;
+    }
+
+    /**
+     *
+     * get extra top offset when there are multi-sticky views at the top of current view
+     * in order to avoid views overlap
+     * the offset value is equal to total sticky views' height.
+     * @param helper
+     */
+    private int getExtraTopOffset(LayoutManagerHelper helper) {
+        if (mStackable == null || !mStackable.enable()) {
+            return 0;
+        }
+
+        int offset = 0;
+        if (helper instanceof VirtualLayoutManager){
+            List<LayoutHelper> helperList = ((VirtualLayoutManager) helper).getLayoutHelpers();
+            for (LayoutHelper helperItem : helperList) {
+                if (helperItem.isFixLayout()) {
+                    if (helperItem.getRange().getUpper() < this.getRange().getLower()) {
+                        View view = helperItem.getFixedView();
+                        if (view != null) {
+                            offset += view.getHeight();
+                        }
+                    }
+                }
+            }
+
+        }
+
+        return offset;
     }
 }
 
