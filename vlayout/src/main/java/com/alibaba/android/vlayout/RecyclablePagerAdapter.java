@@ -81,7 +81,14 @@ public abstract class RecyclablePagerAdapter<VH extends RecyclerView.ViewHolder>
         //so the attributes of layoutParam such as widthFactor and position will also be reused,
         //while these attributes should be reset to default value during reused.
         //Considering ViewPager.LayoutParams has a few inner attributes which could not be modify outside, we provide a new instance here
-        container.addView(holder.itemView, new ViewPager.LayoutParams());
+
+        ViewPager.LayoutParams layoutParams = new ViewPager.LayoutParams();
+        if (holder.itemView.getLayoutParams() != null) {
+            layoutParams.width = holder.itemView.getLayoutParams().width;
+            layoutParams.height = holder.itemView.getLayoutParams().height;
+        }
+
+        container.addView(holder.itemView, layoutParams);
 
         return holder;
     }
