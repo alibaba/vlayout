@@ -24,19 +24,19 @@
 
 package com.alibaba.android.vlayout.layout;
 
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.util.LayoutDirection;
+import android.util.Log;
+import android.util.SparseIntArray;
+import android.view.View;
+import android.widget.TextView;
+
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.OrientationHelperEx;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutParams;
 import com.alibaba.android.vlayout.VirtualLayoutManager.LayoutStateWrapper;
-
-import android.support.annotation.NonNull;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.SparseIntArray;
-import android.view.View;
-import android.widget.TextView;
 
 import java.util.Arrays;
 
@@ -511,7 +511,13 @@ public class GridLayoutHelper extends BaseLayoutHelper {
 
         for (int i = 0; i < count; i++) {
             View view = mSet[i];
-            final int index = mSpanIndices[i];
+            int index = mSpanIndices[i];
+            //镜像环境，条目数据已镜像，但一行不满mSpanCount的条目位置没有镜像，需要移动mSpanCount - count位。
+            if (layoutState.getLayoutDirection() == LayoutDirection.RTL) {
+                if (count != mSpanCount) {
+                    index = index + mSpanCount - count;
+                }
+            }
 
             LayoutParams params = (LayoutParams) view.getLayoutParams();
             if (layoutInVertical) {
