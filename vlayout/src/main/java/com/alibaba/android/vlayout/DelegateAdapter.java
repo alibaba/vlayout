@@ -267,7 +267,7 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     }
 
 
-    public void setAdapters(@Nullable List<Adapter> adapters) {
+    public void setAdapters(@Nullable List<? extends Adapter> adapters) {
         clear();
 
         if (adapters == null) {
