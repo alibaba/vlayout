@@ -158,10 +158,19 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
     }
 
     public void setNoScrolling(boolean noScrolling) {
+        setAutoMeasureEnabled(!noScrolling);
         this.mNoScrolling = noScrolling;
         mSpaceMeasured = false;
         mMeasuredFullSpace = 0;
         mSpaceMeasuring = false;
+    }
+
+    @Override
+    public boolean isAutoMeasureEnabled() {
+        if (mNoScrolling) {
+            return false;
+        }
+        return super.isAutoMeasureEnabled();
     }
 
     public void setCanScrollVertically(boolean canScrollVertically) {
@@ -1588,7 +1597,7 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
 
     // when set no scrolling, the max size should have limit
-    private static final int MAX_NO_SCROLLING_SIZE = Integer.MAX_VALUE >> 4;
+    private static final int MAX_NO_SCROLLING_SIZE = View.MEASURED_SIZE_MASK >> 2;
 
     private boolean mSpaceMeasured = false;
 
@@ -1647,9 +1656,9 @@ public class VirtualLayoutManager extends ExposeLinearLayoutManagerEx implements
 
 
         if (getOrientation() == VERTICAL) {
-            super.onMeasure(recycler, state, widthSpec, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST));
+            super.onMeasure(recycler, state, widthSpec, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.EXACTLY));
         } else {
-            super.onMeasure(recycler, state, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.AT_MOST), heightSpec);
+            super.onMeasure(recycler, state, View.MeasureSpec.makeMeasureSpec(measuredSize, View.MeasureSpec.EXACTLY), heightSpec);
         }
     }
 }

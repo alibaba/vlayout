@@ -24,6 +24,27 @@
 
 package com.alibaba.android.vlayout.example;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.RecyclablePagerAdapter;
@@ -45,29 +66,6 @@ import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.alibaba.android.vlayout.layout.StickyLayoutHelper;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.Log;
-import android.util.Pair;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.EditText;
-import android.widget.TextView;
-
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -76,15 +74,17 @@ import java.util.List;
  */
 public class VLayoutActivity extends Activity {
 
+    private static final boolean TEST_NO_SCROLLING = false;
+
     private static final boolean BANNER_LAYOUT = true;
 
-    private static final boolean FIX_LAYOUT = true;
+    private static final boolean FIX_LAYOUT = true && !TEST_NO_SCROLLING;
 
     private static final boolean LINEAR_LAYOUT = true;
 
     private static final boolean SINGLE_LAYOUT = true;
 
-    private static final boolean FLOAT_LAYOUT = true;
+    private static final boolean FLOAT_LAYOUT = true && !TEST_NO_SCROLLING;
 
     private static final boolean ONEN_LAYOUT = true;
 
@@ -92,7 +92,7 @@ public class VLayoutActivity extends Activity {
 
     private static final boolean GRID_LAYOUT = true;
 
-    private static final boolean STICKY_LAYOUT = true;
+    private static final boolean STICKY_LAYOUT = true && !TEST_NO_SCROLLING;
 
     private static final boolean STAGGER_LAYOUT = true;
 
@@ -110,10 +110,14 @@ public class VLayoutActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+        if (TEST_NO_SCROLLING) {
+            setContentView(R.layout.main_noscroll_activity);
+        } else {
+            setContentView(R.layout.main_activity);
+        }
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        ;
+
         mFirstText = (TextView) findViewById(R.id.first);
         mLastText = (TextView) findViewById(R.id.last);
         mCountText = (TextView) findViewById(R.id.count);
@@ -122,6 +126,11 @@ public class VLayoutActivity extends Activity {
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_view);
 
         final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
+
+        if (TEST_NO_SCROLLING) {
+            layoutManager.setNoScrolling(true);
+        }
+
         layoutManager.setPerformanceMonitor(new PerformanceMonitor() {
 
             long start;
